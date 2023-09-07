@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace LNSF.Infra.Data.Configurations;
 
-public class TourConfiguration : IEntityTypeConfiguration<Tour>
+public class ToursConfiguration : IEntityTypeConfiguration<Tour>
 {
     public void Configure(EntityTypeBuilder<Tour> builder)
     {

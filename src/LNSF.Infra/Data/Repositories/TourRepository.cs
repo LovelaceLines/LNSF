@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LNSF.Infra.Data.Repositories;
 
-public class TourRepository : ITourRepository
+public class ToursRepository : ITourRepository
 {
     private readonly AppDbContext _context;
 
-    public TourRepository(AppDbContext context)
+    public ToursRepository(AppDbContext context)
     {
         _context = context;
     }
@@ -43,7 +43,6 @@ public class TourRepository : ITourRepository
         var tour = await _context.Tours.FindAsync(input.Id) 
             ?? throw new InvalidDataException("Não encontrado");
             
-        // tour.Input = input.Input;
         _context.Entry(tour).CurrentValues.SetValues(input);
 
         _context.Tours.Update(tour);
