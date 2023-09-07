@@ -12,11 +12,13 @@ public class AppDbContext : DbContext
     }
 
     public DbSet<Tour> Tours { get; set; }
+    public DbSet<Room> Rooms { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
 
-        builder.ApplyConfiguration(new TourConfiguration());
+        builder.ApplyConfiguration(new ToursConfiguration());
+        builder.ApplyConfiguration(new RoomsConfiguration());
     }
 }
