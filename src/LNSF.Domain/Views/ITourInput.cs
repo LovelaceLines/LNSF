@@ -1,6 +1,6 @@
 ﻿namespace LNSF.Domain.Views;
 
-public interface IToorInput
+public interface ITourInput
 {
     public int Id { get; set; }
     public DateTime Input { get; set; }

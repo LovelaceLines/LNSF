@@ -11,12 +11,12 @@ public class AppDbContext : DbContext
         
     }
 
-    public DbSet<Toor> Toors { get; set; }
+    public DbSet<Tour> Tours { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
 
-        builder.ApplyConfiguration(new ToorConfiguration());
+        builder.ApplyConfiguration(new TourConfiguration());
     }
 }

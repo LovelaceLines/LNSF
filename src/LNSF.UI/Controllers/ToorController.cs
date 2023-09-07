@@ -6,25 +6,25 @@ namespace LNSF.UI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ToorController : ControllerBase
+public class TourController : ControllerBase
 {
-    private readonly ToorService _service;
+    private readonly TourService _service;
 
-    public ToorController(ToorService service)
+    public TourController(TourService service)
     {
         _service = service;
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<Toor>>> Get()
+    public async Task<ActionResult<List<Tour>>> Get()
     {
-        List<Toor> result = await _service.Get();
+        List<Tour> result = await _service.Get();
         
         return Ok(result);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Toor>> Get(int id)
+    public async Task<ActionResult<Tour>> Get(int id)
     {
         var data = await _service.Get(id);
 

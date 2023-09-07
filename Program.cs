@@ -8,10 +8,10 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddTransient<IToorRepository, ToorRepository>();
-builder.Services.AddTransient<ToorOutputValidator>();
-builder.Services.AddTransient<ToorInputValidator>();
-builder.Services.AddTransient<ToorService>();
+builder.Services.AddTransient<ITourRepository, TourRepository>();
+builder.Services.AddTransient<TourOutputValidator>();
+builder.Services.AddTransient<TourInputValidator>();
+builder.Services.AddTransient<TourService>();
 
 builder.Services.AddControllers();
 

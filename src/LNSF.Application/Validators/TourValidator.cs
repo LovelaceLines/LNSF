@@ -4,26 +4,26 @@ using LNSF.Domain.Views;
 
 namespace LNSF.Application.Validators;
 
-public class ToorOutputValidator : AbstractValidator<IToorOutput>
+public class TourOutputValidator : AbstractValidator<ITourOutput>
 {
-    public ToorOutputValidator()
+    public TourOutputValidator()
     {
-        RuleFor(toor => toor.Output)
+        RuleFor(tour => tour.Output)
             .NotEmpty()
             .Must(output => new GlobalValidator().IsDateFormatted(output))
             .WithMessage("Formato de data 'dd/MM/yyyy HH:mm:ss'");
 
-        RuleFor(toor => toor.Note)
+        RuleFor(tour => tour.Note)
             .MaximumLength(256)
             .WithMessage("Máximo 256 caracteres.");
     }
 }
 
-public class ToorInputValidator : AbstractValidator<IToorInput>
+public class TourInputValidator : AbstractValidator<ITourInput>
 {
-    public ToorInputValidator()
+    public TourInputValidator()
     {
-        RuleFor(toor => toor.Input)
+        RuleFor(tour => tour.Input)
             .NotEmpty()
             .Must(output => new GlobalValidator().IsDateFormatted(output))
             .WithMessage("Formato de data 'dd/MM/yyyy HH:mm:ss'");

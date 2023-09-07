@@ -9,10 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Data\" />
-    <Folder Include="Data\Configurations\" />
     <Folder Include="Data\Context\" />
-    <Folder Include="Data\Repositories\" />
   </ItemGroup>
 
   <ItemGroup>
