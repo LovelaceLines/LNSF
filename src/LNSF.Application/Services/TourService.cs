@@ -36,8 +36,8 @@ public class TourService
     public async Task<ResultDTO<Tour>> Get(int id) =>
         await _tourRepository.Get(id);
 
-    public async Task<ResultDTO<int>> GetQuantityTours() => 
-        await _tourRepository.GetQuantityTours();
+    public async Task<ResultDTO<int>> GetQuantity() => 
+        await _tourRepository.GetQuantity();
 
     public async Task<ResultDTO<Tour>> PostOutput(Tour output)
     {

@@ -38,7 +38,7 @@ public class ToursRepository : ITourRepository
             new ResultDTO<Tour>(tour);
     }
 
-    public async Task<ResultDTO<int>> GetQuantityTours() =>
+    public async Task<ResultDTO<int>> GetQuantity() =>
         new ResultDTO<int>(await _context.Tours.CountAsync());
     
     public async Task<ResultDTO<Tour>> PostOutput(Tour tour)

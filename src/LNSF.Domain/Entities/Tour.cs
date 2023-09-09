@@ -7,15 +7,6 @@ public class Tour
     public DateTime? Input { get; set; }
     public string? Note { get; set; }
 
-    public Tour(
-        DateTime output, 
-        int? id = null,
-        DateTime? input = null,
-        string? note = null)
-    {
-        Id = id;
-        Output = output;
-        Input = input;
-        Note = note;
-    }
+    public int? PeopleId { get; set; }
+    public People? People { get; set; }
 }

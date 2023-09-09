@@ -12,6 +12,10 @@ public class ToursConfiguration : IEntityTypeConfiguration<Tour>
 
         builder.Property(e => e.Id)
             .ValueGeneratedOnAdd();
+
+        builder.HasOne(e => e.People)
+            .WithMany(e => e.Tour)
+            .HasForeignKey(e => e.PeopleId);
         
         builder.Property(e => e.Output)
             .IsRequired(true);

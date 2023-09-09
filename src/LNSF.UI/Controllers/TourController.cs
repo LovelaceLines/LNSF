@@ -34,7 +34,7 @@ public class TourController : ControllerBase
     [HttpGet("quantity")]
     public async Task<ActionResult<ResultDTO<Tour>>> GetQuantity()
     {
-        var result = await _service.GetQuantityTours();
+        var result = await _service.GetQuantity();
 
         return result.Error ? StatusCode(500, result) : Ok(result);
     }
