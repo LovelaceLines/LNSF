@@ -24,6 +24,10 @@ builder.Services.AddTransient<IRoomRepository, RoomRepository>();
 builder.Services.AddTransient<RoomValidator>();
 builder.Services.AddTransient<RoomService>();
 
+builder.Services.AddTransient<IPeopleRepository, PeopleRepository>();
+builder.Services.AddTransient<PeopleValidator>();
+builder.Services.AddTransient<PeopleService>();
+
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
