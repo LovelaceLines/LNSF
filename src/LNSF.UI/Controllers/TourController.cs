@@ -1,5 +1,7 @@
 ﻿using LNSF.Application.Services;
+using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
+using LNSF.Domain.Views;
 using Microsoft.AspNetCore.Mvc; 
 
 namespace LNSF.UI.Controllers;
@@ -10,29 +12,46 @@ public class TourController : ControllerBase
 {
     private readonly TourService _service;
 
-    public TourController(TourService service)
-    {
+    public TourController(TourService service) =>
         _service = service;
-    }
 
     [HttpGet]
-    public async Task<ActionResult<List<Tour>>> Get()
+    public async Task<ActionResult<ResultDTO<List<Tour>>>> Get([FromBody]Pagination pagination)
     {
-        List<Tour> result = await _service.Get();
-        
-        return Ok(result);
+        var result = await _service.Get(pagination);
+
+        return result.Error ? StatusCode(500, result) : Ok(result);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Tour>> Get(int id)
+    public async Task<ActionResult<ResultDTO<Tour>>> Get(int id)
     {
-        var data = await _service.Get(id);
+        var result = await _service.Get(id);
 
-        if (data == null)
-        {
-            return NotFound();
-        }
+        return result.Error ? NotFound(result) : Ok(result);
+    }
 
-        return Ok(data);
+    [HttpGet("quantity")]
+    public async Task<ActionResult<ResultDTO<Tour>>> GetQuantity()
+    {
+        var result = await _service.GetQuantityTours();
+
+        return result.Error ? StatusCode(500, result) : Ok(result);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<ResultDTO<Tour>>> PostOutput([FromBody]Tour output)
+    {
+        var result = await _service.PostOutput(output);
+
+        return result.Error ? BadRequest(result) : Ok(result);
+    }
+
+    [HttpPut]
+    public async Task<ActionResult<ResultDTO<Tour>>> PutInput([FromBody]Tour input)
+    {
+        var result = await _service.PutInput(input);
+
+        return result.Error ? BadRequest(result) : Ok(result);
     }
 }

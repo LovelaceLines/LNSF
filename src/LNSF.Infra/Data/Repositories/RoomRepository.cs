@@ -1,5 +1,7 @@
 ﻿using LNSF.Domain;
+using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
+using LNSF.Domain.Views;
 using LNSF.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,58 +11,52 @@ public class RoomRepository : IRoomRepository
 {
     private readonly AppDbContext _context;
 
-    public RoomRepository(AppDbContext context)
-    {
+    public RoomRepository(AppDbContext context) => 
         _context = context;
-    }
 
-    public async Task<List<Room>> Get()
+    public async Task<ResultDTO<List<Room>>> Get(Pagination pagination)
     {
-        return await _context.Rooms.AsNoTracking().ToListAsync();
-    }
+        var query = _context.Rooms.AsNoTracking();
+        var count = await query.CountAsync();
 
-    public async Task<Room> Get(int id)
-    {
-        var room = await _context.Rooms.FindAsync(id) 
-            ?? throw new InvalidDataException("Não encontrado!");
+        if (count == 0) return new ResultDTO<List<Room>>("Não encontrado");
         
-        return room;
+        var rooms = await query
+            .Skip((pagination.Page - 1) * pagination.PageSize)
+            .Take(pagination.PageSize)
+            .ToListAsync();
+
+        return new ResultDTO<List<Room>>(rooms);
     }
 
-    public async Task<Room> Add(Room room)
+    public async Task<ResultDTO<Room>> Get(int id)
+    {
+        var room = await _context.Rooms.FindAsync(id);
+
+        return (room == null) ?
+            new ResultDTO<Room>("Não encontrado") :
+            new ResultDTO<Room>(room);
+    }
+
+    public async Task<ResultDTO<Room>> Post(Room room)
     {
         _context.Rooms.Add(room);
         await _context.SaveChangesAsync();
-
-        return room;
+        
+        return new ResultDTO<Room>(room);
     }
 
-    public async Task<Room> Update(Room room)
+    public async Task<ResultDTO<Room>> Put(Room room)
     {
-        var _room = await _context.Rooms.FindAsync(room.Id) 
-            ?? throw new InvalidDataException("Não encontrado!");
+        var _room = await _context.Rooms.FindAsync(room.Id);
+
+        if (_room == null) return new ResultDTO<Room>("Não encontrado");
 
         _context.Entry(_room).CurrentValues.SetValues(room);
 
         _context.Rooms.Update(_room);
         await _context.SaveChangesAsync();
 
-        return _room;
-    }
-
-    public async Task<bool> Available(int id)
-    {
-        var room = await _context.Rooms.FindAsync(id) 
-            ?? throw new InvalidDataException("Não encontrado!");
-        
-        return room.Available ?? false;
-    }
-
-    public async Task<int> GetOccupation(int roomId)
-    {
-        var room = await _context.Rooms.FindAsync(roomId) 
-            ?? throw new InvalidDataException("Não encontrado!");
-        
-        return room.Occupation ?? 0;
+        return new ResultDTO<Room>(_room);
     }
 }

@@ -1,5 +1,6 @@
 using LNSF.Application;
 using LNSF.Application.Services;
+using LNSF.Application.Services.Validators;
 using LNSF.Application.Validators;
 using LNSF.Domain;
 using LNSF.Domain.Repositories;
@@ -11,14 +12,16 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddTransient<PaginationValidator>();
+
 builder.Services.AddTransient<ITourRepository, ToursRepository>();
 builder.Services.AddTransient<TourOutputValidator>();
 builder.Services.AddTransient<TourInputValidator>();
+builder.Services.AddTransient<GlobalValidator>();
 builder.Services.AddTransient<TourService>();
 
 builder.Services.AddTransient<IRoomRepository, RoomRepository>();
 builder.Services.AddTransient<RoomValidator>();
-builder.Services.AddTransient<RoomAddValidator>();
 builder.Services.AddTransient<RoomService>();
 
 builder.Services.AddControllers();

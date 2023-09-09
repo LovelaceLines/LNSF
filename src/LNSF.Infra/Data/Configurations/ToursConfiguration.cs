@@ -14,7 +14,7 @@ public class ToursConfiguration : IEntityTypeConfiguration<Tour>
             .ValueGeneratedOnAdd();
         
         builder.Property(e => e.Output)
-            .IsRequired(false);
+            .IsRequired(true);
         
         builder.Property(e => e.Input)
             .IsRequired(false);
