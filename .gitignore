@@ -131,4 +131,6 @@ $RECYCLE.BIN/
 .DS_Store
 
 _NCrunch*
+Migrations/*
+.vscode/*
 appsettings.Development.json
