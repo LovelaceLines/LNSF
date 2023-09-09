@@ -1,6 +1,10 @@
 ﻿using LNSF.Application;
 using LNSF.Domain;
+using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
+using LNSF.Domain.Views;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LNSF.UI;
@@ -11,74 +15,46 @@ public class RoomController : ControllerBase
 {
     private readonly RoomService _roomService;
 
-    public RoomController(RoomService roomService)
-    {
+    public RoomController(RoomService roomService) => 
         _roomService = roomService;
-    }
 
     [HttpGet]
-    public async Task<ActionResult<List<Room>>> Get()
+    public async Task<ActionResult<ResultDTO<List<Room>>>> Get([FromBody]Pagination pagination)
     {
-        return Ok(await _roomService.Get());
+        var result = await _roomService.Get(pagination);
+
+        return result.Error ? 
+            BadRequest(result) :
+            Ok(result);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Room>> Get(int id)
+    public async Task<ActionResult<ResultDTO<Room>>> Get(int id)
     {
-        var room = await _roomService.Get(id);
+        var result = await _roomService.Get(id);
 
-        if (room == null)
-        {
-            return NotFound();
-        }
-
-        return Ok(room);
+        return result.Error ?
+            BadRequest(result) :
+            Ok(result);
     }
 
     [HttpPost]
-    public async Task<ActionResult<Room>> Post([FromBody]IRoomAdd room)
+    public async Task<ActionResult<ResultDTO<Room>>> Post([FromBody]Room room)
     {
-        var _room = await _roomService.Add(room);
+        var result = await _roomService.Post(room);
 
-        if (_room == null)
-        {
-            return BadRequest();
-        }
-
-        return Ok(_room);
+        return result.Error ?
+            BadRequest(result) :
+            Ok(result);
     }
 
     [HttpPut]
-    public async Task<ActionResult<Room>> Put([FromBody]Room room)
+    public async Task<ActionResult<ResultDTO<Room>>> Put([FromBody]Room room)
     {
-        var _room = await _roomService.Update(room);
+        var result = await _roomService.Put(room);
 
-        if (_room == null)
-        {
-            return NotFound();
-        }
-
-        return Ok(_room);
-    }
-
-    [HttpGet("available/{id}")]
-    public async Task<ActionResult<bool>> GetAvailable(int id)
-    {
-        var _available = await _roomService.Available(id);
-
-        if (!_available)
-        {
-            return NotFound();
-        }
-
-        return Ok(_available);
-    }
-
-    [HttpGet("occupation/{id}")]
-    public async Task<ActionResult<int>> GetOccupation(int id)
-    {
-        var _occupation = await _roomService.GetOccupation(id);
-
-        return Ok(_occupation);
+        return result.Error ?
+            BadRequest(result) :
+            Ok(result);
     }
 }

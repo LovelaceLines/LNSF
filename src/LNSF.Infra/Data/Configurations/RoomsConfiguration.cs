@@ -14,21 +14,21 @@ public class RoomsConfiguration : IEntityTypeConfiguration<Room>
             .ValueGeneratedOnAdd();
         
         builder.Property(x => x.Number)
-            .IsRequired(false);
+            .IsRequired(true);
 
         builder.Property(x => x.Bathroom)
-            .IsRequired(false);
+            .IsRequired(true);
 
         builder.Property(x => x.Beds)
-            .IsRequired(false);
+            .IsRequired(true);
 
         builder.Property(x => x.Occupation)
-            .IsRequired(false);
+            .IsRequired(true);
 
         builder.Property(x => x.Storey)
-            .IsRequired(false);
+            .IsRequired(true);
         
         builder.Property(x => x.Available)
-            .IsRequired(false);
+            .IsRequired(true);
     }
 }

@@ -1,5 +1,7 @@
 ﻿using LNSF.Domain;
+using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
+using LNSF.Domain.Views;
 
 namespace LNSF.Application;
 
@@ -7,68 +9,46 @@ public class RoomService
 {
     private readonly IRoomRepository _roomRepository;
     private readonly RoomValidator _roomValidator;
-    private readonly RoomAddValidator _roomAddValidator;
+    private readonly PaginationValidator _paginationValidator;
 
     public RoomService(IRoomRepository roomRepository,
         RoomValidator roomValidator,
-        RoomAddValidator roomAddValidator)
+        PaginationValidator paginationValidator)
     {
         _roomRepository = roomRepository;
         _roomValidator = roomValidator;
-        _roomAddValidator = roomAddValidator;
+        _paginationValidator = paginationValidator;
     }
 
-    public async Task<List<Room>> Get()
+    public async Task<ResultDTO<List<Room>>> Get(Pagination pagination)
     {
-        return await _roomRepository.Get();
+        var validationResult = _paginationValidator.Validate(pagination);
+
+        return validationResult.IsValid ?
+            await _roomRepository.Get(pagination) :
+            new ResultDTO<List<Room>>(validationResult.ToString());
     }
 
-    public async Task<Room> Get(int id)
-    {
-        return await _roomRepository.Get(id);
-    }
+    public async Task<ResultDTO<Room>> Get(int id) => 
+        await _roomRepository.Get(id);
 
-    public async Task<Room> Add(IRoomAdd room)
-    {
-        var validationResult = _roomAddValidator.Validate(room);
-
-        if (!validationResult.IsValid)
-        {
-            return new Room();
-        }
-
-        Room _room = new()
-        {
-            Bathroom = room.Bathroom,
-            Available = true,
-            Beds = room.Beds,
-            Number = room.Number,
-            Occupation = room.Occupation,
-            Storey = room.Storey,
-        };
-
-        return await _roomRepository.Add(_room);
-    }
-
-    public async Task<Room> Update(Room room)
+    public async Task<ResultDTO<Room>> Post(Room room)
     {
         var validationResult = _roomValidator.Validate(room);
 
-        if (!validationResult.IsValid)
-        {
-            return new Room();
-        }
+        if (!validationResult.IsValid) return new ResultDTO<Room>(validationResult.ToString());
 
-        return await _roomRepository.Update(room);
+        room.Id = null; // Null Id to insert into in data base
+
+        return await _roomRepository.Post(room);
     }
 
-    public async Task<bool> Available(int id)
+    public async Task<ResultDTO<Room>> Put(Room room)
     {
-        return await _roomRepository.Available(id);
-    }
+        var validationResult = _roomValidator.Validate(room);
 
-    public async Task<int> GetOccupation(int id)
-    {
-        return await _roomRepository.GetOccupation(id);
+        return validationResult.IsValid ?
+            await _roomRepository.Put(room) :
+            new ResultDTO<Room>(validationResult.ToString());
     }
 }

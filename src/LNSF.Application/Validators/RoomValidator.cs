@@ -8,55 +8,24 @@ public class RoomValidator : AbstractValidator<Room>
 {
     public RoomValidator()
     {
-        RuleFor(room => room.Id)
-            .NotEmpty();
-
-        RuleFor(room => room.Available)
-            .NotEmpty();
-        
-        RuleFor(room => room.Occupation)
-            .NotEmpty();
-        
-        RuleFor(room => room.Storey)
-            .NotEmpty()
-            .GreaterThan(0);
-        
-        RuleFor(room => room.Bathroom)
-            .NotEmpty();
-        
         RuleFor(room => room.Number)
-            .NotEmpty()
-            .GreaterThan(0);
+            .NotEmpty();
+        
+        RuleFor(room => room.Bathroom);
         
         RuleFor(room => room.Beds)
             .NotEmpty()
             .GreaterThan(0);
-    }
-}
-
-public class RoomAddValidator : AbstractValidator<IRoomAdd>
-{
-    public RoomAddValidator()
-    {
-        RuleFor(room => room.Available)
-            .NotEmpty();
         
         RuleFor(room => room.Occupation)
-            .NotEmpty();
+            .LessThanOrEqualTo(room => room.Beds)
+            .WithMessage("Mais pessoas do que cama.")
+            .GreaterThan(0);
         
         RuleFor(room => room.Storey)
             .NotEmpty()
             .GreaterThan(0);
-        
-        RuleFor(room => room.Bathroom)
-            .NotEmpty();
-        
-        RuleFor(room => room.Number)
-            .NotEmpty()
-            .GreaterThan(0);
-        
-        RuleFor(room => room.Beds)
-            .NotEmpty()
-            .GreaterThan(0);
+
+        RuleFor(room => room.Available);
     }
 }

@@ -1,22 +1,23 @@
 ﻿namespace LNSF.Domain.Entities;
 
-public class Room : IRoomAdd
+public class Room
 {
     public int? Id { get; set; }
-    public int? Number { get; set; }
-    public bool? Bathroom { get; set; } 
-    public int? Beds { get; set; } 
-    public int? Occupation { get; set; }
-    public int? Storey { get; set; }
-    public bool? Available { get; set; }
+    public string Number { get; set; }
+    public bool Bathroom { get; set; } 
+    public int Beds { get; set; } 
+    public int Occupation { get; set; }
+    public int Storey { get; set; }
+    public bool Available { get; set; }
 
-    public Room(int? id = null, 
-        int? number = null, 
-        bool? bathroom = null, 
-        int? beds = null, 
-        int? occupation = 0, 
-        int? storey = null,
-        bool? available = false)
+    public Room(
+        string number, 
+        bool bathroom, 
+        int beds, 
+        int occupation, 
+        int storey,
+        bool available,
+        int? id = null)
     {
         Id = id;
         Number = number;
