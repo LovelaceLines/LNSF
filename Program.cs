@@ -28,6 +28,10 @@ builder.Services.AddTransient<IPeopleRepository, PeopleRepository>();
 builder.Services.AddTransient<PeopleValidator>();
 builder.Services.AddTransient<PeopleService>();
 
+builder.Services.AddTransient<IEmergencyContactRepository, EmergencyContactsRepository>();
+builder.Services.AddTransient<EmergencyContactValidator>();
+builder.Services.AddTransient<EmergencyContactService>();
+
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<AppDbContext>(options =>

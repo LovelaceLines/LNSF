@@ -22,4 +22,6 @@ public class People
     public Room? Room { get; set; }
 
     public List<Tour>? Tour { get; set; }
+
+    public List<EmergencyContact>? EmergencyContact { get; set; }
 }
