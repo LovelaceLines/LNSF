@@ -23,9 +23,7 @@ public class RoomController : ControllerBase
     {
         var result = await _roomService.Get(pagination);
 
-        return result.Error ? 
-            BadRequest(result) :
-            Ok(result);
+        return result.Error ? BadRequest(result) : Ok(result);
     }
 
     [HttpGet("{id}")]
@@ -33,9 +31,16 @@ public class RoomController : ControllerBase
     {
         var result = await _roomService.Get(id);
 
-        return result.Error ?
-            BadRequest(result) :
-            Ok(result);
+        return result.Error ? BadRequest(result) : Ok(result);
+    }
+
+
+    [HttpGet("quantity")]
+    public async Task<ActionResult<ResultDTO<int>>> GetQuantity()
+    {
+        var result = await _roomService.GetQuantity();
+
+        return result.Error ? StatusCode(500, result) : Ok(result);
     }
 
     [HttpPost]
@@ -43,9 +48,7 @@ public class RoomController : ControllerBase
     {
         var result = await _roomService.Post(room);
 
-        return result.Error ?
-            BadRequest(result) :
-            Ok(result);
+        return result.Error ? BadRequest(result) : Ok(result);
     }
 
     [HttpPut]
@@ -53,8 +56,6 @@ public class RoomController : ControllerBase
     {
         var result = await _roomService.Put(room);
 
-        return result.Error ?
-            BadRequest(result) :
-            Ok(result);
+        return result.Error ? BadRequest(result) : Ok(result);
     }
 }

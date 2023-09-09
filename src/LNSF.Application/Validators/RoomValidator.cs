@@ -20,7 +20,7 @@ public class RoomValidator : AbstractValidator<Room>
         RuleFor(room => room.Occupation)
             .LessThanOrEqualTo(room => room.Beds)
             .WithMessage("Mais pessoas do que cama.")
-            .GreaterThan(0);
+            .GreaterThanOrEqualTo(0);
         
         RuleFor(room => room.Storey)
             .NotEmpty()

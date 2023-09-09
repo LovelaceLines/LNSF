@@ -5,7 +5,7 @@ using LNSF.Domain.Views;
 using LNSF.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace LNSF.Infra;
+namespace LNSF.Infra.Data.Repositories;
 
 public class RoomRepository : IRoomRepository
 {
@@ -37,6 +37,9 @@ public class RoomRepository : IRoomRepository
             new ResultDTO<Room>("Não encontrado") :
             new ResultDTO<Room>(room);
     }
+
+    public async Task<ResultDTO<int>> GetQuantity()=>
+        new ResultDTO<int>(await _context.Rooms.CountAsync());
 
     public async Task<ResultDTO<Room>> Post(Room room)
     {

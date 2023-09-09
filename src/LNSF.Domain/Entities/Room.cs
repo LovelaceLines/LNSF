@@ -10,6 +10,8 @@ public class Room
     public int Storey { get; set; }
     public bool Available { get; set; }
 
+    public List<People>? People { get; set; }
+
     public Room(
         string number, 
         bool bathroom, 

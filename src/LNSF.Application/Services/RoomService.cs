@@ -32,6 +32,9 @@ public class RoomService
     public async Task<ResultDTO<Room>> Get(int id) => 
         await _roomRepository.Get(id);
 
+    public async Task<ResultDTO<int>> GetQuantity() =>
+        await _roomRepository.GetQuantity();
+
     public async Task<ResultDTO<Room>> Post(Room room)
     {
         var validationResult = _roomValidator.Validate(room);
