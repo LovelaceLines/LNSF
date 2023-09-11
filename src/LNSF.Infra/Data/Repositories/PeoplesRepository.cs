@@ -1,4 +1,4 @@
-﻿using LNSF.Domain;
+﻿using LNSF.Domain.Repositories;
 using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Views;
@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LNSF.Infra.Data.Repositories;
 
-public class PeopleRepository : IPeopleRepository
+public class PeoplesRepository : IPeoplesRepository
 {
     private readonly AppDbContext _context;
 
-    public PeopleRepository(AppDbContext context) =>
+    public PeoplesRepository(AppDbContext context) =>
         _context = context;
 
     public async Task<ResultDTO<List<People>>> Get(Pagination pagination)
@@ -61,21 +61,5 @@ public class PeopleRepository : IPeopleRepository
         await _context.SaveChangesAsync();
 
         return new ResultDTO<People>(_people);
-    }
-
-    public async Task<ResultDTO<People>> Put(int peopleId, int roomId)
-    {
-        var people = await _context.Peoples.FindAsync(peopleId);
-        var room = await _context.Rooms.FindAsync(roomId);
-
-        if (people == null || room == null) return new ResultDTO<People>("Não encontrado");
-
-        people.RoomId = room.Id;
-        people.Room = room;
-
-        _context.Peoples.Update(people);
-        await _context.SaveChangesAsync();
-
-        return new ResultDTO<People>(people);
     }
 }

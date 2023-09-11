@@ -54,4 +54,20 @@ public class PeopleController : ControllerBase
 
         return result.Error ? BadRequest(result) : Ok(result);
     }
+
+    [HttpPost("AddPeopleToRoom")]
+    public async Task<ActionResult<ResultDTO<People>>> AddPeopleToRoom([FromBody]PeopleRoomIds ids)
+    {
+        var result = await _peopleService.AddPeopleToRoom(ids.PeopleId, ids.RoomId);
+
+        return result.Error ? BadRequest(result) : Ok(result);
+    }
+
+    [HttpPost("RemovePeopleFromRoom")]
+    public async Task<ActionResult<ResultDTO<People>>> RemovePeopleFromRoom([FromBody]PeopleRoomIds ids)
+    {
+        var result = await _peopleService.RemovePeopleFromRoom(ids.PeopleId, ids.RoomId);
+
+        return result.Error ? BadRequest(result) : Ok(result);
+    }
 }

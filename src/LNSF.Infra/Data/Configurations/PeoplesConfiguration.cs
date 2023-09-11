@@ -14,7 +14,46 @@ public class PeoplesConfiguration : IEntityTypeConfiguration<People>
             .ValueGeneratedOnAdd();
         
         builder.HasOne(x => x.Room)
-            .WithMany(x => x.People)
+            .WithMany()
             .HasForeignKey(x => x.RoomId);
+        
+        builder.Property(x => x.RoomId)
+            .IsRequired(false);
+        
+        builder.HasIndex(x => x.RG)
+            .IsUnique(true);
+        
+        builder.HasIndex(x => x.CPF)
+            .IsUnique(true);
+        
+        builder.Property(e => e.Name)
+            .IsRequired(true);
+
+        builder.Property(e => e.RG)
+            .IsRequired(false);
+
+        builder.Property(e => e.CPF)
+            .IsRequired(false);
+
+        builder.Property(e => e.Street)
+            .IsRequired(false);
+
+        builder.Property(e => e.HouseNumber)
+            .IsRequired(false);
+
+        builder.Property(e => e.Neighborhood)
+            .IsRequired(false);
+        
+        builder.Property(e => e.City)
+            .IsRequired(false);
+
+        builder.Property(e => e.State)
+            .IsRequired(false);
+
+        builder.Property(e => e.Phone)
+            .IsRequired(false);
+
+        builder.Property(e => e.Note)
+            .IsRequired(false);
     }
 }

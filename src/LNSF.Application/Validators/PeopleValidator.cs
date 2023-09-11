@@ -1,5 +1,7 @@
 ﻿using System.Data;
+using System.Globalization;
 using FluentValidation;
+using LNSF.Application.Services.Validators;
 using LNSF.Domain.Entities;
 
 namespace LNSF.Application;
@@ -10,39 +12,66 @@ public class PeopleValidator : AbstractValidator<People>
     {
         RuleFor(people => people.Name)
             .NotEmpty()
+            .WithMessage(GlobalValidator.RequiredField)
             .NotNull()
-            .MaximumLength(64);
+            .WithMessage(GlobalValidator.RequiredField)
+            .MaximumLength(64)
+            .WithMessage(GlobalValidator.MaxLength);
+        
+        RuleFor(people => people.BirthDate.Year)
+            .LessThan(DateTime.Now.Year - 15)
+            .WithMessage(GlobalValidator.InvalidAge)
+            .GreaterThanOrEqualTo(128)
+            .WithMessage(GlobalValidator.InvalidAge);
         
         RuleFor(people => people.BirthDate)
-            .LessThan(DateTime.Now)
-            .GreaterThan(DateTime.Now.AddYears(-120));
+            .Must(BirthDate =>
+            {
+                return DateTime.TryParse(
+                    s: BirthDate.ToString("dd/MM/yyyy"),
+                    provider: CultureInfo.CreateSpecificCulture("pt-BR"),
+                    out _);
+            })
+            .WithMessage(GlobalValidator.InvalidDateFormat);
         
         RuleFor(people => people.RG)
             .NotEmpty()
+            .WithMessage(GlobalValidator.RequiredField)
+            .NotNull()
+            .WithMessage(GlobalValidator.RequiredField)
             .Matches(@"^\d{2}\.\d{3}\.\d{3}-\d{1}$")
-            .WithMessage("RG inválido. Use o formato XX.XXX.XXX-X");
+            .WithMessage(GlobalValidator.InvalidRGFormat);
 
         RuleFor(people => people.CPF)
             .NotEmpty()
+            .WithMessage(GlobalValidator.RequiredField)
+            .NotNull()
+            .WithMessage(GlobalValidator.RequiredField)
             .Matches(@"^\d{3}\.\d{3}\.\d{3}-\d{2}$")
-            .WithMessage("CPF inválido. Use o formato XXX.XXX.XXX-XX");
+            .WithMessage(GlobalValidator.InvalidCPFFormat);
         
         RuleFor(people => people.Street)
-            .MaximumLength(64);
+            .MaximumLength(64)
+            .WithMessage(GlobalValidator.MaxLength);
 
         RuleFor(people => people.HouseNumber)
-            .MaximumLength(8);
+            .MaximumLength(8)
+            .WithMessage(GlobalValidator.MaxLength);
         
         RuleFor(people => people.Neighborhood)
-            .MaximumLength(32);
+            .MaximumLength(32)
+            .WithMessage(GlobalValidator.MaxLength);
         
         RuleFor(people => people.City)
-            .MaximumLength(32);
+            .MaximumLength(32)
+            .WithMessage(GlobalValidator.MaxLength);
         
         RuleFor(people => people.State)
-            .MaximumLength(16);
+            .MaximumLength(16)
+            .WithMessage(GlobalValidator.MaxLength);
         
         RuleFor(people => people.Note)
-            .MaximumLength(256);
+            .MaximumLength(256)
+            .WithMessage(GlobalValidator.MaxLength);
     }
 }
