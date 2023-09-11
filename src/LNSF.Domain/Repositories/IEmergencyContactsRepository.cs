@@ -4,7 +4,7 @@ using LNSF.Domain.Views;
 
 namespace LNSF.Domain.Repositories;
 
-public interface IEmergencyContactRepository
+public interface IEmergencyContactsRepository
 {
     public Task<ResultDTO<List<EmergencyContact>>> Get(Pagination pagination);
     public Task<ResultDTO<EmergencyContact>> Get(int id);

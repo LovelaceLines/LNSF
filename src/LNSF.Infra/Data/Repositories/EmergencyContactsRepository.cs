@@ -5,17 +5,15 @@ using LNSF.Domain.Views;
 using LNSF.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace LNSF.Infra;
+namespace LNSF.Infra.Data.Repositories;
 
-public class EmergencyContactsRepository : IEmergencyContactRepository
+public class EmergencyContactsRepository : IEmergencyContactsRepository
 {
     private readonly AppDbContext _context;
 
-    public EmergencyContactsRepository(AppDbContext context)
-    {
+    public EmergencyContactsRepository(AppDbContext context) => 
         _context = context;
-    }
-    
+
     public async Task<ResultDTO<List<EmergencyContact>>> Get(Pagination pagination)
     {
         var query = _context.EmergencyContacts.AsNoTracking();
@@ -36,7 +34,7 @@ public class EmergencyContactsRepository : IEmergencyContactRepository
         var contact = await _context.EmergencyContacts.FindAsync(id);
 
         return (contact == null) ?
-            new ResultDTO<EmergencyContact>("Não encontrado") :
+            new ResultDTO<EmergencyContact>("Não encontrado.") :
             new ResultDTO<EmergencyContact>(contact);
     }
 
@@ -55,7 +53,7 @@ public class EmergencyContactsRepository : IEmergencyContactRepository
     {
         var _emergencyContact = await _context.EmergencyContacts.FindAsync(emergencyContact.Id);
 
-        if (_emergencyContact == null) return new ResultDTO<EmergencyContact>("Não encontrado");
+        if (_emergencyContact == null) return new ResultDTO<EmergencyContact>("Não encontrado.");
 
         _context.Entry(_emergencyContact).CurrentValues.SetValues(emergencyContact);
 

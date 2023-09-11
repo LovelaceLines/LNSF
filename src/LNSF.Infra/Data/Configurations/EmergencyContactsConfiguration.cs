@@ -2,19 +2,31 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace LNSF.Infra;
+namespace LNSF.Infra.Data.Configurations;
 
 public class EmergencyContactsConfiguration : IEntityTypeConfiguration<EmergencyContact>
 {
     public void Configure(EntityTypeBuilder<EmergencyContact> builder)
     {
-        builder.HasKey(e => e.Id);
+        builder.HasKey(x => x.Id);
 
-        builder.Property(e => e.Id)
+        builder.Property(x => x.Id)
             .ValueGeneratedOnAdd();
         
-        builder.HasOne(e => e.People)
-            .WithMany(e => e.EmergencyContact)
-            .HasForeignKey(e => e.PeopleId);
+        builder.HasOne(x => x.People)
+            .WithMany()
+            .HasForeignKey(x => x.PeopleId);
+        
+        builder.Property(x => x.PeopleId)
+            .IsRequired(true);
+        
+        builder.HasIndex(x => x.Phone)
+            .IsUnique(true);
+        
+        builder.Property(x => x.Name)
+            .IsRequired(true);
+        
+        builder.Property(x => x.Phone)
+            .IsRequired(true);
     }
 }

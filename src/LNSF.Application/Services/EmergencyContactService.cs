@@ -8,15 +8,18 @@ namespace LNSF.Application.Services;
 
 public class EmergencyContactService
 {
-    private readonly IEmergencyContactRepository _emergencyContactRepository;
+    private readonly IEmergencyContactsRepository _emergencyContactRepository;
+    private readonly IPeoplesRepository _peoplesRepository;
     private readonly PaginationValidator _paginationValidator;
     private readonly EmergencyContactValidator _emergencyContactValidator;
 
-    public EmergencyContactService(IEmergencyContactRepository emergencyContactRepository,
+    public EmergencyContactService(IEmergencyContactsRepository emergencyContactsRepository,
+        IPeoplesRepository peoplesRepository,
         PaginationValidator paginationValidator,
         EmergencyContactValidator emergencyContactValidator)
     {
-        _emergencyContactRepository = emergencyContactRepository;
+        _emergencyContactRepository = emergencyContactsRepository;
+        _peoplesRepository = peoplesRepository;
         _paginationValidator = paginationValidator;
         _emergencyContactValidator = emergencyContactValidator;
     }
@@ -38,6 +41,12 @@ public class EmergencyContactService
 
     public async Task<ResultDTO<EmergencyContact>> Post(EmergencyContact contact)
     {
+        contact.Id = 0;
+
+        var people = await _peoplesRepository.Get(contact.PeopleId);
+
+        if (people.Error == true) return new ResultDTO<EmergencyContact>("Pessoa não encontrada.");
+
         var validationResult = _emergencyContactValidator.Validate(contact);
 
         return validationResult.IsValid ?
@@ -47,11 +56,17 @@ public class EmergencyContactService
 
     public async Task<ResultDTO<EmergencyContact>> Put(EmergencyContact contact)
     {
+        if (contact.Id == 0) return new ResultDTO<EmergencyContact>("Contato não encontrado.");
+        if (contact.PeopleId == 0) return new ResultDTO<EmergencyContact>("Pessoa não encontrada.");
+
+        // var people = await _peoplesRepository.Get(contact.PeopleId);
+        
+        // if (people.Error == true) return new ResultDTO<EmergencyContact>("Pessoa não encontrada.");
+
         var validationResult = _emergencyContactValidator.Validate(contact);
 
         return validationResult.IsValid ?
             await _emergencyContactRepository.Put(contact) :
             new ResultDTO<EmergencyContact>(validationResult.ToString());
     }
-
 }
