@@ -1,10 +1,7 @@
-﻿using LNSF.Application;
-using LNSF.Domain;
+﻿using LNSF.Application.Services;
 using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Views;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LNSF.UI;

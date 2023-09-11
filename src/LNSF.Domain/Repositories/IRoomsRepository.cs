@@ -2,9 +2,9 @@
 using LNSF.Domain.Entities;
 using LNSF.Domain.Views;
 
-namespace LNSF.Domain;
+namespace LNSF.Domain.Repositories;
 
-public interface IRoomRepository
+public interface IRoomsRepository
 {
     public Task<ResultDTO<List<Room>>> Get(Pagination pagination);
     public Task<ResultDTO<Room>> Get(int id);

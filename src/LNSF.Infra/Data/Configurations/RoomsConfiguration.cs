@@ -13,6 +13,9 @@ public class RoomsConfiguration : IEntityTypeConfiguration<Room>
         builder.Property(x => x.Id)
             .ValueGeneratedOnAdd();
         
+        builder.HasIndex(x => x.Id)
+            .IsUnique(true);
+        
         builder.Property(x => x.Number)
             .IsRequired(true);
 

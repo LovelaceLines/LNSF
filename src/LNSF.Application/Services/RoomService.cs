@@ -1,17 +1,17 @@
-﻿using LNSF.Domain;
+﻿using LNSF.Domain.Repositories;
 using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Views;
 
-namespace LNSF.Application;
+namespace LNSF.Application.Services;
 
 public class RoomService
 {
-    private readonly IRoomRepository _roomRepository;
+    private readonly IRoomsRepository _roomRepository;
     private readonly RoomValidator _roomValidator;
     private readonly PaginationValidator _paginationValidator;
 
-    public RoomService(IRoomRepository roomRepository,
+    public RoomService(IRoomsRepository roomRepository,
         RoomValidator roomValidator,
         PaginationValidator paginationValidator)
     {
@@ -37,17 +37,19 @@ public class RoomService
 
     public async Task<ResultDTO<Room>> Post(Room room)
     {
+        room.Id = 0;
+
         var validationResult = _roomValidator.Validate(room);
 
-        if (!validationResult.IsValid) return new ResultDTO<Room>(validationResult.ToString());
-
-        room.Id = null; // Null Id to insert into in data base
-
-        return await _roomRepository.Post(room);
+        return validationResult.IsValid ? 
+            await _roomRepository.Post(room) :
+            new ResultDTO<Room>(validationResult.ToString());
     }
 
     public async Task<ResultDTO<Room>> Put(Room room)
     {
+        if (room.Id == 0) return new ResultDTO<Room>("Quarto não encontrado");
+        
         var validationResult = _roomValidator.Validate(room);
 
         return validationResult.IsValid ?

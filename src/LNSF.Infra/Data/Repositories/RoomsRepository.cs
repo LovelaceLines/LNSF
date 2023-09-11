@@ -1,4 +1,4 @@
-﻿using LNSF.Domain;
+﻿using LNSF.Domain.Repositories;
 using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Views;
@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LNSF.Infra.Data.Repositories;
 
-public class RoomRepository : IRoomRepository
+public class RoomsRepository : IRoomsRepository
 {
     private readonly AppDbContext _context;
 
-    public RoomRepository(AppDbContext context) => 
+    public RoomsRepository(AppDbContext context) => 
         _context = context;
 
     public async Task<ResultDTO<List<Room>>> Get(Pagination pagination)
@@ -38,7 +38,7 @@ public class RoomRepository : IRoomRepository
             new ResultDTO<Room>(room);
     }
 
-    public async Task<ResultDTO<int>> GetQuantity()=>
+    public async Task<ResultDTO<int>> GetQuantity() =>
         new ResultDTO<int>(await _context.Rooms.CountAsync());
 
     public async Task<ResultDTO<Room>> Post(Room room)
