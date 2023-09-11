@@ -14,21 +14,21 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddTransient<PaginationValidator>();
 
-builder.Services.AddTransient<ITourRepository, ToursRepository>();
-builder.Services.AddTransient<TourOutputValidator>();
-builder.Services.AddTransient<TourInputValidator>();
+builder.Services.AddTransient<IToursRepository, ToursRepository>();
+builder.Services.AddTransient<TourPostValidator>();
+builder.Services.AddTransient<TourPutValidator>();
 builder.Services.AddTransient<GlobalValidator>();
 builder.Services.AddTransient<TourService>();
 
-builder.Services.AddTransient<IRoomRepository, RoomRepository>();
+builder.Services.AddTransient<IRoomsRepository, RoomsRepository>();
 builder.Services.AddTransient<RoomValidator>();
 builder.Services.AddTransient<RoomService>();
 
-builder.Services.AddTransient<IPeopleRepository, PeopleRepository>();
+builder.Services.AddTransient<IPeoplesRepository, PeoplesRepository>();
 builder.Services.AddTransient<PeopleValidator>();
 builder.Services.AddTransient<PeopleService>();
 
-builder.Services.AddTransient<IEmergencyContactRepository, EmergencyContactsRepository>();
+builder.Services.AddTransient<IEmergencyContactsRepository, EmergencyContactsRepository>();
 builder.Services.AddTransient<EmergencyContactValidator>();
 builder.Services.AddTransient<EmergencyContactService>();
 

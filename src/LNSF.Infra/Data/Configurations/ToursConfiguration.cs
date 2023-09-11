@@ -8,22 +8,25 @@ public class ToursConfiguration : IEntityTypeConfiguration<Tour>
 {
     public void Configure(EntityTypeBuilder<Tour> builder)
     {
-        builder.HasKey(e => e.Id);
+        builder.HasKey(x => x.Id);
 
-        builder.Property(e => e.Id)
+        builder.Property(x => x.Id)
             .ValueGeneratedOnAdd();
 
-        builder.HasOne(e => e.People)
-            .WithMany(e => e.Tour)
-            .HasForeignKey(e => e.PeopleId);
+        builder.HasOne(x => x.People)
+            .WithMany()
+            .HasForeignKey(x => x.PeopleId);
         
-        builder.Property(e => e.Output)
+        builder.Property(x => x.PeopleId)
             .IsRequired(true);
         
-        builder.Property(e => e.Input)
+        builder.Property(x => x.Output)
+            .IsRequired(true);
+        
+        builder.Property(x => x.Input)
             .IsRequired(false);
         
-        builder.Property(e => e.Note)
+        builder.Property(x => x.Note)
             .IsRequired(false);
     }
 }

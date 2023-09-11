@@ -1,53 +1,51 @@
-﻿using System.Drawing;
-using FluentValidation;
+﻿using FluentValidation;
 using LNSF.Application.Services.Validators;
 using LNSF.Domain.Entities;
-using LNSF.Domain.Views;
 
 namespace LNSF.Application.Validators;
 
-public class TourOutputValidator : AbstractValidator<Tour>
+public class TourPostValidator : AbstractValidator<Tour>
 {
-    public TourOutputValidator()
+    public TourPostValidator()
     {
         RuleFor(tour => tour.Output)
             .NotEmpty()
+            .WithMessage(GlobalValidator.RequiredField)
+            .NotNull()
+            .WithMessage(GlobalValidator.RequiredField)
             .Must(output => new GlobalValidator().IsDateFormatted(output))
-            .WithMessage("Formato de data 'dd/MM/yyyy HH:mm:ss'");
+            .WithMessage(GlobalValidator.InvalidDateTimeFormat);
 
         RuleFor(tour => tour.Note)
             .MaximumLength(256)
-            .WithMessage("Máximo 256 caracteres.");
+            .WithMessage(GlobalValidator.MaxLength);
     }
 }
 
-public class TourInputValidator : AbstractValidator<Tour>
+public class TourPutValidator : AbstractValidator<Tour>
 {
-    GlobalValidator _globalValidator = new();
-
-    public TourInputValidator(GlobalValidator globalValidator) => 
-        _globalValidator = globalValidator;
-
-    public TourInputValidator()
+    public TourPutValidator()
     {
-        RuleFor(tour => tour.Id)
-            .NotEmpty();
-        
         RuleFor(tour => tour.Output)
+            .NotEmpty()
+            .WithMessage(GlobalValidator.RequiredField)
             .NotNull()
-            .NotEmpty()
-            .Must(input => _globalValidator.IsDateFormatted(input))
-            .WithMessage("Formato de data 'dd/MM/yyyy HH:mm:ss'");
-        
-        RuleFor(tour => tour.Note);
+            .WithMessage(GlobalValidator.RequiredField)
+            .Must(output => new GlobalValidator().IsDateFormatted(output))
+            .WithMessage(GlobalValidator.InvalidDateTimeFormat);
         
         RuleFor(tour => tour.Input)
             .NotEmpty()
-            .Must(input => new GlobalValidator().IsDateFormatted(input))
-            .WithMessage("Formato de data 'dd/MM/yyyy HH:mm:ss'");
-        
-        // TODO
-        RuleFor(tour => tour.Input)
-            .GreaterThan(tour => tour.Output);
+            .WithMessage(GlobalValidator.RequiredField)
+            .NotNull()
+            .WithMessage(GlobalValidator.RequiredField)
+            .Must(output => new GlobalValidator().IsDateFormatted(output))
+            .WithMessage(GlobalValidator.InvalidDateTimeFormat)
+            .GreaterThan(tour => tour.Output)
+            .WithMessage(GlobalValidator.InvalidOutputDate);
+
+        RuleFor(tour => tour.Note)
+            .MaximumLength(256)
+            .WithMessage(GlobalValidator.MaxLength);
     }
 }

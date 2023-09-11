@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LNSF.Infra.Data.Repositories;
 
-public class ToursRepository : ITourRepository
+public class ToursRepository : IToursRepository
 {
     private readonly AppDbContext _context;
 
@@ -41,7 +41,7 @@ public class ToursRepository : ITourRepository
     public async Task<ResultDTO<int>> GetQuantity() =>
         new ResultDTO<int>(await _context.Tours.CountAsync());
     
-    public async Task<ResultDTO<Tour>> PostOutput(Tour tour)
+    public async Task<ResultDTO<Tour>> Post(Tour tour)
     {
         await _context.Tours.AddAsync(tour);
         await _context.SaveChangesAsync();
@@ -49,7 +49,7 @@ public class ToursRepository : ITourRepository
         return new ResultDTO<Tour>(tour); 
     }
 
-    public async Task<ResultDTO<Tour>> PutInput(Tour tour)
+    public async Task<ResultDTO<Tour>> Put(Tour tour)
     {
         var _tour = await _context.Tours.FindAsync(tour.Id);
 

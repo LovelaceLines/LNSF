@@ -40,17 +40,17 @@ public class TourController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<ResultDTO<Tour>>> PostOutput([FromBody]Tour output)
+    public async Task<ActionResult<ResultDTO<Tour>>> Post([FromBody]Tour tour)
     {
-        var result = await _service.PostOutput(output);
+        var result = await _service.Post(tour);
 
         return result.Error ? BadRequest(result) : Ok(result);
     }
 
     [HttpPut]
-    public async Task<ActionResult<ResultDTO<Tour>>> PutInput([FromBody]Tour input)
+    public async Task<ActionResult<ResultDTO<Tour>>> Put([FromBody]Tour tour)
     {
-        var result = await _service.PutInput(input);
+        var result = await _service.Put(tour);
 
         return result.Error ? BadRequest(result) : Ok(result);
     }
