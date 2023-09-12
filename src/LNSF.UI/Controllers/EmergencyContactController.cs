@@ -16,9 +16,9 @@ public class EmergencyContactController : ControllerBase
         _emergencyContactService = emergencyContactService;
     
     [HttpGet]
-    public async Task<ActionResult<ResultDTO<List<EmergencyContact>>>> Get([FromBody]Pagination pagination)
+    public async Task<ActionResult<ResultDTO<List<EmergencyContact>>>> Get()
     {
-        var result = await _emergencyContactService.Get(pagination);
+        var result = await _emergencyContactService.Get();
 
         return result.Error ? BadRequest(result) : Ok(result);
     }
@@ -42,7 +42,7 @@ public class EmergencyContactController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<ResultDTO<EmergencyContact>>> Post([FromBody]EmergencyContact contact)
     {
-        var result = await _emergencyContactService.Post(contact);
+        var result = await _emergencyContactService.CreateNewContact(contact);
 
         return result.Error ? BadRequest(result) : Ok(result);
     }
@@ -50,7 +50,7 @@ public class EmergencyContactController : ControllerBase
     [HttpPut]
     public async Task<ActionResult<ResultDTO<EmergencyContact>>> Put([FromBody]EmergencyContact contact)
     {
-        var result = await _emergencyContactService.Put(contact);
+        var result = await _emergencyContactService.EditContact(contact);
 
         return result.Error ? BadRequest(result) : Ok(result);
     }

@@ -2,9 +2,7 @@ using LNSF.Application;
 using LNSF.Application.Services;
 using LNSF.Application.Services.Validators;
 using LNSF.Application.Validators;
-using LNSF.Domain;
 using LNSF.Domain.Repositories;
-using LNSF.Infra;
 using LNSF.Infra.Data.Context;
 using LNSF.Infra.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -33,13 +31,15 @@ builder.Services.AddTransient<IEmergencyContactsRepository, EmergencyContactsRep
 builder.Services.AddTransient<EmergencyContactValidator>();
 builder.Services.AddTransient<EmergencyContactService>();
 
-builder.Services.AddControllers();
 
+builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     // options.UseInMemoryDatabase("InMemoryDatabaseName");
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddTransient<PeopleService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

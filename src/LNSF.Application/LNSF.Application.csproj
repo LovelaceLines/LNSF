@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LNSF.Domain\LNSF.Domain.csproj" />
+    <ProjectReference Include="..\LNSF.Infra\LNSF.Infra.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -20,7 +20,7 @@ public class EmergencyContactsConfiguration : IEntityTypeConfiguration<Emergency
         builder.Property(x => x.PeopleId)
             .IsRequired(true);
         
-        builder.HasIndex(x => x.Phone)
+        builder.HasIndex(x => new { x.PeopleId, x.Phone })
             .IsUnique(true);
         
         builder.Property(x => x.Name)

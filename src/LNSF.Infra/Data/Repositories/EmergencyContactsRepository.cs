@@ -1,7 +1,6 @@
 ﻿using LNSF.Domain.Repositories;
 using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
-using LNSF.Domain.Views;
 using LNSF.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,24 +13,30 @@ public class EmergencyContactsRepository : IEmergencyContactsRepository
     public EmergencyContactsRepository(AppDbContext context) => 
         _context = context;
 
-    public async Task<ResultDTO<List<EmergencyContact>>> Get(Pagination pagination)
+    public async Task<ResultDTO<List<EmergencyContact>>> Get()
     {
-        var query = _context.EmergencyContacts.AsNoTracking();
-        var count = await query.CountAsync();
-
-        if (count == 0) return new ResultDTO<List<EmergencyContact>>("Não encontrado");
+        var contacts = await _context.EmergencyContacts.AsNoTracking().ToListAsync();
         
-        var contacts = await query
-            .Skip((pagination.Page - 1) * pagination.PageSize)
-            .Take(pagination.PageSize)
-            .ToListAsync();
-
-        return new ResultDTO<List<EmergencyContact>>(contacts);
+        return contacts == null ? 
+            new ResultDTO<List<EmergencyContact>>("Não encontrado.") : 
+            new ResultDTO<List<EmergencyContact>>(contacts);
     }
 
     public async Task<ResultDTO<EmergencyContact>> Get(int id)
     {
         var contact = await _context.EmergencyContacts.FindAsync(id);
+
+        return (contact == null) ?
+            new ResultDTO<EmergencyContact>("Não encontrado.") :
+            new ResultDTO<EmergencyContact>(contact);
+    }
+
+    public async Task<ResultDTO<EmergencyContact>> Get(int peopleId, string phone)
+    {
+        var contact = await _context.EmergencyContacts
+            .Where(c => c.Phone == phone)
+            .Where(c => c.PeopleId == peopleId)
+            .FirstOrDefaultAsync();
 
         return (contact == null) ?
             new ResultDTO<EmergencyContact>("Não encontrado.") :
