@@ -39,18 +39,18 @@ public class PeopleController : ControllerBase
         return result.Error ? StatusCode(500, result) : Ok(result);
     }
 
-    [HttpPost]
+    [HttpPost("CreateNewPerson")]
     public async Task<ActionResult<ResultDTO<People>>> Post([FromBody]People people)
     {
-        var result = await _peopleService.Post(people);
+        var result = await _peopleService.CreateNewPerson(people);
 
         return result.Error ? BadRequest(result) : Ok(result);
     }
 
-    [HttpPut]
+    [HttpPut("EditBasicInformation")]
     public async Task<ActionResult<ResultDTO<People>>> Put([FromBody]People people)
     {
-        var result = await _peopleService.Put(people);
+        var result = await _peopleService.EditBasicInformation(people);
 
         return result.Error ? BadRequest(result) : Ok(result);
     }
