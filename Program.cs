@@ -22,6 +22,7 @@ builder.Services.AddTransient<TourService>();
 
 builder.Services.AddTransient<IRoomsRepository, RoomsRepository>();
 builder.Services.AddTransient<RoomValidator>();
+builder.Services.AddTransient<RoomFiltersValidator>();
 builder.Services.AddTransient<RoomService>();
 
 builder.Services.AddTransient<IPeoplesRepository, PeoplesRepository>();

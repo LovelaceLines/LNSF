@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using LNSF.Domain.Views;
+using LNSF.Domain.DTOs;
 
 namespace LNSF.Application;
 

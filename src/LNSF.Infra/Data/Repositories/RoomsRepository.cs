@@ -14,16 +14,21 @@ public class RoomsRepository : IRoomsRepository
     public RoomsRepository(AppDbContext context) => 
         _context = context;
 
-    public async Task<ResultDTO<List<Room>>> Get(Pagination pagination)
+    public async Task<ResultDTO<List<Room>>> Get(RoomFilters filters)
     {
         var query = _context.Rooms.AsNoTracking();
         var count = await query.CountAsync();
 
-        if (count == 0) return new ResultDTO<List<Room>>("Não encontrado");
-        
+        query = query.Where(x => x.Bathroom);
+        query = query.Where(x => x.Beds == filters.Beds);
+        query = query.Where(x => x.Beds - x.Occupation > 0);
+        query = query.Where(x => x.Storey == filters.Storey);
+        query = query.Where(x => x.Available);
+        if (filters.OrderBy == OrderBy.Descending) query = query.OrderByDescending(x => x.Id);
+
         var rooms = await query
-            .Skip((pagination.Page - 1) * pagination.PageSize)
-            .Take(pagination.PageSize)
+            .Skip((filters.Page.Page - 1) * filters.Page.PageSize)
+            .Take(filters.Page.PageSize)
             .ToListAsync();
 
         return new ResultDTO<List<Room>>(rooms);

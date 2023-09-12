@@ -1,4 +1,4 @@
-﻿namespace LNSF.Domain.Views;
+﻿namespace LNSF.Domain.DTOs;
 
 public class Pagination
 {

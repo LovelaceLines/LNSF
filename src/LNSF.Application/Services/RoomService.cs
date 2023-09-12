@@ -1,7 +1,6 @@
 ﻿using LNSF.Domain.Repositories;
 using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
-using LNSF.Domain.Views;
 
 namespace LNSF.Application.Services;
 
@@ -9,23 +8,23 @@ public class RoomService
 {
     private readonly IRoomsRepository _roomRepository;
     private readonly RoomValidator _roomValidator;
-    private readonly PaginationValidator _paginationValidator;
+    private readonly RoomFiltersValidator _roomFiltersValidator;
 
     public RoomService(IRoomsRepository roomRepository,
         RoomValidator roomValidator,
-        PaginationValidator paginationValidator)
+        RoomFiltersValidator roomFiltersValidator)
     {
         _roomRepository = roomRepository;
         _roomValidator = roomValidator;
-        _paginationValidator = paginationValidator;
+        _roomFiltersValidator = roomFiltersValidator;
     }
 
-    public async Task<ResultDTO<List<Room>>> Get(Pagination pagination)
+    public async Task<ResultDTO<List<Room>>> Get(RoomFilters filters)
     {
-        var validationResult = _paginationValidator.Validate(pagination);
+        var validationResult = _roomFiltersValidator.Validate(filters);
 
         return validationResult.IsValid ?
-            await _roomRepository.Get(pagination) :
+            await _roomRepository.Get(filters) :
             new ResultDTO<List<Room>>(validationResult.ToString());
     }
 

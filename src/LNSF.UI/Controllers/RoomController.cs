@@ -1,4 +1,5 @@
 ﻿using LNSF.Application.Services;
+using LNSF.Domain;
 using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Views;
@@ -16,9 +17,9 @@ public class RoomController : ControllerBase
         _roomService = roomService;
 
     [HttpGet]
-    public async Task<ActionResult<ResultDTO<List<Room>>>> Get([FromBody]Pagination pagination)
+    public async Task<ActionResult<ResultDTO<List<Room>>>> Get([FromBody]RoomFilters filters)
     {
-        var result = await _roomService.Get(pagination);
+        var result = await _roomService.Get(filters);
 
         return result.Error ? BadRequest(result) : Ok(result);
     }
