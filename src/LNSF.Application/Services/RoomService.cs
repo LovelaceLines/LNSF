@@ -36,23 +36,21 @@ public class RoomService
 
     public async Task<ResultDTO<Room>> Post(Room room)
     {
+        var validationResult = _roomValidator.Validate(room);
+        if (!validationResult.IsValid) return new ResultDTO<Room>(validationResult.ToString());
+
         room.Id = 0;
 
-        var validationResult = _roomValidator.Validate(room);
-
-        return validationResult.IsValid ? 
-            await _roomRepository.Post(room) :
-            new ResultDTO<Room>(validationResult.ToString());
+        return await _roomRepository.Post(room);
     }
 
     public async Task<ResultDTO<Room>> Put(Room room)
     {
-        if (room.Id == 0) return new ResultDTO<Room>("Quarto não encontrado");
-        
         var validationResult = _roomValidator.Validate(room);
+        if (!validationResult.IsValid) return new ResultDTO<Room>(validationResult.ToString());
 
-        return validationResult.IsValid ?
-            await _roomRepository.Put(room) :
-            new ResultDTO<Room>(validationResult.ToString());
+        if (room.Id == 0) return new ResultDTO<Room>("Quarto não encontrado");
+
+        return await _roomRepository.Put(room);
     }
 }

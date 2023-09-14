@@ -6,7 +6,7 @@ namespace LNSF.Domain.Repositories;
 
 public interface IEmergencyContactsRepository
 {
-    public Task<ResultDTO<List<EmergencyContact>>> Get();
+    public Task<ResultDTO<List<EmergencyContact>>> Get(EmergencyContactFilters filters);
     public Task<ResultDTO<EmergencyContact>> Get(int id);
     public Task<ResultDTO<EmergencyContact>> Get(int peopleId, string phone);
     public Task<ResultDTO<int>> GetQuantity();

@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using LNSF.Application.Services.Validators;
 using LNSF.Domain.Entities;
 
 namespace LNSF.Application.Validators;
@@ -21,7 +20,6 @@ public class EmergencyContactValidator : AbstractValidator<EmergencyContact>
             .WithMessage(GlobalValidator.RequiredField)
             .NotNull()
             .WithMessage(GlobalValidator.RequiredField)
-            .Matches(@"^\(\d{2}\) \d \d{4}-\d{4}$")
-            .WithMessage(GlobalValidator.InvalidPhoneFormat);
+            .SetValidator(new PhoneValidator());
     }
 }

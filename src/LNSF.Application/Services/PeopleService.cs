@@ -10,28 +10,28 @@ public class PeopleService
     private readonly AppDbContext _context;
     private readonly IPeoplesRepository _peopleRepository;
     private readonly IRoomsRepository _roomRepository;
-    private readonly PaginationValidator _paginationValidator;
+    private readonly PeopleFiltersValidator _peopleFiltersValidator;
     private readonly PeopleValidator _peopleValidator;
 
     public PeopleService(AppDbContext context,
         IPeoplesRepository peopleRepository,
         IRoomsRepository roomRepository,
-        PaginationValidator paginationValidator,
+        PeopleFiltersValidator peopleFiltersValidator,
         PeopleValidator peopleValidator)
     {
         _context = context;
         _peopleRepository = peopleRepository;
         _roomRepository = roomRepository;
-        _paginationValidator = paginationValidator;
+        _peopleFiltersValidator = peopleFiltersValidator;
         _peopleValidator = peopleValidator;
     }
 
-    public async Task<ResultDTO<List<People>>> Get(Pagination pagination)
+    public async Task<ResultDTO<List<People>>> Get(PeopleFilters filters)
     {
-        var validationResult = _paginationValidator.Validate(pagination);
+        var validationResult = _peopleFiltersValidator.Validate(filters);
 
         return validationResult.IsValid ?
-            await _peopleRepository.Get(pagination) :
+            await _peopleRepository.Get(filters) :
             new ResultDTO<List<People>>(validationResult.ToString());
     }
 
@@ -41,12 +41,11 @@ public class PeopleService
     public async Task<ResultDTO<int>> GetQuantity() =>
         await _peopleRepository.GetQuantity();
 
-    public async Task<ResultDTO<People>> CreateNewPerson(People people)
+    public async Task<ResultDTO<People>> CreateNewPeople(People people)
     {
         var validationResult = _peopleValidator.Validate(people);
         if (!validationResult.IsValid) return new ResultDTO<People>(validationResult.ToString());
 
-        // CreateNewPerson
         var transaction = await _context.Database.BeginTransactionAsync();
 
         var resultPeople = await _peopleRepository.Post(people);
@@ -57,7 +56,6 @@ public class PeopleService
         }
 
         await transaction.CommitAsync();
-
         return resultPeople;
     }
 
@@ -71,7 +69,6 @@ public class PeopleService
 
         people.RoomId = resultPeople.Data.RoomId; //Quarto não pode ser alterado.
 
-        // EditBasicInformation
         var transaction = await _context.Database.BeginTransactionAsync();
 
         resultPeople = await _peopleRepository.Put(people);
@@ -82,7 +79,6 @@ public class PeopleService
         }
 
         await transaction.CommitAsync();
-
         return resultPeople;	
     }
 

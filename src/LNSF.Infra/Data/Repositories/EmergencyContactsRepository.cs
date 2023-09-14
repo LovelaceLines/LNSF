@@ -13,9 +13,14 @@ public class EmergencyContactsRepository : IEmergencyContactsRepository
     public EmergencyContactsRepository(AppDbContext context) => 
         _context = context;
 
-    public async Task<ResultDTO<List<EmergencyContact>>> Get()
+    public async Task<ResultDTO<List<EmergencyContact>>> Get(EmergencyContactFilters filters)
     {
-        var contacts = await _context.EmergencyContacts.AsNoTracking().ToListAsync();
+        var query = _context.EmergencyContacts.AsNoTracking();
+
+        if (filters.PeopleId != 0) query = query.Where(x => x.PeopleId == filters.PeopleId);
+        query = query.OrderBy(x => x.Name);
+
+        var contacts = await query.ToListAsync();
         
         return contacts == null ? 
             new ResultDTO<List<EmergencyContact>>("Não encontrado.") : 

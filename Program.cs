@@ -1,6 +1,5 @@
 using LNSF.Application;
 using LNSF.Application.Services;
-using LNSF.Application.Services.Validators;
 using LNSF.Application.Validators;
 using LNSF.Domain.Repositories;
 using LNSF.Infra.Data.Context;

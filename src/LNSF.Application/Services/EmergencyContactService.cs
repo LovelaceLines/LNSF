@@ -9,22 +9,19 @@ public class EmergencyContactService
 {
     private readonly IEmergencyContactsRepository _emergencyContactRepository;
     private readonly IPeoplesRepository _peoplesRepository;
-    private readonly PaginationValidator _paginationValidator;
     private readonly EmergencyContactValidator _emergencyContactValidator;
 
     public EmergencyContactService(IEmergencyContactsRepository emergencyContactsRepository,
         IPeoplesRepository peoplesRepository,
-        PaginationValidator paginationValidator,
         EmergencyContactValidator emergencyContactValidator)
     {
         _emergencyContactRepository = emergencyContactsRepository;
         _peoplesRepository = peoplesRepository;
-        _paginationValidator = paginationValidator;
         _emergencyContactValidator = emergencyContactValidator;
     }
 
-    public async Task<ResultDTO<List<EmergencyContact>>> Get() => 
-        await _emergencyContactRepository.Get();
+    public async Task<ResultDTO<List<EmergencyContact>>> Get(EmergencyContactFilters filters) => 
+        await _emergencyContactRepository.Get(filters);
 
     public async Task<ResultDTO<EmergencyContact>> Get(int id) => 
         await _emergencyContactRepository.Get(id);
@@ -35,9 +32,9 @@ public class EmergencyContactService
     public async Task<ResultDTO<EmergencyContact>> CreateNewContact(EmergencyContact contact)
     {
         var validationResult = _emergencyContactValidator.Validate(contact);
+        if (!validationResult.IsValid) return new ResultDTO<EmergencyContact>(validationResult.ToString());
 
         var people = await _peoplesRepository.Get(contact.PeopleId);
-
         if (people.Error == true) return new ResultDTO<EmergencyContact>("Pessoa não encontrada.");
         
         var contactFound = await _emergencyContactRepository.Get(contact.PeopleId, contact.Phone);
@@ -45,20 +42,17 @@ public class EmergencyContactService
 
         contact.Id = 0; // Garante que o contato será criado como novo.
 
-        return validationResult.IsValid ?
-            await _emergencyContactRepository.Post(contact) :
-            new ResultDTO<EmergencyContact>(validationResult.ToString());
+        return await _emergencyContactRepository.Post(contact);
     }
 
     public async Task<ResultDTO<EmergencyContact>> EditContact(EmergencyContact contact)
     {
         var validationResult = _emergencyContactValidator.Validate(contact);
+        if (!validationResult.IsValid) return new ResultDTO<EmergencyContact>(validationResult.ToString());
 
         var resultContact = await _emergencyContactRepository.Get(contact.Id);
         if (resultContact.Error == true) return new ResultDTO<EmergencyContact>("Contato não encontrado.");
 
-        return validationResult.IsValid ?
-            await _emergencyContactRepository.Put(contact) :
-            new ResultDTO<EmergencyContact>(validationResult.ToString());
+        return await _emergencyContactRepository.Put(contact);
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System.Globalization;
-using LNSF.Domain.DTOs;
 
-namespace LNSF.Application.Services.Validators;
+namespace LNSF.Application.Validators;
 
 public class GlobalValidator
 {

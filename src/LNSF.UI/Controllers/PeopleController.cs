@@ -1,7 +1,6 @@
 ﻿using LNSF.Application;
 using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
-using LNSF.Domain.Views;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LNSF.UI;
@@ -16,9 +15,9 @@ public class PeopleController : ControllerBase
         _peopleService = peopleService;
 
     [HttpGet]
-    public async Task<ActionResult<ResultDTO<List<People>>>> Get([FromBody]Pagination pagination)
+    public async Task<ActionResult<ResultDTO<List<People>>>> Get([FromBody]PeopleFilters filters)
     {
-        var result = await _peopleService.Get(pagination);
+        var result = await _peopleService.Get(filters);
 
         return result.Error ? BadRequest(result) : Ok(result);
     }
@@ -42,7 +41,7 @@ public class PeopleController : ControllerBase
     [HttpPost("CreateNewPerson")]
     public async Task<ActionResult<ResultDTO<People>>> Post([FromBody]People people)
     {
-        var result = await _peopleService.CreateNewPerson(people);
+        var result = await _peopleService.CreateNewPeople(people);
 
         return result.Error ? BadRequest(result) : Ok(result);
     }

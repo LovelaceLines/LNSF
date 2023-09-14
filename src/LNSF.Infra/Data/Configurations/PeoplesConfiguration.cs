@@ -29,12 +29,6 @@ public class PeoplesConfiguration : IEntityTypeConfiguration<People>
         builder.Property(e => e.Name)
             .IsRequired(true);
 
-        builder.Property(e => e.RG)
-            .IsRequired(false);
-
-        builder.Property(e => e.CPF)
-            .IsRequired(false);
-
         builder.Property(e => e.Street)
             .IsRequired(false);
 

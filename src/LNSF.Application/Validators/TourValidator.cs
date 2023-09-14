@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using LNSF.Application.Services.Validators;
 using LNSF.Domain.Entities;
 
 namespace LNSF.Application.Validators;

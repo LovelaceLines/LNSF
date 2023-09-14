@@ -1,7 +1,6 @@
-﻿using System.Data;
-using System.Globalization;
+﻿using System.Globalization;
 using FluentValidation;
-using LNSF.Application.Services.Validators;
+using LNSF.Application.Validators;
 using LNSF.Domain.Entities;
 
 namespace LNSF.Application;

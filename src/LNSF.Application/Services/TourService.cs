@@ -1,6 +1,5 @@
 ﻿using LNSF.Domain.Repositories;
 using LNSF.Domain.Entities;
-using LNSF.Domain.Views;
 using LNSF.Application.Validators;
 using LNSF.Domain.DTOs;
 

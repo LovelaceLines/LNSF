@@ -1,7 +1,6 @@
 ﻿using LNSF.Domain.Repositories;
 using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
-using LNSF.Domain.Views;
 using LNSF.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 

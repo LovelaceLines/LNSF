@@ -13,7 +13,7 @@ public class RoomsConfiguration : IEntityTypeConfiguration<Room>
         builder.Property(x => x.Id)
             .ValueGeneratedOnAdd();
         
-        builder.HasIndex(x => x.Id)
+        builder.HasIndex(x => x.Number)
             .IsUnique(true);
         
         builder.Property(x => x.Number)

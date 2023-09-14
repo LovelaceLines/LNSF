@@ -16,9 +16,9 @@ public class EmergencyContactController : ControllerBase
         _emergencyContactService = emergencyContactService;
     
     [HttpGet]
-    public async Task<ActionResult<ResultDTO<List<EmergencyContact>>>> Get()
+    public async Task<ActionResult<ResultDTO<List<EmergencyContact>>>> Get([FromBody] EmergencyContactFilters filters)
     {
-        var result = await _emergencyContactService.Get();
+        var result = await _emergencyContactService.Get(filters);
 
         return result.Error ? BadRequest(result) : Ok(result);
     }
