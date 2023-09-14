@@ -102,6 +102,15 @@ public class PeopleService
         people.RoomId = roomId;
         room.Occupation++;
 
+        people.Room = room;
+
+        resultPeople = await _peopleRepository.Put(people);
+
+        return resultPeople.Error == true ? 
+            new ResultDTO<People>("Erro ao adicionar pessoa ao quarto.") : 
+            resultPeople;
+
+        /*
         var transaction = await _context.Database.BeginTransactionAsync();
 
         resultPeople = await _peopleRepository.Put(people);
@@ -116,6 +125,7 @@ public class PeopleService
         await transaction.CommitAsync();
 
         return resultPeople;
+        */
     }
 
     public async Task<ResultDTO<People>> RemovePeopleFromRoom(int peopleId, int roomId)
@@ -135,6 +145,14 @@ public class PeopleService
         people.RoomId = null;
         room.Occupation--;
 
+        people.Room = room;
+
+        resultPeople = await _peopleRepository.Put(people);
+        return resultPeople.Error == true ? 
+            new ResultDTO<People>("Erro ao remover pessoa do quarto.") : 
+            resultPeople;
+
+        /*
         var transaction = await _context.Database.BeginTransactionAsync();
 
         resultPeople = await _peopleRepository.Put(people);
@@ -149,5 +167,6 @@ public class PeopleService
         await transaction.CommitAsync();
 
         return resultPeople;
+        */
     }
 }

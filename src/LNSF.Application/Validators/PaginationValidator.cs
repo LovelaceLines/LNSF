@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using LNSF.Application.Validators;
 using LNSF.Domain.DTOs;
 
 namespace LNSF.Application;
@@ -9,10 +10,10 @@ public class PaginationValidator : AbstractValidator<Pagination>
     {   
         RuleFor(page => page.Page)
             .GreaterThan(0)
-            .WithMessage("Pagina deve ser maior que 0");
+            .WithMessage(GlobalValidator.MinLength);
         
         RuleFor(page => page.PageSize)
             .GreaterThan(0)
-            .WithMessage("Tamanho deve ser maior que 0");
+            .WithMessage(GlobalValidator.MinLength);
     }
 }

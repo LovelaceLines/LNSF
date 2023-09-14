@@ -24,14 +24,7 @@ public class PeopleValidator : AbstractValidator<People>
             .WithMessage(GlobalValidator.InvalidAge);
         
         RuleFor(people => people.BirthDate)
-            .Must(BirthDate =>
-            {
-                return DateTime.TryParse(
-                    s: BirthDate.ToString("dd/MM/yyyy"),
-                    provider: CultureInfo.CreateSpecificCulture("pt-BR"),
-                    out _);
-            })
-            .WithMessage(GlobalValidator.InvalidDateFormat);
+            .SetValidator(new DateValidator());
         
         RuleFor(people => people.RG)
             .NotEmpty()
@@ -68,6 +61,11 @@ public class PeopleValidator : AbstractValidator<People>
         RuleFor(people => people.State)
             .MaximumLength(16)
             .WithMessage(GlobalValidator.MaxLength);
+        
+        RuleFor(people => people.Phone)
+            .MaximumLength(21)
+            .WithMessage(GlobalValidator.MaxLength)
+            .SetValidator(new PhoneValidator());
         
         RuleFor(people => people.Note)
             .MaximumLength(256)
