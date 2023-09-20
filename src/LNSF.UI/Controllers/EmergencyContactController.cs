@@ -2,7 +2,6 @@
 using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
-using LNSF.Domain.Views;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LNSF.UI.Controllers;

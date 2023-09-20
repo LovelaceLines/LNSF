@@ -19,5 +19,5 @@ public class People
     public string Note { get; set; }  = "";
     
     public int? RoomId { get; set; }
-    public Room? Room { get; set; }
+    public Room Room { get; set; } = new();
 }
