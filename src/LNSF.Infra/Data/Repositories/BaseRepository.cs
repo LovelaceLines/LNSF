@@ -13,7 +13,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         _context = context;
 
     public virtual async Task<List<T>> Get() => 
-        await _context.Set<T>().ToListAsync();
+        await _context.Set<T>().AsNoTracking().ToListAsync();
 
     public virtual async Task<T> Get(int id) => 
         await _context.Set<T>().FindAsync(id) ??

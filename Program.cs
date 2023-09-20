@@ -1,4 +1,3 @@
-using AutoMapper;
 using LNSF.Application;
 using LNSF.Application.Services;
 using LNSF.Application.Validators;
@@ -7,6 +6,7 @@ using LNSF.Domain.Repositories;
 using LNSF.Infra.Data.Context;
 using LNSF.Infra.Data.Repositories;
 using LNSF.UI.ViewModels;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

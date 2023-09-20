@@ -70,7 +70,7 @@ public class PeopleController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<People>> Post([FromBody]PeoplePostViewModel people)
+    public async Task<ActionResult<PeopleReturnViewModel>> Post([FromBody]PeoplePostViewModel people)
     {
         try
         {
@@ -91,7 +91,7 @@ public class PeopleController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<ActionResult<People>> Put([FromBody]PeoplePutViewModel people)
+    public async Task<ActionResult<PeopleReturnViewModel>> Put([FromBody]PeoplePutViewModel people)
     {
         try
         {
@@ -112,7 +112,7 @@ public class PeopleController : ControllerBase
     }
 
     [HttpPut("AddPeopleToRoom")]
-    public async Task<ActionResult<People>> AddPeopleToRoom(PeopleAddPeopleToRoomViewModel Ids)
+    public async Task<ActionResult<PeopleReturnViewModel>> AddPeopleToRoom(PeopleAddPeopleToRoomViewModel Ids)
     {
         try
         {
@@ -132,7 +132,7 @@ public class PeopleController : ControllerBase
     }
 
     [HttpPut("RemovePeopleFromRoom")]
-    public async Task<ActionResult<People>> RemovePeopleFromRoom(PeopleRemovePeopleFromRoom peopleId)
+    public async Task<ActionResult<PeopleReturnViewModel>> RemovePeopleFromRoom(PeopleRemovePeopleFromRoom peopleId)
     {
         try
         {
