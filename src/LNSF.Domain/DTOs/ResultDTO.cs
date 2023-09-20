@@ -3,18 +3,23 @@
 public class ResultDTO<T>
 {
     public T? Data { get; set; }
-    public string? Message { get; set; }
-    public bool Error { get; set; }
+    public string Message { get; set; } = "";
+    public bool Success { get; set; }
+
+    public ResultDTO()
+    {
+        Success = true;
+    }
 
     public ResultDTO(T data)
     {
         Data = data;
-        Error = false;
+        Success = false;
     }
 
     public ResultDTO(string message)
     {
         Message = message;
-        Error = true;
+        Success = true;
     }
 }

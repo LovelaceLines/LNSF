@@ -2,6 +2,7 @@
 using LNSF.Domain.Entities;
 using LNSF.Application.Validators;
 using LNSF.Domain.DTOs;
+using LNSF.Domain.Exceptions;
 
 namespace LNSF.Application.Services;
 
@@ -26,51 +27,43 @@ public class TourService
         _paginationValidator = paginationValidator;
     }
 
-    public async Task<ResultDTO<List<Tour>>> Get(Pagination pagination)
+    public async Task<List<Tour>> Get(Pagination pagination)
     {
         var validationResult = _paginationValidator.Validate(pagination);
+        if (!validationResult.IsValid) throw new AppException(validationResult.ToString());
 
-        return validationResult.IsValid ?
-            await _tourRepository.Get(pagination) :
-            new ResultDTO<List<Tour>>(validationResult.ToString());
+        return await _tourRepository.Get(pagination);
     }
 
-    public async Task<ResultDTO<Tour>> Get(int id) =>
+    public async Task<Tour> Get(int id) =>
         await _tourRepository.Get(id);
 
-    public async Task<ResultDTO<int>> GetQuantity() => 
+    public async Task<int> GetQuantity() => 
         await _tourRepository.GetQuantity();
 
-    public async Task<ResultDTO<Tour>> Post(Tour tour)
+    public async Task<Tour> Post(Tour tour)
     {
+        var validationResult = _tourPostValidator.Validate(tour);
+        if (!validationResult.IsValid) throw new AppException(validationResult.ToString());
+
+        await _peopleRepository.Get(tour.PeopleId);
+
         tour.Id = 0;
         tour.Input = null;
 
-        var people = await _peopleRepository.Get(tour.PeopleId);
-
-        if (people.Error == true) return new ResultDTO<Tour>("Pessoa não encontrda.");
-
-        var validationResult = _tourPostValidator.Validate(tour);
-
-        return validationResult.IsValid ? 
-            await _tourRepository.Post(tour) :
-            new ResultDTO<Tour>(validationResult.ToString()); 
+        return await _tourRepository.Post(tour);
     }
 
-    public async Task<ResultDTO<Tour>> Put(Tour tour)
+    public async Task<Tour> Put(Tour tour)
     {
-        if (tour.Id == 0) return new ResultDTO<Tour>("Pesseio não encontrda.");
-
-        var people = await _peopleRepository.Get(tour.PeopleId);
-        
-        if (people.Error == true) return new ResultDTO<Tour>("Pessoa não encontrda.");
-
-        // tour.PeopleId = people.Data.Id;
-
         var validationResult = _tourPutValidator.Validate(tour);
+        if (!validationResult.IsValid) throw new AppException(validationResult.ToString());
 
-        return validationResult.IsValid ?
-            await _tourRepository.Put(tour) :
-            new ResultDTO<Tour>(validationResult.ToString()); 
+        var old_tour = await _tourRepository.Get(tour.Id);
+        
+        tour.Output = old_tour.Output;
+        tour.PeopleId = old_tour.PeopleId;
+        
+        return await _tourRepository.Put(tour); 
     }
 }

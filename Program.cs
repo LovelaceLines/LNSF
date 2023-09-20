@@ -1,14 +1,32 @@
+using AutoMapper;
 using LNSF.Application;
 using LNSF.Application.Services;
 using LNSF.Application.Validators;
+using LNSF.Domain.Entities;
 using LNSF.Domain.Repositories;
 using LNSF.Infra.Data.Context;
 using LNSF.Infra.Data.Repositories;
+using LNSF.UI.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+#region AutoMapper
+
+var autoMapperConfig = new MapperConfiguration(configure =>
+{
+    configure.CreateMap<People, PeoplePostViewModel>().ReverseMap();
+    configure.CreateMap<People, PeoplePutViewModel>().ReverseMap();
+    configure.CreateMap<People, PeopleAddPeopleToRoomViewModel>().ReverseMap();
+    configure.CreateMap<People, PeopleReturnViewModel>().ReverseMap();
+});
+
+builder.Services.AddSingleton(autoMapperConfig.CreateMapper());
+
+#endregion
+
+#region DI
+
 builder.Services.AddTransient<PaginationValidator>();
 
 builder.Services.AddTransient<IToursRepository, ToursRepository>();
@@ -23,6 +41,7 @@ builder.Services.AddTransient<RoomFiltersValidator>();
 builder.Services.AddTransient<RoomService>();
 
 builder.Services.AddTransient<IPeoplesRepository, PeoplesRepository>();
+builder.Services.AddTransient<PeopleFiltersValidator>();
 builder.Services.AddTransient<PeopleValidator>();
 builder.Services.AddTransient<PeopleService>();
 
@@ -30,6 +49,7 @@ builder.Services.AddTransient<IEmergencyContactsRepository, EmergencyContactsRep
 builder.Services.AddTransient<EmergencyContactValidator>();
 builder.Services.AddTransient<EmergencyContactService>();
 
+#endregion
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(options =>

@@ -4,11 +4,7 @@ using LNSF.Domain.Views;
 
 namespace LNSF.Domain.Repositories;
 
-public interface IToursRepository
+public interface IToursRepository : IBaseRepository<Tour>
 {
-    public Task<ResultDTO<List<Tour>>> Get(Pagination pagination);
-    public Task<ResultDTO<Tour>> Get(int id);
-    public Task<ResultDTO<int>> GetQuantity();
-    public Task<ResultDTO<Tour>> Post(Tour tour);
-    public Task<ResultDTO<Tour>> Put(Tour tour);
+    public Task<List<Tour>> Get(Pagination pagination);
 }

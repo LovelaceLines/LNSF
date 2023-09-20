@@ -1,6 +1,7 @@
 ﻿using LNSF.Application.Services;
 using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
+using LNSF.Domain.Exceptions;
 using LNSF.Domain.Views;
 using Microsoft.AspNetCore.Mvc; 
 
@@ -16,42 +17,87 @@ public class TourController : ControllerBase
         _service = service;
 
     [HttpGet]
-    public async Task<ActionResult<ResultDTO<List<Tour>>>> Get([FromBody]Pagination pagination)
+    public async Task<ActionResult<List<Tour>>> Get([FromBody]Pagination pagination)
     {
-        var result = await _service.Get(pagination);
-
-        return result.Error ? StatusCode(500, result) : Ok(result);
+        try
+        {
+            return Ok(await _service.Get(pagination));
+        }
+        catch (AppException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<ResultDTO<Tour>>> Get(int id)
+    public async Task<ActionResult<Tour>> Get(int id)
     {
-        var result = await _service.Get(id);
-
-        return result.Error ? NotFound(result) : Ok(result);
+        try
+        {
+            return Ok(await _service.Get(id));
+        }
+        catch (AppException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 
     [HttpGet("quantity")]
-    public async Task<ActionResult<ResultDTO<Tour>>> GetQuantity()
+    public async Task<ActionResult<Tour>> GetQuantity()
     {
-        var result = await _service.GetQuantity();
-
-        return result.Error ? StatusCode(500, result) : Ok(result);
+        try
+        {
+            return Ok(await _service.GetQuantity());
+        }
+        catch (AppException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 
     [HttpPost]
-    public async Task<ActionResult<ResultDTO<Tour>>> Post([FromBody]Tour tour)
+    public async Task<ActionResult<Tour>> Post([FromBody]Tour tour)
     {
-        var result = await _service.Post(tour);
-
-        return result.Error ? BadRequest(result) : Ok(result);
+        try
+        {
+            return await _service.Post(tour);
+        }
+        catch (AppException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 
     [HttpPut]
-    public async Task<ActionResult<ResultDTO<Tour>>> Put([FromBody]Tour tour)
+    public async Task<ActionResult<Tour>> Put([FromBody]Tour tour)
     {
-        var result = await _service.Put(tour);
-
-        return result.Error ? BadRequest(result) : Ok(result);
+        try
+        {
+            return await _service.Put(tour);
+        }
+        catch (AppException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 }

@@ -1,6 +1,9 @@
-﻿using LNSF.Application;
+﻿using AutoMapper;
+using LNSF.Application;
 using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
+using LNSF.Domain.Exceptions;
+using LNSF.UI.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LNSF.UI;
@@ -9,64 +12,142 @@ namespace LNSF.UI;
 [Route("api/[controller]")]
 public class PeopleController : ControllerBase
 {
+    private readonly IMapper _mapper;
     private readonly PeopleService _peopleService;
 
-    public PeopleController(PeopleService peopleService) => 
+    public PeopleController(PeopleService peopleService,
+        IMapper mapper)
+    {
+        _mapper = mapper;
         _peopleService = peopleService;
+    }
 
     [HttpGet]
-    public async Task<ActionResult<ResultDTO<List<People>>>> Get([FromBody]PeopleFilters filters)
+    public async Task<ActionResult<List<People>>> Get([FromQuery]PeopleFilters filters)
     {
-        var result = await _peopleService.Get(filters);
-
-        return result.Error ? BadRequest(result) : Ok(result);
+        try
+        {
+            return Ok(await _peopleService.Get(filters));
+        }
+        catch (AppException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<ResultDTO<People>>> Get(int id)
+    public async Task<ActionResult<People>> Get(int id)
     {
-        var result = await _peopleService.Get(id);
-
-        return result.Error ? BadRequest(result) : Ok(result);
+        try
+        {
+            return Ok(await _peopleService.Get(id));
+        }
+        catch (AppException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 
     [HttpGet("quantity")]
     public async Task<ActionResult<ResultDTO<int>>> GetQuantity()
     {
-        var result = await _peopleService.GetQuantity();
-
-        return result.Error ? StatusCode(500, result) : Ok(result);
+        try
+        {
+            return Ok(await _peopleService.GetQuantity());
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 
-    [HttpPost("CreateNewPerson")]
-    public async Task<ActionResult<ResultDTO<People>>> Post([FromBody]People people)
+    [HttpPost]
+    public async Task<ActionResult<People>> Post([FromBody]PeoplePostViewModel people)
     {
-        var result = await _peopleService.CreateNewPeople(people);
-
-        return result.Error ? BadRequest(result) : Ok(result);
+        try
+        {
+            var peopleEntity = _mapper.Map<People>(people);
+            peopleEntity = await _peopleService.CreateNewPeople(peopleEntity);
+            var peopleReturn = _mapper.Map<PeopleReturnViewModel>(peopleEntity);
+            
+            return Ok(peopleReturn);
+        }
+        catch (AppException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 
-    [HttpPut("EditBasicInformation")]
-    public async Task<ActionResult<ResultDTO<People>>> Put([FromBody]People people)
+    [HttpPut]
+    public async Task<ActionResult<People>> Put([FromBody]PeoplePutViewModel people)
     {
-        var result = await _peopleService.EditBasicInformation(people);
+        try
+        {
+            var peopleEntity = _mapper.Map<People>(people);
+            peopleEntity = await _peopleService.EditBasicInformation(peopleEntity);
+            var peopleReturn = _mapper.Map<PeopleReturnViewModel>(peopleEntity);
 
-        return result.Error ? BadRequest(result) : Ok(result);
+            return Ok(peopleReturn);
+        }
+        catch (AppException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 
-    [HttpPost("AddPeopleToRoom")]
-    public async Task<ActionResult<ResultDTO<People>>> AddPeopleToRoom([FromBody]PeopleRoomIds ids)
+    [HttpPut("AddPeopleToRoom")]
+    public async Task<ActionResult<People>> AddPeopleToRoom(PeopleAddPeopleToRoomViewModel Ids)
     {
-        var result = await _peopleService.AddPeopleToRoom(ids.PeopleId, ids.RoomId);
+        try
+        {
+            var peopleEntity = await _peopleService.AddPeopleToRoom(Ids.PeopleId, Ids.RoomId);
+            var peopleReturn = _mapper.Map<PeopleReturnViewModel>(peopleEntity);
 
-        return result.Error ? BadRequest(result) : Ok(result);
+            return Ok(peopleReturn);
+        }
+        catch (AppException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 
-    [HttpPost("RemovePeopleFromRoom")]
-    public async Task<ActionResult<ResultDTO<People>>> RemovePeopleFromRoom([FromBody]PeopleRoomIds ids)
+    [HttpPut("RemovePeopleFromRoom")]
+    public async Task<ActionResult<People>> RemovePeopleFromRoom(PeopleRemovePeopleFromRoom peopleId)
     {
-        var result = await _peopleService.RemovePeopleFromRoom(ids.PeopleId, ids.RoomId);
+        try
+        {
+            var peopleEntity = await _peopleService.RemovePeopleFromRoom(peopleId.PeopleId);
+            var peopleReturn = _mapper.Map<PeopleReturnViewModel>(peopleEntity);
 
-        return result.Error ? BadRequest(result) : Ok(result);
+            return Ok(peopleReturn);
+        }
+        catch (AppException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using LNSF.Domain.Repositories;
 using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
+using LNSF.Domain.Exceptions;
 
 namespace LNSF.Application.Services;
 
@@ -19,37 +20,32 @@ public class RoomService
         _roomFiltersValidator = roomFiltersValidator;
     }
 
-    public async Task<ResultDTO<List<Room>>> Get(RoomFilters filters)
+    public async Task<List<Room>> Get(RoomFilters filters)
     {
         var validationResult = _roomFiltersValidator.Validate(filters);
+        if (!validationResult.IsValid) throw new AppException(validationResult.ToString());
 
-        return validationResult.IsValid ?
-            await _roomRepository.Get(filters) :
-            new ResultDTO<List<Room>>(validationResult.ToString());
+        return await _roomRepository.Get(filters);
     }
 
-    public async Task<ResultDTO<Room>> Get(int id) => 
+    public async Task<Room> Get(int id) => 
         await _roomRepository.Get(id);
 
-    public async Task<ResultDTO<int>> GetQuantity() =>
+    public async Task<int> GetQuantity() =>
         await _roomRepository.GetQuantity();
 
-    public async Task<ResultDTO<Room>> Post(Room room)
+    public async Task<Room> Post(Room room)
     {
         var validationResult = _roomValidator.Validate(room);
-        if (!validationResult.IsValid) return new ResultDTO<Room>(validationResult.ToString());
-
-        room.Id = 0;
+        if (!validationResult.IsValid) throw new AppException(validationResult.ToString());
 
         return await _roomRepository.Post(room);
     }
 
-    public async Task<ResultDTO<Room>> Put(Room room)
+    public async Task<Room> Put(Room room)
     {
         var validationResult = _roomValidator.Validate(room);
-        if (!validationResult.IsValid) return new ResultDTO<Room>(validationResult.ToString());
-
-        if (room.Id == 0) return new ResultDTO<Room>("Quarto não encontrado");
+        if (!validationResult.IsValid) throw new AppException(validationResult.ToString());
 
         return await _roomRepository.Put(room);
     }

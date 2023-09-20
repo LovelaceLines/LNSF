@@ -2,6 +2,7 @@
 using LNSF.Domain;
 using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
+using LNSF.Domain.Exceptions;
 using LNSF.Domain.Views;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,43 +18,88 @@ public class RoomController : ControllerBase
         _roomService = roomService;
 
     [HttpGet]
-    public async Task<ActionResult<ResultDTO<List<Room>>>> Get([FromBody]RoomFilters filters)
+    public async Task<ActionResult<List<Room>>> Get([FromBody]RoomFilters filters)
     {
-        var result = await _roomService.Get(filters);
-
-        return result.Error ? BadRequest(result) : Ok(result);
+        try
+        {
+            return Ok(await _roomService.Get(filters));
+        }
+        catch (AppException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<ResultDTO<Room>>> Get(int id)
+    public async Task<ActionResult<Room>> Get(int id)
     {
-        var result = await _roomService.Get(id);
-
-        return result.Error ? BadRequest(result) : Ok(result);
+        try
+        {
+            return Ok(await _roomService.Get(id));
+        }
+        catch (AppException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 
 
     [HttpGet("quantity")]
-    public async Task<ActionResult<ResultDTO<int>>> GetQuantity()
+    public async Task<ActionResult<int>> GetQuantity()
     {
-        var result = await _roomService.GetQuantity();
-
-        return result.Error ? StatusCode(500, result) : Ok(result);
+        try
+        {
+            return Ok(await _roomService.GetQuantity());
+        }
+        catch (AppException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 
     [HttpPost]
-    public async Task<ActionResult<ResultDTO<Room>>> Post([FromBody]Room room)
+    public async Task<ActionResult<Room>> Post([FromBody]Room room)
     {
-        var result = await _roomService.Post(room);
-
-        return result.Error ? BadRequest(result) : Ok(result);
+        try
+        {
+            return Ok(await _roomService.Post(room));
+        }
+        catch (AppException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 
     [HttpPut]
-    public async Task<ActionResult<ResultDTO<Room>>> Put([FromBody]Room room)
+    public async Task<ActionResult<Room>> Put([FromBody]Room room)
     {
-        var result = await _roomService.Put(room);
-
-        return result.Error ? BadRequest(result) : Ok(result);
+        try
+        {
+            return Ok(await _roomService.Put(room));
+        }
+        catch (AppException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 }

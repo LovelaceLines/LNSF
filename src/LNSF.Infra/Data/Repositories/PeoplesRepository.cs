@@ -6,14 +6,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LNSF.Infra.Data.Repositories;
 
-public class PeoplesRepository : IPeoplesRepository
+public class PeoplesRepository : BaseRepository<People>, IPeoplesRepository
 {
     private readonly AppDbContext _context;
 
-    public PeoplesRepository(AppDbContext context) =>
+    public PeoplesRepository(AppDbContext context) : base(context) =>
         _context = context;
 
-    public async Task<ResultDTO<List<People>>> Get(PeopleFilters filters)
+    public async Task<List<People>> Get(PeopleFilters filters)
     {
         var query = _context.Peoples.AsNoTracking();
         var count = await query.CountAsync();
@@ -29,40 +29,6 @@ public class PeoplesRepository : IPeoplesRepository
             .Take(filters.Page.PageSize)
             .ToListAsync();
 
-        return new ResultDTO<List<People>>(peoples);
-    }
-
-    public async Task<ResultDTO<People>> Get(int id)
-    {
-        var people = await _context.Peoples.FindAsync(id);
-
-        return (people == null) ?
-            new ResultDTO<People>("Não encontrado") :
-            new ResultDTO<People>(people);
-    }
-
-    public async Task<ResultDTO<int>> GetQuantity() =>
-        new ResultDTO<int>(await _context.Peoples.CountAsync());
-
-    public async Task<ResultDTO<People>> Post(People people)
-    {
-        _context.Peoples.Add(people);
-        await _context.SaveChangesAsync();
-        
-        return new ResultDTO<People>(people);
-    }
-
-    public async Task<ResultDTO<People>> Put(People people)
-    {
-        var _people = await _context.Peoples.FindAsync(people.Id);
-
-        if (_people == null) return new ResultDTO<People>("Não encontrado");
-
-        _context.Entry(_people).CurrentValues.SetValues(people);
-
-        _context.Peoples.Update(_people);
-        await _context.SaveChangesAsync();
-
-        return new ResultDTO<People>(_people);
+        return peoples;
     }
 }
