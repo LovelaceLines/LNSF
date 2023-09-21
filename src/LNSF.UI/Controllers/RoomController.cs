@@ -1,9 +1,9 @@
-﻿using LNSF.Application.Services;
-using LNSF.Domain;
+﻿using AutoMapper;
+using LNSF.Application.Services;
 using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
-using LNSF.Domain.Views;
+using LNSF.UI.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LNSF.UI;
@@ -13,12 +13,17 @@ namespace LNSF.UI;
 public class RoomController : ControllerBase
 {
     private readonly RoomService _roomService;
+    private readonly IMapper _mapper;
 
-    public RoomController(RoomService roomService) => 
+    public RoomController(RoomService roomService,
+        IMapper mapper)
+    {
         _roomService = roomService;
+        _mapper = mapper;
+    }
 
     [HttpGet]
-    public async Task<ActionResult<List<Room>>> Get([FromBody]RoomFilters filters)
+    public async Task<ActionResult<List<Room>>> Get([FromQuery]RoomFilters filters)
     {
         try
         {
@@ -70,11 +75,14 @@ public class RoomController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Room>> Post([FromBody]Room room)
+    public async Task<ActionResult<Room>> Post([FromBody]RoomPostViewModel room)
     {
         try
         {
-            return Ok(await _roomService.Post(room));
+            var roomEntity = _mapper.Map<Room>(room);
+            roomEntity = await _roomService.Post(roomEntity);
+
+            return Ok(roomEntity);
         }
         catch (AppException ex)
         {

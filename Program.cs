@@ -15,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 var autoMapperConfig = new MapperConfiguration(configure =>
 {
+    configure.CreateMap<Room, RoomPostViewModel>().ReverseMap();
     configure.CreateMap<People, PeoplePostViewModel>().ReverseMap();
     configure.CreateMap<People, PeoplePutViewModel>().ReverseMap();
     configure.CreateMap<People, PeopleAddPeopleToRoomViewModel>().ReverseMap();
@@ -54,8 +55,8 @@ builder.Services.AddTransient<EmergencyContactService>();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    // options.UseInMemoryDatabase("InMemoryDatabaseName");
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseInMemoryDatabase("InMemoryDatabaseName");
+    // options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
