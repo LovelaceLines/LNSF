@@ -16,6 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 var autoMapperConfig = new MapperConfiguration(configure =>
 {
     configure.CreateMap<Room, RoomPostViewModel>().ReverseMap();
+    
     configure.CreateMap<People, PeoplePostViewModel>().ReverseMap();
     configure.CreateMap<People, PeoplePutViewModel>().ReverseMap();
     configure.CreateMap<People, PeopleAddPeopleToRoomViewModel>().ReverseMap();
