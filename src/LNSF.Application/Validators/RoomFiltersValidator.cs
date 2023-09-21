@@ -11,7 +11,7 @@ public class RoomFiltersValidator : AbstractValidator<RoomFilters>
         RuleFor(x => x.Page)
             .SetValidator(new PaginationValidator());
         
-        RuleFor(x => x.OrderBy)
+        RuleFor(x => x.Order)
             .SetValidator(new OrderByValidator());
     }
 }

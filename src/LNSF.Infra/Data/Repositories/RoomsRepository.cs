@@ -18,13 +18,14 @@ public class RoomsRepository : BaseRepository<Room>, IRoomsRepository
         var query = _context.Rooms.AsNoTracking();
         var count = await query.CountAsync();
 
+        if (filters.Id != null) query = query.Where(x => x.Id == filters.Id);
         if (filters.Number != null) query = query.Where(x => x.Number == filters.Number);
         if (filters.Bathroom != null) query = query.Where(x => x.Bathroom);
         if (filters.Beds != null) query = query.Where(x => x.Beds == filters.Beds);
         if (filters.Vacant != null) query = query.Where(x => x.Beds - x.Occupation > 0);
         if (filters.Storey != null) query = query.Where(x => x.Storey == filters.Storey);
         if (filters.Available != null) query = query.Where(x => x.Available == filters.Available);
-        if (filters.OrderBy == OrderBy.Descending) query = query.OrderByDescending(x => x.Id);
+        if (filters.Order == OrderBy.Descending) query = query.OrderByDescending(x => x.Id);
 
         var rooms = await query
             .Skip((filters.Page.Page - 1) * filters.Page.PageSize)

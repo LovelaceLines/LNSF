@@ -13,6 +13,6 @@ public class RoomFiltersFake : Faker<RoomFilters>
         RuleFor(r => r.Storey, f => f.Random.Int(1, 2));
         RuleFor(r => r.Available, f => f.Random.Bool());
         RuleFor(r => r.Page, f => new PaginationFake().Generate());
-        RuleFor(r => r.OrderBy, f => f.PickRandom<OrderBy>());    
+        RuleFor(r => r.Order, f => f.PickRandom<OrderBy>());    
     }
 }

@@ -39,23 +39,6 @@ public class RoomController : ControllerBase
         }
     }
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Room>> Get(int id)
-    {
-        try
-        {
-            return Ok(await _roomService.Get(id));
-        }
-        catch (AppException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
-    }
-
 
     [HttpGet("quantity")]
     public async Task<ActionResult<int>> GetQuantity()
