@@ -5,6 +5,7 @@ namespace LNSF.Test;
 
 public class Util
 {
+    public const string BaseUrl = "http://localhost:5206/api/";
     public async Task<int> GetQuantity(HttpClient client)
     {
         var response = await client.GetAsync("quantity");

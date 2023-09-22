@@ -13,7 +13,7 @@ namespace LNSF.Test.Apis;
 
 public class RoomTestApi
 {
-    private static readonly Uri uri = new("http://localhost:5206/api/Room/");
+    private static readonly Uri uri = new($"{Util.BaseUrl}Room/");
     private readonly HttpClient _client = new() { BaseAddress = uri };
     private readonly Util _util = new();
     private readonly IMapper _mapper;

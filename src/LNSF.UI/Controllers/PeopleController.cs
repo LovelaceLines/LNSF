@@ -23,28 +23,14 @@ public class PeopleController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<People>>> Get([FromQuery]PeopleFilters filters)
+    public async Task<ActionResult<List<PeopleReturnViewModel>>> Get([FromQuery]PeopleFilters filters)
     {
         try
         {
-            return Ok(await _peopleService.Get(filters));
-        }
-        catch (AppException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
-    }
-
-    [HttpGet("{id}")]
-    public async Task<ActionResult<People>> Get(int id)
-    {
-        try
-        {
-            return Ok(await _peopleService.Get(id));
+            var peoples = await _peopleService.Get(filters);
+            var peoplesReturn = _mapper.Map<List<PeopleReturnViewModel>>(peoples);
+            
+            return Ok(peoplesReturn);
         }
         catch (AppException ex)
         {

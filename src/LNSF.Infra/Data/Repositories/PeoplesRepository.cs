@@ -18,6 +18,7 @@ public class PeoplesRepository : BaseRepository<People>, IPeoplesRepository
         var query = _context.Peoples.AsNoTracking();
         var count = await query.CountAsync();
 
+        if (filters.Id != null) query = query.Where(x => x.Id == filters.Id);
         if (!string.IsNullOrEmpty(filters.Name)) query = query.Where(x => x.Name.Contains(filters.Name));
         if (!string.IsNullOrEmpty(filters.RG)) query = query.Where(x => x.RG.Contains(filters.RG));
         if (!string.IsNullOrEmpty(filters.CPF)) query = query.Where(x => x.CPF.Contains(filters.CPF));
