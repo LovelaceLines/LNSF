@@ -31,9 +31,8 @@ public class RoomTestApi
     [Fact]
     public async Task Get_UsingFilters_ReturnOk()
     {
-        var fakeRooms = new RoomPostViewModelFake().Generate(RandomNumberGenerator.GetInt32(1, 9999));
-        var postTasks = fakeRooms.Select(room => _client.PostAsync("", JsonContent.Create(room))).ToList();
-        await Task.WhenAll(postTasks);
+        var fakeRooms = new RoomPostViewModelFake().Generate(RandomNumberGenerator.GetInt32(1, 10));
+        await _util.Post(_client, fakeRooms);
 
         var filters = new RoomFiltersFake().Generate();
         var getResponse = await _client.GetAsync(_util.ConvertObjectToQueryString(filters));
@@ -44,9 +43,8 @@ public class RoomTestApi
     [Fact]
     public async Task Get_UsingFiltersEmpty_ReturnAll()
     {
-        var fakeRooms = new RoomPostViewModelFake().Generate(RandomNumberGenerator.GetInt32(1, 9999));
-        var postTasks = fakeRooms.Select(room => _client.PostAsync("", JsonContent.Create(room))).ToList();
-        await Task.WhenAll(postTasks);
+        var fakeRooms = new RoomPostViewModelFake().Generate(RandomNumberGenerator.GetInt32(1, 10));
+        await _util.Post(_client, fakeRooms);
 
         var filters = new RoomFilters(); // Empty
         var getResponse = await _client.GetAsync(_util.ConvertObjectToQueryString(filters));

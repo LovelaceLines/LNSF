@@ -54,6 +54,7 @@ public class PeopleService
         var oldPeople = await _peopleRepository.Get(people.Id);
 
         people.RoomId = oldPeople.RoomId; //Quarto não pode ser alterado.
+        people.Room = oldPeople.Room;
 
         return await _peopleRepository.Put(people);	
     }

@@ -14,6 +14,12 @@ public class Util
         return quantity;
     }
 
+    public async Task Post<T>(HttpClient client, List<T> values) where T : class
+    {
+        var postTasks = values.Select(value => client.PostAsync("", JsonContent.Create(value))).ToList();
+        await Task.WhenAll(postTasks);
+    }
+
     public string ConvertObjectToQueryString(object obj)
     {
         var json = JsonConvert.SerializeObject(obj);
