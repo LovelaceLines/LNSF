@@ -9,11 +9,9 @@ public class PaginationValidator : AbstractValidator<Pagination>
     public PaginationValidator()
     {   
         RuleFor(page => page.Page)
-            .GreaterThan(0)
-            .WithMessage(GlobalValidator.MinLength);
+            .GreaterThan(0).WithMessage(GlobalValidator.MinLength("Página", 1));
         
         RuleFor(page => page.PageSize)
-            .GreaterThan(0)
-            .WithMessage(GlobalValidator.MinLength);
+            .GreaterThan(0).WithMessage(GlobalValidator.MinLength("Tamanho da página", 1));
     }
 }

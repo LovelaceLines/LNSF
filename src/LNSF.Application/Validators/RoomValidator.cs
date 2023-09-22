@@ -9,31 +9,17 @@ public class RoomValidator : AbstractValidator<Room>
     public RoomValidator()
     {
         RuleFor(room => room.Number)
-            .NotEmpty()
-            .WithMessage(GlobalValidator.RequiredField)
-            .MaximumLength(8)
-            .WithMessage(GlobalValidator.MaxLength);
-        
-        // RuleFor(room => room.Bathroom);
-        
+            .MinimumLength(1).WithMessage(GlobalValidator.MinLength("Número", 1))
+            .MaximumLength(8).WithMessage(GlobalValidator.MaxLength("Número", 8));
+                
         RuleFor(room => room.Beds)
-            .NotEmpty()
-            .WithMessage(GlobalValidator.RequiredField)
-            .GreaterThan(0)
-            .WithMessage(GlobalValidator.MinLength);
+            .GreaterThan(0).WithMessage(GlobalValidator.MinLength("Camas", 1));
         
         RuleFor(room => room.Occupation)
-            .LessThanOrEqualTo(room => room.Beds)
-            .WithMessage("Mais pessoas do que cama.")
-            .GreaterThanOrEqualTo(0)
-            .WithMessage(GlobalValidator.MinLength);
+            .LessThanOrEqualTo(room => room.Beds).WithMessage("Mais pessoas do que cama.")
+            .GreaterThanOrEqualTo(0).WithMessage(GlobalValidator.MinLength("Ocupação", 0));
         
         RuleFor(room => room.Storey)
-            .NotEmpty()
-            .WithMessage(GlobalValidator.RequiredField)
-            .GreaterThan(0)
-            .WithMessage(GlobalValidator.MinLength);
-
-        // RuleFor(room => room.Available);
+            .GreaterThan(0).WithMessage(GlobalValidator.MinLength("Andar", 1));
     }
 }

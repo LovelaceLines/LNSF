@@ -9,9 +9,7 @@ public class OrderByValidator : AbstractValidator<OrderBy>
     public OrderByValidator()
     {
         RuleFor(x => x)
-            .NotNull()
-            .WithMessage(GlobalValidator.RequiredField)
-            .IsInEnum()
-            .WithMessage(GlobalValidator.InvalidField);
+            .NotNull().WithMessage(GlobalValidator.RequiredField("Ordenação"))
+            .IsInEnum().WithMessage(GlobalValidator.InvalidField("Ordenação"));
     }
 }

@@ -8,6 +8,6 @@ public class DateTimeValidator : AbstractValidator<DateTime>
     {
         RuleFor(date => date.ToString())
             .Matches(@"^\d{2}/\d{2}/\d{4} \d{2}:\d{2}$")
-            .WithMessage(GlobalValidator.InvalidDateFormat);
+            .WithMessage(GlobalValidator.InvalidDateFormat());
     }
 }

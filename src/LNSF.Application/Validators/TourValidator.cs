@@ -8,43 +8,24 @@ public class TourPostValidator : AbstractValidator<Tour>
     public TourPostValidator()
     {
         RuleFor(tour => tour.Output)
-            .NotEmpty()
-            .WithMessage(GlobalValidator.RequiredField)
-            .NotNull()
-            .WithMessage(GlobalValidator.RequiredField)
-            .Must(output => new GlobalValidator().IsDateFormatted(output))
-            .WithMessage(GlobalValidator.InvalidDateTimeFormat);
+            .SetValidator(new DateTimeValidator());
 
         RuleFor(tour => tour.Note)
-            .MaximumLength(256)
-            .WithMessage(GlobalValidator.MaxLength);
+            .MaximumLength(256).WithMessage(GlobalValidator.MaxLength("Observação", 256));
     }
 }
 
 public class TourPutValidator : AbstractValidator<Tour>
 {
     public TourPutValidator()
-    {
-        RuleFor(tour => tour.Output)
-            .NotEmpty()
-            .WithMessage(GlobalValidator.RequiredField)
-            .NotNull()
-            .WithMessage(GlobalValidator.RequiredField)
-            .Must(output => new GlobalValidator().IsDateFormatted(output))
-            .WithMessage(GlobalValidator.InvalidDateTimeFormat);
-        
+    {   
         RuleFor(tour => tour.Input)
-            .NotEmpty()
-            .WithMessage(GlobalValidator.RequiredField)
-            .NotNull()
-            .WithMessage(GlobalValidator.RequiredField)
-            .Must(output => new GlobalValidator().IsDateFormatted(output))
-            .WithMessage(GlobalValidator.InvalidDateTimeFormat)
-            .GreaterThan(tour => tour.Output)
-            .WithMessage(GlobalValidator.InvalidOutputDate);
-
-        RuleFor(tour => tour.Note)
-            .MaximumLength(256)
-            .WithMessage(GlobalValidator.MaxLength);
+            .GreaterThan(tour => tour.Output).WithMessage("Data de retorno deve ser maior que a data de saída.");
+        
+        RuleFor(tour => tour.Input ?? DateTime.Now)
+            .SetValidator(new DateTimeValidator());
+        
+        RuleFor(tour => tour)
+            .SetValidator(new TourPostValidator());
     }
 }
