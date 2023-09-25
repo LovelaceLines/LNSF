@@ -7,6 +7,5 @@ public class PeopleFilters
     public string? RG { get; set; }
     public string? CPF { get; set; }
     public string? Phone { get; set; }
-    public string? RoomNumber { get; set; }
     public Pagination Page { get; set; } = new Pagination();
 }

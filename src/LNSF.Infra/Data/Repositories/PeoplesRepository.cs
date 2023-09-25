@@ -23,7 +23,6 @@ public class PeoplesRepository : BaseRepository<People>, IPeoplesRepository
         if (!string.IsNullOrEmpty(filters.RG)) query = query.Where(x => x.RG.Contains(filters.RG));
         if (!string.IsNullOrEmpty(filters.CPF)) query = query.Where(x => x.CPF.Contains(filters.CPF));
         if (!string.IsNullOrEmpty(filters.Phone)) query = query.Where(x => x.Phone.Contains(filters.Phone));
-        if (!string.IsNullOrEmpty(filters.RoomNumber)) query = query.Where(x => x.Room.Number.Contains(filters.RoomNumber));
 
         var peoples = await query
             .Skip((filters.Page.Page - 1) * filters.Page.PageSize)

@@ -56,8 +56,9 @@ builder.Services.AddTransient<EmergencyContactService>();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseInMemoryDatabase("InMemoryDatabaseName");
-    // options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    // options.UseInMemoryDatabase("InMemoryDatabaseName");
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

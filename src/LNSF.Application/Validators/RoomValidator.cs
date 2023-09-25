@@ -21,5 +21,9 @@ public class RoomValidator : AbstractValidator<Room>
         
         RuleFor(room => room.Storey)
             .GreaterThan(0).WithMessage(GlobalValidator.MinLength("Andar", 1));
+        
+        RuleFor(room => room)
+            .Must(room => (room.Available == true && room.Occupation < room.Beds) ||
+                room.Available == false).WithMessage("Quarto deve ser indisponível. Não há vagas.");
     }
 }

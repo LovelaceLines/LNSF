@@ -43,7 +43,7 @@ public class PeopleController : ControllerBase
     }
 
     [HttpGet("quantity")]
-    public async Task<ActionResult<ResultDTO<int>>> GetQuantity()
+    public async Task<ActionResult<int>> GetQuantity()
     {
         try
         {
@@ -97,8 +97,8 @@ public class PeopleController : ControllerBase
         }
     }
 
-    [HttpPut("AddPeopleToRoom")]
-    public async Task<ActionResult<PeopleReturnViewModel>> AddPeopleToRoom(PeopleAddPeopleToRoomViewModel Ids)
+    [HttpPut("add-people-to-room")]
+    public async Task<ActionResult<PeopleReturnViewModel>> Put([FromBody]PeopleAddPeopleToRoomViewModel Ids)
     {
         try
         {
@@ -117,8 +117,8 @@ public class PeopleController : ControllerBase
         }
     }
 
-    [HttpPut("RemovePeopleFromRoom")]
-    public async Task<ActionResult<PeopleReturnViewModel>> RemovePeopleFromRoom(PeopleRemovePeopleFromRoom peopleId)
+    [HttpPut("remove-people-from-room")]
+    public async Task<ActionResult<PeopleReturnViewModel>> Put([FromBody]PeopleRemovePeopleFromRoom peopleId)
     {
         try
         {

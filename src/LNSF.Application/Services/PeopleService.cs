@@ -73,6 +73,7 @@ public class PeopleService
         people.RoomId = roomId;
         people.Room = room;
         room.Occupation++;
+        if (room.Beds == room.Occupation) room.Available = false;
 
         return await _peopleRepository.Put(people);
     }
@@ -87,12 +88,24 @@ public class PeopleService
 
         // RemovePeopleFromRoom
         people.RoomId = null;
+        people.Room = null;
         room.Occupation--;
 
-        // TEST
+        await _peopleRepository.BeguinTransaction();
 
-        people.Room = room;
+        try
+        {
+            people = await _peopleRepository.Put(people);
+            await _roomRepository.Put(room);
+        }
+        catch (Exception)
+        {
+            await _peopleRepository.RollbackTransaction();
+            throw new AppException("Erro ao remover pessoa do quarto.");
+        }
 
-        return await _peopleRepository.Put(people);
+        await _peopleRepository.CommitTransaction();
+
+        return people;
     }
 }

@@ -13,7 +13,6 @@ public class PeopleFiltersFake : Faker<PeopleFilters>
         RuleFor(p => p.RG, f => f.Random.ReplaceNumbers("##.###.###.###-#"));
         RuleFor(p => p.CPF, f => f.Person.Cpf());
         RuleFor(p => p.Phone, f => f.Phone.PhoneNumber("(##) # ####-####"));
-        RuleFor(p => p.RoomNumber, f => f.Address.BuildingNumber());
         RuleFor(p => p.Page, f => new PaginationFake().Generate());
     }
 }

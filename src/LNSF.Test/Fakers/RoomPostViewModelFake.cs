@@ -1,4 +1,5 @@
 ﻿using Bogus;
+using LNSF.Domain.DTOs;
 using LNSF.UI.ViewModels;
 
 namespace LNSF.Test.Fakers;
@@ -12,6 +13,6 @@ public class RoomPostViewModelFake : Faker<RoomPostViewModel>
         RuleFor(r => r.Beds, f => f.Random.Number(1, 4));
         RuleFor(r => r.Occupation, (f, r) => f.Random.Number(0, r.Beds));
         RuleFor(r => r.Storey, f => f.Random.Number(1, 2));
-        RuleFor(r => r.Available, f => f.Random.Bool());
+        RuleFor(r => r.Available, (f, r) => r.Occupation != r.Beds && f.Random.Bool());
     }
 }

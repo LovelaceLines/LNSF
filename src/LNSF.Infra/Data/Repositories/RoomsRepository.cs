@@ -25,7 +25,8 @@ public class RoomsRepository : BaseRepository<Room>, IRoomsRepository
         if (filters.Vacant != null) query = query.Where(x => x.Beds - x.Occupation > 0);
         if (filters.Storey != null) query = query.Where(x => x.Storey == filters.Storey);
         if (filters.Available != null) query = query.Where(x => x.Available == filters.Available);
-        if (filters.Order == OrderBy.Descending) query = query.OrderByDescending(x => x.Id);
+        if (filters.Order == OrderBy.Ascending) query = query.OrderBy(x => x.Number);
+        else query = query.OrderByDescending(x => x.Number);
 
         var rooms = await query
             .Skip((filters.Page.Page - 1) * filters.Page.PageSize)
