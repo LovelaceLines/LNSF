@@ -32,20 +32,18 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
     public virtual async Task<T> Put(T entity)
     {
-        _context.Update(entity);
+        _context.Entry(entity).State = EntityState.Modified;
         await _context.SaveChangesAsync();
 
         return entity;
     }
 
-    public virtual async Task<T> Delete(int id)
+    public virtual async Task<T> Delete(T entity)
     {
-        var ent = await Get(id);
-        
-        _context.Remove(ent);
+        _context.Remove(entity);
         await _context.SaveChangesAsync();
 
-        return ent;
+        return entity;
     }
 
     public async Task BeguinTransaction() => 

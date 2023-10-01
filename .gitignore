@@ -134,3 +134,6 @@ _NCrunch*
 Migrations/*
 .vscode/*
 appsettings.Development.json
+appsettings.json
+TestLog.txt
+TestResults.trx

@@ -11,7 +11,7 @@ public class GlobalValidator
     public static string InvalidRGFormat() => "RG inválido. Use o formato XX.XXX.XXX-X.";
     public static string InvalidCPFFormat() => "CPF inválido. Use o formato XXX.XXX.XXX-XX.";
     public static string InvalidAge() => "Idade inválida.";
-    public static string InvalidDateTimeFormat() => "Data inválida. Use o formato dd/MM/yyyy hh:mm";
+    public static string InvalidDateTimeFormat() => "Data inválida. Use o formato dd/MM/yyyy HH:mm";
     public static string InvalidPhoneFormat() => "Telefone inválida. Use o formato (XX) X XXXX-XXXX)";
     public static string InvalidDateFormat() =>  "Data inválida. Use o formato dd/MM/yyyy";
 }

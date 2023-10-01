@@ -20,12 +20,12 @@ public class RoomService
         _roomFiltersValidator = roomFiltersValidator;
     }
 
-    public async Task<List<Room>> Get(RoomFilters filters)
+    public async Task<List<Room>> Query(RoomFilters filters)
     {
         var validationResult = _roomFiltersValidator.Validate(filters);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString());
 
-        return await _roomRepository.Get(filters);
+        return await _roomRepository.Query(filters);
     }
 
     public async Task<Room> Get(int id) => 
@@ -34,7 +34,7 @@ public class RoomService
     public async Task<int> GetQuantity() =>
         await _roomRepository.GetQuantity();
 
-    public async Task<Room> Post(Room room)
+    public async Task<Room> Create(Room room)
     {
         var validationResult = _roomValidator.Validate(room);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString());
@@ -42,7 +42,7 @@ public class RoomService
         return await _roomRepository.Post(room);
     }
 
-    public async Task<Room> Put(Room room)
+    public async Task<Room> Update(Room room)
     {
         var validationResult = _roomValidator.Validate(room);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString());

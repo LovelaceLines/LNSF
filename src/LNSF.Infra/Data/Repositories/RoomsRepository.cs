@@ -13,7 +13,7 @@ public class RoomsRepository : BaseRepository<Room>, IRoomsRepository
     public RoomsRepository(AppDbContext context) : base(context) => 
         _context = context;
 
-    public async Task<List<Room>> Get(RoomFilters filters)
+    public async Task<List<Room>> Query(RoomFilters filters)
     {
         var query = _context.Rooms.AsNoTracking();
         var count = await query.CountAsync();

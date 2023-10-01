@@ -1,7 +1,9 @@
-﻿using LNSF.Application.Services;
+﻿using AutoMapper;
+using LNSF.Application.Services;
 using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
+using LNSF.UI.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LNSF.UI.Controllers;
@@ -11,33 +13,24 @@ namespace LNSF.UI.Controllers;
 public class EmergencyContactController : ControllerBase
 {
     private readonly EmergencyContactService _emergencyContactService;
+    private readonly IMapper _mapper;
 
-    public EmergencyContactController(EmergencyContactService emergencyContactService) => 
-        _emergencyContactService = emergencyContactService;
-    
-    [HttpGet]
-    public async Task<ActionResult<List<EmergencyContact>>> Get([FromBody] EmergencyContactFilters filters)
+    public EmergencyContactController(EmergencyContactService emergencyContactService, 
+        IMapper mapper)
     {
-        try
-        {
-            return Ok(await _emergencyContactService.Get(filters));
-        }
-        catch (AppException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
+        _emergencyContactService = emergencyContactService;
+        _mapper = mapper;
     }
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<EmergencyContact>> Get(int id)
+    [HttpGet]
+    public async Task<ActionResult<List<EmergencyContactViewModel>>> Get([FromQuery] EmergencyContactFilters filters)
     {
         try
         {
-            return Ok(await _emergencyContactService.Get(id));
+            var contacts = await _emergencyContactService.Query(filters);
+            var contactsViewModel = _mapper.Map<List<EmergencyContactViewModel>>(contacts);
+
+            return Ok(contactsViewModel);
         }
         catch (AppException ex)
         {
@@ -67,11 +60,15 @@ public class EmergencyContactController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<EmergencyContact>> Post([FromBody]EmergencyContact contact)
+    public async Task<ActionResult<EmergencyContactViewModel>> Post([FromBody]EmergencyContactPostViewModel contact)
     {
         try
         {
-            return Ok(await _emergencyContactService.CreateNewContact(contact));
+            var contactMapped = _mapper.Map<EmergencyContact>(contact);
+            var contactCreated = await _emergencyContactService.Create(contactMapped);
+            var contactViewModel = _mapper.Map<EmergencyContactViewModel>(contactCreated);
+
+            return Ok(contactViewModel);
         }
         catch (AppException ex)
         {
@@ -84,11 +81,35 @@ public class EmergencyContactController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<ActionResult<EmergencyContact>> Put([FromBody]EmergencyContact contact)
+    public async Task<ActionResult<EmergencyContactViewModel>> Put([FromBody]EmergencyContactViewModel contact)
     {
         try
         {
-            return Ok(await _emergencyContactService.EditContact(contact));
+            var contactMapped = _mapper.Map<EmergencyContact>(contact);
+            var contactEdited = await _emergencyContactService.Update(contactMapped);
+            var contactViewModel = _mapper.Map<EmergencyContactViewModel>(contactEdited);
+
+            return Ok(contactViewModel);
+        }
+        catch (AppException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<EmergencyContactViewModel>> Delete(int id)
+    {
+        try
+        {
+            var contactDeleted = await _emergencyContactService.Delete(id);
+            var contactsViewModel = _mapper.Map<EmergencyContactViewModel>(contactDeleted);
+
+            return Ok(contactsViewModel);
         }
         catch (AppException ex)
         {

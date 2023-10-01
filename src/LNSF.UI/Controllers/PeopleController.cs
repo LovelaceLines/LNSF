@@ -23,14 +23,14 @@ public class PeopleController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<PeopleReturnViewModel>>> Get([FromQuery]PeopleFilters filters)
+    public async Task<ActionResult<List<PeopleViewModel>>> Get([FromQuery]PeopleFilters filters)
     {
         try
         {
             var peoples = await _peopleService.Get(filters);
-            var peoplesReturn = _mapper.Map<List<PeopleReturnViewModel>>(peoples);
+            var peoplesViewModel = _mapper.Map<List<PeopleViewModel>>(peoples);
             
-            return Ok(peoplesReturn);
+            return Ok(peoplesViewModel);
         }
         catch (AppException ex)
         {
@@ -56,15 +56,15 @@ public class PeopleController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<PeopleReturnViewModel>> Post([FromBody]PeoplePostViewModel people)
+    public async Task<ActionResult<PeopleViewModel>> Post([FromBody]PeoplePostViewModel people)
     {
         try
         {
-            var peopleEntity = _mapper.Map<People>(people);
-            peopleEntity = await _peopleService.CreateNewPeople(peopleEntity);
-            var peopleReturn = _mapper.Map<PeopleReturnViewModel>(peopleEntity);
+            var peopleMapped = _mapper.Map<People>(people);
+            var peopleCreated = await _peopleService.CreateNewPeople(peopleMapped);
+            var peopleViewModel = _mapper.Map<PeopleViewModel>(peopleCreated);
             
-            return Ok(peopleReturn);
+            return Ok(peopleViewModel);
         }
         catch (AppException ex)
         {
@@ -77,15 +77,15 @@ public class PeopleController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<ActionResult<PeopleReturnViewModel>> Put([FromBody]PeoplePutViewModel people)
+    public async Task<ActionResult<PeopleViewModel>> Put([FromBody]PeoplePutViewModel people)
     {
         try
         {
-            var peopleEntity = _mapper.Map<People>(people);
-            peopleEntity = await _peopleService.EditBasicInformation(peopleEntity);
-            var peopleReturn = _mapper.Map<PeopleReturnViewModel>(peopleEntity);
+            var peopleMapper = _mapper.Map<People>(people);
+            var peopleUpdated = await _peopleService.EditBasicInformation(peopleMapper);
+            var peopleViewModel = _mapper.Map<PeopleViewModel>(peopleUpdated);
 
-            return Ok(peopleReturn);
+            return Ok(peopleViewModel);
         }
         catch (AppException ex)
         {
@@ -98,14 +98,14 @@ public class PeopleController : ControllerBase
     }
 
     [HttpPut("add-people-to-room")]
-    public async Task<ActionResult<PeopleReturnViewModel>> Put([FromBody]PeopleAddPeopleToRoomViewModel Ids)
+    public async Task<ActionResult<PeopleViewModel>> Put([FromBody]PeopleAddPeopleToRoomViewModel Ids)
     {
         try
         {
-            var peopleEntity = await _peopleService.AddPeopleToRoom(Ids.PeopleId, Ids.RoomId);
-            var peopleReturn = _mapper.Map<PeopleReturnViewModel>(peopleEntity);
+            var peopleUpdated = await _peopleService.AddPeopleToRoom(Ids.PeopleId, Ids.RoomId);
+            var peopleViewModel = _mapper.Map<PeopleViewModel>(peopleUpdated);
 
-            return Ok(peopleReturn);
+            return Ok(peopleViewModel);
         }
         catch (AppException ex)
         {
@@ -118,14 +118,14 @@ public class PeopleController : ControllerBase
     }
 
     [HttpPut("remove-people-from-room")]
-    public async Task<ActionResult<PeopleReturnViewModel>> Put([FromBody]PeopleRemovePeopleFromRoom peopleId)
+    public async Task<ActionResult<PeopleViewModel>> Put([FromBody]PeopleRemovePeopleFromRoom peopleId)
     {
         try
         {
-            var peopleEntity = await _peopleService.RemovePeopleFromRoom(peopleId.PeopleId);
-            var peopleReturn = _mapper.Map<PeopleReturnViewModel>(peopleEntity);
+            var peopleUpdated = await _peopleService.RemovePeopleFromRoom(peopleId.PeopleId);
+            var peopleViewModel = _mapper.Map<PeopleViewModel>(peopleUpdated);
 
-            return Ok(peopleReturn);
+            return Ok(peopleViewModel);
         }
         catch (AppException ex)
         {

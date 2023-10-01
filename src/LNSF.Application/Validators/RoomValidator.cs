@@ -20,7 +20,7 @@ public class RoomValidator : AbstractValidator<Room>
             .GreaterThanOrEqualTo(0).WithMessage(GlobalValidator.MinLength("Ocupação", 0));
         
         RuleFor(room => room.Storey)
-            .GreaterThan(0).WithMessage(GlobalValidator.MinLength("Andar", 1));
+            .GreaterThanOrEqualTo(0).WithMessage(GlobalValidator.MinLength("Andar", 0));
         
         RuleFor(room => room)
             .Must(room => (room.Available == true && room.Occupation < room.Beds) ||

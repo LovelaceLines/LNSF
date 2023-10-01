@@ -16,11 +16,22 @@ var builder = WebApplication.CreateBuilder(args);
 var autoMapperConfig = new MapperConfiguration(configure =>
 {
     configure.CreateMap<Room, RoomPostViewModel>().ReverseMap();
+    configure.CreateMap<Room, RoomViewModel>().ReverseMap();
+    configure.CreateMap<RoomViewModel, RoomPostViewModel>().ReverseMap();
     
     configure.CreateMap<People, PeoplePostViewModel>().ReverseMap();
     configure.CreateMap<People, PeoplePutViewModel>().ReverseMap();
     configure.CreateMap<People, PeopleAddPeopleToRoomViewModel>().ReverseMap();
-    configure.CreateMap<People, PeopleReturnViewModel>().ReverseMap();
+    configure.CreateMap<People, PeopleViewModel>().ReverseMap();
+
+    configure.CreateMap<EmergencyContact, EmergencyContactPostViewModel>().ReverseMap();
+    configure.CreateMap<EmergencyContact, EmergencyContactViewModel>().ReverseMap();
+
+    configure.CreateMap<TourViewModel, TourPostViewModel>().ReverseMap();
+    configure.CreateMap<Tour, TourViewModel>().ReverseMap();
+    configure.CreateMap<Tour, TourPostViewModel>().ReverseMap();
+    configure.CreateMap<Tour, TourPutViewModel>().ReverseMap();
+    configure.CreateMap<TourViewModel, TourPutViewModel>().ReverseMap();
 });
 
 builder.Services.AddSingleton(autoMapperConfig.CreateMapper());
@@ -32,6 +43,7 @@ builder.Services.AddSingleton(autoMapperConfig.CreateMapper());
 builder.Services.AddTransient<PaginationValidator>();
 
 builder.Services.AddTransient<IToursRepository, ToursRepository>();
+builder.Services.AddTransient<TourFiltersValidator>();
 builder.Services.AddTransient<TourPostValidator>();
 builder.Services.AddTransient<TourPutValidator>();
 builder.Services.AddTransient<GlobalValidator>();
@@ -56,8 +68,8 @@ builder.Services.AddTransient<EmergencyContactService>();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    // options.UseInMemoryDatabase("InMemoryDatabaseName");
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseInMemoryDatabase("InMemoryDatabaseName");
+    // options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
     options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 });
 
@@ -68,7 +80,9 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || 
+    app.Environment.IsProduction() || 
+    app.Environment.IsStaging())
 {
     app.UseSwagger();
     app.UseSwaggerUI();

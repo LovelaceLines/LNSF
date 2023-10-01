@@ -1,9 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
-using System.Security.Cryptography;
 using AutoMapper;
-using LNSF.Domain.DTOs;
-using LNSF.Domain.Entities;
 using LNSF.Test.Fakers;
 using LNSF.UI.ViewModels;
 using Newtonsoft.Json;
@@ -20,143 +17,197 @@ public class RoomTestApi
     {
         var mapperConfig = new MapperConfiguration(cfg =>
         {
-            cfg.CreateMap<RoomPostViewModel, Room>().ReverseMap();
+            cfg.CreateMap<RoomPostViewModel, RoomViewModel>().ReverseMap();
         });
 
         _mapper = mapperConfig.CreateMapper();
     }
 
     [Fact]
-    public async Task Get_UsingFilters_ReturnOk()
+    public async Task Post_RoomValid_Ok()
     {
-        var fakeRooms = new RoomPostViewModelFake().Generate(RandomNumberGenerator.GetInt32(1, 10));
-        await _global.Post(_global._roomClient, fakeRooms);
-
-        var filters = new RoomFiltersFake().Generate();
-        var getResponse = await _global._roomClient.GetAsync(_global.ConvertObjectToQueryString(filters));
-
-        Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
-    }
-
-    [Fact]
-    public async Task Get_UsingFiltersEmpty_ReturnAll()
-    {
-        var fakeRooms = new RoomPostViewModelFake().Generate(RandomNumberGenerator.GetInt32(1, 10));
-        await _global.Post(_global._roomClient, fakeRooms);
-
-        var filters = new RoomFilters(); // Empty
-        var getResponse = await _global._roomClient.GetAsync(_global.ConvertObjectToQueryString(filters));
-        var getRooms = await getResponse.Content.ReadFromJsonAsync<List<Room>>();
-        var quantity = await _global.GetQuantity(_global._roomClient);
-
-        Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
-        Assert.Equal(quantity, getRooms?.Count);
-    }
-
-    [Fact]
-    public async Task Get_UsingFiltersId_ReturnOne()
-    {
-        var fakeRooms = new RoomPostViewModelFake().Generate();
-        var postResponse = await _global._roomClient.PostAsync("", JsonContent.Create(fakeRooms));
-        var postRoom = await postResponse.Content.ReadFromJsonAsync<Room>();
-
-        var filters = new RoomFilters() { Id = postRoom?.Id ?? 0 };
-        var getResponse = await _global._roomClient.GetAsync(_global.ConvertObjectToQueryString(filters));
-        var getRooms = await _global.Get<List<Room>>(_global._roomClient, _global.ConvertObjectToQueryString(filters));
-
-        Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
-        Assert.Single(getRooms);
-    }
-
-    [Fact]
-    public async Task GetQuantity__NotNull()
-    {
-        var getReponse = await _global._roomClient.GetAsync("quantity");
-        var quantity = await getReponse.Content.ReadFromJsonAsync<int>();
-
-        Assert.Equal(HttpStatusCode.OK, getReponse.StatusCode);
-        Assert.True(quantity >= 0);
-    }
-
-    [Fact]
-    public async Task GetQuantity_PostRoom_ReturnQuantityPlusOne()
-    {
-        var quantity = await _global.GetQuantity(_global._roomClient);
-        
-        await _global._roomClient.PostAsync("", JsonContent.Create(new RoomPostViewModelFake().Generate()));
-        var newQuantity = await _global.GetQuantity(_global._roomClient);
-
-        Assert.Equal(quantity + 1, newQuantity);
-    }
-
-    [Fact]
-    public async Task Post_RoomValid_ReturnOk()
-    {
+        // Arrange
         var fakeRoom = new RoomPostViewModelFake().Generate();
-        var quantity = await _global.GetQuantity(_global._roomClient);
+        var quantityBefore = await GetQuantity();
 
-        var postResponse = await _global._roomClient.PostAsync("", JsonContent.Create(fakeRoom));
-        var postRoom = await postResponse.Content.ReadFromJsonAsync<Room>();
-        var newQuantity = await _global.GetQuantity(_global._roomClient);
+        // Act
+        var roomPosted = await Post(fakeRoom);
+        var quantityAfter = await GetQuantity();
 
-        Assert.Equal(HttpStatusCode.OK, postResponse.StatusCode);
-        Assert.Equal(quantity + 1, newQuantity);
-        Assert.NotEqual(0, postRoom?.Id ?? 0);
-        Assert.Equivalent(fakeRoom, postRoom);
+        Assert.Equal(quantityBefore + 1, quantityAfter);
+        Assert.Equivalent(fakeRoom, roomPosted);
     }
 
     [Fact]
-    public async Task Post_RoomInvalid_ReturnBadRequest()
+    public async Task Post_RoomInvalid_BadRequest()
     {
-        var fakeRoom = new RoomPostViewModelFake().Generate();
-        fakeRoom.Number = "";
-        var quantity = await _global.GetQuantity(_global._roomClient);
+        // Arrange
+        var fakeRoom1 = new RoomPostViewModelFake().Generate();
+        fakeRoom1.Number = "";
+        var fakeRoom2 = new RoomPostViewModelFake().Generate();
+        fakeRoom2.Beds = 0;
+        var fakeRoom3 = new RoomPostViewModelFake().Generate();
+        fakeRoom3.Storey = -1;
+        var fakeRoom4 = new RoomPostViewModelFake().Generate();
+        fakeRoom4.Occupation = -1;
+        var fakeRoom5 = new RoomPostViewModelFake().Generate();
+        fakeRoom5.Occupation = fakeRoom5.Beds + 1;
+        var fakeRoom6 = new RoomPostViewModelFake().Generate();
+        fakeRoom6.Available = true;
+        fakeRoom6.Occupation = fakeRoom6.Beds;
+        var fakeRoom7 = new RoomPostViewModelFake().Generate();
+        fakeRoom7.Available = true;
+        fakeRoom7.Occupation = fakeRoom7.Beds + 1;
 
-        var postResponse = await _global._roomClient.PostAsync("", JsonContent.Create(fakeRoom));
-        var newQuantity = await _global.GetQuantity(_global._roomClient);
+        var quantityBefore = await GetQuantity();
 
-        Assert.Equal(HttpStatusCode.BadRequest, postResponse.StatusCode);
-        Assert.Equal(quantity, newQuantity);
+        // Act
+        // Room withou number
+        await Assert.ThrowsAsync<Exception>(() => Post(fakeRoom1));
+        // Room withou beds
+        await Assert.ThrowsAsync<Exception>(() => Post(fakeRoom2));
+        // Room with invalid storey
+        await Assert.ThrowsAsync<Exception>(() => Post(fakeRoom3));
+        // Room with invalid occupation
+        await Assert.ThrowsAsync<Exception>(() => Post(fakeRoom4));
+        // Room with more occupants than beds
+        await Assert.ThrowsAsync<Exception>(() => Post(fakeRoom5));
+        // Room with available but no vacant beds
+        await Assert.ThrowsAsync<Exception>(() => Post(fakeRoom6));
+        // Room with available but more occupants than beds
+        await Assert.ThrowsAsync<Exception>(() => Post(fakeRoom7));
+
+        var quantityAfter = await GetQuantity();
+
+        // Assert
+        Assert.Equal(quantityBefore, quantityAfter);
     }
 
     [Fact]
-    public async Task Put_RoomValid_ReturnOk()
+    public async Task Put_RoomValid_Ok()
     {
-        var fakeRoom = new RoomPostViewModelFake().Generate();
-        var postResponse = await _global._roomClient.PostAsync("", JsonContent.Create(fakeRoom));
-        var postRoom = await postResponse.Content.ReadFromJsonAsync<Room>();
-        var postRoomId = postRoom?.Id ?? 0;
-        postRoom = _mapper.Map<Room>(new RoomPostViewModelFake().Generate());
-        postRoom.Id = postRoomId;
+        // Arrange - Room
+        var fakeRoom1 = new RoomPostViewModelFake().Generate();
+        var roomPosted1 = await Post(fakeRoom1);
 
-        var putResponse = await _global._roomClient.PutAsync("", JsonContent.Create(postRoom));
-        var putRoom = await putResponse.Content.ReadFromJsonAsync<Room>();
+        // Arrange - Quantity
+        var quantityBefore = await GetQuantity();
 
-        Assert.Equal(HttpStatusCode.OK, putResponse.StatusCode);
-        Assert.Equal(postRoomId, putRoom?.Id);
+        // Act
+        var fakeRoom2 = new RoomPostViewModelFake().Generate();
+        var roomMapped = _mapper.Map<RoomViewModel>(fakeRoom2);
+        roomMapped.Id = roomPosted1.Id;
+        var roomPuted = await Put(roomMapped);
+        var quantityAfter = await GetQuantity();
+
+        // Assert
+        Assert.Equivalent(fakeRoom2, roomPuted);
+        Assert.Equal(quantityBefore, quantityAfter);
     }
 
-    public async Task<Room> Get(int id)
+    [Fact]
+    public async Task Put_RoomInvalid_BadRequest()
     {
-        var filters = new RoomFilters() { Id = id };
-        var getResponse = await _global._roomClient.GetAsync(_global.ConvertObjectToQueryString(filters));
-        var getRooms = await _global.Get<List<Room>>(_global._roomClient, _global.ConvertObjectToQueryString(filters));
+        // Arrange - Room
+        var roomFake = new RoomPostViewModelFake().Generate();
+        var roomPosted = await Post(roomFake);
 
-        return getRooms?.FirstOrDefault();
+        var roomFake1 = new RoomPostViewModelFake().Generate();
+        var roomMapped1 = _mapper.Map<RoomViewModel>(roomFake1);
+        roomMapped1.Number = "";
+        var roomFake2 = new RoomPostViewModelFake().Generate();
+        var roomMapped2 = _mapper.Map<RoomViewModel>(roomFake2);
+        roomMapped2.Beds = 0;
+        var roomFake3 = new RoomPostViewModelFake().Generate();
+        var roomMapped3 = _mapper.Map<RoomViewModel>(roomFake3);
+        roomMapped3.Storey = -1;
+        var roomFake4 = new RoomPostViewModelFake().Generate();
+        var roomMapped4 = _mapper.Map<RoomViewModel>(roomFake4); 
+        roomMapped4.Occupation = -1;
+        var roomFake5 = new RoomPostViewModelFake().Generate();
+        var roomMapped5 = _mapper.Map<RoomViewModel>(roomFake5);
+        roomMapped5.Occupation = roomMapped5.Beds + 1;
+        var roomFake6 = new RoomPostViewModelFake().Generate();
+        var roomMapped6 = _mapper.Map<RoomViewModel>(roomFake6); 
+        roomMapped6.Available = true;
+        roomMapped6.Occupation = roomMapped6.Beds;
+        var roomFake7 = new RoomPostViewModelFake().Generate();
+        var roomMapped7 = _mapper.Map<RoomViewModel>(roomFake7); 
+        roomMapped7.Available = true;
+        roomMapped7.Occupation = roomMapped7.Beds + 1;
+
+        // Arrange - Quantity
+        var quantityBefore = await GetQuantity();
+
+        // Act
+        // Room withou number
+        await Assert.ThrowsAsync<Exception>(() => Put(roomMapped1));
+        // Room withou beds
+        await Assert.ThrowsAsync<Exception>(() => Put(roomMapped2));
+        // Room with invalid storey
+        await Assert.ThrowsAsync<Exception>(() => Put(roomMapped3));
+        // Room with invalid occupation
+        await Assert.ThrowsAsync<Exception>(() => Put(roomMapped4));
+        // Room with more occupants than beds
+        await Assert.ThrowsAsync<Exception>(() => Put(roomMapped5));
+        // Room with available but no vacant beds
+        await Assert.ThrowsAsync<Exception>(() => Put(roomMapped6));
+        // Room with available but more occupants than beds
+        await Assert.ThrowsAsync<Exception>(() => Put(roomMapped7));
+        var quantityAfter = await GetQuantity();
+
+        // Assert
+        Assert.Equal(quantityBefore, quantityAfter);
     }
 
-    public async Task<Room> Post(RoomPostViewModel room)
+    public async Task<RoomViewModel> Get(int id)
     {
-        var postResponse = await _global._roomClient.PostAsync("", JsonContent.Create(room));
-        var content = await postResponse.Content.ReadAsStringAsync();
-        var value = JsonConvert.DeserializeObject<Room>(content);
+        var response = await _global._roomClient.GetAsync($"?Id={id}");
+        var content = await response.Content.ReadAsStringAsync();
+        var values = JsonConvert.DeserializeObject<List<RoomViewModel>>(content);
+        var value = values?.FirstOrDefault();
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
         return value ?? throw new Exception("Value is null");
     }
 
-    public async Task Post(List<RoomPostViewModel> rooms)
+    public async Task<int> GetQuantity()
     {
-        var postTasks = rooms.Select(room => _global._roomClient.PostAsync("", JsonContent.Create(room))).ToList();
-        await Task.WhenAll(postTasks);
+        var response = await _global._roomClient.GetAsync("quantity");
+        var content = await response.Content.ReadAsStringAsync();
+        var value = JsonConvert.DeserializeObject<int>(content);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        return value;
+    }
+
+    public async Task<RoomViewModel> Post(RoomPostViewModel room)
+    {
+        var roomJson = JsonContent.Create(room);
+        var response = await _global._roomClient.PostAsync("", roomJson);
+        var content = await response.Content.ReadAsStringAsync();
+
+        if (response.StatusCode == HttpStatusCode.BadRequest)
+            throw new Exception(content);
+
+        var value = JsonConvert.DeserializeObject<RoomViewModel>(content);
+
+        return value ?? throw new Exception("Value is null");
+    }
+
+    public async Task<RoomViewModel> Put(RoomViewModel room)
+    {
+        var roomJson = JsonContent.Create(room);
+        var response = await _global._roomClient.PutAsync("", roomJson);
+        var content = await response.Content.ReadAsStringAsync();
+
+        if (response.StatusCode == HttpStatusCode.BadRequest)
+            throw new Exception(content);
+
+        var value = JsonConvert.DeserializeObject<RoomViewModel>(content);
+
+        return value ?? throw new Exception("Value is null");
     }
 }

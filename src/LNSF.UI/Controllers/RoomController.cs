@@ -23,11 +23,14 @@ public class RoomController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<Room>>> Get([FromQuery]RoomFilters filters)
+    public async Task<ActionResult<List<RoomViewModel>>> Get([FromQuery]RoomFilters filters)
     {
         try
         {
-            return Ok(await _roomService.Get(filters));
+            var rooms = await _roomService.Query(filters);
+            var roomsMapped = _mapper.Map<List<RoomViewModel>>(rooms);
+
+            return Ok(roomsMapped);
         }
         catch (AppException ex)
         {
@@ -58,14 +61,15 @@ public class RoomController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Room>> Post([FromBody]RoomPostViewModel room)
+    public async Task<ActionResult<RoomViewModel>> Post([FromBody]RoomPostViewModel room)
     {
         try
         {
-            var roomEntity = _mapper.Map<Room>(room);
-            roomEntity = await _roomService.Post(roomEntity);
+            var roomMapped = _mapper.Map<Room>(room);
+            roomMapped = await _roomService.Create(roomMapped);
+            var roomViewModel = _mapper.Map<RoomViewModel>(roomMapped);
 
-            return Ok(roomEntity);
+            return Ok(roomViewModel);
         }
         catch (AppException ex)
         {
@@ -78,11 +82,15 @@ public class RoomController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<ActionResult<Room>> Put([FromBody]Room room)
+    public async Task<ActionResult<RoomViewModel>> Put([FromBody]RoomViewModel room)
     {
         try
         {
-            return Ok(await _roomService.Put(room));
+            var roomMapped = _mapper.Map<Room>(room);
+            roomMapped = await _roomService.Update(roomMapped);
+            var roomViewModel = _mapper.Map<RoomViewModel>(roomMapped);
+
+            return Ok(roomViewModel);
         }
         catch (AppException ex)
         {

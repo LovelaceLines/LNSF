@@ -5,5 +5,5 @@ namespace LNSF.Domain.Repositories;
 
 public interface IRoomsRepository : IBaseRepository<Room>
 {
-    public Task<List<Room>> Get(RoomFilters filters);
+    public Task<List<Room>> Query(RoomFilters filters);
 }

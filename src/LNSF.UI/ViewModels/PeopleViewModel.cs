@@ -2,7 +2,7 @@
 
 namespace LNSF.UI.ViewModels;
 
-public class PeopleReturnViewModel
+public class PeopleViewModel
 {
     public int Id { get; set; }
     public string Name { get; set; }  = "";

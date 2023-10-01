@@ -22,302 +22,415 @@ public class PeopleTestApi
         var mapperConfig = new MapperConfiguration(cfg =>
         {
             cfg.CreateMap<PeoplePutViewModel, PeoplePostViewModel>().ReverseMap();
-            cfg.CreateMap<PeopleReturnViewModel, PeoplePostViewModel>().ReverseMap();
+            cfg.CreateMap<PeopleViewModel, PeoplePostViewModel>().ReverseMap();
         });
 
         _mapper = mapperConfig.CreateMapper();
     }
 
     [Fact]
-    public async Task Get_UsingFilters_ReturnOk()
+    public async Task Post_PeopleValid_Ok()
     {
-        var fakePeoples = new PeoplePostViewModelFake().Generate(RandomNumberGenerator.GetInt32(1, 10));
-        await Post(fakePeoples);
-        var quantity = await GetQuantity();
+        // Arrange - People
+        var peopleFake = new PeoplePostViewModelFake().Generate();
 
-        var filters = new PeopleFiltersFake().Generate();
-        var getResponse = await _global._peopleClient.GetAsync(_global.ConvertObjectToQueryString(filters));
-        var getPeoples = await getResponse.Content.ReadFromJsonAsync<List<People>>();
-        var newQuantity = await GetQuantity();
+        // Arrange - Quantity
+        var quantityBefore = await GetQuantity();
 
-        Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
-        Assert.Equal(quantity, newQuantity);
-        Assert.NotNull(getPeoples);
-        Assert.True(getPeoples?.Count >= 0);
-        Assert.True(getPeoples?.Count <= filters.Page.PageSize);
-        Assert.True(getPeoples?.Count <= quantity);
+        // Act
+        var peoplePosted = await Post(peopleFake);
+        var quantityAfter = await GetQuantity();
+
+        // Assert
+        Assert.Equal(quantityBefore + 1, quantityAfter);
+        Assert.Equivalent(peopleFake, peoplePosted);
     }
 
     [Fact]
-    public async Task Get_UsingFiltersEmpty_ReturnAll() // Filters empty equals to return all
+    public async Task Post_PeopleInvalid_BadRequest()
     {
-        int randomCount = RandomNumberGenerator.GetInt32(1, 50);
-        var quantity = await GetQuantity();
-        var fakePeoples = new PeoplePostViewModelFake().Generate(randomCount);
-        await Post(fakePeoples);
-
-        var filters = new PeopleFilters(); // Empty
-        var getResponse = await _global._peopleClient.GetAsync(_global.ConvertObjectToQueryString(filters));
-        var getPeoples = await getResponse.Content.ReadFromJsonAsync<List<People>>();
-        var newQuantity = await GetQuantity();
-
-        Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
-        Assert.Equal(quantity + randomCount, newQuantity);
-        Assert.Equal(newQuantity, getPeoples?.Count);
-        Assert.True(getPeoples?.Count >= 0);
-    }
-
-    [Fact]
-    public async Task GetQuantity__ReturnOk()
-    {
-        var fakePeoples = new PeoplePostViewModelFake().Generate(RandomNumberGenerator.GetInt32(1, 50));
-        await Post(fakePeoples);
-
-        var getResponse = await _global._peopleClient.GetAsync("quantity");
-
-        Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
-    }
-
-    [Fact]
-    public async Task GetQuantity_PostPeople_ReturnQuantityPlusOne()
-    {
-        var quantity = await GetQuantity();
-
-        var people = new PeoplePostViewModelFake().Generate();
-        var postResponse = await _global._peopleClient.PostAsync("", JsonContent.Create(people));
-        var newQuantity = await GetQuantity();
-
-        Assert.Equal(HttpStatusCode.OK, postResponse.StatusCode);
-        Assert.Equal(quantity + 1, newQuantity);
-    }
-
-    [Fact]
-    public async Task Post_PeopleValid_ReturnOk()
-    {
-        var fakePeople = new PeoplePostViewModelFake().Generate();
-        var quantity = await GetQuantity();
-
-        var postResponse = await _global._peopleClient.PostAsync("", JsonContent.Create(fakePeople));
-        var postPeople = await postResponse.Content.ReadFromJsonAsync<PeopleReturnViewModel>();
-        var newQuantity = await GetQuantity();
-
-        Assert.Equal(HttpStatusCode.OK, postResponse.StatusCode);
-        Assert.Equal(quantity + 1, newQuantity);
-        Assert.Equivalent(fakePeople, postPeople);
-        Assert.True(postPeople?.Id != null);
-        Assert.True(postPeople?.RoomId == null);
-    }
-
-    [Fact]
-    public async Task Post_PeopleInvalid_ReturnBadRequest()
-    {
-        var fakePeople = new PeoplePostViewModelFake().Generate();
-        fakePeople.Name = "";
-
-        var postResponse = await _global._peopleClient.PostAsync("", JsonContent.Create(fakePeople));
-
-        Assert.Equal(HttpStatusCode.BadRequest, postResponse.StatusCode);
-    }
-
-    [Fact]
-    public async Task Put_PeopleValid_ReturnOk()
-    {
-        var fakePeople = new PeoplePostViewModelFake().Generate();
-        var postPeople = await Post(fakePeople);
-        var quantity = await _global.GetQuantity(_global._peopleClient);
-
-        fakePeople = new PeoplePostViewModelFake().Generate();
-        var putPeople = _mapper.Map<PeopleReturnViewModel>(fakePeople);
-        putPeople.Id = postPeople.Id;
-        var putResponse = await _global._peopleClient.PutAsync("", JsonContent.Create(putPeople));
-        var getPutPeople = await putResponse.Content.ReadFromJsonAsync<PeopleReturnViewModel>();
-        var newQuantity = await GetQuantity();
-
-        Assert.Equal(HttpStatusCode.OK, putResponse.StatusCode);
-        Assert.Equal(quantity, newQuantity);
-        Assert.Equivalent(fakePeople, getPutPeople);
-        Assert.Equal(postPeople.Id, putPeople.Id);
-        Assert.Equal(putPeople.Id, getPutPeople?.Id);
-        Assert.Equal(postPeople.RoomId, putPeople.RoomId);
-        Assert.Equal(putPeople.RoomId, getPutPeople?.RoomId);
-    }
-
-    [Fact]
-    public async Task AddPeopleToRoom_PeopleValidAndRoomValid_ReturnOk()
-    {
-        var fakePeople = new PeoplePostViewModelFake().Generate();
-        var postPeople = await Post(fakePeople);
-        var fakeRoom = new RoomPostViewModelFake().Generate();
-        if (fakeRoom.Occupation == fakeRoom.Beds) fakeRoom.Occupation--;
-        fakeRoom.Available = true;
-        var postRoom = await _room.Post(fakeRoom);
-
-        var ids = new PeopleAddPeopleToRoomViewModel
-        {
-            PeopleId = postPeople?.Id ?? 0,
-            RoomId = postRoom?.Id ?? 0
-        };
-        var peoplePutResponse = await _global._peopleClient.PutAsync("add-people-to-room", JsonContent.Create(ids));
-        var putPeople = await peoplePutResponse.Content.ReadFromJsonAsync<PeopleReturnViewModel>();
-        var filters = new RoomFilters(){ Id = postRoom?.Id };
-        var roomGetResponse = await _global._roomClient.GetAsync(_global.ConvertObjectToQueryString(filters));
-        var putRooms = await roomGetResponse.Content.ReadFromJsonAsync<List<Room>>();
-        var putRoom = putRooms?.FirstOrDefault();
-
-        Assert.Equal(HttpStatusCode.OK, peoplePutResponse.StatusCode);
-        Assert.Equivalent(fakePeople, putPeople);
-        Assert.Equal(ids.RoomId, putRoom?.Id);
-        Assert.Equal(fakeRoom?.Occupation + 1, putRoom?.Occupation ?? 0);
-    }
-
-    [Fact]
-    public async Task AddPeopleToRoom_PeopleInvalid_ReturnBadRequest()
-    {
-        var fakePeople = new PeoplePostViewModelFake().Generate();
-        var postPeople = await Post(fakePeople);
-        var fakeRoom = new RoomPostViewModelFake().Generate();
-        if (fakeRoom.Occupation == fakeRoom.Beds) fakeRoom.Occupation--;
-        fakeRoom.Available = true;
-        var postRoom = await _room.Post(fakeRoom);
-        var ids = new PeopleAddPeopleToRoomViewModel
-        {
-            PeopleId = postPeople?.Id ?? 0,
-            RoomId = postRoom?.Id ?? 0
-        };
-        var peoplePutResponse = await _global._peopleClient.PutAsync("add-people-to-room", JsonContent.Create(ids));
-        
-        var fakeRoom2 = new RoomPostViewModelFake().Generate();
-        if (fakeRoom2.Occupation == fakeRoom2.Beds) fakeRoom2.Occupation--;
-        fakeRoom2.Available = true;
-        var postRoom2 = await _room.Post(fakeRoom2);
-        var ids2 = new PeopleAddPeopleToRoomViewModel
-        {
-            PeopleId = postPeople?.Id ?? 0,
-            RoomId = postRoom2?.Id ?? 0
-        };
-
-        var peoplePutResponse2 = await _global._peopleClient.PutAsync("add-people-to-room", JsonContent.Create(ids2));
-        var getRoom2 = await _room.Get(postRoom2?.Id ?? 0);
-
-        Assert.Equal(HttpStatusCode.OK, peoplePutResponse.StatusCode);
-        Assert.Equal(HttpStatusCode.BadRequest, peoplePutResponse2.StatusCode);
-        Assert.Equivalent(fakeRoom2, getRoom2);
-        Assert.Equivalent(postRoom2, getRoom2);
-    }
-
-    [Fact]
-    public async Task AddPeopleToRoom_RoomInvalid_ReturnBadRequest()
-    {
-        var fakePeople = new PeoplePostViewModelFake().Generate();
-        var postPeople = await Post(fakePeople);
-        var fakeRoom = new RoomPostViewModelFake().Generate();
-        if (fakeRoom.Occupation == fakeRoom.Beds) fakeRoom.Occupation = fakeRoom.Beds - 1;
-        fakeRoom.Available = true;
-        var postRoom = await _room.Post(fakeRoom);
-        var ids = new PeopleAddPeopleToRoomViewModel
-        {
-            PeopleId = postPeople?.Id ?? 0,
-            RoomId = postRoom?.Id ?? 0
-        };
-        var peoplePutResponse = await _global._peopleClient.PutAsync("add-people-to-room", JsonContent.Create(ids));
-        var getPostRoom = await _room.Get(postRoom?.Id ?? 0);
-
+        // Arrange - People
+        var fakePeople1 = new PeoplePostViewModelFake().Generate();
+        fakePeople1.Name = "";
         var fakePeople2 = new PeoplePostViewModelFake().Generate();
-        var postPeople2 = await Post(fakePeople2);
-        var ids2 = new PeopleAddPeopleToRoomViewModel
-        {
-            PeopleId = postPeople2?.Id ?? 0,
-            RoomId = postRoom?.Id ?? 0
-        };
+        fakePeople2.BirthDate = DateTime.Now.AddYears(-14);
+        var fakePeople3 = new PeoplePostViewModelFake().Generate();
+        fakePeople3.BirthDate = DateTime.Now.AddYears(-129);
+        var fakePeople4 = new PeoplePostViewModelFake().Generate();
+        fakePeople4.RG = "123456789";
+        var fakePeople5 = new PeoplePostViewModelFake().Generate();
+        fakePeople5.CPF = "123456789";
+        var fakePeople6 = new PeoplePostViewModelFake().Generate();
+        fakePeople6.Phone = "123456789";
 
-        var peoplePutResponse2 = await _global._peopleClient.PutAsync("add-people-to-room", JsonContent.Create(ids2));
-        var getRoom2 = await _room.Get(postRoom?.Id ?? 0);
+        // Arrange - Quantity
+        var quantityBefore = await GetQuantity();
 
-        Assert.Equal(HttpStatusCode.OK, peoplePutResponse.StatusCode);
-        Assert.Equal(HttpStatusCode.BadRequest, peoplePutResponse2.StatusCode);
-        Assert.Equivalent(getPostRoom, getRoom2);
-        Assert.NotEqual(postRoom, getRoom2);
+        // Act
+        // People without name
+        await Assert.ThrowsAsync<Exception>(() => Post(fakePeople1));
+        // People with less than 14 years old
+        await Assert.ThrowsAsync<Exception>(() => Post(fakePeople2));
+        // People with more than 129 years old
+        await Assert.ThrowsAsync<Exception>(() => Post(fakePeople3));
+        // People with invalid RG
+        await Assert.ThrowsAsync<Exception>(() => Post(fakePeople4));
+        // People with invalid CPF
+        await Assert.ThrowsAsync<Exception>(() => Post(fakePeople5));
+        // People with invalid phone
+        await Assert.ThrowsAsync<Exception>(() => Post(fakePeople6));
+        var quantityAfter = await GetQuantity();
+
+        // Assert
+        Assert.Equal(quantityBefore, quantityAfter);
     }
 
     [Fact]
-    public async Task RemovePeopleFromRoom_PeopleValid_ReturnOk()
+    public async Task Put_PeopleValid_Ok()
     {
-        var fakePeople = new PeoplePostViewModelFake().Generate();
-        var postPeople = await Post(fakePeople);
-        var fakeRoom = new RoomPostViewModelFake().Generate();
-        if (fakeRoom.Occupation == fakeRoom.Beds) fakeRoom.Occupation = fakeRoom.Beds - 1;
-        fakeRoom.Available = true;
-        var postRoom = await _room.Post(fakeRoom);
-        var ids = new PeopleAddPeopleToRoomViewModel
-        {
-            PeopleId = postPeople?.Id ?? 0,
-            RoomId = postRoom?.Id ?? 0
-        };
-        var peoplePutResponse = await _global._peopleClient.PutAsync("add-people-to-room", JsonContent.Create(ids));
-        var getPostRoom = await _room.Get(postRoom?.Id ?? 0);
-        var getPutPeople = await Get(postPeople?.Id ?? 0);
+        // Arrange - People
+        var fakePeople1 = new PeoplePostViewModelFake().Generate();
+        var peoplePosted1 = await Post(fakePeople1);
 
-        var peoplePutResponse2 = await _global._peopleClient.PutAsync("remove-people-from-room", JsonContent.Create(new PeopleRemovePeopleFromRoom(){ PeopleId = postPeople?.Id ?? 0 }));
-        var message = await peoplePutResponse2.Content.ReadAsStringAsync();
-        var getPeople = await Get(postPeople?.Id ?? 0); 
-        var getRoom = await _room.Get(postRoom?.Id ?? 0);
+        // Arrange - Quantity
+        var quantityBefore = await GetQuantity();
 
-        Assert.Equal(HttpStatusCode.OK, peoplePutResponse.StatusCode);
-        Assert.Equal(HttpStatusCode.OK, peoplePutResponse2.StatusCode);
-        Assert.Equal(getPostRoom.Occupation, getRoom.Occupation + 1);
-        Assert.NotEqual(getPutPeople.RoomId, getPeople.RoomId);
+        // Act
+        var fakePeople2 = new PeoplePostViewModelFake().Generate();
+        var peopleMapped = _mapper.Map<PeoplePutViewModel>(fakePeople2);
+        peopleMapped.Id = peoplePosted1.Id;
+        var peoplePuted = await Put(peopleMapped);
+        var quantityAfter = await GetQuantity();
+
+        // Assert
+        Assert.Equal(quantityBefore, quantityAfter);
+        Assert.Equivalent(peopleMapped, peoplePuted);
     }
 
     [Fact]
-    public async Task RemovePeopleFromRoom_PeopleInvalid_ReturnBadRequest()
+    public async Task Put_PeopleInvalid_BadRequest()
     {
-        var fakePeople = new PeoplePostViewModelFake().Generate();
-        var peoplePostResponse = await _global._peopleClient.PostAsync("", JsonContent.Create(fakePeople));
-        var postPeople = await peoplePostResponse.Content.ReadFromJsonAsync<PeopleReturnViewModel>();
-        
-        var peoplePutResponse = await _global._peopleClient.PutAsync("remove-people-from-room", JsonContent.Create(new PeopleRemovePeopleFromRoom(){ PeopleId = postPeople?.Id ?? 0 }));
-        var getPeople = await Get(postPeople?.Id ?? 0);
-        
-        Assert.Equal(HttpStatusCode.BadRequest, peoplePutResponse.StatusCode);
-        Assert.Equivalent(postPeople, getPeople);
+        // Arrange - People
+        var peopleFake = new PeoplePostViewModelFake().Generate();
+        var peoplePosted = await Post(peopleFake);
+
+        var peopleFake1 = new PeoplePostViewModelFake().Generate();
+        var peopleMapped1 = _mapper.Map<PeoplePutViewModel>(peopleFake1);
+        peopleMapped1.Name = "";
+        peopleMapped1.Id = peoplePosted.Id;
+        var peopleFake2 = new PeoplePostViewModelFake().Generate();
+        var peopleMapped2 = _mapper.Map<PeoplePutViewModel>(peopleFake2);
+        peopleMapped2.BirthDate = DateTime.Now.AddYears(-14);
+        peopleMapped2.Id = peoplePosted.Id;
+        var peopleFake3 = new PeoplePostViewModelFake().Generate();
+        var peopleMapped3 = _mapper.Map<PeoplePutViewModel>(peopleFake3);
+        peopleMapped3.BirthDate = DateTime.Now.AddYears(-129);
+        peopleMapped3.Id = peoplePosted.Id;
+        var peopleFake4 = new PeoplePostViewModelFake().Generate();
+        var peopleMapped4 = _mapper.Map<PeoplePutViewModel>(peopleFake4);
+        peopleMapped4.RG = "123456789";
+        peopleMapped4.Id = peoplePosted.Id;
+        var peopleFake5 = new PeoplePostViewModelFake().Generate();
+        var peopleMapped5 = _mapper.Map<PeoplePutViewModel>(peopleFake5);
+        peopleMapped5.CPF = "123456789";
+        peopleMapped5.Id = peoplePosted.Id;
+        var peopleFake6 = new PeoplePostViewModelFake().Generate();
+        var peopleMapped6 = _mapper.Map<PeoplePutViewModel>(peopleFake6);
+        peopleMapped6.Phone = "123456789";
+        peopleMapped6.Id = peoplePosted.Id;
+
+        // Arrange - Quantity
+        var quantityBefore = await GetQuantity();
+
+        // Act
+        // People without name
+        await Assert.ThrowsAsync<Exception>(() => Put(peopleMapped1));
+        // People with less than 14 years old
+        await Assert.ThrowsAsync<Exception>(() => Put(peopleMapped2));
+        // People with more than 129 years old
+        await Assert.ThrowsAsync<Exception>(() => Put(peopleMapped3));
+        // People with invalid RG
+        await Assert.ThrowsAsync<Exception>(() => Put(peopleMapped4));
+        // People with invalid CPF
+        await Assert.ThrowsAsync<Exception>(() => Put(peopleMapped5));
+        // People with invalid phone
+        await Assert.ThrowsAsync<Exception>(() => Put(peopleMapped6));
+        var quantityAfter = await GetQuantity();
+
+        // Assert
+        Assert.Equal(quantityBefore, quantityAfter);
     }
 
-    public async Task<PeopleReturnViewModel> Get(int id)
+    [Fact]
+    public async Task AddPeopleToRoom_PeopleValidAndRoomValid_Ok()
     {
-        var getResponse = await _global._peopleClient.GetAsync($"?id={id}");
-        var getPeople = await getResponse.Content.ReadFromJsonAsync<List<PeopleReturnViewModel>>();
+        // Arrange - Room
+        var roomFake1 = new RoomPostViewModelFake().Generate();
+        if (roomFake1.Occupation == roomFake1.Beds) roomFake1.Occupation--;
+        roomFake1.Available = true;
+        var roomPosted1 = await _room.Post(roomFake1);
 
-        return getPeople?.First() ?? throw new Exception("Value is null");
+        var roomFake2 = new RoomPostViewModelFake().Generate();
+        roomFake2.Occupation = roomFake2.Beds - 1;
+        roomFake2.Available = true;
+        var roomPosted2 = await _room.Post(roomFake2);
+
+        // Arrange - People
+        var peopleFake1 = new PeoplePostViewModelFake().Generate();
+        var peoplePosted1 = await Post(peopleFake1);
+
+        var peopleFake2 = new PeoplePostViewModelFake().Generate();
+        var peoplePosted2 = await Post(peopleFake2);
+
+        // Arrange - Quantity
+        var quantityBefore = await GetQuantity();
+
+        // Act
+        var peoplePuted1 = await Put(peoplePosted1.Id, roomPosted1.Id);
+        var roomPuted1 = await _room.Get(roomPosted1.Id);
+
+        var peoplePuted2 = await Put(peoplePosted2.Id, roomPosted2.Id);
+        var roomPuted2 = await _room.Get(roomPosted2.Id);
+
+        var quantityAfter = await GetQuantity();
+
+        Assert.Equal(quantityBefore, quantityAfter);
+        Assert.Equal(peoplePuted1.RoomId, roomPosted1.Id);
+        Assert.Equal(roomPosted1.Occupation + 1, roomPuted1.Occupation);
+        Assert.False(roomPuted2.Available);
+        Assert.Equal(roomPosted1.Beds, roomPuted1.Beds);
+        Assert.Equal(peoplePosted1.Id, peoplePuted1.Id);
+        Assert.Equal(roomPosted1.Id, roomPuted1.Id);
+    }
+
+    [Fact]
+    public async Task AddPeopleToRoom_PeopleInvalid_BadRequest()
+    {
+        // Arrange - Room
+        var roomFake1 = new RoomPostViewModelFake().Generate();
+        if (roomFake1.Occupation == roomFake1.Beds) roomFake1.Occupation--;
+        roomFake1.Available = true;
+        var roomPosted1 = await _room.Post(roomFake1);
+
+        var roomFake2 = new RoomPostViewModelFake().Generate();
+        if (roomFake2.Occupation == roomFake2.Beds) roomFake2.Occupation--;
+        roomFake2.Available = true;
+        var roomPosted2 = await _room.Post(roomFake2);
+
+        // Arrange - People
+        var peopleFake1 = new PeoplePostViewModelFake().Generate();
+        var peoplePosted1 = await Post(peopleFake1);
+        var peoplePuted1 = await Put(peoplePosted1.Id, roomPosted1.Id);
+        var peopleFake2 = new PeoplePostViewModelFake().Generate();
+        var peoplePosted2 = await Post(peopleFake2);
+        var peopleFake3 = new PeoplePostViewModelFake().Generate();
+        var peoplePosted3 = await Post(peopleFake3);
+
+        // Arrange - Quantity
+        var quantityBefore = await GetQuantity();
+        
+        // Act
+        // People already has a room
+        await Assert.ThrowsAsync<Exception>(() => Put(peoplePuted1.Id, roomPosted1.Id));
+        // People with invalid room
+        await Assert.ThrowsAsync<Exception>(() => Put(peoplePosted2.Id, -1));
+        await Assert.ThrowsAsync<Exception>(() => Put(peoplePosted3.Id, 0));
+        // People with invalid id
+        await Assert.ThrowsAsync<Exception>(() => Put(-1, roomPosted2.Id));
+        await Assert.ThrowsAsync<Exception>(() => Put(0, roomPosted2.Id));
+        var quantityAfter = await GetQuantity();
+
+        // Assert
+        Assert.Equal(quantityBefore, quantityAfter);
+    }
+
+    [Fact]
+    public async Task AddPeopleToRoom_RoomInvalid_BadRequest()
+    {
+        // Arrange - People
+        var peopleFake1 = new PeoplePostViewModelFake().Generate();
+        var peoplePosted1 = await Post(peopleFake1);
+
+        var peopleFake2 = new PeoplePostViewModelFake().Generate();
+        var peoplePosted2 = await Post(peopleFake2);
+
+        // Arrange - Room
+        var roomFake1 = new RoomPostViewModelFake().Generate();
+        roomFake1.Available = false;
+        var roomPosted1 = await _room.Post(roomFake1);
+
+        var roomFake2 = new RoomPostViewModelFake().Generate();
+        roomFake2.Occupation = roomFake2.Beds;
+        roomFake2.Available = false;
+        var roomPosted2 = await _room.Post(roomFake2);
+
+        // Arrange - Quantity
+        var quantityBefore = await GetQuantity();
+
+        // Act
+        // Room is not available
+        await Assert.ThrowsAsync<Exception>(() => Put(peoplePosted1.Id, roomPosted2.Id));
+        // Room is full
+        await Assert.ThrowsAsync<Exception>(() => Put(peoplePosted1.Id, roomPosted2.Id));
+        // Room is invalid
+        await Assert.ThrowsAsync<Exception>(() => Put(peoplePosted1.Id, -1));
+        await Assert.ThrowsAsync<Exception>(() => Put(peoplePosted1.Id, 0));
+        var quantityAfter = await GetQuantity();
+
+        // Assert
+        Assert.Equal(quantityBefore, quantityAfter);
+    }
+
+    [Fact]
+    public async Task RemovePeopleFromRoom_PeopleValid_Ok()
+    {
+        // Arrange - Room
+        var roomFake = new RoomPostViewModelFake().Generate();
+        if (roomFake.Occupation == roomFake.Beds) roomFake.Occupation--;
+        roomFake.Available = true;
+        var roomPosted = await _room.Post(roomFake);
+
+        // Arrange - People
+        var peopleFake = new PeoplePostViewModelFake().Generate();
+        var peoplePosted = await Post(peopleFake);
+
+        // Arrange - AddPeopleToRoom
+        var peoplePuted = await Put(peoplePosted.Id, roomPosted.Id);
+        var roomPuted = await _room.Get(roomPosted.Id);
+
+        // Arrange - Quantity
+        var quantityBefore = await GetQuantity();
+
+        // Act
+        var peopleRemoved = await Put(peoplePosted.Id);
+        var roomRemoved = await _room.Get(roomPosted.Id);
+        var quantityAfter = await GetQuantity();
+
+        // Assert
+        Assert.Equal(quantityBefore, quantityAfter);
+        Assert.Null(peopleRemoved.RoomId);
+        Assert.Equal(roomPuted.Occupation - 1, roomRemoved.Occupation);
+        Assert.True(roomRemoved.Available);
+        Assert.Equal(roomPuted.Beds, roomRemoved.Beds);
+    }
+
+    [Fact]
+    public async Task RemovePeopleFromRoom_PeopleInvalid_BadRequest()
+    {
+        // Arrange - People
+        var peopleFake1 = new PeoplePostViewModelFake().Generate();
+        var peoplePosted1 = await Post(peopleFake1);
+
+        var peopleFake2 = new PeoplePostViewModelFake().Generate();
+        var peoplePosted2 = await Post(peopleFake2);
+
+        // Arrange - Room
+        var roomFake1 = new RoomPostViewModelFake().Generate();
+        if (roomFake1.Occupation == roomFake1.Beds) roomFake1.Occupation--;
+        roomFake1.Available = true;
+        var roomPosted1 = await _room.Post(roomFake1);
+
+        var roomFake2 = new RoomPostViewModelFake().Generate();
+        if (roomFake2.Occupation == roomFake2.Beds) roomFake2.Occupation--;
+        roomFake2.Available = true;
+        var roomPosted2 = await _room.Post(roomFake2);
+
+        // Arrange - AddPeopleToRoom
+        var peoplePuted1 = await Put(peoplePosted1.Id, roomPosted1.Id);
+        var roomPuted1 = await _room.Get(roomPosted1.Id);
+
+        // Arrange - Quantity
+        var quantityBefore = await GetQuantity();
+
+        // Act
+        // People is not in a room
+        await Assert.ThrowsAsync<Exception>(() => Put(peoplePosted2.Id));
+        // People with invalid id
+        await Assert.ThrowsAsync<Exception>(() => Put(-1));
+        await Assert.ThrowsAsync<Exception>(() => Put(0));
+        var quantityAfter = await GetQuantity();
+
+        // Assert
+        Assert.Equal(quantityBefore, quantityAfter);
+    }
+
+    public async Task<PeopleViewModel> Get(int id)
+    {
+        var response = await _global._peopleClient.GetAsync($"{id}");
+        var content = await response.Content.ReadAsStringAsync();
+        var values = JsonConvert.DeserializeObject<List<PeopleViewModel>>(content);
+        var value = values?.FirstOrDefault();
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        return value ?? throw new Exception("Value is null");
     }
 
     public async Task<int> GetQuantity()
     {
         var response = await _global._peopleClient.GetAsync("quantity");
-        var quantity = int.Parse(await response.Content.ReadAsStringAsync());
+        var content = await response.Content.ReadAsStringAsync();
+        var value = JsonConvert.DeserializeObject<int>(content);
 
-        return quantity;
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        return value;
     }
 
-    public async Task Post(List<PeoplePostViewModel> peoples)
+    public async Task<PeopleViewModel> Post(PeoplePostViewModel people)
     {
-        var postTasks = peoples.Select(people => _global._peopleClient.PostAsync("", JsonContent.Create(people))).ToList();
-        await Task.WhenAll(postTasks);
-    }
+        var peopleJson = JsonContent.Create(people);
+        var response = await _global._peopleClient.PostAsync("", peopleJson);
+        var content = await response.Content.ReadAsStringAsync();
 
-    public async Task<PeopleReturnViewModel> Post(PeoplePostViewModel people)
-    {
-        var postResponse = await _global._peopleClient.PostAsync("", JsonContent.Create(people));
-        var content = await postResponse.Content.ReadAsStringAsync();
-        var value = JsonConvert.DeserializeObject<PeopleReturnViewModel>(content);
+        if (response.StatusCode == HttpStatusCode.BadRequest)
+            throw new Exception(content);
+
+        var value = JsonConvert.DeserializeObject<PeopleViewModel>(content);
 
         return value ?? throw new Exception("Value is null");
     }
 
-    public async Task<PeopleReturnViewModel> Put(PeoplePutViewModel people)
+    public async Task<PeopleViewModel> Put(PeoplePutViewModel people)
     {
-        var putResponse = await _global._peopleClient.PutAsync("", JsonContent.Create(people));
-        var content = await putResponse.Content.ReadAsStringAsync();
-        var value = JsonConvert.DeserializeObject<PeopleReturnViewModel>(content);
+        var peopleJson = JsonContent.Create(people);
+        var response = await _global._peopleClient.PutAsync("", peopleJson);
+        var content = await response.Content.ReadAsStringAsync();
+
+        if (response.StatusCode == HttpStatusCode.BadRequest)
+            throw new Exception(content);
+
+        var value = JsonConvert.DeserializeObject<PeopleViewModel>(content);
+
+        return value ?? throw new Exception("Value is null");
+    }
+
+    public async Task<PeopleViewModel> Put(int peopleId, int roomId)
+    {
+        var ids = new PeopleAddPeopleToRoomViewModel { PeopleId = peopleId, RoomId = roomId };
+        var peopleJson = JsonContent.Create(ids);
+        var response = await _global._peopleClient.PutAsync("add-people-to-room", peopleJson);
+        var content = await response.Content.ReadAsStringAsync();
+
+        if (response.StatusCode == HttpStatusCode.BadRequest)
+            throw new Exception(content);
+
+        var value = JsonConvert.DeserializeObject<PeopleViewModel>(content);
+
+        return value ?? throw new Exception("Value is null");
+    }
+
+    public async Task<PeopleViewModel> Put(int peopleId)
+    {
+        var ids = new PeopleRemovePeopleFromRoom { PeopleId = peopleId };
+        var peopleJson = JsonContent.Create(ids);
+        var response = await _global._peopleClient.PutAsync("remove-people-from-room", peopleJson);
+        var content = await response.Content.ReadAsStringAsync();
+
+        if (response.StatusCode == HttpStatusCode.BadRequest)
+            throw new Exception(content);
+
+        var value = JsonConvert.DeserializeObject<PeopleViewModel>(content);
 
         return value ?? throw new Exception("Value is null");
     }

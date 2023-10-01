@@ -1,8 +1,9 @@
-﻿using LNSF.Application.Services;
+﻿using AutoMapper;
+using LNSF.Application.Services;
 using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
-using LNSF.Domain.Views;
+using LNSF.UI.ViewModels;
 using Microsoft.AspNetCore.Mvc; 
 
 namespace LNSF.UI.Controllers;
@@ -12,16 +13,24 @@ namespace LNSF.UI.Controllers;
 public class TourController : ControllerBase
 {
     private readonly TourService _service;
+    private readonly IMapper _mapper;
 
-    public TourController(TourService service) =>
+    public TourController(TourService service, 
+        IMapper mapper)
+    {
         _service = service;
+        _mapper = mapper;
+    }
 
     [HttpGet]
-    public async Task<ActionResult<List<Tour>>> Get([FromBody]Pagination pagination)
+    public async Task<ActionResult<List<TourViewModel>>> Get([FromQuery]TourFilters filters)
     {
         try
         {
-            return Ok(await _service.Get(pagination));
+            var tours = await _service.Query(filters);
+            var tourViewModels = _mapper.Map<List<TourViewModel>>(tours);
+
+            return Ok(tourViewModels);
         }
         catch (AppException ex)
         {
@@ -32,26 +41,9 @@ public class TourController : ControllerBase
             return StatusCode(500, ex.Message);
         }
     }
-
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Tour>> Get(int id)
-    {
-        try
-        {
-            return Ok(await _service.Get(id));
-        }
-        catch (AppException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
-    }
-
+    
     [HttpGet("quantity")]
-    public async Task<ActionResult<Tour>> GetQuantity()
+    public async Task<ActionResult<int>> GetQuantity()
     {
         try
         {
@@ -68,11 +60,15 @@ public class TourController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Tour>> Post([FromBody]Tour tour)
+    public async Task<ActionResult<TourViewModel>> Post([FromBody]TourPostViewModel tour)
     {
         try
         {
-            return await _service.Post(tour);
+            var tourMapped = _mapper.Map<Tour>(tour);
+            var tourCreated = await _service.Create(tourMapped);
+            var tourViewModel = _mapper.Map<TourViewModel>(tourCreated);
+
+            return Ok(tourViewModel);
         }
         catch (AppException ex)
         {
@@ -85,11 +81,36 @@ public class TourController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<ActionResult<Tour>> Put([FromBody]Tour tour)
+    public async Task<ActionResult<TourViewModel>> Put([FromBody]TourPutViewModel tour)
     {
         try
         {
-            return await _service.Put(tour);
+            var tourMapped = _mapper.Map<Tour>(tour);
+            var tourUpdated = await _service.Update(tourMapped);
+            var tourViewModel = _mapper.Map<TourViewModel>(tourUpdated);
+
+            return Ok(tourViewModel);
+        }
+        catch (AppException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpPut("put-all")]
+    public async Task<ActionResult<TourViewModel>> Put([FromBody]TourViewModel tour)
+    {
+        try
+        {
+            var tourMapped = _mapper.Map<Tour>(tour);
+            var tourUpdated = await _service.UpdateAll(tourMapped);
+            var tourViewModel = _mapper.Map<TourViewModel>(tourUpdated);
+
+            return Ok(tourViewModel);
         }
         catch (AppException ex)
         {

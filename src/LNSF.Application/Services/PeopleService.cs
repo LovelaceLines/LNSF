@@ -71,11 +71,25 @@ public class PeopleService
 
         // AddPeopleToRoom
         people.RoomId = roomId;
-        people.Room = room;
         room.Occupation++;
         if (room.Beds == room.Occupation) room.Available = false;
+        
+        // await _peopleRepository.BeguinTransaction();
 
-        return await _peopleRepository.Put(people);
+        try
+        {
+            people = await _peopleRepository.Put(people);
+            await _roomRepository.Put(room);
+        }
+        catch (Exception)
+        {
+            // await _peopleRepository.RollbackTransaction();
+            throw new AppException("Erro ao adicionar pessoa ao quarto.");
+        }
+
+        // await _peopleRepository.CommitTransaction();
+
+        return people;
     }
 
     public async Task<People> RemovePeopleFromRoom(int peopleId)
@@ -90,8 +104,9 @@ public class PeopleService
         people.RoomId = null;
         people.Room = null;
         room.Occupation--;
+        room.Available = true;
 
-        await _peopleRepository.BeguinTransaction();
+        // await _peopleRepository.BeguinTransaction();
 
         try
         {
@@ -100,11 +115,11 @@ public class PeopleService
         }
         catch (Exception)
         {
-            await _peopleRepository.RollbackTransaction();
+            // await _peopleRepository.RollbackTransaction();
             throw new AppException("Erro ao remover pessoa do quarto.");
         }
 
-        await _peopleRepository.CommitTransaction();
+        // await _peopleRepository.CommitTransaction();
 
         return people;
     }
