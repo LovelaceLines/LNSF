@@ -8,4 +8,5 @@ public class PeopleFilters
     public string? CPF { get; set; }
     public string? Phone { get; set; }
     public Pagination Page { get; set; } = new Pagination();
+    public OrderBy OrderBy { get; set; } = OrderBy.Ascending;
 }

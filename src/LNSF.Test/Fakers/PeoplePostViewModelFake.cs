@@ -12,7 +12,7 @@ public class PeoplePostViewModelFake : Faker<PeoplePostViewModel>
     {
         RuleFor(p => p.Name, f => f.Person.FullName);
         RuleFor(p => p.Gender, f => f.PickRandom<Gender>());
-        RuleFor(p => p.BirthDate, f => DateTime.ParseExact(f.Person.DateOfBirth.ToString("dd-MM-yyyy"), "dd-MM-yyyy", CultureInfo.InvariantCulture));
+        RuleFor(p => p.BirthDate, f => DateTime.ParseExact(f.Person.DateOfBirth.ToString("dd/MM/yyyy"), "dd/MM/yyyy", CultureInfo.InvariantCulture));
         RuleFor(p => p.RG, f => f.Random.ReplaceNumbers("##.###.###-#"));
         RuleFor(p => p.CPF, f => f.Person.Cpf());
         RuleFor(p => p.Street, f => f.Address.StreetName());
