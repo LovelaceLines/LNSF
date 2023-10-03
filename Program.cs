@@ -44,8 +44,7 @@ builder.Services.AddTransient<PaginationValidator>();
 
 builder.Services.AddTransient<IToursRepository, ToursRepository>();
 builder.Services.AddTransient<TourFiltersValidator>();
-builder.Services.AddTransient<TourPostValidator>();
-builder.Services.AddTransient<TourPutValidator>();
+builder.Services.AddTransient<TourValidator>();
 builder.Services.AddTransient<GlobalValidator>();
 builder.Services.AddTransient<TourService>();
 
@@ -62,6 +61,8 @@ builder.Services.AddTransient<PeopleService>();
 builder.Services.AddTransient<IEmergencyContactsRepository, EmergencyContactsRepository>();
 builder.Services.AddTransient<EmergencyContactValidator>();
 builder.Services.AddTransient<EmergencyContactService>();
+
+builder.Services.AddTransient<IAccountRepository, AccountRepository>();
 
 #endregion
 

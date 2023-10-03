@@ -3,7 +3,6 @@ using LNSF.Domain.Entities;
 using LNSF.Application.Validators;
 using LNSF.Domain.DTOs;
 using LNSF.Domain.Exceptions;
-using System.Linq;
 
 namespace LNSF.Application.Services;
 
@@ -12,20 +11,17 @@ public class TourService
     private readonly IToursRepository _tourRepository;
     private readonly IPeoplesRepository _peopleRepository;
     private readonly TourFiltersValidator _tourFilters;
-    private readonly TourPostValidator _tourPostValidator;
-    private readonly TourPutValidator _tourPutValidator;
+    private readonly TourValidator _tourValidator;
 
     public TourService(IToursRepository tourRepository,
         IPeoplesRepository peoplesRepository,
         TourFiltersValidator tourFilters,
-        TourPostValidator tourPostValidator,
-        TourPutValidator tourPutValidator)
+        TourValidator tourValidator)
     {
         _tourRepository = tourRepository;
         _peopleRepository = peoplesRepository;
         _tourFilters = tourFilters;
-        _tourPostValidator = tourPostValidator;
-        _tourPutValidator = tourPutValidator;
+        _tourValidator = tourValidator;
     }
 
     public async Task<List<Tour>> Query(TourFilters filters)
@@ -44,7 +40,7 @@ public class TourService
 
     public async Task<Tour> Create(Tour tour)
     {
-        var validationResult = _tourPostValidator.Validate(tour);
+        var validationResult = _tourValidator.Validate(tour);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString());
 
         await _peopleRepository.Get(tour.PeopleId);
@@ -60,7 +56,7 @@ public class TourService
 
     public async Task<Tour> Update(Tour tour)
     {
-        var validationResult = _tourPutValidator.Validate(tour);
+        var validationResult = _tourValidator.Validate(tour);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString());
 
         await _tourRepository.Get(tour.Id);
@@ -76,7 +72,7 @@ public class TourService
 
     public async Task<Tour> UpdateAll(Tour tour)
     {
-        var validationResult = _tourPutValidator.Validate(tour);
+        var validationResult = _tourValidator.Validate(tour);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString());
 
         var query = await Query(new TourFilters { Id = tour.Id, PeopleId = tour.PeopleId });

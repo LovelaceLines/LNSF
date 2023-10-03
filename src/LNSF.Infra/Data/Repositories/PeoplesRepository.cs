@@ -13,7 +13,7 @@ public class PeoplesRepository : BaseRepository<People>, IPeoplesRepository
     public PeoplesRepository(AppDbContext context) : base(context) =>
         _context = context;
 
-    public async Task<List<People>> Get(PeopleFilters filters)
+    public async Task<List<People>> Query(PeopleFilters filters)
     {
         var query = _context.Peoples.AsNoTracking();
         var count = await query.CountAsync();

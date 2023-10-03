@@ -1,6 +1,6 @@
-﻿using System.Globalization;
-using FluentValidation;
+﻿using FluentValidation;
 using LNSF.Application.Validators;
+using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
 
 namespace LNSF.Application;
@@ -46,5 +46,14 @@ public class PeopleValidator : AbstractValidator<People>
         
         RuleFor(people => people.Note)
             .MaximumLength(256).WithMessage(GlobalValidator.MaxLength("Observação", 256));
+    }
+}
+
+public class PeopleFiltersValidator : AbstractValidator<PeopleFilters>
+{
+    public PeopleFiltersValidator()
+    {
+        RuleFor(x => x.Page)
+            .SetValidator(new PaginationValidator());
     }
 }

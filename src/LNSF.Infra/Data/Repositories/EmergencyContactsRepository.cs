@@ -3,7 +3,6 @@ using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
 using LNSF.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
-using LNSF.Domain.Exceptions;
 
 namespace LNSF.Infra.Data.Repositories;
 

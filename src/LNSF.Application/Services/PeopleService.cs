@@ -23,13 +23,13 @@ public class PeopleService
         _peopleValidator = peopleValidator;
     }
 
-    public async Task<List<People>> Get(PeopleFilters filters)
+    public async Task<List<People>> Query(PeopleFilters filters)
     {
         var validationResult = _peopleFiltersValidator.Validate(filters);
 
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString());
 
-        return await _peopleRepository.Get(filters);
+        return await _peopleRepository.Query(filters);
     }
 
     public async Task<People> Get(int id) => 

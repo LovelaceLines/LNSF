@@ -15,6 +15,7 @@ public class AppDbContext : DbContext
     public DbSet<Room> Rooms { get; set; }
     public DbSet<People> Peoples { get; set; }
     public DbSet<EmergencyContact> EmergencyContacts { get; set; }
+    public DbSet<Account> Accounts { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -24,5 +25,6 @@ public class AppDbContext : DbContext
         builder.ApplyConfiguration(new RoomsConfiguration());
         builder.ApplyConfiguration(new PeoplesConfiguration());
         builder.ApplyConfiguration(new EmergencyContactsConfiguration());
+        builder.ApplyConfiguration(new AccountsConfiguration());
     }
 }

@@ -1,22 +1,23 @@
 ﻿using FluentValidation;
+using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
 
 namespace LNSF.Application.Validators;
 
-public class TourPostValidator : AbstractValidator<Tour>
+public class TourValidator : AbstractValidator<Tour>
 {
-    public TourPostValidator()
+    public TourValidator()
     {
         RuleFor(tour => tour.Note)
             .MaximumLength(256).WithMessage(GlobalValidator.MaxLength("Observação", 256));
     }
 }
 
-public class TourPutValidator : AbstractValidator<Tour>
+public class TourFiltersValidator : AbstractValidator<TourFilters>
 {
-    public TourPutValidator()
-    {   
-        RuleFor(tour => tour)
-            .SetValidator(new TourPostValidator());
+    public TourFiltersValidator()
+    {
+        RuleFor(x => x.Page)
+            .SetValidator(new PaginationValidator());
     }
 }

@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using LNSF.Application.Validators;
+using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
 
 namespace LNSF.Application;
@@ -25,5 +26,17 @@ public class RoomValidator : AbstractValidator<Room>
         RuleFor(room => room)
             .Must(room => (room.Available == true && room.Occupation < room.Beds) ||
                 room.Available == false).WithMessage("Quarto deve ser indisponível. Não há vagas.");
+    }
+}
+
+public class RoomFiltersValidator : AbstractValidator<RoomFilters>
+{
+    public RoomFiltersValidator()
+    {
+        RuleFor(x => x.Page)
+            .SetValidator(new PaginationValidator());
+        
+        RuleFor(x => x.Order)
+            .SetValidator(new OrderByValidator());
     }
 }

@@ -6,7 +6,7 @@ using LNSF.Domain.Exceptions;
 using LNSF.UI.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LNSF.UI;
+namespace LNSF.UI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

@@ -6,7 +6,7 @@ using LNSF.Domain.Exceptions;
 using LNSF.UI.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LNSF.UI;
+namespace LNSF.UI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -27,7 +27,7 @@ public class PeopleController : ControllerBase
     {
         try
         {
-            var peoples = await _peopleService.Get(filters);
+            var peoples = await _peopleService.Query(filters);
             var peoplesViewModel = _mapper.Map<List<PeopleViewModel>>(peoples);
             
             return Ok(peoplesViewModel);
