@@ -1,7 +1,6 @@
-﻿using System.Net;
+﻿/*using System.Net;
 using System.Net.Http.Json;
 using AutoMapper;
-using Bogus.DataSets;
 using LNSF.Test.Fakers;
 using LNSF.UI.ViewModels;
 using Newtonsoft.Json;
@@ -11,7 +10,7 @@ namespace LNSF.Test.Apis;
 
 public class TourTestApi
 {
-    private readonly Global _global = new();
+    private readonly GlobalClientRequest _global = new();
     private readonly IMapper _mapper;
     private readonly PeopleTestApi _people = new();
 
@@ -247,3 +246,4 @@ public class TourTestApi
         return value ?? throw new Exception("Value is null");
     }
 }
+*/

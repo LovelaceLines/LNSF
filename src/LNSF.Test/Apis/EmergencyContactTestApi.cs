@@ -1,4 +1,4 @@
-﻿using System.Net;
+﻿/*using System.Net;
 using System.Net.Http.Json;
 using AutoMapper;
 using LNSF.Test.Fakers;
@@ -10,7 +10,7 @@ namespace LNSF.Test.Apis;
 
 public class EmergencyContactTestApi
 {
-    private readonly Global _global = new();
+    private readonly GlobalClientRequest _global = new();
     private readonly IMapper _mapper;
     private readonly PeopleTestApi _peopleTestApi = new();
 
@@ -266,3 +266,4 @@ public class EmergencyContactTestApi
         return value ?? throw new Exception("Value is null");
     }
 }
+*/
