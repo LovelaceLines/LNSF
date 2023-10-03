@@ -4,6 +4,7 @@ using AutoMapper;
 using LNSF.UI.ViewModels;
 using Newtonsoft.Json;
 using Xunit;
+
 [assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly)]
 
 namespace LNSF.Test;
@@ -25,6 +26,11 @@ public class GlobalClientRequest
 
             cfg.CreateMap<PeoplePostViewModel, PeoplePutViewModel>().ReverseMap();
             cfg.CreateMap<PeopleViewModel, PeoplePostViewModel>().ReverseMap();
+
+            cfg.CreateMap<EmergencyContactViewModel, EmergencyContactPostViewModel>().ReverseMap();
+
+            cfg.CreateMap<TourViewModel, TourPostViewModel>().ReverseMap();
+            cfg.CreateMap<TourViewModel, TourPutViewModel>().ReverseMap();
         });
 
         _mapper = mapperConfig.CreateMapper();
@@ -60,7 +66,7 @@ public class GlobalClientRequest
 
     public async Task<T> Delete<T>(HttpClient client, int id) where T : class
     {
-        var response = await client.DeleteAsync($"?Id={id}");
+        var response = await client.DeleteAsync($"{id}");
         return await DeserializeResponse<T>(response);
     }
 

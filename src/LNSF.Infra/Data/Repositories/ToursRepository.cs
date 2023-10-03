@@ -20,8 +20,9 @@ public class ToursRepository : BaseRepository<Tour>, IToursRepository
 
         if (filters.Id != null) query = query.Where(x => x.Id == filters.Id);
         if (filters.Output != null) query = query.Where(x => x.Output >= filters.Output);
-        if (filters.Input == null) query = query.Where(x => x.Input == null);
-        else query = query.Where(x => x.Input <= filters.Input);
+        if (filters.Input != null) query = query.Where(x => x.Input <= filters.Input);
+        if (filters.InOpen == true) query = query.Where(x => x.Input == null);
+        else if (filters.InOpen == false) query = query.Where(x => x.Input != null);
         if (filters.Note != null) query = query.Where(x => x.Note.Contains(filters.Note));
         if (filters.PeopleId != null) query = query.Where(x => x.PeopleId == filters.PeopleId);
         if (filters.Order == OrderBy.Ascending) query = query.OrderBy(x => x.Output);
