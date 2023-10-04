@@ -12,6 +12,20 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Accounts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Role = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Accounts", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Rooms",
                 columns: table => new
                 {
@@ -103,6 +117,12 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Accounts_Role",
+                table: "Accounts",
+                column: "Role",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_EmergencyContacts_PeopleId_Phone",
                 table: "EmergencyContacts",
                 columns: new[] { "PeopleId", "Phone" },
@@ -140,6 +160,9 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Accounts");
+
             migrationBuilder.DropTable(
                 name: "EmergencyContacts");
 
