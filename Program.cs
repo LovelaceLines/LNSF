@@ -55,18 +55,18 @@ builder.Services.AddTransient<AccountService>();
 builder.Services.AddTransient<PaginationValidator>();
 
 builder.Services.AddTransient<IToursRepository, ToursRepository>();
-builder.Services.AddTransient<TourFiltersValidator>();
+builder.Services.AddTransient<TourFilterValidator>();
 builder.Services.AddTransient<TourValidator>();
 builder.Services.AddTransient<GlobalValidator>();
 builder.Services.AddTransient<TourService>();
 
 builder.Services.AddTransient<IRoomsRepository, RoomsRepository>();
 builder.Services.AddTransient<RoomValidator>();
-builder.Services.AddTransient<RoomFiltersValidator>();
+builder.Services.AddTransient<RoomFilterValidator>();
 builder.Services.AddTransient<RoomService>();
 
 builder.Services.AddTransient<IPeoplesRepository, PeoplesRepository>();
-builder.Services.AddTransient<PeopleFiltersValidator>();
+builder.Services.AddTransient<PeopleFilterValidator>();
 builder.Services.AddTransient<PeopleValidator>();
 builder.Services.AddTransient<PeopleService>();
 
@@ -108,8 +108,8 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    // options.UseInMemoryDatabase("InMemoryDatabaseName");
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseInMemoryDatabase("InMemoryDatabaseName");
+    // options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
     options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 });
 

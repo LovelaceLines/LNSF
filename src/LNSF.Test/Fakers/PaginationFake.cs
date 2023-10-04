@@ -1,4 +1,4 @@
-﻿using LNSF.Domain.DTOs;
+﻿using LNSF.Domain.Filters;
 using Bogus;
 
 namespace LNSF.Test.Fakers;

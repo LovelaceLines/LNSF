@@ -1,4 +1,4 @@
-﻿namespace LNSF.Domain.DTOs;
+﻿namespace LNSF.Domain.Enums;
 
 public enum OrderBy
 {

@@ -1,7 +1,7 @@
 ﻿using LNSF.Domain.Repositories;
 using LNSF.Domain.Entities;
 using LNSF.Application.Validators;
-using LNSF.Domain.DTOs;
+using LNSF.Domain.Filters;
 using LNSF.Domain.Exceptions;
 
 namespace LNSF.Application.Services;
@@ -10,26 +10,26 @@ public class TourService
 {
     private readonly IToursRepository _tourRepository;
     private readonly IPeoplesRepository _peopleRepository;
-    private readonly TourFiltersValidator _tourFilters;
+    private readonly TourFilterValidator _tourFilter;
     private readonly TourValidator _tourValidator;
 
     public TourService(IToursRepository tourRepository,
         IPeoplesRepository peoplesRepository,
-        TourFiltersValidator tourFilters,
+        TourFilterValidator tourFilter,
         TourValidator tourValidator)
     {
         _tourRepository = tourRepository;
         _peopleRepository = peoplesRepository;
-        _tourFilters = tourFilters;
+        _tourFilter = tourFilter;
         _tourValidator = tourValidator;
     }
 
-    public async Task<List<Tour>> Query(TourFilters filters)
+    public async Task<List<Tour>> Query(TourFilter filter)
     {
-        var validationResult = _tourFilters.Validate(filters);
+        var validationResult = _tourFilter.Validate(filter);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString());
 
-        return await _tourRepository.Query(filters);
+        return await _tourRepository.Query(filter);
     }
 
     public async Task<Tour> Get(int id) =>
@@ -45,7 +45,7 @@ public class TourService
 
         await _peopleRepository.Get(tour.PeopleId);
 
-        var query = await _tourRepository.Query(new TourFilters { PeopleId = tour.PeopleId, Input = null });
+        var query = await _tourRepository.Query(new TourFilter { PeopleId = tour.PeopleId, Input = null });
         if (query.Count > 0) throw new AppException("Pessoa possui pesseio em aberto!");
 
         tour.Id = 0;
@@ -62,7 +62,7 @@ public class TourService
         await _tourRepository.Get(tour.Id);
         await _peopleRepository.Get(tour.PeopleId);
 
-        var query = await _tourRepository.Query(new TourFilters { PeopleId = tour.PeopleId, Input = null });
+        var query = await _tourRepository.Query(new TourFilter { PeopleId = tour.PeopleId, Input = null });
         if (query.Count != 1) throw new AppException("Pessoa não possui pesseio em aberto!");
 
         tour.Input = DateTime.Now;
@@ -75,7 +75,7 @@ public class TourService
         var validationResult = _tourValidator.Validate(tour);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString());
 
-        var query = await Query(new TourFilters { Id = tour.Id, PeopleId = tour.PeopleId });
+        var query = await Query(new TourFilter { Id = tour.Id, PeopleId = tour.PeopleId });
         if (query.Count != 1) throw new AppException("Id e PeopleId não existem!");
 
         return await _tourRepository.Put(tour);

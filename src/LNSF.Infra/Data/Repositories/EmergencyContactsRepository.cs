@@ -1,5 +1,5 @@
 ﻿using LNSF.Domain.Repositories;
-using LNSF.Domain.DTOs;
+using LNSF.Domain.Filters;
 using LNSF.Domain.Entities;
 using LNSF.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
@@ -13,19 +13,19 @@ public class EmergencyContactsRepository : BaseRepository<EmergencyContact>, IEm
     public EmergencyContactsRepository(AppDbContext context) : base(context) => 
         _context = context;
 
-    public async Task<List<EmergencyContact>> Query(EmergencyContactFilters filters)
+    public async Task<List<EmergencyContact>> Query(EmergencyContactFilter filter)
     {
         var query = _context.EmergencyContacts.AsNoTracking();
         
-        if (filters.Id != null) query = query.Where(x => x.Id == filters.Id);
-        if (filters.Name != null) query = query.Where(x => x.Name.Contains(filters.Name));
-        if (filters.Phone != null) query = query.Where(x => x.Phone.Contains(filters.Phone));
-        if (filters.PeopleId != null) query = query.Where(x => x.PeopleId == filters.PeopleId);
+        if (filter.Id != null) query = query.Where(x => x.Id == filter.Id);
+        if (filter.Name != null) query = query.Where(x => x.Name.Contains(filter.Name));
+        if (filter.Phone != null) query = query.Where(x => x.Phone.Contains(filter.Phone));
+        if (filter.PeopleId != null) query = query.Where(x => x.PeopleId == filter.PeopleId);
         query = query.OrderBy(x => x.Name);
 
         var contacts = await query
-            .Skip((filters.Page.Page - 1) * filters.Page.PageSize)
-            .Take(filters.Page.PageSize)
+            .Skip((filter.Page.Page - 1) * filter.Page.PageSize)
+            .Take(filter.Page.PageSize)
             .ToListAsync();
 
         return contacts;

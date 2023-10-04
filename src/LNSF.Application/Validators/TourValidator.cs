@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using LNSF.Domain.DTOs;
+using LNSF.Domain.Filters;
 using LNSF.Domain.Entities;
 
 namespace LNSF.Application.Validators;
@@ -13,9 +13,9 @@ public class TourValidator : AbstractValidator<Tour>
     }
 }
 
-public class TourFiltersValidator : AbstractValidator<TourFilters>
+public class TourFilterValidator : AbstractValidator<TourFilter>
 {
-    public TourFiltersValidator()
+    public TourFilterValidator()
     {
         RuleFor(x => x.Page)
             .SetValidator(new PaginationValidator());

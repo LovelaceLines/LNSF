@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using LNSF.Application;
-using LNSF.Domain.DTOs;
+using LNSF.Domain.Filters;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
 using LNSF.UI.ViewModels;
@@ -25,11 +25,11 @@ public class PeopleController : ControllerBase
 
     [HttpGet]
     [Authorize]
-    public async Task<ActionResult<List<PeopleViewModel>>> Get([FromQuery]PeopleFilters filters)
+    public async Task<ActionResult<List<PeopleViewModel>>> Get([FromQuery]PeopleFilter filter)
     {
         try
         {
-            var peoples = await _peopleService.Query(filters);
+            var peoples = await _peopleService.Query(filter);
             var peoplesViewModel = _mapper.Map<List<PeopleViewModel>>(peoples);
             
             return Ok(peoplesViewModel);

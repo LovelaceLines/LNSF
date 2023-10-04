@@ -1,5 +1,5 @@
 ﻿using LNSF.Application.Validators;
-using LNSF.Domain.DTOs;
+using LNSF.Domain.Filters;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
 using LNSF.Domain.Repositories;
@@ -21,8 +21,8 @@ public class EmergencyContactService
         _emergencyContactValidator = emergencyContactValidator;
     }
 
-    public async Task<List<EmergencyContact>> Query(EmergencyContactFilters filters) => 
-        await _emergencyContactRepository.Query(filters);
+    public async Task<List<EmergencyContact>> Query(EmergencyContactFilter filter) => 
+        await _emergencyContactRepository.Query(filter);
     
     public async Task<int> GetQuantity() =>
         await _emergencyContactRepository.GetQuantity();

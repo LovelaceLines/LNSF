@@ -1,6 +1,8 @@
-﻿namespace LNSF.Domain.DTOs;
+﻿using LNSF.Domain.Enums;
 
-public class TourFilters
+namespace LNSF.Domain.Filters;
+
+public class TourFilter
 {
     public int? Id { get; set; }
     public DateTime? Output { get; set; }

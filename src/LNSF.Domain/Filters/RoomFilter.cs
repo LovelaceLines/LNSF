@@ -1,6 +1,8 @@
-﻿namespace LNSF.Domain.DTOs;
+﻿using LNSF.Domain.Enums;
 
-public class RoomFilters
+namespace LNSF.Domain.Filters;
+
+public class RoomFilter
 {
     public int? Id { get; set; }
     public string? Number { get; set; }

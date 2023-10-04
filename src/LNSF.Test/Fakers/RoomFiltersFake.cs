@@ -1,11 +1,12 @@
 ﻿using Bogus;
-using LNSF.Domain.DTOs;
+using LNSF.Domain.Enums;
+using LNSF.Domain.Filters;
 
 namespace LNSF.Test.Fakers;
 
-public class RoomFiltersFake : Faker<RoomFilters>
+public class RoomFilterFake : Faker<RoomFilter>
 {
-    public RoomFiltersFake()
+    public RoomFilterFake()
     {
         RuleFor(r => r.Bathroom, f => f.Random.Bool());
         RuleFor(r => r.Beds, f => f.Random.Int(1, 4));

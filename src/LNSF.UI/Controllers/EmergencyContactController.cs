@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using LNSF.Application.Services;
-using LNSF.Domain.DTOs;
+using LNSF.Domain.Filters;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
 using LNSF.UI.ViewModels;
@@ -23,11 +23,11 @@ public class EmergencyContactController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<EmergencyContactViewModel>>> Get([FromQuery] EmergencyContactFilters filters)
+    public async Task<ActionResult<List<EmergencyContactViewModel>>> Get([FromQuery] EmergencyContactFilter filter)
     {
         try
         {
-            var contacts = await _emergencyContactService.Query(filters);
+            var contacts = await _emergencyContactService.Query(filter);
             var contactsViewModel = _mapper.Map<List<EmergencyContactViewModel>>(contacts);
 
             return Ok(contactsViewModel);

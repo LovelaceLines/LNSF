@@ -1,5 +1,5 @@
 ﻿using LNSF.Domain.Repositories;
-using LNSF.Domain.DTOs;
+using LNSF.Domain.Filters;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
 
@@ -9,27 +9,27 @@ public class PeopleService
 {
     private readonly IPeoplesRepository _peopleRepository;
     private readonly IRoomsRepository _roomRepository;
-    private readonly PeopleFiltersValidator _peopleFiltersValidator;
+    private readonly PeopleFilterValidator _PeopleFilterValidator;
     private readonly PeopleValidator _peopleValidator;
 
     public PeopleService(IPeoplesRepository peopleRepository,
         IRoomsRepository roomRepository,
-        PeopleFiltersValidator peopleFiltersValidator,
+        PeopleFilterValidator PeopleFilterValidator,
         PeopleValidator peopleValidator)
     {
         _peopleRepository = peopleRepository;
         _roomRepository = roomRepository;
-        _peopleFiltersValidator = peopleFiltersValidator;
+        _PeopleFilterValidator = PeopleFilterValidator;
         _peopleValidator = peopleValidator;
     }
 
-    public async Task<List<People>> Query(PeopleFilters filters)
+    public async Task<List<People>> Query(PeopleFilter filter)
     {
-        var validationResult = _peopleFiltersValidator.Validate(filters);
+        var validationResult = _PeopleFilterValidator.Validate(filter);
 
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString());
 
-        return await _peopleRepository.Query(filters);
+        return await _peopleRepository.Query(filter);
     }
 
     public async Task<People> Get(int id) => 

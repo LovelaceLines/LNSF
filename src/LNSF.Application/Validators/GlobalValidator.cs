@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
-using LNSF.Domain.DTOs;
+using LNSF.Domain.Enums;
+using LNSF.Domain.Filters;
 
 namespace LNSF.Application.Validators;
 

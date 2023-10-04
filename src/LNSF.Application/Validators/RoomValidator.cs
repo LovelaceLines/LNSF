@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using LNSF.Application.Validators;
-using LNSF.Domain.DTOs;
+using LNSF.Domain.Filters;
 using LNSF.Domain.Entities;
 
 namespace LNSF.Application;
@@ -29,9 +29,9 @@ public class RoomValidator : AbstractValidator<Room>
     }
 }
 
-public class RoomFiltersValidator : AbstractValidator<RoomFilters>
+public class RoomFilterValidator : AbstractValidator<RoomFilter>
 {
-    public RoomFiltersValidator()
+    public RoomFilterValidator()
     {
         RuleFor(x => x.Page)
             .SetValidator(new PaginationValidator());

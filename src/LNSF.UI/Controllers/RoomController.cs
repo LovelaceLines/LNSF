@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using LNSF.Application.Services;
-using LNSF.Domain.DTOs;
+using LNSF.Domain.Filters;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
 using LNSF.UI.ViewModels;
@@ -24,11 +24,11 @@ public class RoomController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<RoomViewModel>>> Get([FromQuery]RoomFilters filters)
+    public async Task<ActionResult<List<RoomViewModel>>> Get([FromQuery]RoomFilter filter)
     {
         try
         {
-            var rooms = await _roomService.Query(filters);
+            var rooms = await _roomService.Query(filter);
             var roomsMapped = _mapper.Map<List<RoomViewModel>>(rooms);
 
             return Ok(roomsMapped);

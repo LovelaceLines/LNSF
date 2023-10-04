@@ -1,12 +1,12 @@
 ﻿using Bogus;
 using Bogus.Extensions.Brazil;
-using LNSF.Domain.DTOs;
+using LNSF.Domain.Filters;
 
 namespace LNSF.Test.Fakers;
 
-public class PeopleFiltersFake : Faker<PeopleFilters>
+public class PeopleFilterFake : Faker<PeopleFilter>
 {
-    public PeopleFiltersFake()
+    public PeopleFilterFake()
     {
         RuleFor(p => p.Id, f => f.Random.Int(1, 9999));
         RuleFor(p => p.Name, f => f.Person.FullName);

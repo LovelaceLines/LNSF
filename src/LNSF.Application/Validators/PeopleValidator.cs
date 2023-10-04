@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using LNSF.Application.Validators;
-using LNSF.Domain.DTOs;
+using LNSF.Domain.Filters;
 using LNSF.Domain.Entities;
 
 namespace LNSF.Application;
@@ -49,9 +49,9 @@ public class PeopleValidator : AbstractValidator<People>
     }
 }
 
-public class PeopleFiltersValidator : AbstractValidator<PeopleFilters>
+public class PeopleFilterValidator : AbstractValidator<PeopleFilter>
 {
-    public PeopleFiltersValidator()
+    public PeopleFilterValidator()
     {
         RuleFor(x => x.Page)
             .SetValidator(new PaginationValidator());

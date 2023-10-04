@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using LNSF.Application.Services;
-using LNSF.Domain.DTOs;
+using LNSF.Domain.Filters;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
 using LNSF.UI.ViewModels;
@@ -23,11 +23,11 @@ public class TourController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<TourViewModel>>> Get([FromQuery]TourFilters filters)
+    public async Task<ActionResult<List<TourViewModel>>> Get([FromQuery]TourFilter filter)
     {
         try
         {
-            var tours = await _service.Query(filters);
+            var tours = await _service.Query(filter);
             var tourViewModels = _mapper.Map<List<TourViewModel>>(tours);
 
             return Ok(tourViewModels);

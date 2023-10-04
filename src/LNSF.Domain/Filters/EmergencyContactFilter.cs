@@ -1,6 +1,6 @@
-﻿namespace LNSF.Domain.DTOs;
+﻿namespace LNSF.Domain.Filters;
 
-public class EmergencyContactFilters
+public class EmergencyContactFilter
 {
     public int? Id { get; set; }
     public string? Name { get; set; }

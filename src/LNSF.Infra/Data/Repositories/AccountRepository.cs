@@ -1,4 +1,4 @@
-﻿using LNSF.Domain.DTOs;
+﻿using LNSF.Domain.Filters;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Repositories;
 using LNSF.Infra.Data.Context;

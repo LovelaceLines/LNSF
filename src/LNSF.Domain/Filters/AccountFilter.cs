@@ -1,6 +1,6 @@
-﻿namespace LNSF.Domain.DTOs;
+﻿namespace LNSF.Domain.Filters;
 
-public class AccountFilters
+public class AccountFilter
 {
     public string Role { get; set; } = "";
     public string Password { get; set; } = "";
