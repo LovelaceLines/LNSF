@@ -24,7 +24,6 @@ public class PeopleController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize]
     public async Task<ActionResult<List<PeopleViewModel>>> Get([FromQuery]PeopleFilter filter)
     {
         try
@@ -45,7 +44,6 @@ public class PeopleController : ControllerBase
     }
 
     [HttpGet("quantity")]
-    [Authorize]
     public async Task<ActionResult<int>> GetQuantity()
     {
         try

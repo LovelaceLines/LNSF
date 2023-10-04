@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerUI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -108,8 +107,9 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseInMemoryDatabase("InMemoryDatabaseName");
-    // options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    // options.UseInMemoryDatabase("InMemoryDatabaseName");
+    // options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionMYSQL"));
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnectionSQLite"));
     options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 });
 
@@ -149,8 +149,8 @@ builder.Services.AddSwaggerGen(setup =>
             {
                 Reference = new OpenApiReference
                 {
-                    Id = "Bearer",
-                    Type = ReferenceType.SecurityScheme
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
                 }
             },
             new string[] {}

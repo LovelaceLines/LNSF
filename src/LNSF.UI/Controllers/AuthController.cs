@@ -30,13 +30,53 @@ public class AuthController : ControllerBase
 
         if (!await _accountService.Exist(accountMapped))
             return BadRequest("Usuário ou senha inválidos");
+
+        var token = _tokenService.GenerateToken(accountMapped);
+        var refreshToken = _tokenService.GenerateRefreshToken();
+        _tokenService.SetRefreshToken(account.Role, refreshToken);
         
-        var token = new TokenViewModel()
+        var tokenViewModel = new TokenViewModel()
         {
             Role = account.Role,
-            Token = _tokenService.GenerateToken(accountMapped)
+            Token = token,
+            RefreshToken = refreshToken
         };
 
-        return Ok(token);
+        return Ok(tokenViewModel);
+    }
+
+    [HttpPost("refresh-token")]
+    public async Task<ActionResult<TokenViewModel>> RefreshToken(TokenViewModel tokenViewModel)
+    {
+        var refreshToken = _tokenService.GetRefreshToken(tokenViewModel.Role);
+
+        if (refreshToken != tokenViewModel.RefreshToken)
+            return BadRequest("Token inválido");
+
+        var token = _tokenService.GenerateToken(new List<Claim>()
+        {
+            new(ClaimTypes.Role, tokenViewModel.Role)
+        });
+        refreshToken = _tokenService.GenerateRefreshToken();
+        _tokenService.SetRefreshToken(tokenViewModel.Role, refreshToken);
+
+        tokenViewModel.Token = token;
+        tokenViewModel.RefreshToken = refreshToken;
+
+        return Ok(tokenViewModel);
+    }
+
+    // [HttpPost("register")]
+    [NonAction]
+    public async Task<ActionResult> Register(AccountViewModel account)
+    {
+        var accountMapped = _mapper.Map<Account>(account);
+
+        if (await _accountService.Exist(accountMapped))
+            return BadRequest("Usuário já cadastrado");
+
+        await _accountService.Create(accountMapped);
+
+        return Ok();
     }
 }
