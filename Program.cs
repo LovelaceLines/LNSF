@@ -8,6 +8,11 @@ using LNSF.Infra.Data.Repositories;
 using LNSF.UI.ViewModels;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +20,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 var autoMapperConfig = new MapperConfiguration(configure =>
 {
+    configure.CreateMap<Account, AccountViewModel>().ReverseMap();
+
     configure.CreateMap<Room, RoomPostViewModel>().ReverseMap();
     configure.CreateMap<Room, RoomViewModel>().ReverseMap();
     configure.CreateMap<RoomViewModel, RoomPostViewModel>().ReverseMap();
@@ -39,6 +46,11 @@ builder.Services.AddSingleton(autoMapperConfig.CreateMapper());
 #endregion
 
 #region DI
+
+IConfiguration configuration = builder.Configuration.GetSection("Jwt");
+builder.Services.AddSingleton(configuration);
+builder.Services.AddTransient<TokenService>();
+builder.Services.AddTransient<AccountService>();
 
 builder.Services.AddTransient<PaginationValidator>();
 
@@ -67,16 +79,86 @@ builder.Services.AddTransient<IAccountRepository, AccountRepository>();
 #endregion
 
 builder.Services.AddControllers();
+
+#region Authentication
+
+var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:SecretKey"] ?? 
+    throw new InvalidOperationException("JwtConfig: Secret is null"));
+
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    }
+).AddJwtBearer(options =>
+    {
+        options.RequireHttpsMetadata = false;
+        options.SaveToken = true;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ValidateAudience = false,
+            ValidateIssuer = false,
+        };
+    }
+);
+
+#endregion
+
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseInMemoryDatabase("InMemoryDatabaseName");
-    // options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    // options.UseInMemoryDatabase("InMemoryDatabaseName");
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
     options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+#region Swagger
+
+builder.Services.AddSwaggerGen(setup => 
+{
+    setup.SwaggerDoc("v1", new() 
+    { 
+        Title = "LNSF.API",
+        Description = "...",
+        Version = "v1",
+        Contact = new OpenApiContact
+        {
+            Name = "",
+            Email = "",
+            Url = new Uri("https://github.com/LovelaceLines/LNSF")
+        },
+    });
+
+    setup.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "JWT Authorization header using the Bearer scheme.",
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "bearer"
+    });
+
+    setup.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Id = "Bearer",
+                    Type = ReferenceType.SecurityScheme
+                }
+            },
+            new string[] {}
+        }
+    });
+});
+
+#endregion
 
 var app = builder.Build();
 
@@ -91,6 +173,7 @@ if (app.Environment.IsDevelopment() ||
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

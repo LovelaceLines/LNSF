@@ -4,6 +4,7 @@ using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
 using LNSF.UI.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LNSF.UI.Controllers;
@@ -61,6 +62,7 @@ public class RoomController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<ActionResult<RoomViewModel>> Post([FromBody]RoomPostViewModel room)
     {
         try

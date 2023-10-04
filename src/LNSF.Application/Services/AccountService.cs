@@ -1,4 +1,4 @@
-﻿using LNSF.Domain.DTOs;
+﻿using LNSF.Domain.Entities;
 using LNSF.Domain.Repositories;
 
 namespace LNSF.Application.Services;
@@ -10,6 +10,9 @@ public class AccountService
     public AccountService(IAccountRepository accountRepository)
         => _accountRepository = accountRepository;
     
-    public async Task<bool> Exist(AccountFilters filters)
-        => await _accountRepository.Exist(filters);
+    public async Task<bool> Exist(Account account)
+        => await _accountRepository.Exist(account);
+    
+    public async Task<Account> Create(Account account)
+        => await _accountRepository.Post(account);
 }

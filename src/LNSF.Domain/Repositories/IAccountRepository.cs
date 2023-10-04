@@ -5,5 +5,5 @@ namespace LNSF.Domain.Repositories;
 
 public interface IAccountRepository : IBaseRepository<Account>
 {
-    public Task<bool> Exist(AccountFilters filters);
+    public Task<bool> Exist(Account account);
 }

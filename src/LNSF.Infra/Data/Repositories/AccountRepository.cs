@@ -13,10 +13,10 @@ public class AccountRepository : BaseRepository<Account>, IAccountRepository
     public AccountRepository(AppDbContext context) : base(context) => 
         _context = context;
 
-    public async Task<bool> Exist(AccountFilters filters)
+    public async Task<bool> Exist(Account account)
     {
         var accounts = await _context.Accounts.AsNoTracking()
-            .Where(x => x.Role == filters.Role && x.Password == filters.Password)
+            .Where(x => x.Role == account.Role && x.Password == account.Password)
             .ToListAsync();
 
         if (accounts.Count == 1) return true;

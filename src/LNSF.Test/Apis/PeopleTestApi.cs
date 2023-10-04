@@ -297,7 +297,7 @@ public class PeopleTestApi : GlobalClientRequest
         // Arrange - Room
         var roomFake = new RoomPostViewModelFake().Generate();
         if (roomFake.Beds < 2) roomFake.Beds = new Random().Next(3, 4);
-        roomFake.Occupation = new Random().Next(0, 2);
+        roomFake.Occupation = new Random().Next(0, 1);
         roomFake.Available = true;
         var roomPosted = await Post<RoomViewModel>(_roomClient, roomFake);
 

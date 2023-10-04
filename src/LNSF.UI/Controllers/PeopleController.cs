@@ -4,6 +4,7 @@ using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
 using LNSF.UI.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LNSF.UI.Controllers;
@@ -23,6 +24,7 @@ public class PeopleController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<ActionResult<List<PeopleViewModel>>> Get([FromQuery]PeopleFilters filters)
     {
         try
@@ -43,6 +45,7 @@ public class PeopleController : ControllerBase
     }
 
     [HttpGet("quantity")]
+    [Authorize]
     public async Task<ActionResult<int>> GetQuantity()
     {
         try
