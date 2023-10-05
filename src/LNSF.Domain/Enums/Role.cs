@@ -2,8 +2,8 @@
 
 public enum Role
 {
-    Volunteering,
-    Administration, 
-    SocialAssistance, 
-    Secretary, 
+    VOLUNTEERING,
+    ADMINISTRATION, 
+    SOCIALASSISTANCE, 
+    SECRETARY, 
 }

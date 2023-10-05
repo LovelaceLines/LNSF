@@ -17,9 +17,6 @@ public class AccountValidator : AbstractValidator<Account>
         
         RuleFor(account => account.Role)
             .IsInEnum().WithMessage("Cargo inválido!");
-        
-        RuleFor(account => account.CreationDate)
-            .SetValidator(new DateTimeValidator());
     }
 }
 

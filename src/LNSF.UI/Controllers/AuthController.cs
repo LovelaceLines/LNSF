@@ -83,4 +83,21 @@ public class AuthController : ControllerBase
             return StatusCode(500, ex.Message);
         }
     }
+
+    [HttpGet]
+    public async Task<ActionResult<AccountViewModel>> Get()
+    {
+        try
+        {
+            return Ok(await _authTokenService.Get());
+        }
+        catch (AppException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
 }

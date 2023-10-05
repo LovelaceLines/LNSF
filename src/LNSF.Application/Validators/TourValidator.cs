@@ -17,7 +17,7 @@ public class TourFilterValidator : AbstractValidator<TourFilter>
 {
     public TourFilterValidator()
     {
-        RuleFor(x => x.Page)
+        RuleFor(filter => filter.Page)
             .SetValidator(new PaginationValidator());
     }
 }

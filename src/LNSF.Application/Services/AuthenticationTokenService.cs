@@ -27,24 +27,17 @@ public class AuthenticationTokenService
 
     public async Task<AuthenticationToken> Login(Account account)
     {
-        try 
-        { 
-            var authToken = await Get(account.UserName, account.Password); 
-            return authToken;
-        }
-        catch { }
-
         // Verify if account exists
-        await _accountRepository.Get(account.UserName, account.Password);
+        var accountGet = await _accountRepository.Get(account.UserName, account.Password);
 
         var token = GenerateToken(account);
         var refreshToken = GenerateRefreshToken();
 
-        var newAuthToken = new AuthenticationToken()
+        var newAuthToken = new AuthenticationToken
         {
             Token = token,
             RefreshToken = refreshToken,
-            AccountId = account.Id
+            AccountId = accountGet.Id,
         };
 
         await Add(newAuthToken);
@@ -54,20 +47,20 @@ public class AuthenticationTokenService
     
     public async Task<AuthenticationToken> RefreshToken(AuthenticationToken token)
     {
-        var account = await _accountRepository.Get(token.AccountId);
-        await Get(token.Token, token.RefreshToken);
-        if (!IsExpired(token.Token)) throw new AppException("Not expired token");
+        var authToken = await Get(token.Token, token.RefreshToken);
+        var account = await _accountRepository.Get(authToken.AccountId);
+        if (!IsExpired(authToken.Token)) throw new AppException("Not expired token");
                 
         var newToken = GenerateToken(account);
         var newRefreshToken = GenerateRefreshToken();
 
-        await Delete(token.Token, token.RefreshToken);
+        await Delete(authToken.Token, authToken.RefreshToken);
         
         var newAuthToken = new AuthenticationToken()
         {
             Token = newToken,
             RefreshToken = newRefreshToken,
-            AccountId = account.Id
+            AccountId = authToken.AccountId
         };
 
         await Add(newAuthToken);
@@ -185,11 +178,11 @@ public class AuthenticationTokenService
         return principal;
     }
 
-    private async Task<AuthenticationToken> Add(AuthenticationToken token)
-    {
-        await Get(token.Token, token.RefreshToken);
-        return await _authTokenRepository.Post(token);
-    }
+    public async Task<List<AuthenticationToken>> Get() => 
+        await _authTokenRepository.Get();
+
+    private async Task<AuthenticationToken> Add(AuthenticationToken token) => 
+        await _authTokenRepository.Post(token);
 
     private async Task<AuthenticationToken> Get(string token, string refreshToken) => 
         await _authTokenRepository.Get(token, refreshToken);

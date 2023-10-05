@@ -26,6 +26,10 @@ public class AccountService
 
     public async Task<List<Account>> Query(AccountFilter filter)
     {
+        var validationResult = await _accountFilterValidator.ValidateAsync(filter);
+
+        if (!validationResult.IsValid) throw new AppException(validationResult.ToString());
+        
         var accounts = await _accountRepository.Query(filter);
         accounts.ForEach(x => x.Password = "");
 
@@ -45,8 +49,6 @@ public class AccountService
         var validationResult = await _accountValidator.ValidateAsync(account);
 
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString());
-
-        account.CreationDate = DateTime.Now;
 
         account.Id = 0;
         account = await _accountRepository.Post(account);

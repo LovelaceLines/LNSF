@@ -7,11 +7,11 @@ public class EmergencyContactValidator : AbstractValidator<EmergencyContact>
 {
     public EmergencyContactValidator()
     {
-        RuleFor(x => x.Name)
+        RuleFor(contact => contact.Name)
             .MinimumLength(3).WithMessage(GlobalValidator.MinLength("Nome", 3))
             .MaximumLength(64).WithMessage(GlobalValidator.MaxLength("Nome", 64));
         
-        RuleFor(x => x.Phone)
+        RuleFor(contact => contact.Phone)
             .SetValidator(new PhoneValidator());
     }
 }

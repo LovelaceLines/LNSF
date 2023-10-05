@@ -53,7 +53,7 @@ public class PeopleFilterValidator : AbstractValidator<PeopleFilter>
 {
     public PeopleFilterValidator()
     {
-        RuleFor(x => x.Page)
+        RuleFor(filter => filter.Page)
             .SetValidator(new PaginationValidator());
     }
 }
