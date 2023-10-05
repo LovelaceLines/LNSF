@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using LNSF.Domain.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +20,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 var autoMapperConfig = new MapperConfiguration(configure =>
 {
+    configure.CreateMap<AuthenticationToken, AuthenticationTokenViewModel>().ReverseMap();
+
+    configure.CreateMap<Account, AccountLoginViewModel>().ReverseMap();
     configure.CreateMap<Account, AccountViewModel>().ReverseMap();
+    configure.CreateMap<Account, AccountPostViewModel>().ReverseMap();
+    configure.CreateMap<Account, AccountPutViewModel>().ReverseMap();
+    configure.CreateMap<AccountViewModel, AccountFilter>().ReverseMap();
 
     configure.CreateMap<Room, RoomPostViewModel>().ReverseMap();
     configure.CreateMap<Room, RoomViewModel>().ReverseMap();
@@ -48,8 +55,12 @@ builder.Services.AddSingleton(autoMapperConfig.CreateMapper());
 
 IConfiguration configuration = builder.Configuration.GetSection("Jwt");
 builder.Services.AddSingleton(configuration);
-builder.Services.AddTransient<TokenService>();
+
+builder.Services.AddTransient<AuthenticationTokenService>();
+builder.Services.AddTransient<IAuthenticationTokenRepository, AuthenticationTokenRepository>();
+
 builder.Services.AddTransient<AccountService>();
+builder.Services.AddTransient<IAccountRepository, AccountRepository>();
 
 builder.Services.AddTransient<PaginationValidator>();
 

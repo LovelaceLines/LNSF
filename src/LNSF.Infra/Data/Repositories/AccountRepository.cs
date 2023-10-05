@@ -3,6 +3,7 @@ using LNSF.Domain.Entities;
 using LNSF.Domain.Repositories;
 using LNSF.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
+using LNSF.Domain.Enums;
 
 namespace LNSF.Infra.Data.Repositories;
 
@@ -12,14 +13,32 @@ public class AccountRepository : BaseRepository<Account>, IAccountRepository
 
     public AccountRepository(AppDbContext context) : base(context) => 
         _context = context;
-
-    public async Task<bool> Exist(Account account)
+    
+    public async Task<List<Account>> Query(AccountFilter filter)
     {
-        var accounts = await _context.Accounts.AsNoTracking()
-            .Where(x => x.Role == account.Role && x.Password == account.Password)
+        var query = _context.Accounts.AsNoTracking();
+        var count = await query.CountAsync();
+
+        if (filter.UserName != null) query = query.Where(x => x.UserName.Contains(filter.UserName));
+        if (filter.Role != null) query = query.Where(x => x.Role == filter.Role);
+        if (filter.OrderBy == OrderBy.Descending) query = query.OrderByDescending(x => x.UserName);
+        else query = query.OrderBy(x => x.UserName);
+
+        var accounts = await query
+            .Skip((filter.Page.Page - 1) * filter.Page.PageSize)
+            .Take(filter.Page.PageSize)
             .ToListAsync();
 
-        if (accounts.Count == 1) return true;
-        return false;
+        return accounts;
+    }
+
+    public async Task<Account> Get(string userName, string Password)
+    {
+        var accounts = await _context.Accounts.AsNoTracking()
+            .Where(x => x.UserName == userName && x.Password == Password)
+            .ToListAsync();
+
+        if (accounts.Count == 1) return accounts.First();
+        throw new Exception("Usuário ou senha inválidos");
     }
 }

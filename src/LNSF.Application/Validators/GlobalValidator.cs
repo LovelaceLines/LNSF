@@ -67,3 +67,13 @@ public class DateTimeValidator : AbstractValidator<DateTime>
             .WithMessage(GlobalValidator.InvalidDateTimeFormat());
     }
 }
+
+public class PasswordValidator : AbstractValidator<string>
+{
+    public PasswordValidator()
+    {
+        RuleFor(password => password)
+            .MinimumLength(6).WithMessage(GlobalValidator.MinLength("Senha", 6))
+            .MaximumLength(16).WithMessage(GlobalValidator.MaxLength("Senha", 16));
+    }
+}

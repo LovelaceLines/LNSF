@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LNSF.Application.Services;
 using LNSF.Domain.Entities;
+using LNSF.Domain.Exceptions;
 using LNSF.UI.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,73 +11,76 @@ namespace LNSF.UI.Controllers;
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
-    private readonly TokenService _tokenService;
+    private readonly AuthenticationTokenService _authTokenService;
     private readonly AccountService _accountService;
     private readonly IMapper _mapper;
 
-    public AuthController(TokenService tokenService,
+    public AuthController(AuthenticationTokenService authTokenService,
         AccountService accountService,
         IMapper mapper)
     {
-        _tokenService = tokenService;
+        _authTokenService = authTokenService;
         _accountService = accountService;
         _mapper = mapper;
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<TokenViewModel>> Login(AccountViewModel account)
+    public async Task<ActionResult<AuthenticationTokenViewModel>> Login(AccountLoginViewModel account)
     {
-        var accountMapped = _mapper.Map<Account>(account);
-
-        if (!await _accountService.Exist(accountMapped))
-            return BadRequest("Usuário ou senha inválidos");
-
-        var token = _tokenService.GenerateToken(accountMapped);
-        var refreshToken = _tokenService.GenerateRefreshToken();
-        _tokenService.SetRefreshToken(account.Role, refreshToken);
-        
-        var tokenViewModel = new TokenViewModel()
+        try
         {
-            Role = account.Role,
-            Token = token,
-            RefreshToken = refreshToken
-        };
+            var accountMapped = _mapper.Map<Account>(account);
+            var token = await _authTokenService.Login(accountMapped);
 
-        return Ok(tokenViewModel);
+            return Ok(token);
+        }
+        catch (AppException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 
     [HttpPost("refresh-token")]
-    public async Task<ActionResult<TokenViewModel>> RefreshToken(TokenViewModel tokenViewModel)
+    public async Task<ActionResult<AuthenticationTokenViewModel>> RefreshToken(AuthenticationTokenViewModel tokenViewModel)
     {
-        var refreshToken = _tokenService.GetRefreshToken(tokenViewModel.Role);
-
-        if (refreshToken != tokenViewModel.RefreshToken)
-            return BadRequest("Token inválido");
-
-        var token = _tokenService.GenerateToken(new List<Claim>()
+        try
         {
-            new(ClaimTypes.Role, tokenViewModel.Role)
-        });
-        refreshToken = _tokenService.GenerateRefreshToken();
-        _tokenService.SetRefreshToken(tokenViewModel.Role, refreshToken);
+            var tokenMapped = _mapper.Map<AuthenticationToken>(tokenViewModel);
+            var token = await _authTokenService.RefreshToken(tokenMapped);
 
-        tokenViewModel.Token = token;
-        tokenViewModel.RefreshToken = refreshToken;
-
-        return Ok(tokenViewModel);
+            return Ok(token);
+        }
+        catch (AppException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 
-    // [HttpPost("register")]
-    [NonAction]
-    public async Task<ActionResult> Register(AccountViewModel account)
+    [HttpPost("logout")]
+    public async Task<ActionResult> Logout(AuthenticationTokenViewModel tokenViewModel)
     {
-        var accountMapped = _mapper.Map<Account>(account);
+        try
+        {
+            var tokenMapped = _mapper.Map<AuthenticationToken>(tokenViewModel);
+            await _authTokenService.Logout(tokenMapped);
 
-        if (await _accountService.Exist(accountMapped))
-            return BadRequest("Usuário já cadastrado");
-
-        await _accountService.Create(accountMapped);
-
-        return Ok();
+            return Ok();
+        }
+        catch (AppException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 }

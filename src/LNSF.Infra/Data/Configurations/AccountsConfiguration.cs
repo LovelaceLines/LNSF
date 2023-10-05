@@ -12,8 +12,8 @@ public class AccountsConfiguration : IEntityTypeConfiguration<Account>
 
         builder.Property(x => x.Id)
             .ValueGeneratedOnAdd();
-        
-        builder.HasIndex(x => x.Role)
+
+        builder.HasIndex(x => x.UserName)
             .IsUnique(true);
     }
 }
