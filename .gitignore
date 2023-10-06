@@ -137,3 +137,4 @@ appsettings.Development.json
 appsettings.json
 TestLog.txt
 TestResults.trx
+logs/*

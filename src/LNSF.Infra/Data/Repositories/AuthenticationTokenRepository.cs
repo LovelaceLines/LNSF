@@ -1,4 +1,5 @@
-﻿using LNSF.Domain.Entities;
+﻿using System.Net;
+using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
 using LNSF.Domain.Repositories;
 using LNSF.Infra.Data.Context;
@@ -19,7 +20,7 @@ public class AuthenticationTokenRepository : BaseRepository<AuthenticationToken>
             .Where(x => x.Token == token && x.RefreshToken == refreshToken)
             .ToListAsync();
         
-        if (authToken.Count != 1) throw new AppException("Token not found");
+        if (authToken.Count != 1) throw new AppException("Token not found", HttpStatusCode.NotFound);
         return authToken.First();
     }
 }

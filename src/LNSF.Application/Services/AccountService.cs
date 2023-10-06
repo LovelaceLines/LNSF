@@ -1,4 +1,5 @@
-﻿using LNSF.Application.Validators;
+﻿using System.Net;
+using LNSF.Application.Validators;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
 using LNSF.Domain.Filters;
@@ -28,7 +29,7 @@ public class AccountService
     {
         var validationResult = await _accountFilterValidator.ValidateAsync(filter);
 
-        if (!validationResult.IsValid) throw new AppException(validationResult.ToString());
+        if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
         
         var accounts = await _accountRepository.Query(filter);
         accounts.ForEach(x => x.Password = "");
@@ -48,7 +49,7 @@ public class AccountService
     {
         var validationResult = await _accountValidator.ValidateAsync(account);
 
-        if (!validationResult.IsValid) throw new AppException(validationResult.ToString());
+        if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
         account.Id = 0;
         account = await _accountRepository.Post(account);
@@ -61,7 +62,7 @@ public class AccountService
     {
         var validationResult = await _accountValidator.ValidateAsync(account);
 
-        if (!validationResult.IsValid) throw new AppException(validationResult.ToString());
+        if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
         await _accountRepository.Get(account.Id);
 
@@ -75,7 +76,7 @@ public class AccountService
     {
         var validationResult = await _passwordValidator.ValidateAsync(oldPassword);
 
-        if (!validationResult.IsValid) throw new AppException(validationResult.ToString());
+        if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
         account.Password = oldPassword;
 

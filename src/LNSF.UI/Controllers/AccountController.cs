@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using LNSF.Application.Services;
 using LNSF.Domain.Entities;
-using LNSF.Domain.Exceptions;
 using LNSF.Domain.Filters;
 using LNSF.UI.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -25,21 +24,10 @@ public class AccountController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<AccountViewModel>>> Get([FromQuery]AccountFilter filter)
     {
-        try
-        {
-            var accounts = await _accountService.Query(filter);
-            var accountsViewModel = _mapper.Map<List<AccountViewModel>>(accounts);
+        var accounts = await _accountService.Query(filter);
+        var accountsViewModel = _mapper.Map<List<AccountViewModel>>(accounts);
 
-            return Ok(accountsViewModel);
-        }
-        catch (AppException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
+        return Ok(accountsViewModel);
     }
 
     [HttpPost]
@@ -55,41 +43,19 @@ public class AccountController : ControllerBase
     [HttpPut]
     public async Task<ActionResult<AccountViewModel>> Put([FromBody]AccountPutViewModel account)
     {
-        try
-        {
-            var accountMapped = _mapper.Map<Account>(account);
-            var accountUpdated = await _accountService.Update(accountMapped);
-            var accountViewModel = _mapper.Map<AccountViewModel>(accountUpdated);
+        var accountMapped = _mapper.Map<Account>(account);
+        var accountUpdated = await _accountService.Update(accountMapped);
+        var accountViewModel = _mapper.Map<AccountViewModel>(accountUpdated);
 
-            return Ok(accountViewModel);
-        }
-        catch (AppException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
+        return Ok(accountViewModel);
     }
 
     [HttpDelete]
     public async Task<ActionResult<AccountViewModel>> Delete([FromBody]AccountDeleteViewModel id)
     {
-        try
-        {
-            var accountDeleted = await _accountService.Delete(id.AccountId);
-            var accountViewModel = _mapper.Map<AccountViewModel>(accountDeleted);
+        var accountDeleted = await _accountService.Delete(id.AccountId);
+        var accountViewModel = _mapper.Map<AccountViewModel>(accountDeleted);
 
-            return Ok(accountViewModel);
-        }
-        catch (AppException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
+        return Ok(accountViewModel);
     }
 }

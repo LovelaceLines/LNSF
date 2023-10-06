@@ -2,6 +2,7 @@
 using LNSF.Domain.Filters;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
+using System.Net;
 
 namespace LNSF.Application;
 
@@ -27,7 +28,7 @@ public class PeopleService
     {
         var validationResult = _PeopleFilterValidator.Validate(filter);
 
-        if (!validationResult.IsValid) throw new AppException(validationResult.ToString());
+        if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
         return await _peopleRepository.Query(filter);
     }
@@ -41,7 +42,7 @@ public class PeopleService
     public async Task<People> CreateNewPeople(People people)
     {
         var validationResult = _peopleValidator.Validate(people);
-        if (!validationResult.IsValid) throw new AppException(validationResult.ToString());
+        if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
         return await _peopleRepository.Post(people);
     }
@@ -49,7 +50,7 @@ public class PeopleService
     public async Task<People> EditBasicInformation(People people)
     {
         var validationResult = _peopleValidator.Validate(people);
-        if (!validationResult.IsValid) throw new AppException(validationResult.ToString());
+        if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
         var oldPeople = await _peopleRepository.Get(people.Id);
 
@@ -64,10 +65,10 @@ public class PeopleService
         var people = await _peopleRepository.Get(peopleId);
         var room = await _roomRepository.Get(roomId);
 
-        if (people.RoomId == roomId) throw new AppException("Pessoa já está no quarto.");
-        if (people.RoomId != null) throw new AppException("Pessoa já está em um quarto.");
-        if (room.Beds - room.Occupation <= 0) throw new AppException("Não há vagas.");
-        if (!room.Available) throw new AppException("Quarto indisponível.");
+        if (people.RoomId == roomId) throw new AppException("Pessoa já está no quarto.", HttpStatusCode.UnprocessableEntity);
+        if (people.RoomId != null) throw new AppException("Pessoa já está em um quarto.", HttpStatusCode.UnprocessableEntity);
+        if (room.Beds - room.Occupation <= 0) throw new AppException("Não há vagas.", HttpStatusCode.UnprocessableEntity);
+        if (!room.Available) throw new AppException("Quarto indisponível.", HttpStatusCode.UnprocessableEntity);
 
         // AddPeopleToRoom
         people.RoomId = roomId;
@@ -84,7 +85,7 @@ public class PeopleService
         catch (Exception)
         {
             // await _peopleRepository.RollbackTransaction();
-            throw new AppException("Erro ao adicionar pessoa ao quarto.");
+            throw new AppException("Erro ao adicionar pessoa ao quarto.", HttpStatusCode.InternalServerError);
         }
 
         // await _peopleRepository.CommitTransaction();
@@ -96,7 +97,7 @@ public class PeopleService
     {
         var people = await _peopleRepository.Get(peopleId);
 
-        if (people.RoomId == null) throw new AppException("Pessoa não está no quarto.");
+        if (people.RoomId == null) throw new AppException("Pessoa não está no quarto.", HttpStatusCode.UnprocessableEntity);
 
         var room = await _roomRepository.Get(people.RoomId.Value);
 
@@ -116,7 +117,7 @@ public class PeopleService
         catch (Exception)
         {
             // await _peopleRepository.RollbackTransaction();
-            throw new AppException("Erro ao remover pessoa do quarto.");
+            throw new AppException("Erro ao remover pessoa do quarto.", HttpStatusCode.InternalServerError);
         }
 
         // await _peopleRepository.CommitTransaction();

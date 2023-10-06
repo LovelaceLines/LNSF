@@ -2,9 +2,7 @@
 using LNSF.Application;
 using LNSF.Domain.Filters;
 using LNSF.Domain.Entities;
-using LNSF.Domain.Exceptions;
 using LNSF.UI.ViewModels;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LNSF.UI.Controllers;
@@ -26,115 +24,51 @@ public class PeopleController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<PeopleViewModel>>> Get([FromQuery]PeopleFilter filter)
     {
-        try
-        {
-            var peoples = await _peopleService.Query(filter);
-            var peoplesViewModel = _mapper.Map<List<PeopleViewModel>>(peoples);
-            
-            return Ok(peoplesViewModel);
-        }
-        catch (AppException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
+        var peoples = await _peopleService.Query(filter);
+        var peoplesViewModel = _mapper.Map<List<PeopleViewModel>>(peoples);
+        
+        return Ok(peoplesViewModel);
     }
 
     [HttpGet("quantity")]
-    public async Task<ActionResult<int>> GetQuantity()
-    {
-        try
-        {
-            return Ok(await _peopleService.GetQuantity());
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
-    }
+    public async Task<ActionResult<int>> GetQuantity() => 
+        Ok(await _peopleService.GetQuantity());
 
     [HttpPost]
     public async Task<ActionResult<PeopleViewModel>> Post([FromBody]PeoplePostViewModel people)
     {
-        try
-        {
-            var peopleMapped = _mapper.Map<People>(people);
-            var peopleCreated = await _peopleService.CreateNewPeople(peopleMapped);
-            var peopleViewModel = _mapper.Map<PeopleViewModel>(peopleCreated);
-            
-            return Ok(peopleViewModel);
-        }
-        catch (AppException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
+        var peopleMapped = _mapper.Map<People>(people);
+        var peopleCreated = await _peopleService.CreateNewPeople(peopleMapped);
+        var peopleViewModel = _mapper.Map<PeopleViewModel>(peopleCreated);
+        
+        return Ok(peopleViewModel);
     }
 
     [HttpPut]
     public async Task<ActionResult<PeopleViewModel>> Put([FromBody]PeoplePutViewModel people)
     {
-        try
-        {
-            var peopleMapper = _mapper.Map<People>(people);
-            var peopleUpdated = await _peopleService.EditBasicInformation(peopleMapper);
-            var peopleViewModel = _mapper.Map<PeopleViewModel>(peopleUpdated);
+        var peopleMapper = _mapper.Map<People>(people);
+        var peopleUpdated = await _peopleService.EditBasicInformation(peopleMapper);
+        var peopleViewModel = _mapper.Map<PeopleViewModel>(peopleUpdated);
 
-            return Ok(peopleViewModel);
-        }
-        catch (AppException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
+        return Ok(peopleViewModel);
     }
 
     [HttpPut("add-people-to-room")]
     public async Task<ActionResult<PeopleViewModel>> Put([FromBody]PeopleAddPeopleToRoomViewModel Ids)
     {
-        try
-        {
-            var peopleUpdated = await _peopleService.AddPeopleToRoom(Ids.PeopleId, Ids.RoomId);
-            var peopleViewModel = _mapper.Map<PeopleViewModel>(peopleUpdated);
+        var peopleUpdated = await _peopleService.AddPeopleToRoom(Ids.PeopleId, Ids.RoomId);
+        var peopleViewModel = _mapper.Map<PeopleViewModel>(peopleUpdated);
 
-            return Ok(peopleViewModel);
-        }
-        catch (AppException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
+        return Ok(peopleViewModel);
     }
 
     [HttpPut("remove-people-from-room")]
     public async Task<ActionResult<PeopleViewModel>> Put([FromBody]PeopleRemovePeopleFromRoom peopleId)
     {
-        try
-        {
-            var peopleUpdated = await _peopleService.RemovePeopleFromRoom(peopleId.PeopleId);
-            var peopleViewModel = _mapper.Map<PeopleViewModel>(peopleUpdated);
+        var peopleUpdated = await _peopleService.RemovePeopleFromRoom(peopleId.PeopleId);
+        var peopleViewModel = _mapper.Map<PeopleViewModel>(peopleUpdated);
 
-            return Ok(peopleViewModel);
-        }
-        catch (AppException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
+        return Ok(peopleViewModel);
     }
 }

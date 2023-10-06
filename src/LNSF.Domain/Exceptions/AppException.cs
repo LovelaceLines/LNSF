@@ -1,4 +1,6 @@
-﻿namespace LNSF.Domain.Exceptions;
+﻿using System.Net;
+
+namespace LNSF.Domain.Exceptions;
 
 public class AppException : Exception
 {
@@ -12,4 +14,7 @@ public class AppException : Exception
     
     public AppException(string message, int statusCode) : base(message) =>
         (Message, StatusCode) = (message, statusCode);
+
+    public AppException(string message, HttpStatusCode statusCode) : this(message) => 
+        (Message, StatusCode) = (message, (int)statusCode);
 }

@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -49,7 +50,7 @@ public class AuthenticationTokenService
     {
         var authToken = await Get(token.Token, token.RefreshToken);
         var account = await _accountRepository.Get(authToken.AccountId);
-        if (!IsExpired(authToken.Token)) throw new AppException("Not expired token");
+        if (!IsExpired(authToken.Token)) throw new AppException("Not expired token", HttpStatusCode.NotModified);
                 
         var newToken = GenerateToken(account);
         var newRefreshToken = GenerateRefreshToken();

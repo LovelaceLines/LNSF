@@ -1,4 +1,5 @@
-﻿using LNSF.Domain.Exceptions;
+﻿using System.Net;
+using LNSF.Domain.Exceptions;
 using LNSF.Domain.Repositories;
 using LNSF.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +18,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
     public virtual async Task<T> Get(int id) => 
         await _context.Set<T>().FindAsync(id) ??
-            throw new AppException("Entidade não encontrada");
+            throw new AppException("Entidade não encontrada", HttpStatusCode.NotFound);
 
     public virtual async Task<int> GetQuantity() => 
         await _context.Set<T>().CountAsync();

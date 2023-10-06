@@ -3,6 +3,7 @@ using LNSF.Domain.Filters;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
 using LNSF.Domain.Repositories;
+using System.Net;
 
 namespace LNSF.Application.Services;
 
@@ -30,7 +31,7 @@ public class EmergencyContactService
     public async Task<EmergencyContact> Create(EmergencyContact contact)
     {
         var validationResult = _emergencyContactValidator.Validate(contact);
-        if (!validationResult.IsValid) throw new AppException(validationResult.ToString());
+        if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
         await _peoplesRepository.Get(contact.PeopleId);
 
@@ -42,12 +43,12 @@ public class EmergencyContactService
     public async Task<EmergencyContact> Update(EmergencyContact contact)
     {
         var validationResult = _emergencyContactValidator.Validate(contact);
-        if (!validationResult.IsValid) throw new AppException(validationResult.ToString());
+        if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
         await _peoplesRepository.Get(contact.PeopleId);
 
         var contactGet = await _emergencyContactRepository.Get(contact.Id);
-        if (contactGet.PeopleId != contact.PeopleId) throw new AppException("Não é possível alterar o ID da pessoa.");
+        if (contactGet.PeopleId != contact.PeopleId) throw new AppException("Não é possível alterar o ID da pessoa.", HttpStatusCode.UnprocessableEntity);
 
         return await _emergencyContactRepository.Put(contact);
     }

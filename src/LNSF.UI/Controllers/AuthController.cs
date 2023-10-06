@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using LNSF.Application.Services;
 using LNSF.Domain.Entities;
-using LNSF.Domain.Exceptions;
 using LNSF.UI.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,77 +26,33 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<ActionResult<AuthenticationTokenViewModel>> Login(AccountLoginViewModel account)
     {
-        try
-        {
-            var accountMapped = _mapper.Map<Account>(account);
-            var token = await _authTokenService.Login(accountMapped);
+        var accountMapped = _mapper.Map<Account>(account);
+        var token = await _authTokenService.Login(accountMapped);
 
-            return Ok(token);
-        }
-        catch (AppException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
+        return Ok(token);
     }
 
     [HttpPost("refresh-token")]
     public async Task<ActionResult<AuthenticationTokenViewModel>> RefreshToken(AuthenticationTokenViewModel tokenViewModel)
     {
-        try
-        {
-            var tokenMapped = _mapper.Map<AuthenticationToken>(tokenViewModel);
-            var token = await _authTokenService.RefreshToken(tokenMapped);
+        var tokenMapped = _mapper.Map<AuthenticationToken>(tokenViewModel);
+        var token = await _authTokenService.RefreshToken(tokenMapped);
 
-            return Ok(token);
-        }
-        catch (AppException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
+        return Ok(token);
     }
 
     [HttpPost("logout")]
     public async Task<ActionResult> Logout(AuthenticationTokenViewModel tokenViewModel)
     {
-        try
-        {
-            var tokenMapped = _mapper.Map<AuthenticationToken>(tokenViewModel);
-            await _authTokenService.Logout(tokenMapped);
+        var tokenMapped = _mapper.Map<AuthenticationToken>(tokenViewModel);
+        await _authTokenService.Logout(tokenMapped);
 
-            return Ok();
-        }
-        catch (AppException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
+        return Ok();
     }
 
     [HttpGet]
     public async Task<ActionResult<AccountViewModel>> Get()
     {
-        try
-        {
-            return Ok(await _authTokenService.Get());
-        }
-        catch (AppException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
+        return Ok(await _authTokenService.Get());
     }
 }

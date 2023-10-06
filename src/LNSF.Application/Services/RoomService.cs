@@ -2,6 +2,7 @@
 using LNSF.Domain.Filters;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
+using System.Net;
 
 namespace LNSF.Application.Services;
 
@@ -23,7 +24,7 @@ public class RoomService
     public async Task<List<Room>> Query(RoomFilter filter)
     {
         var validationResult = _roomFilterValidator.Validate(filter);
-        if (!validationResult.IsValid) throw new AppException(validationResult.ToString());
+        if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
         return await _roomRepository.Query(filter);
     }
@@ -37,7 +38,7 @@ public class RoomService
     public async Task<Room> Create(Room room)
     {
         var validationResult = _roomValidator.Validate(room);
-        if (!validationResult.IsValid) throw new AppException(validationResult.ToString());
+        if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
         return await _roomRepository.Post(room);
     }
@@ -45,7 +46,7 @@ public class RoomService
     public async Task<Room> Update(Room room)
     {
         var validationResult = _roomValidator.Validate(room);
-        if (!validationResult.IsValid) throw new AppException(validationResult.ToString());
+        if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
         return await _roomRepository.Put(room);
     }
