@@ -45,22 +45,11 @@ public class AccountController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<AccountViewModel>> Post([FromBody]AccountPostViewModel account)
     {
-        try
-        {
-            var accountMapped = _mapper.Map<Account>(account);
-            var accountCreated = await _accountService.Create(accountMapped);
-            var accountViewModel = _mapper.Map<AccountViewModel>(accountCreated);
+        var accountMapped = _mapper.Map<Account>(account);
+        var accountCreated = await _accountService.Create(accountMapped);
+        var accountViewModel = _mapper.Map<AccountViewModel>(accountCreated);
 
-            return Ok(accountViewModel);
-        }
-        catch (AppException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
+        return Ok(accountViewModel);
     }
 
     [HttpPut]

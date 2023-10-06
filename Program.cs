@@ -13,8 +13,21 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using LNSF.Domain.Filters;
+using Serilog;
+using Serilog.Formatting.Json;
 
 var builder = WebApplication.CreateBuilder(args);
+
+#region Logger
+
+Log.Logger = new LoggerConfiguration() 
+    .Enrich.FromLogContext()
+    .ReadFrom.Configuration(builder.Configuration)
+    .CreateLogger();
+
+builder.Logging.AddSerilog();
+
+#endregion
 
 #region AutoMapper
 
@@ -121,9 +134,9 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    // options.UseInMemoryDatabase("InMemoryDatabaseName");
+    options.UseInMemoryDatabase("InMemoryDatabaseName");
     // options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionMYSQL"));
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnectionSQLite"));
+    // options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnectionSQLite"));
     options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 });
 
@@ -176,11 +189,15 @@ builder.Services.AddSwaggerGen(setup =>
 
 var app = builder.Build();
 
+app.UseExceptionHandler("/api/Error");
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment() || 
     app.Environment.IsProduction() || 
     app.Environment.IsStaging())
 {
+    // app.UseDeveloperExceptionPage();
+
     app.UseSwagger();
     app.UseSwaggerUI();
 }
