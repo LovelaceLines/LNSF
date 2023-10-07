@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using LNSF.Domain.Entities;
-using LNSF.Domain.Filters;
 
 namespace LNSF.Application.Validators;
 
@@ -17,17 +16,5 @@ public class AccountValidator : AbstractValidator<Account>
         
         RuleFor(account => account.Role)
             .IsInEnum().WithMessage("Cargo inválido!");
-    }
-}
-
-public class AccountFilterValidator : AbstractValidator<AccountFilter>
-{
-    public AccountFilterValidator()
-    {
-        RuleFor(filter => filter.Page)
-            .SetValidator(new PaginationValidator());
-        
-        RuleFor(filter => filter.OrderBy)
-            .SetValidator(new OrderByValidator());
     }
 }

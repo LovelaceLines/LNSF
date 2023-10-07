@@ -42,7 +42,7 @@ public class PeopleService
     {
         var validationResult = _peopleValidator.Validate(newPeople);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
-        if (!await _peopleRepository.Exists(newPeople.Id)) throw new AppException("Pessoa não encontrada.", HttpStatusCode.UnprocessableEntity);
+        if (!await _peopleRepository.Exists(newPeople.Id)) throw new AppException("Pessoa não encontrada!", HttpStatusCode.UnprocessableEntity);
 
         var oldPeople = await _peopleRepository.Get(newPeople.Id);
         newPeople.RoomId = oldPeople.RoomId; //Quarto não pode ser alterado.
@@ -52,14 +52,14 @@ public class PeopleService
 
     public async Task<People> AddPeopleToRoom(int peopleId, int roomId)
     {
-        if (!await _peopleRepository.Exists(peopleId)) throw new AppException("Pessoa não encontrada.", HttpStatusCode.UnprocessableEntity);
-        if (!await _roomRepository.Exists(roomId)) throw new AppException("Quarto não encontrado.", HttpStatusCode.UnprocessableEntity);
+        if (!await _peopleRepository.Exists(peopleId)) throw new AppException("Pessoa não encontrada!", HttpStatusCode.UnprocessableEntity);
+        if (!await _roomRepository.Exists(roomId)) throw new AppException("Quarto não encontrado!", HttpStatusCode.UnprocessableEntity);
         var people = await _peopleRepository.Get(peopleId);
         var room = await _roomRepository.Get(roomId);
-        if (people.RoomId == roomId) throw new AppException("Pessoa já está no quarto.", HttpStatusCode.UnprocessableEntity);
-        if (people.RoomId != null) throw new AppException("Pessoa já está em um quarto.", HttpStatusCode.UnprocessableEntity);
-        if (room.Beds <= room.Occupation) throw new AppException("Não há vagas.", HttpStatusCode.UnprocessableEntity);
-        if (!room.Available) throw new AppException("Quarto indisponível.", HttpStatusCode.UnprocessableEntity);
+        if (people.RoomId == roomId) throw new AppException("Pessoa já está no quarto!", HttpStatusCode.UnprocessableEntity);
+        if (people.RoomId != null) throw new AppException("Pessoa já está em um quarto!", HttpStatusCode.UnprocessableEntity);
+        if (room.Beds <= room.Occupation) throw new AppException("Não há vagas!", HttpStatusCode.UnprocessableEntity);
+        if (!room.Available) throw new AppException("Quarto indisponível!", HttpStatusCode.UnprocessableEntity);
 
         people.RoomId = roomId;
         room.Occupation++;
@@ -74,7 +74,7 @@ public class PeopleService
         catch (Exception)
         {
             // await _peopleRepository.RollbackTransaction();
-            throw new AppException("Erro ao adicionar pessoa ao quarto.", HttpStatusCode.InternalServerError);
+            throw new AppException("Erro ao adicionar pessoa ao quarto!", HttpStatusCode.InternalServerError);
         }
         // await _peopleRepository.CommitTransaction();
 
@@ -83,10 +83,10 @@ public class PeopleService
 
     public async Task<People> RemovePeopleFromRoom(int peopleId)
     {
-        if (!await _peopleRepository.Exists(peopleId)) throw new AppException("Pessoa não encontrada.", HttpStatusCode.UnprocessableEntity);
+        if (!await _peopleRepository.Exists(peopleId)) throw new AppException("Pessoa não encontrada!", HttpStatusCode.UnprocessableEntity);
         var people = await _peopleRepository.Get(peopleId);
-        if (people.RoomId == null) throw new AppException("Pessoa não está no quarto.", HttpStatusCode.UnprocessableEntity);
-        if (!await _roomRepository.Exists(people.RoomId.Value)) throw new AppException("Quarto não encontrado.", HttpStatusCode.UnprocessableEntity);
+        if (people.RoomId == null) throw new AppException("Pessoa não está no quarto!", HttpStatusCode.UnprocessableEntity);
+        if (!await _roomRepository.Exists(people.RoomId.Value)) throw new AppException("Quarto não encontrado!", HttpStatusCode.UnprocessableEntity);
 
         var room = await _roomRepository.Get(people.RoomId.Value);
         people.RoomId = null;
@@ -101,7 +101,7 @@ public class PeopleService
         catch (Exception)
         {
             // await _peopleRepository.RollbackTransaction();
-            throw new AppException("Erro ao remover pessoa do quarto.", HttpStatusCode.InternalServerError);
+            throw new AppException("Erro ao remover pessoa do quarto!", HttpStatusCode.InternalServerError);
         }
         // await _peopleRepository.CommitTransaction();
 

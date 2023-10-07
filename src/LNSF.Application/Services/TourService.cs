@@ -35,7 +35,7 @@ public class TourService
     {
         var validationResult = _tourValidator.Validate(tour);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
-        if (!await _peopleRepository.Exists(tour.PeopleId)) throw new AppException("Pessoa não encontrada.", HttpStatusCode.UnprocessableEntity);
+        if (!await _peopleRepository.Exists(tour.PeopleId)) throw new AppException("Pessoa não encontrada!", HttpStatusCode.UnprocessableEntity);
         var filter = new TourFilter { PeopleId = tour.PeopleId, Input = null };
         var query = await _tourRepository.Query(filter);
         if (query.Count > 0) throw new AppException("Pessoa possui pesseio em aberto!", HttpStatusCode.UnprocessableEntity);
@@ -50,8 +50,8 @@ public class TourService
     {
         var validationResult = _tourValidator.Validate(tour);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
-        if (!await _tourRepository.Exists(tour.Id)) throw new AppException("Id não encontrado.", HttpStatusCode.UnprocessableEntity);
-        if (!await _peopleRepository.Exists(tour.PeopleId)) throw new AppException("Pessoa não encontrada.", HttpStatusCode.UnprocessableEntity);
+        if (!await _tourRepository.Exists(tour.Id)) throw new AppException("Id não encontrado!", HttpStatusCode.UnprocessableEntity);
+        if (!await _peopleRepository.Exists(tour.PeopleId)) throw new AppException("Pessoa não encontrada!", HttpStatusCode.UnprocessableEntity);
 
         var query = await _tourRepository.Query(new TourFilter { PeopleId = tour.PeopleId, InOpen = true });
         if (query.Count != 1) throw new AppException("Pessoa não possui pesseio em aberto!", HttpStatusCode.UnprocessableEntity);
