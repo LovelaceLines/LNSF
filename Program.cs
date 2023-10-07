@@ -135,7 +135,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseInMemoryDatabase("InMemoryDatabaseName");
-    // options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionMYSQL"));
+    // options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionMSSQL"));
     // options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnectionSQLite"));
     options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 });
@@ -204,7 +204,7 @@ if (app.Environment.IsDevelopment() ||
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
+// app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

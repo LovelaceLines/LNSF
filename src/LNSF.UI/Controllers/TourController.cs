@@ -30,9 +30,9 @@ public class TourController : ControllerBase
         return Ok(tourViewModels);
     }
 
-    [HttpGet("quantity")]
-    public async Task<ActionResult<int>> GetQuantity() => 
-        Ok(await _service.GetQuantity());
+    [HttpGet("count")]
+    public async Task<ActionResult<int>> GetCount() => 
+        Ok(await _service.GetCount());
 
     [HttpPost]
     public async Task<ActionResult<TourViewModel>> Post([FromBody]TourPostViewModel tour)

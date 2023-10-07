@@ -43,7 +43,7 @@ public class AccountService
             throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
         account.Id = 0;
-        account = await _accountRepository.Post(account);
+        account = await _accountRepository.Add(account);
         account.Password = "";
         return account;
     }
@@ -66,7 +66,7 @@ public class AccountService
         if (!await _accountRepository.Exists(account.Id)) 
             throw new AppException("Account not Found!", HttpStatusCode.NotFound); 
 
-        account = await _accountRepository.Put(account);
+        account = await _accountRepository.Update(account);
         account.Password = "";
         return account;
     }
@@ -77,7 +77,7 @@ public class AccountService
             throw new AppException("AccountId not Found!", HttpStatusCode.NotFound);
 
         var account = await _accountRepository.Get(id);
-        account = await _accountRepository.Delete(account);
+        account = await _accountRepository.Remove(account);
         account.Password = "";
         return account;
     }

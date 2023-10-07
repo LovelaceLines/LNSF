@@ -20,15 +20,15 @@ public class TourTestApi : GlobalClientRequest
         var tourMapped = _mapper.Map<TourPostViewModel>(tourFake);
         tourMapped.PeopleId = peoplePosted.Id;
 
-        // Arrange - Quantity
-        var quantityBefore = await GetQuantity(_tourClient);
+        // Arrange - Count
+        var countBefore = await GetCount(_tourClient);
 
         // Act
         var tourPosted = await Post<TourViewModel>(_tourClient, tourMapped);
-        var quantityAfter = await GetQuantity(_tourClient);
+        var countAfter = await GetCount(_tourClient);
 
         // Assert
-        Assert.Equal(quantityBefore + 1, quantityAfter);
+        Assert.Equal(countBefore + 1, countAfter);
         Assert.Equivalent(tourMapped.PeopleId, tourPosted.PeopleId);
     }
 
@@ -44,17 +44,17 @@ public class TourTestApi : GlobalClientRequest
         openTourFake.PeopleId = peoplePosted.Id;
         var openTourPosted = await Post<TourViewModel>(_tourClient, openTourFake);
 
-        // Arrange - Quantity
-        var quantityBefore = await GetQuantity(_tourClient);
+        // Arrange - Count
+        var countBefore = await GetCount(_tourClient);
 
         // Act
         var otherTourFake = _mapper.Map<TourPostViewModel>(new TourViewModelFake().Generate());
         otherTourFake.PeopleId = peoplePosted.Id;
         await Assert.ThrowsAsync<Exception>(() => Post<TourViewModel>(_tourClient, otherTourFake));
-        var quantityAfter = await GetQuantity(_tourClient);
+        var countAfter = await GetCount(_tourClient);
 
         // Assert
-        Assert.Equal(quantityBefore, quantityAfter);
+        Assert.Equal(countBefore, countAfter);
     }
 
     [Fact]
@@ -74,15 +74,15 @@ public class TourTestApi : GlobalClientRequest
         closeTourFake.Id = tourPosted.Id;
         closeTourFake.PeopleId = peoplePosted.Id;
 
-        // Arrange - Quantity
-        var quantityBefore = await GetQuantity(_tourClient);
+        // Arrange - Count
+        var countBefore = await GetCount(_tourClient);
 
         // Act
         var tourPut = await Put<TourViewModel>(_putAllClient, closeTourFake);
-        var quantityAfter = await GetQuantity(_tourClient);
+        var countAfter = await GetCount(_tourClient);
 
         // Assert
-        Assert.Equal(quantityBefore, quantityAfter);
+        Assert.Equal(countBefore, countAfter);
         Assert.Equal(closeTourFake.Id, tourPut.Id);
         Assert.Equal(closeTourFake.PeopleId, tourPut.PeopleId);
     }
@@ -94,15 +94,15 @@ public class TourTestApi : GlobalClientRequest
         var closeTourFake = _mapper.Map<TourPutViewModel>(new TourViewModelFake().Generate());
         closeTourFake.PeopleId = new Random().Next(9999, 99999);
 
-        // Arrange - Quantity
-        var quantityBefore = await GetQuantity(_tourClient);
+        // Arrange - Count
+        var countBefore = await GetCount(_tourClient);
 
         // Act
         await Assert.ThrowsAsync<Exception>(() => Put<TourViewModel>(_putAllClient, closeTourFake));
-        var quantityAfter = await GetQuantity(_tourClient);
+        var countAfter = await GetCount(_tourClient);
 
         // Assert
-        Assert.Equal(quantityBefore, quantityAfter);
+        Assert.Equal(countBefore, countAfter);
     }
 
     [Fact]
@@ -117,17 +117,17 @@ public class TourTestApi : GlobalClientRequest
         tourFake.PeopleId = peoplePosted.Id;
         var tourPosted = await Post<TourViewModel>(_tourClient, tourFake);
 
-        // Arrange - Quantity
-        var quantityBefore = await GetQuantity(_tourClient);
+        // Arrange - Count
+        var countBefore = await GetCount(_tourClient);
  
         // Act
         var otherTourFake = _mapper.Map<TourViewModel>(new TourViewModelFake().Generate());
         otherTourFake.Id = tourPosted.Id;
         otherTourFake.PeopleId = tourPosted.PeopleId;
         var otherTourPuted = await Put<TourViewModel>(_putAllClient, otherTourFake); 
-        var quantityAfter = await GetQuantity(_tourClient);
+        var countAfter = await GetCount(_tourClient);
 
         // Assert
-        Assert.Equal(quantityBefore, quantityAfter);
+        Assert.Equal(countBefore, countAfter);
     }
 }

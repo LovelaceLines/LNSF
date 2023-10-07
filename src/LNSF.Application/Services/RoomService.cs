@@ -24,15 +24,15 @@ public class RoomService
     public async Task<Room> Get(int id) => 
         await _roomRepository.Get(id);
 
-    public async Task<int> GetQuantity() =>
-        await _roomRepository.GetQuantity();
+    public async Task<int> GetCount() =>
+        await _roomRepository.GetCount();
 
     public async Task<Room> Create(Room room)
     {
         var validationResult = _roomValidator.Validate(room);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
-        return await _roomRepository.Post(room);
+        return await _roomRepository.Add(room);
     }
 
     public async Task<Room> Update(Room room)
@@ -40,6 +40,6 @@ public class RoomService
         var validationResult = _roomValidator.Validate(room);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
-        return await _roomRepository.Put(room);
+        return await _roomRepository.Update(room);
     }
 }

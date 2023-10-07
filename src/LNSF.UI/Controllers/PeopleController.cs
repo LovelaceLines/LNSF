@@ -30,9 +30,9 @@ public class PeopleController : ControllerBase
         return Ok(peoplesViewModel);
     }
 
-    [HttpGet("quantity")]
-    public async Task<ActionResult<int>> GetQuantity() => 
-        Ok(await _peopleService.GetQuantity());
+    [HttpGet("count")]
+    public async Task<ActionResult<int>> GetCount() => 
+        Ok(await _peopleService.GetCount());
 
     [HttpPost]
     public async Task<ActionResult<PeopleViewModel>> Post([FromBody]PeoplePostViewModel people)

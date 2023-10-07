@@ -38,7 +38,7 @@ public class AuthenticationTokenService
             RefreshToken = GenerateRefreshToken(),
             AccountId = account.Id,
         };
-        return await _authTokenRepository.Post(token);
+        return await _authTokenRepository.Add(token);
     }
     
     public async Task<AuthenticationToken> RefreshToken(AuthenticationToken token)
@@ -49,19 +49,19 @@ public class AuthenticationTokenService
             throw new AppException("Not expired token", HttpStatusCode.NotModified);
 
         var account = await _accountRepository.Get(token.AccountId);
-        await _authTokenRepository.Delete(token);
+        await _authTokenRepository.Remove(token);
         token = new AuthenticationToken()
         {
             Token = GenerateToken(account),
             RefreshToken = GenerateRefreshToken(),
             AccountId = token.AccountId
         };
-        return await _authTokenRepository.Post(token);
+        return await _authTokenRepository.Add(token);
     }
 
     public async Task<bool> Logout(AuthenticationToken token)
     {
-        await _authTokenRepository.Delete(token);
+        await _authTokenRepository.Remove(token);
         return true;
     }
 

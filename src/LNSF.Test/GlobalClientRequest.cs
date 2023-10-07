@@ -43,9 +43,9 @@ public class GlobalClientRequest
         return await DeserializeResponse<T>(response);
     }
 
-    public virtual async Task<int> GetQuantity(HttpClient client)
+    public virtual async Task<int> GetCount(HttpClient client)
     {
-        var response = await client.GetAsync("quantity");
+        var response = await client.GetAsync("count");
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         return await DeserializeResponse<int>(response);
     }

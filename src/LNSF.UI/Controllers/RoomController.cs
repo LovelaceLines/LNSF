@@ -3,7 +3,6 @@ using LNSF.Application.Services;
 using LNSF.Domain.Filters;
 using LNSF.Domain.Entities;
 using LNSF.UI.ViewModels;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LNSF.UI.Controllers;
@@ -32,12 +31,11 @@ public class RoomController : ControllerBase
     }
 
 
-    [HttpGet("quantity")]
-    public async Task<ActionResult<int>> GetQuantity() => 
-        Ok(await _roomService.GetQuantity());
+    [HttpGet("count")]
+    public async Task<ActionResult<int>> GetCount() => 
+        Ok(await _roomService.GetCount());
 
     [HttpPost]
-    [Authorize]
     public async Task<ActionResult<RoomViewModel>> Post([FromBody]RoomPostViewModel room)
     {
         var roomMapped = _mapper.Map<Room>(room);

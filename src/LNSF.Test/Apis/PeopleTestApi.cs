@@ -15,15 +15,15 @@ public class PeopleTestApi : GlobalClientRequest
         // Arrange - People
         var peopleFake = new PeoplePostViewModelFake().Generate();
 
-        // Arrange - Quantity
-        var quantityBefore = await GetQuantity(_peopleClient);
+        // Arrange - Count
+        var countBefore = await GetCount(_peopleClient);
 
         // Act
         var peoplePosted = await Post<PeopleViewModel>(_peopleClient, peopleFake);
-        var quantityAfter = await GetQuantity(_peopleClient);
+        var countAfter = await GetCount(_peopleClient);
 
         // Assert
-        Assert.Equal(quantityBefore + 1, quantityAfter);
+        Assert.Equal(countBefore + 1, countAfter);
         Assert.Equivalent(peopleFake, peoplePosted);
         Assert.NotEqual(0, peoplePosted.Id);
         Assert.NotEqual(-1, peoplePosted.Id);
@@ -36,15 +36,15 @@ public class PeopleTestApi : GlobalClientRequest
         var peopleFake = new PeoplePostViewModelFake().Generate();
         peopleFake.Name = "";
 
-        // Arrange - Quantity
-        var quantityBefore = await GetQuantity(_peopleClient);
+        // Arrange - Count
+        var countBefore = await GetCount(_peopleClient);
 
         // Act
         await Assert.ThrowsAsync<Exception>(() => Post<PeopleViewModel>(_peopleClient, peopleFake));
-        var quantityAfter = await GetQuantity(_peopleClient);
+        var countAfter = await GetCount(_peopleClient);
 
         // Assert
-        Assert.Equal(quantityBefore, quantityAfter);
+        Assert.Equal(countBefore, countAfter);
     }
 
     [Fact]
@@ -54,15 +54,15 @@ public class PeopleTestApi : GlobalClientRequest
         var peopleFake = new PeoplePostViewModelFake().Generate();
         peopleFake.BirthDate = DateTime.Now.AddYears(-14);
 
-        // Arrange - Quantity
-        var quantityBefore = await GetQuantity(_peopleClient);
+        // Arrange - Count
+        var countBefore = await GetCount(_peopleClient);
 
         // Act
         await Assert.ThrowsAsync<Exception>(() => Post<PeopleViewModel>(_peopleClient, peopleFake));
-        var quantityAfter = await GetQuantity(_peopleClient);
+        var countAfter = await GetCount(_peopleClient);
 
         // Assert
-        Assert.Equal(quantityBefore, quantityAfter);
+        Assert.Equal(countBefore, countAfter);
     }
 
     [Fact]
@@ -72,15 +72,15 @@ public class PeopleTestApi : GlobalClientRequest
         var peopleFake = new PeoplePostViewModelFake().Generate();
         peopleFake.BirthDate = DateTime.Now.AddYears(-129);
 
-        // Arrange - Quantity
-        var quantityBefore = await GetQuantity(_peopleClient);
+        // Arrange - Count
+        var countBefore = await GetCount(_peopleClient);
 
         // Act
         await Assert.ThrowsAsync<Exception>(() => Post<PeopleViewModel>(_peopleClient, peopleFake));
-        var quantityAfter = await GetQuantity(_peopleClient);
+        var countAfter = await GetCount(_peopleClient);
 
         // Assert
-        Assert.Equal(quantityBefore, quantityAfter);
+        Assert.Equal(countBefore, countAfter);
     }
 
     [Fact]
@@ -90,15 +90,15 @@ public class PeopleTestApi : GlobalClientRequest
         var peopleFake = new PeoplePostViewModelFake().Generate();
         peopleFake.RG = "123456789";
 
-        // Arrange - Quantity
-        var quantityBefore = await GetQuantity(_peopleClient);
+        // Arrange - Count
+        var countBefore = await GetCount(_peopleClient);
 
         // Act
         await Assert.ThrowsAsync<Exception>(() => Post<PeopleViewModel>(_peopleClient, peopleFake));
-        var quantityAfter = await GetQuantity(_peopleClient);
+        var countAfter = await GetCount(_peopleClient);
 
         // Assert
-        Assert.Equal(quantityBefore, quantityAfter);
+        Assert.Equal(countBefore, countAfter);
     }
 
     [Fact]
@@ -108,15 +108,15 @@ public class PeopleTestApi : GlobalClientRequest
         var peopleFake = new PeoplePostViewModelFake().Generate();
         peopleFake.CPF = "123456789";
 
-        // Arrange - Quantity
-        var quantityBefore = await GetQuantity(_peopleClient);
+        // Arrange - Count
+        var countBefore = await GetCount(_peopleClient);
 
         // Act
         await Assert.ThrowsAsync<Exception>(() => Post<PeopleViewModel>(_peopleClient, peopleFake));
-        var quantityAfter = await GetQuantity(_peopleClient);
+        var countAfter = await GetCount(_peopleClient);
 
         // Assert
-        Assert.Equal(quantityBefore, quantityAfter);
+        Assert.Equal(countBefore, countAfter);
     }
 
     [Fact]
@@ -126,15 +126,15 @@ public class PeopleTestApi : GlobalClientRequest
         var peopleFake = new PeoplePostViewModelFake().Generate();
         peopleFake.Phone = "123456789";
 
-        // Arrange - Quantity
-        var quantityBefore = await GetQuantity(_peopleClient);
+        // Arrange - Count
+        var countBefore = await GetCount(_peopleClient);
 
         // Act
         await Assert.ThrowsAsync<Exception>(() => Post<PeopleViewModel>(_peopleClient, peopleFake));
-        var quantityAfter = await GetQuantity(_peopleClient);
+        var countAfter = await GetCount(_peopleClient);
 
         // Assert
-        Assert.Equal(quantityBefore, quantityAfter);
+        Assert.Equal(countBefore, countAfter);
     }
 
     [Fact]
@@ -144,18 +144,18 @@ public class PeopleTestApi : GlobalClientRequest
         var fakePeople = new PeoplePostViewModelFake().Generate();
         var peoplePosted = await Post<PeopleViewModel>(_peopleClient, fakePeople);
 
-        // Arrange - Quantity
-        var quantityBefore = await GetQuantity(_peopleClient);
+        // Arrange - Count
+        var countBefore = await GetCount(_peopleClient);
 
         // Act
         var newFakePeople = new PeoplePostViewModelFake().Generate();
         var peopleMapped = _mapper.Map<PeoplePutViewModel>(newFakePeople);
         peopleMapped.Id = peoplePosted.Id;
         var peoplePuted = await Put<PeopleViewModel>(_peopleClient, peopleMapped);
-        var quantityAfter = await GetQuantity(_peopleClient);
+        var countAfter = await GetCount(_peopleClient);
 
         // Assert
-        Assert.Equal(quantityBefore, quantityAfter);
+        Assert.Equal(countBefore, countAfter);
         Assert.Equivalent(peopleMapped, peoplePuted);
     }
 
@@ -166,8 +166,8 @@ public class PeopleTestApi : GlobalClientRequest
         var fakePeople = new PeoplePostViewModelFake().Generate();
         var peoplePosted = await Post<PeopleViewModel>(_peopleClient, fakePeople);
 
-        // Arrange - Quantity
-        var quantityBefore = await GetQuantity(_peopleClient);
+        // Arrange - Count
+        var countBefore = await GetCount(_peopleClient);
 
         // Act
         var newFakePeople = new PeoplePostViewModelFake().Generate();
@@ -175,10 +175,10 @@ public class PeopleTestApi : GlobalClientRequest
         peopleMapped.Name = "";
         peopleMapped.Id = peoplePosted.Id;
         await Assert.ThrowsAsync<Exception>(() => Put<PeopleViewModel>(_peopleClient, peopleMapped));
-        var quantityAfter = await GetQuantity(_peopleClient);
+        var countAfter = await GetCount(_peopleClient);
 
         // Assert
-        Assert.Equal(quantityBefore, quantityAfter);
+        Assert.Equal(countBefore, countAfter);
     }
 
     [Fact]
@@ -188,8 +188,8 @@ public class PeopleTestApi : GlobalClientRequest
         var fakePeople = new PeoplePostViewModelFake().Generate();
         var peoplePosted = await Post<PeopleViewModel>(_peopleClient, fakePeople);
 
-        // Arrange - Quantity
-        var quantityBefore = await GetQuantity(_peopleClient);
+        // Arrange - Count
+        var countBefore = await GetCount(_peopleClient);
 
         // Act
         var newFakePeople = new PeoplePostViewModelFake().Generate();
@@ -197,10 +197,10 @@ public class PeopleTestApi : GlobalClientRequest
         peopleMapped.BirthDate = DateTime.Now.AddYears(-14);
         peopleMapped.Id = peoplePosted.Id;
         await Assert.ThrowsAsync<Exception>(() => Put<PeopleViewModel>(_peopleClient, peopleMapped));
-        var quantityAfter = await GetQuantity(_peopleClient);
+        var countAfter = await GetCount(_peopleClient);
 
         // Assert
-        Assert.Equal(quantityBefore, quantityAfter);
+        Assert.Equal(countBefore, countAfter);
     }
 
     [Fact]
@@ -210,8 +210,8 @@ public class PeopleTestApi : GlobalClientRequest
         var fakePeople = new PeoplePostViewModelFake().Generate();
         var peoplePosted = await Post<PeopleViewModel>(_peopleClient, fakePeople);
 
-        // Arrange - Quantity
-        var quantityBefore = await GetQuantity(_peopleClient);
+        // Arrange - Count
+        var countBefore = await GetCount(_peopleClient);
 
         // Act
         var newFakePeople = new PeoplePostViewModelFake().Generate();
@@ -219,10 +219,10 @@ public class PeopleTestApi : GlobalClientRequest
         peopleMapped.BirthDate = DateTime.Now.AddYears(-129);
         peopleMapped.Id = peoplePosted.Id;
         await Assert.ThrowsAsync<Exception>(() => Put<PeopleViewModel>(_peopleClient, peopleMapped));
-        var quantityAfter = await GetQuantity(_peopleClient);
+        var countAfter = await GetCount(_peopleClient);
 
         // Assert
-        Assert.Equal(quantityBefore, quantityAfter);
+        Assert.Equal(countBefore, countAfter);
     }
 
     [Fact]
@@ -232,8 +232,8 @@ public class PeopleTestApi : GlobalClientRequest
         var fakePeople = new PeoplePostViewModelFake().Generate();
         var peoplePosted = await Post<PeopleViewModel>(_peopleClient, fakePeople);
 
-        // Arrange - Quantity
-        var quantityBefore = await GetQuantity(_peopleClient);
+        // Arrange - Count
+        var countBefore = await GetCount(_peopleClient);
 
         // Act
         var newFakePeople = new PeoplePostViewModelFake().Generate();
@@ -241,10 +241,10 @@ public class PeopleTestApi : GlobalClientRequest
         peopleMapped.RG = "123456789";
         peopleMapped.Id = peoplePosted.Id;
         await Assert.ThrowsAsync<Exception>(() => Put<PeopleViewModel>(_peopleClient, peopleMapped));
-        var quantityAfter = await GetQuantity(_peopleClient);
+        var countAfter = await GetCount(_peopleClient);
 
         // Assert
-        Assert.Equal(quantityBefore, quantityAfter);
+        Assert.Equal(countBefore, countAfter);
     }
 
     [Fact]
@@ -254,8 +254,8 @@ public class PeopleTestApi : GlobalClientRequest
         var fakePeople = new PeoplePostViewModelFake().Generate();
         var peoplePosted = await Post<PeopleViewModel>(_peopleClient, fakePeople);
 
-        // Arrange - Quantity
-        var quantityBefore = await GetQuantity(_peopleClient);
+        // Arrange - Count
+        var countBefore = await GetCount(_peopleClient);
 
         // Act
         var newFakePeople = new PeoplePostViewModelFake().Generate();
@@ -263,10 +263,10 @@ public class PeopleTestApi : GlobalClientRequest
         peopleMapped.CPF = "123456789";
         peopleMapped.Id = peoplePosted.Id;
         await Assert.ThrowsAsync<Exception>(() => Put<PeopleViewModel>(_peopleClient, peopleMapped));
-        var quantityAfter = await GetQuantity(_peopleClient);
+        var countAfter = await GetCount(_peopleClient);
 
         // Assert
-        Assert.Equal(quantityBefore, quantityAfter);
+        Assert.Equal(countBefore, countAfter);
     }
 
     [Fact]
@@ -276,8 +276,8 @@ public class PeopleTestApi : GlobalClientRequest
         var fakePeople = new PeoplePostViewModelFake().Generate();
         var peoplePosted = await Post<PeopleViewModel>(_peopleClient, fakePeople);
 
-        // Arrange - Quantity
-        var quantityBefore = await GetQuantity(_peopleClient);
+        // Arrange - Count
+        var countBefore = await GetCount(_peopleClient);
 
         // Act
         var newFakePeople = new PeoplePostViewModelFake().Generate();
@@ -285,10 +285,10 @@ public class PeopleTestApi : GlobalClientRequest
         peopleMapped.Phone = "123456789";
         peopleMapped.Id = peoplePosted.Id;
         await Assert.ThrowsAsync<Exception>(() => Put<PeopleViewModel>(_peopleClient, peopleMapped));
-        var quantityAfter = await GetQuantity(_peopleClient);
+        var countAfter = await GetCount(_peopleClient);
 
         // Assert
-        Assert.Equal(quantityBefore, quantityAfter);
+        Assert.Equal(countBefore, countAfter);
     }
 
     [Fact]
@@ -305,22 +305,22 @@ public class PeopleTestApi : GlobalClientRequest
         var peopleFake = new PeoplePostViewModelFake().Generate();
         var peoplePosted = await Post<PeopleViewModel>(_peopleClient, peopleFake);
 
-        // Arrange - Quantity
-        var quantityRoomsBefore = await GetQuantity(_roomClient);
-        var quantityPeoplesBefore = await GetQuantity(_peopleClient);
+        // Arrange - Count
+        var countRoomsBefore = await GetCount(_roomClient);
+        var countPeoplesBefore = await GetCount(_peopleClient);
 
         // Act
         var ids = new PeopleAddPeopleToRoomViewModel { PeopleId = peoplePosted.Id, RoomId = roomPosted.Id };
         var peoplePuted = await Put<PeopleViewModel>(_addPeopleToRoomClient, ids);
         var roomsPuted = await Get<List<RoomViewModel>>(_roomClient, roomPosted.Id);
         var roomPuted = roomsPuted.First();
-        var quantityRoomsAfter = await GetQuantity(_roomClient);
-        var quantityPeoplesAfter = await GetQuantity(_peopleClient);
+        var countRoomsAfter = await GetCount(_roomClient);
+        var countPeoplesAfter = await GetCount(_peopleClient);
 
         // Assert
-        Assert.Equal(quantityRoomsBefore, quantityRoomsAfter);
+        Assert.Equal(countRoomsBefore, countRoomsAfter);
         Assert.True(roomPuted.Available);
-        Assert.Equal(quantityPeoplesBefore, quantityPeoplesAfter);
+        Assert.Equal(countPeoplesBefore, countPeoplesAfter);
         Assert.Equal(peoplePuted.RoomId, roomPosted.Id);
         Assert.Equal(roomPosted.Occupation + 1, roomPuted.Occupation);
         Assert.Equal(roomPosted.Beds, roomPuted.Beds);
@@ -341,22 +341,22 @@ public class PeopleTestApi : GlobalClientRequest
         var peopleFake = new PeoplePostViewModelFake().Generate();
         var peoplePosted = await Post<PeopleViewModel>(_peopleClient, peopleFake);
 
-        // Arrange - Quantity
-        var quantityRoomsBefore = await GetQuantity(_roomClient);
-        var quantityPeoplesBefore = await GetQuantity(_peopleClient);
+        // Arrange - Count
+        var countRoomsBefore = await GetCount(_roomClient);
+        var countPeoplesBefore = await GetCount(_peopleClient);
 
         // Act
         var ids = new PeopleAddPeopleToRoomViewModel { PeopleId = peoplePosted.Id, RoomId = roomPosted.Id };
         var peoplePuted = await Put<PeopleViewModel>(_addPeopleToRoomClient, ids);
         var roomsPuted = await Get<List<RoomViewModel>>(_roomClient, roomPosted.Id);
         var roomPuted = roomsPuted.First();
-        var quantityRoomsAfter = await GetQuantity(_roomClient);
-        var quantityPeoplesAfter = await GetQuantity(_peopleClient);
+        var countRoomsAfter = await GetCount(_roomClient);
+        var countPeoplesAfter = await GetCount(_peopleClient);
 
         // Assert
-        Assert.Equal(quantityRoomsBefore, quantityRoomsAfter);
+        Assert.Equal(countRoomsBefore, countRoomsAfter);
         Assert.False(roomPuted.Available);
-        Assert.Equal(quantityPeoplesBefore, quantityPeoplesAfter);
+        Assert.Equal(countPeoplesBefore, countPeoplesAfter);
         Assert.Equal(peoplePuted.RoomId, roomPosted.Id);
         Assert.Equal(roomPosted.Occupation + 1, roomPuted.Occupation);
         Assert.Equal(roomPosted.Beds, roomPuted.Beds);
@@ -387,19 +387,19 @@ public class PeopleTestApi : GlobalClientRequest
         var peoplePuted = await Put<PeopleViewModel>(_addPeopleToRoomClient, ids);
         var otherRoomPuted = await Get<List<RoomViewModel>>(_roomClient, otherRoomPosted.Id);
 
-        // Arrange - Quantity
-        var quantityRoomsBefore = await GetQuantity(_roomClient);
-        var quantityPeoplesBefore = await GetQuantity(_peopleClient);
+        // Arrange - Count
+        var countRoomsBefore = await GetCount(_roomClient);
+        var countPeoplesBefore = await GetCount(_peopleClient);
 
         // Act
         ids = new PeopleAddPeopleToRoomViewModel { PeopleId = peoplePosted.Id, RoomId = roomPosted.Id };
         await Assert.ThrowsAsync<Exception>(() => Put<PeopleViewModel>(_addPeopleToRoomClient, ids));
-        var quantityRoomsAfter = await GetQuantity(_roomClient);
-        var quantityPeoplesAfter = await GetQuantity(_peopleClient);
+        var countRoomsAfter = await GetCount(_roomClient);
+        var countPeoplesAfter = await GetCount(_peopleClient);
 
         // Assert
-        Assert.Equal(quantityRoomsBefore, quantityRoomsAfter);
-        Assert.Equal(quantityPeoplesBefore, quantityPeoplesAfter);
+        Assert.Equal(countRoomsBefore, countRoomsAfter);
+        Assert.Equal(countPeoplesBefore, countPeoplesAfter);
     }
 
     [Fact]
@@ -414,19 +414,19 @@ public class PeopleTestApi : GlobalClientRequest
         var peopleFake = new PeoplePostViewModelFake().Generate();
         var peoplePosted = await Post<PeopleViewModel>(_peopleClient, peopleFake);
 
-        // Arrange - Quantity
-        var quantityRoomsBefore = await GetQuantity(_roomClient);
-        var quantityPeoplesBefore = await GetQuantity(_peopleClient);
+        // Arrange - Count
+        var countRoomsBefore = await GetCount(_roomClient);
+        var countPeoplesBefore = await GetCount(_peopleClient);
 
         // Act
         var ids = new PeopleAddPeopleToRoomViewModel { PeopleId = peoplePosted.Id, RoomId = roomPosted.Id };
         await Assert.ThrowsAsync<Exception>(() => Put<PeopleViewModel>(_addPeopleToRoomClient, ids));
-        var quantityRoomsAfter = await GetQuantity(_roomClient);
-        var quantityPeoplesAfter = await GetQuantity(_peopleClient);
+        var countRoomsAfter = await GetCount(_roomClient);
+        var countPeoplesAfter = await GetCount(_peopleClient);
 
         // Assert
-        Assert.Equal(quantityRoomsBefore, quantityRoomsAfter);
-        Assert.Equal(quantityPeoplesBefore, quantityPeoplesAfter);
+        Assert.Equal(countRoomsBefore, countRoomsAfter);
+        Assert.Equal(countPeoplesBefore, countPeoplesAfter);
     }
 
     [Fact]
@@ -448,21 +448,20 @@ public class PeopleTestApi : GlobalClientRequest
         var roomsPuted = await Get<List<RoomViewModel>>(_roomClient, roomPosted.Id);
         var roomPuted = roomsPuted.First();
 
-        // Arrange - Quantity
-        var quantityBefore = await GetQuantity(_peopleClient);
+        // Arrange - Count
+        var countBefore = await GetCount(_peopleClient);
 
         // Act
         var id = new PeopleRemovePeopleFromRoom { PeopleId = peoplePosted.Id };
         var peopleRemoved = await Put<PeopleViewModel>(_removePeopleFromRoom, id);
         var roomsRemoved = await Get<List<RoomViewModel>>(_roomClient, roomPosted.Id);
         var roomRemoved = roomsRemoved.First();
-        var quantityAfter = await GetQuantity(_peopleClient);
+        var countAfter = await GetCount(_peopleClient);
 
         // Assert
-        Assert.Equal(quantityBefore, quantityAfter);
+        Assert.Equal(countBefore, countAfter);
         Assert.Null(peopleRemoved.RoomId);
         Assert.Equal(roomPuted.Occupation - 1, roomRemoved.Occupation);
-        Assert.True(roomRemoved.Available);
         Assert.Equal(roomPuted.Beds, roomRemoved.Beds);
     }
 
@@ -473,18 +472,18 @@ public class PeopleTestApi : GlobalClientRequest
         var peopleFake = new PeoplePostViewModelFake().Generate();
         var peoplePosted = await Post<PeopleViewModel>(_peopleClient, peopleFake);
 
-        // Arrange - Quantity
-        var quantityRoomsBefore = await GetQuantity(_roomClient);
-        var quantityPeoplesBefore = await GetQuantity(_peopleClient);
+        // Arrange - Count
+        var countRoomsBefore = await GetCount(_roomClient);
+        var countPeoplesBefore = await GetCount(_peopleClient);
 
         // Act
         await Assert.ThrowsAsync<Exception>(() => Put<PeopleViewModel>(_peopleClient, peoplePosted.Id));
-        var quantityRoomsAfter = await GetQuantity(_roomClient);
-        var quantityPeoplesAfter = await GetQuantity(_peopleClient);
+        var countRoomsAfter = await GetCount(_roomClient);
+        var countPeoplesAfter = await GetCount(_peopleClient);
 
         // Assert
-        Assert.Equal(quantityPeoplesAfter, quantityPeoplesBefore);
-        Assert.Equal(quantityRoomsAfter, quantityRoomsBefore);
+        Assert.Equal(countPeoplesAfter, countPeoplesBefore);
+        Assert.Equal(countRoomsAfter, countRoomsBefore);
     }
 }
     

@@ -1,4 +1,4 @@
-version: 'version'
+version: '2.22.0-desktop.2'
 
 services:
   dotnetLNSF:

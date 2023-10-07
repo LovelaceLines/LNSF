@@ -30,9 +30,9 @@ public class EmergencyContactController : ControllerBase
         return Ok(contactsViewModel);
     }
 
-    [HttpGet("quantity")]
-    public async Task<ActionResult<int>> GetQuantity() => 
-        Ok(await _emergencyContactService.GetQuantity());
+    [HttpGet("count")]
+    public async Task<ActionResult<int>> GetCount() => 
+        Ok(await _emergencyContactService.GetCount());
 
     [HttpPost]
     public async Task<ActionResult<EmergencyContactViewModel>> Post([FromBody]EmergencyContactPostViewModel contact)

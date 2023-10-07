@@ -27,15 +27,15 @@ public class PeopleService
     public async Task<People> Get(int id) => 
         await _peopleRepository.Get(id);
     
-    public async Task<int> GetQuantity() =>
-        await _peopleRepository.GetQuantity();
+    public async Task<int> GetCount() =>
+        await _peopleRepository.GetCount();
 
     public async Task<People> Create(People people)
     {
         var validationResult = _peopleValidator.Validate(people);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
-        return await _peopleRepository.Post(people);
+        return await _peopleRepository.Add(people);
     }
 
     public async Task<People> Update(People newPeople)
@@ -47,7 +47,7 @@ public class PeopleService
         var oldPeople = await _peopleRepository.Get(newPeople.Id);
         newPeople.RoomId = oldPeople.RoomId; //Quarto não pode ser alterado.
 
-        return await _peopleRepository.Put(newPeople);	
+        return await _peopleRepository.Update(newPeople);	
     }
 
     public async Task<People> AddPeopleToRoom(int peopleId, int roomId)
@@ -68,8 +68,8 @@ public class PeopleService
         // await _peopleRepository.BeguinTransaction();
         try
         {
-            people = await _peopleRepository.Put(people);
-            await _roomRepository.Put(room);
+            people = await _peopleRepository.Update(people);
+            await _roomRepository.Update(room);
         }
         catch (Exception)
         {
@@ -95,8 +95,8 @@ public class PeopleService
         // await _peopleRepository.BeguinTransaction();
         try
         {
-            people = await _peopleRepository.Put(people);
-            await _roomRepository.Put(room);
+            people = await _peopleRepository.Update(people);
+            await _roomRepository.Update(room);
         }
         catch (Exception)
         {

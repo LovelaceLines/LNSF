@@ -25,8 +25,8 @@ public class EmergencyContactService
     public async Task<List<EmergencyContact>> Query(EmergencyContactFilter filter) => 
         await _emergencyContactRepository.Query(filter);
     
-    public async Task<int> GetQuantity() =>
-        await _emergencyContactRepository.GetQuantity();
+    public async Task<int> GetCount() =>
+        await _emergencyContactRepository.GetCount();
 
     public async Task<EmergencyContact> Create(EmergencyContact contact)
     {
@@ -35,7 +35,7 @@ public class EmergencyContactService
         if (!await _peoplesRepository.Exists(contact.PeopleId)) throw new AppException("Pessoa não encontrada.", HttpStatusCode.UnprocessableEntity);
 
         contact.Id = 0;
-        return await _emergencyContactRepository.Post(contact);
+        return await _emergencyContactRepository.Add(contact);
     }
 
     public async Task<EmergencyContact> Update(EmergencyContact newContact)
@@ -46,13 +46,13 @@ public class EmergencyContactService
         var query = await _emergencyContactRepository.Query(filter);
         if (query.Count != 1) throw new AppException("Contato de emergência não encontrado.", HttpStatusCode.UnprocessableEntity);
 
-        return await _emergencyContactRepository.Put(newContact);
+        return await _emergencyContactRepository.Update(newContact);
     }
 
     public async Task<EmergencyContact> Delete(int id)
     {
         if (!await _emergencyContactRepository.Exists(id)) throw new AppException("Contato de emergência não encontrado.", HttpStatusCode.UnprocessableEntity);
 
-        return await _emergencyContactRepository.Delete(id);
+        return await _emergencyContactRepository.Remove(id);
     }
 }

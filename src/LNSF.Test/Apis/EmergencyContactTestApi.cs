@@ -21,15 +21,15 @@ public class EmergencyContactTestApi : GlobalClientRequest
         var contactFake = new EmergencyContactViewModelFake().Generate();
         contactFake.PeopleId = peoplePosted.Id;
 
-        // Arrange - Quantity
-        var quantityBefore = await GetQuantity(_emergencyContactClient);
+        // Arrange - Count
+        var countBefore = await GetCount(_emergencyContactClient);
 
         // Act
         var contactPosted = await Post<EmergencyContactViewModel>(_emergencyContactClient, contactFake);
-        var quantityAfter = await GetQuantity(_emergencyContactClient);
+        var countAfter = await GetCount(_emergencyContactClient);
 
         // Assert
-        Assert.Equal(quantityBefore + 1, quantityAfter);
+        Assert.Equal(countBefore + 1, countAfter);
         Assert.Equivalent(contactFake, contactPosted);
     }
 
@@ -45,15 +45,15 @@ public class EmergencyContactTestApi : GlobalClientRequest
         contactFake.Name = "";
         contactFake.PeopleId = peoplePosted.Id;
 
-        // Arrange - Quantity
-        var quantityBefore = await GetQuantity(_emergencyContactClient);
+        // Arrange - Count
+        var countBefore = await GetCount(_emergencyContactClient);
 
         // Act
         await Assert.ThrowsAsync<Exception>(async () => await Post<EmergencyContactViewModel>(_emergencyContactClient, contactFake));
-        var quantityAfter = await GetQuantity(_emergencyContactClient);
+        var countAfter = await GetCount(_emergencyContactClient);
 
         // Assert
-        Assert.Equal(quantityBefore, quantityAfter);
+        Assert.Equal(countBefore, countAfter);
     }
 
     [Fact]
@@ -68,15 +68,15 @@ public class EmergencyContactTestApi : GlobalClientRequest
         contactFake.Phone = "";
         contactFake.PeopleId = peoplePosted.Id;
 
-        // Arrange - Quantity
-        var quantityBefore = await GetQuantity(_emergencyContactClient);
+        // Arrange - Count
+        var countBefore = await GetCount(_emergencyContactClient);
 
         // Act
         await Assert.ThrowsAsync<Exception>(async () => await Post<EmergencyContactViewModel>(_emergencyContactClient, contactFake));
-        var quantityAfter = await GetQuantity(_emergencyContactClient);
+        var countAfter = await GetCount(_emergencyContactClient);
 
         // Assert
-        Assert.Equal(quantityBefore, quantityAfter);
+        Assert.Equal(countBefore, countAfter);
     }
 
     [Fact]
@@ -86,15 +86,15 @@ public class EmergencyContactTestApi : GlobalClientRequest
         var contactFake = new EmergencyContactViewModelFake().Generate();
         contactFake.PeopleId = -1;
 
-        // Arrange - Quantity
-        var quantityBefore = await GetQuantity(_emergencyContactClient);
+        // Arrange - Count
+        var countBefore = await GetCount(_emergencyContactClient);
 
         // Act
         await Assert.ThrowsAsync<Exception>(async () => await Post<EmergencyContactViewModel>(_emergencyContactClient, contactFake));
-        var quantityAfter = await GetQuantity(_emergencyContactClient);
+        var countAfter = await GetCount(_emergencyContactClient);
 
         // Assert
-        Assert.Equal(quantityBefore, quantityAfter);
+        Assert.Equal(countBefore, countAfter);
     }
     
     [Fact]
@@ -109,8 +109,8 @@ public class EmergencyContactTestApi : GlobalClientRequest
         contactFake.PeopleId = peoplePosted.Id;
         var contactPosted = await Post<EmergencyContactViewModel>(_emergencyContactClient, contactFake);
 
-        // Arrange - Quantity
-        var quantityBefore = await GetQuantity(_emergencyContactClient);
+        // Arrange - Count
+        var countBefore = await GetCount(_emergencyContactClient);
 
         // Act
         var otherContactFake = new EmergencyContactViewModelFake().Generate();
@@ -118,10 +118,10 @@ public class EmergencyContactTestApi : GlobalClientRequest
         contactMapped.Id = contactPosted.Id;
         contactMapped.PeopleId = peoplePosted.Id;
         var contactPuted = await Put<EmergencyContactViewModel>(_emergencyContactClient, contactMapped);
-        var quantityAfter = await GetQuantity(_emergencyContactClient);
+        var countAfter = await GetCount(_emergencyContactClient);
 
         // Assert
-        Assert.Equal(quantityBefore, quantityAfter);
+        Assert.Equal(countBefore, countAfter);
         Assert.Equivalent(contactMapped, contactPuted);
     }
 
@@ -137,8 +137,8 @@ public class EmergencyContactTestApi : GlobalClientRequest
         contactFake.PeopleId = peoplePosted.Id;
         var contactPosted = await Post<EmergencyContactViewModel>(_emergencyContactClient, contactFake);
 
-        // Arrange - Quantity
-        var quantityBefore = await GetQuantity(_emergencyContactClient);
+        // Arrange - Count
+        var countBefore = await GetCount(_emergencyContactClient);
 
         // Act
         var contactMapped = _mapper.Map<EmergencyContactViewModel>(contactFake);
@@ -146,10 +146,10 @@ public class EmergencyContactTestApi : GlobalClientRequest
         contactMapped.Id = contactPosted.Id;
         contactMapped.PeopleId = peoplePosted.Id;
         await Assert.ThrowsAsync<Exception>(async () => await Put<EmergencyContactViewModel>(_emergencyContactClient, contactMapped));
-        var quantityAfter = await GetQuantity(_emergencyContactClient);
+        var countAfter = await GetCount(_emergencyContactClient);
 
         // Assert
-        Assert.Equal(quantityBefore, quantityAfter);
+        Assert.Equal(countBefore, countAfter);
     }
 
     [Fact]
@@ -164,8 +164,8 @@ public class EmergencyContactTestApi : GlobalClientRequest
         contactFake.PeopleId = peoplePosted.Id;
         var contactPosted = await Post<EmergencyContactViewModel>(_emergencyContactClient, contactFake);
 
-        // Arrange - Quantity
-        var quantityBefore = await GetQuantity(_emergencyContactClient);
+        // Arrange - Count
+        var countBefore = await GetCount(_emergencyContactClient);
 
         // Act
         var contactMapped = _mapper.Map<EmergencyContactViewModel>(contactFake);
@@ -173,10 +173,10 @@ public class EmergencyContactTestApi : GlobalClientRequest
         contactMapped.Id = contactPosted.Id;
         contactMapped.PeopleId = peoplePosted.Id;
         await Assert.ThrowsAsync<Exception>(async () => await Put<EmergencyContactViewModel>(_emergencyContactClient, contactMapped));
-        var quantityAfter = await GetQuantity(_emergencyContactClient);
+        var countAfter = await GetCount(_emergencyContactClient);
 
         // Assert
-        Assert.Equal(quantityBefore, quantityAfter);
+        Assert.Equal(countBefore, countAfter);
     }
 
     [Fact]
@@ -191,18 +191,18 @@ public class EmergencyContactTestApi : GlobalClientRequest
         contactFake.PeopleId = peoplePosted.Id;
         var contactPosted = await Post<EmergencyContactViewModel>(_emergencyContactClient, contactFake);
 
-        // Arrange - Quantity
-        var quantityBefore = await GetQuantity(_emergencyContactClient);
+        // Arrange - Count
+        var countBefore = await GetCount(_emergencyContactClient);
 
         // Act
         var contactMapped = _mapper.Map<EmergencyContactViewModel>(contactFake);
         contactMapped.Id = contactPosted.Id;
         contactMapped.PeopleId = -1;
         await Assert.ThrowsAsync<Exception>(async () => await Put<EmergencyContactViewModel>(_emergencyContactClient, contactMapped));
-        var quantityAfter = await GetQuantity(_emergencyContactClient);
+        var countAfter = await GetCount(_emergencyContactClient);
 
         // Assert
-        Assert.Equal(quantityBefore, quantityAfter);
+        Assert.Equal(countBefore, countAfter);
     }
 
     [Fact]
@@ -219,8 +219,8 @@ public class EmergencyContactTestApi : GlobalClientRequest
         contactFake.PeopleId = peoplePosted.Id;
         var contactPosted = await Post<EmergencyContactViewModel>(_emergencyContactClient, contactFake);
 
-        // Arrange - Quantity
-        var quantityBefore = await GetQuantity(_emergencyContactClient);
+        // Arrange - Count
+        var countBefore = await GetCount(_emergencyContactClient);
 
         // Act
         var otherContactFake = new EmergencyContactViewModelFake().Generate();
@@ -228,10 +228,10 @@ public class EmergencyContactTestApi : GlobalClientRequest
         contactMapped.Id = contactPosted.Id;
         contactMapped.PeopleId = otherpeoplePosted.Id;
         await Assert.ThrowsAsync<Exception>(async () => await Put<EmergencyContactViewModel>(_emergencyContactClient, contactMapped));
-        var quantityAfter = await GetQuantity(_emergencyContactClient);
+        var countAfter = await GetCount(_emergencyContactClient);
 
         // Assert
-        Assert.Equal(quantityBefore, quantityAfter);
+        Assert.Equal(countBefore, countAfter);
     }
 
     [Fact]
@@ -246,32 +246,32 @@ public class EmergencyContactTestApi : GlobalClientRequest
         contactFake.PeopleId = peoplePosted.Id;
         var contactPosted = await Post<EmergencyContactViewModel>(_emergencyContactClient, contactFake);
 
-        // Arrange - Quantity
-        var quantityBefore = await GetQuantity(_emergencyContactClient);
+        // Arrange - Count
+        var countBefore = await GetCount(_emergencyContactClient);
  
         // Act
         var contactDeleted = await Delete<EmergencyContactViewModel>(_emergencyContactClient, contactPosted.Id);
-        var quantityAfter = await GetQuantity(_emergencyContactClient);
+        var countAfter = await GetCount(_emergencyContactClient);
 
         // Assert
-        Assert.Equal(quantityBefore - 1, quantityAfter);
+        Assert.Equal(countBefore - 1, countAfter);
         Assert.Equivalent(contactFake, contactDeleted);
     }
 
     [Fact]
     public async Task Delete_InvalidContact_BadRequest()
     {
-        // Arrange - Quantity
-        var quantityBefore = await GetQuantity(_emergencyContactClient);
+        // Arrange - Count
+        var countBefore = await GetCount(_emergencyContactClient);
  
         // Act
         // Contact with invalid Id
         await Assert.ThrowsAsync<Exception>(async () => await Delete<EmergencyContactViewModel>(_emergencyContactClient, -1));
         await Assert.ThrowsAsync<Exception>(async () => await Delete<EmergencyContactViewModel>(_emergencyContactClient, 0));
-        var quantityAfter = await GetQuantity(_emergencyContactClient);
+        var countAfter = await GetCount(_emergencyContactClient);
 
         // Assert
-        Assert.Equal(quantityBefore, quantityAfter);
+        Assert.Equal(countBefore, countAfter);
     }
 
 }

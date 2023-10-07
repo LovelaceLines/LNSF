@@ -23,10 +23,10 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     public virtual async Task<bool> Exists(int id) => 
         await _context.Set<T>().FindAsync(id) != null;
 
-    public virtual async Task<int> GetQuantity() => 
+    public virtual async Task<int> GetCount() => 
         await _context.Set<T>().CountAsync();
 
-    public virtual async Task<T> Post(T entity)
+    public virtual async Task<T> Add(T entity)
     {
         await _context.AddAsync(entity);
         await _context.SaveChangesAsync();
@@ -34,7 +34,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         return entity;
     }
 
-    public virtual async Task<T> Put(T entity)
+    public virtual async Task<T> Update(T entity)
     {
         _context.Entry(entity).State = EntityState.Modified;
         await _context.SaveChangesAsync();
@@ -42,7 +42,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         return entity;
     }
 
-    public virtual async Task<T> Delete(T entity)
+    public virtual async Task<T> Remove(T entity)
     {
         _context.Remove(entity);
         await _context.SaveChangesAsync();
@@ -50,7 +50,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         return entity;
     }
 
-    public virtual async Task<T> Delete(int id)
+    public virtual async Task<T> Remove(int id)
     {
         var entity = await Get(id);
         _context.Remove(entity);

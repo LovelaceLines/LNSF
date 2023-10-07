@@ -28,8 +28,8 @@ public class TourService
     public async Task<Tour> Get(int id) =>
         await _tourRepository.Get(id);
 
-    public async Task<int> GetQuantity() => 
-        await _tourRepository.GetQuantity();
+    public async Task<int> GetCount() => 
+        await _tourRepository.GetCount();
 
     public async Task<Tour> Create(Tour tour)
     {
@@ -43,7 +43,7 @@ public class TourService
         tour.Id = 0;
         tour.Output = DateTime.Now;
 
-        return await _tourRepository.Post(tour);
+        return await _tourRepository.Add(tour);
     }
 
     public async Task<Tour> Update(Tour tour)
@@ -58,7 +58,7 @@ public class TourService
 
         tour.Input = DateTime.Now;
 
-        return await _tourRepository.Put(tour); 
+        return await _tourRepository.Update(tour); 
     }
 
     public async Task<Tour> UpdateAll(Tour tour)
@@ -69,6 +69,6 @@ public class TourService
         var query = await Query(filter);
         if (query.Count != 1) throw new AppException("Id e PeopleId não existem!", HttpStatusCode.UnprocessableEntity);
 
-        return await _tourRepository.Put(tour);
+        return await _tourRepository.Update(tour);
     }
 }
