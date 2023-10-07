@@ -34,6 +34,16 @@ public class AccountRepository : BaseRepository<Account>, IAccountRepository
         return accounts;
     }
 
+    public async Task<Account> Get(string id)
+    {
+        var account = await _context.Accounts.AsNoTracking()
+            .Where(x => x.Id == id)
+            .FirstOrDefaultAsync();
+
+        if (account == null) throw new AppException("Conta não encontrada!", HttpStatusCode.NotFound);
+        return account;
+    }
+
     public async Task<Account> Get(string userName, string Password)
     {
         var accounts = await _context.Accounts.AsNoTracking()
@@ -41,7 +51,16 @@ public class AccountRepository : BaseRepository<Account>, IAccountRepository
             .ToListAsync();
 
         if (accounts.Count == 1) return accounts.First();
-        throw new AppException("Usuário ou senha inválidos", HttpStatusCode.Unauthorized);
+        throw new AppException("Usuário ou senha inválidos!", HttpStatusCode.Unauthorized);
+    }
+
+    public async Task<bool> Exists(string id)
+    {
+        var accounts = await _context.Accounts.AsNoTracking()
+            .Where(x => x.Id == id)
+            .ToListAsync();
+
+        return accounts.Count == 1;
     }
 
     public async Task<bool> Exists(string userName, string password)

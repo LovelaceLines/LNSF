@@ -3,10 +3,12 @@ using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using LNSF.Application.Validators;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
 using LNSF.Domain.Repositories;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
 namespace LNSF.Application.Services;
@@ -14,71 +16,75 @@ namespace LNSF.Application.Services;
 public class AuthenticationTokenService
 {
     private readonly IConfiguration _configuration;
-    private readonly IAuthenticationTokenRepository _authTokenRepository;
     private readonly IAccountRepository _accountRepository;
+    private readonly AuthenticationTokenValidator _tokenValidator;
 
     public AuthenticationTokenService(IConfiguration configuration,
-        IAuthenticationTokenRepository authTokenRepository,
-        IAccountRepository accountRepository)
+        IAccountRepository accountRepository,
+        AuthenticationTokenValidator tokenValidator)
     {
         _configuration = configuration;
-        _authTokenRepository = authTokenRepository;
         _accountRepository = accountRepository;
+        _tokenValidator = tokenValidator;
     }
 
     public async Task<AuthenticationToken> Login(Account account)
     {
         if (!await _accountRepository.Exists(account.UserName, account.Password))
-            throw new AppException("Usuário ou senha inválidos", HttpStatusCode.Unauthorized);
+            throw new AppException("Usuário ou senha inválidos!", HttpStatusCode.Unauthorized);
         
         account = await _accountRepository.Get(account.UserName, account.Password);
         var token = new AuthenticationToken
         {
-            Token = GenerateToken(account),
-            RefreshToken = GenerateRefreshToken(),
-            AccountId = account.Id,
+            AccessToken = GenerateAccessToken(account),
+            RefreshToken = GenerateRefreshToken(account),
+            Expires = DateTime.Now.AddHours(ExpireHoursAccessToken),
         };
-        return await _authTokenRepository.Add(token);
+        return token;
     }
     
     public async Task<AuthenticationToken> RefreshToken(AuthenticationToken token)
     {
-        if (!await _authTokenRepository.Exists(token))
-            throw new AppException("Token inválido", HttpStatusCode.Unauthorized);
-        if (!IsExpired(token.Token)) 
-            throw new AppException("Not expired token", HttpStatusCode.NotModified);
+        var validationResult = _tokenValidator.Validate(token);
+        if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.UnprocessableEntity);
 
-        var account = await _accountRepository.Get(token.AccountId);
-        await _authTokenRepository.Remove(token);
-        token = new AuthenticationToken()
+        var key = GetSecretKey();
+        var tokenHandler = new JsonWebTokenHandler();
+        var result = tokenHandler.ValidateToken(token.RefreshToken, new TokenValidationParameters()
         {
-            Token = GenerateToken(account),
-            RefreshToken = GenerateRefreshToken(),
-            AccountId = token.AccountId
+            ValidIssuer = Issuer,
+            ValidAudience = Audience,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+        });
+        if (!result.IsValid) throw new AppException("Token de atualização expirado!", HttpStatusCode.Unauthorized);
+        
+        var expires = DateTime.Parse(result.Claims["exp"].ToString() ?? throw new AppException("Token de atualização inválido!", HttpStatusCode.InternalServerError));
+        var accountId = result.Claims["nameid"].ToString(); // accountId = NameIdentifier
+        var account = await _accountRepository.Get(accountId ?? throw new AppException("Token de atualização inválido!", HttpStatusCode.InternalServerError));
+
+        var newToken = new AuthenticationToken
+        {
+            AccessToken = GenerateAccessToken(account),
+            RefreshToken = GenerateRefreshToken(account),
+            Expires = DateTime.Now.AddHours(ExpireHoursAccessToken),
         };
-        return await _authTokenRepository.Add(token);
+        return newToken;
     }
 
-    public async Task<bool> Logout(AuthenticationToken token)
-    {
-        await _authTokenRepository.Remove(token);
-        return true;
-    }
-
-    private string GenerateToken(Account account)
+    private string GenerateAccessToken(Account account)
     {
         var claims = GetClaims(account);
         var key = GetSecretKey();
-        var expireHours = GetExpireHours();
+        var expireHours = ExpireHoursAccessToken;
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
+            Issuer = Issuer,
+            Audience = Audience,
             Subject = new ClaimsIdentity(claims),
             Expires = DateTime.UtcNow.AddHours(expireHours),
-            SigningCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(key),
-                SecurityAlgorithms.HmacSha256Signature
-            )
+            SigningCredentials = GetSigningCredentials(key),
+            TokenType = "at+jwt"
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();
@@ -87,88 +93,59 @@ public class AuthenticationTokenService
         return tokenHandler.WriteToken(token);
     }
 
-    private int GetExpireHours()
+    private string GenerateRefreshToken(Account account)
     {
-        return int.Parse(_configuration["ExpireHours"] ?? "8");
+        var claims = GetClaims(account.Id.ToString());
+        var key = GetSecretKey();
+        var expireHours = ExpireHoursRefreshToken;
+
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Issuer = Issuer,
+            Audience = Audience,
+            Subject = new ClaimsIdentity(claims),
+            Expires = DateTime.UtcNow.AddHours(expireHours),
+            SigningCredentials = GetSigningCredentials(key),
+            TokenType = "rt+jwt"
+        };
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+
+        return tokenHandler.WriteToken(token);
     }
+
+    private static SigningCredentials GetSigningCredentials(byte[] key) => 
+        new(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature);
+
+    private string Issuer =>
+        _configuration["Issuer"] ?? throw new AppException("JwtConfig: Issuer é nulo!", HttpStatusCode.NotImplemented);
+    
+    private string Audience =>
+        _configuration["Audience"] ?? throw new AppException("JwtConfig: Audience é nulo!", HttpStatusCode.NotImplemented);
+
+    private int ExpireHoursAccessToken =>
+        int.Parse(_configuration["ExpireHoursAccessToken"] ?? throw new AppException("JwtConfig: ExpireHoursAccessToken é nulo!", HttpStatusCode.NotImplemented));
+
+    private int ExpireHoursRefreshToken =>
+        int.Parse(_configuration["ExpireHoursRefreshToken"] ?? throw new AppException("JwtConfig: ExpireHoursRefreshToken é nulo!", HttpStatusCode.NotImplemented));
 
     private byte[] GetSecretKey()
     {
-        var secretKey = _configuration["SecretKey"] ?? throw new InvalidOperationException("JwtConfig: Secret is null");
+        var secretKey = _configuration["SecretKey"] ?? throw new AppException("JwtConfig: Secret é nulo!", HttpStatusCode.NotImplemented);
         var key = Encoding.ASCII.GetBytes(secretKey);
 
         return key;
     }
 
-    private static Claim[] GetClaims(Account account)
-    {
-        return new[]
+    private static Claim[] GetClaims(string accountId) => 
+        new[] { new Claim(ClaimTypes.NameIdentifier, accountId) };
+
+    private static Claim[] GetClaims(Account account) => 
+        new[]
         {
             new Claim(ClaimTypes.NameIdentifier, account.Id.ToString()),
             new Claim(ClaimTypes.Role, account.Role.ToString()),
             new Claim(ClaimTypes.Name, account.UserName)
         };
-    }
-
-    private bool IsExpired(string token)
-    {
-        var key = GetSecretKey();
-
-        var tokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateAudience = false,
-            ValidateIssuer = false,
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(key),
-            ValidateLifetime = false
-        };
-
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var principal = tokenHandler.ValidateToken(
-                token, tokenValidationParameters, out var securityToken);
-                
-        if (securityToken is not JwtSecurityToken jwtSecurityToken || 
-            !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, 
-            StringComparison.InvariantCultureIgnoreCase))
-            throw new SecurityTokenException("Invalid token");
-
-        return jwtSecurityToken.ValidTo < DateTime.UtcNow;
-    }
-
-    private string GenerateRefreshToken()
-    {
-        var randomNumber = new byte[32];
-        using var rng = RandomNumberGenerator.Create();
-        rng.GetBytes(randomNumber);
-        
-        return Convert.ToBase64String(randomNumber);
-    }
-
-    private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
-    {
-        var key = GetSecretKey();
-
-        var tokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateAudience = false,
-            ValidateIssuer = false,
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(key),
-            ValidateLifetime = false
-        };
-
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var principal = tokenHandler.ValidateToken(
-            token, tokenValidationParameters, out var securityToken);
-        
-        if (securityToken is not JwtSecurityToken jwtSecurityToken || 
-            !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, 
-            StringComparison.InvariantCultureIgnoreCase))
-            throw new SecurityTokenException("Invalid token");
-
-        return principal;
-    }
-
-    public async Task<List<AuthenticationToken>> Get() => 
-        await _authTokenRepository.Get();
 }

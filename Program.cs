@@ -70,11 +70,10 @@ IConfiguration configuration = builder.Configuration.GetSection("Jwt");
 builder.Services.AddSingleton(configuration);
 
 builder.Services.AddTransient<AuthenticationTokenService>();
-builder.Services.AddTransient<IAuthenticationTokenRepository, AuthenticationTokenRepository>();
+builder.Services.AddTransient<AuthenticationTokenValidator>();
 
 builder.Services.AddTransient<AccountService>();
 builder.Services.AddTransient<AccountValidator>();
-builder.Services.AddTransient<AccountFilterValidator>();
 builder.Services.AddTransient<PasswordValidator>();
 builder.Services.AddTransient<IAccountRepository, AccountRepository>();
 

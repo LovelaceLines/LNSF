@@ -40,19 +40,4 @@ public class AuthController : ControllerBase
 
         return Ok(token);
     }
-
-    [HttpPost("logout")]
-    public async Task<ActionResult> Logout(AuthenticationTokenViewModel tokenViewModel)
-    {
-        var tokenMapped = _mapper.Map<AuthenticationToken>(tokenViewModel);
-        await _authTokenService.Logout(tokenMapped);
-
-        return Ok();
-    }
-
-    [HttpGet]
-    public async Task<ActionResult<AccountViewModel>> Get()
-    {
-        return Ok(await _authTokenService.Get());
-    }
 }
