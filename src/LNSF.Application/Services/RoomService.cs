@@ -10,24 +10,16 @@ public class RoomService
 {
     private readonly IRoomsRepository _roomRepository;
     private readonly RoomValidator _roomValidator;
-    private readonly RoomFilterValidator _roomFilterValidator;
 
     public RoomService(IRoomsRepository roomRepository,
-        RoomValidator roomValidator,
-        RoomFilterValidator roomFilterValidator)
+        RoomValidator roomValidator)
     {
         _roomRepository = roomRepository;
         _roomValidator = roomValidator;
-        _roomFilterValidator = roomFilterValidator;
     }
 
-    public async Task<List<Room>> Query(RoomFilter filter)
-    {
-        var validationResult = _roomFilterValidator.Validate(filter);
-        if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
-
-        return await _roomRepository.Query(filter);
-    }
+    public async Task<List<Room>> Query(RoomFilter filter) => 
+        await _roomRepository.Query(filter);
 
     public async Task<Room> Get(int id) => 
         await _roomRepository.Get(id);

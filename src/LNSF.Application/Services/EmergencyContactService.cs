@@ -32,30 +32,27 @@ public class EmergencyContactService
     {
         var validationResult = _emergencyContactValidator.Validate(contact);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
+        if (!await _peoplesRepository.Exists(contact.PeopleId)) throw new AppException("Pessoa não encontrada.", HttpStatusCode.UnprocessableEntity);
 
-        await _peoplesRepository.Get(contact.PeopleId);
-
-        contact.Id = 0; // Garante que o contato será criado como novo.
-
+        contact.Id = 0;
         return await _emergencyContactRepository.Post(contact);
     }
 
-    public async Task<EmergencyContact> Update(EmergencyContact contact)
+    public async Task<EmergencyContact> Update(EmergencyContact newContact)
     {
-        var validationResult = _emergencyContactValidator.Validate(contact);
+        var validationResult = _emergencyContactValidator.Validate(newContact);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
+        var filter = new EmergencyContactFilter { Id = newContact.Id, PeopleId = newContact.PeopleId };
+        var query = await _emergencyContactRepository.Query(filter);
+        if (query.Count != 1) throw new AppException("Contato de emergência não encontrado.", HttpStatusCode.UnprocessableEntity);
 
-        await _peoplesRepository.Get(contact.PeopleId);
-
-        var contactGet = await _emergencyContactRepository.Get(contact.Id);
-        if (contactGet.PeopleId != contact.PeopleId) throw new AppException("Não é possível alterar o ID da pessoa.", HttpStatusCode.UnprocessableEntity);
-
-        return await _emergencyContactRepository.Put(contact);
+        return await _emergencyContactRepository.Put(newContact);
     }
 
     public async Task<EmergencyContact> Delete(int id)
     {
-        var contact = await _emergencyContactRepository.Get(id);
-        return await _emergencyContactRepository.Delete(contact);
+        if (!await _emergencyContactRepository.Exists(id)) throw new AppException("Contato de emergência não encontrado.", HttpStatusCode.UnprocessableEntity);
+
+        return await _emergencyContactRepository.Delete(id);
     }
 }

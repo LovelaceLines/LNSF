@@ -4,6 +4,8 @@ using LNSF.Domain.Repositories;
 using LNSF.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using LNSF.Domain.Enums;
+using LNSF.Domain.Exceptions;
+using System.Net;
 
 namespace LNSF.Infra.Data.Repositories;
 
@@ -39,6 +41,15 @@ public class AccountRepository : BaseRepository<Account>, IAccountRepository
             .ToListAsync();
 
         if (accounts.Count == 1) return accounts.First();
-        throw new Exception("Usuário ou senha inválidos");
+        throw new AppException("Usuário ou senha inválidos", HttpStatusCode.Unauthorized);
+    }
+
+    public async Task<bool> Exists(string userName, string password)
+    {
+        var accounts = await _context.Accounts.AsNoTracking()
+            .Where(x => x.UserName == userName && x.Password == password)
+            .ToListAsync();
+
+        return accounts.Count == 1;
     }
 }

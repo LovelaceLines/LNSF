@@ -18,7 +18,10 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
     public virtual async Task<T> Get(int id) => 
         await _context.Set<T>().FindAsync(id) ??
-            throw new AppException("Entidade não encontrada", HttpStatusCode.NotFound);
+            throw new AppException("Entity not found!", HttpStatusCode.NotFound);
+
+    public virtual async Task<bool> Exists(int id) => 
+        await _context.Set<T>().FindAsync(id) != null;
 
     public virtual async Task<int> GetQuantity() => 
         await _context.Set<T>().CountAsync();
@@ -41,6 +44,15 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
     public virtual async Task<T> Delete(T entity)
     {
+        _context.Remove(entity);
+        await _context.SaveChangesAsync();
+
+        return entity;
+    }
+
+    public virtual async Task<T> Delete(int id)
+    {
+        var entity = await Get(id);
         _context.Remove(entity);
         await _context.SaveChangesAsync();
 

@@ -16,5 +16,8 @@ public class AuthenticationTokensConfiguration : IEntityTypeConfiguration<Authen
         builder.HasOne(x => x.Account)
             .WithOne()
             .HasForeignKey<AuthenticationToken>(x => x.AccountId);
+
+        builder.Property(x => x.Token)
+            .IsUnicode();
     }
 }

@@ -28,50 +28,40 @@ public class AuthenticationTokenService
 
     public async Task<AuthenticationToken> Login(Account account)
     {
-        // Verify if account exists
-        var accountGet = await _accountRepository.Get(account.UserName, account.Password);
-
-        var token = GenerateToken(account);
-        var refreshToken = GenerateRefreshToken();
-
-        var newAuthToken = new AuthenticationToken
+        if (!await _accountRepository.Exists(account.UserName, account.Password))
+            throw new AppException("Usuário ou senha inválidos", HttpStatusCode.Unauthorized);
+        
+        account = await _accountRepository.Get(account.UserName, account.Password);
+        var token = new AuthenticationToken
         {
-            Token = token,
-            RefreshToken = refreshToken,
-            AccountId = accountGet.Id,
+            Token = GenerateToken(account),
+            RefreshToken = GenerateRefreshToken(),
+            AccountId = account.Id,
         };
-
-        await Add(newAuthToken);
-
-        return newAuthToken;
+        return await _authTokenRepository.Post(token);
     }
     
     public async Task<AuthenticationToken> RefreshToken(AuthenticationToken token)
     {
-        var authToken = await Get(token.Token, token.RefreshToken);
-        var account = await _accountRepository.Get(authToken.AccountId);
-        if (!IsExpired(authToken.Token)) throw new AppException("Not expired token", HttpStatusCode.NotModified);
-                
-        var newToken = GenerateToken(account);
-        var newRefreshToken = GenerateRefreshToken();
+        if (!await _authTokenRepository.Exists(token))
+            throw new AppException("Token inválido", HttpStatusCode.Unauthorized);
+        if (!IsExpired(token.Token)) 
+            throw new AppException("Not expired token", HttpStatusCode.NotModified);
 
-        await Delete(authToken.Token, authToken.RefreshToken);
-        
-        var newAuthToken = new AuthenticationToken()
+        var account = await _accountRepository.Get(token.AccountId);
+        await _authTokenRepository.Delete(token);
+        token = new AuthenticationToken()
         {
-            Token = newToken,
-            RefreshToken = newRefreshToken,
-            AccountId = authToken.AccountId
+            Token = GenerateToken(account),
+            RefreshToken = GenerateRefreshToken(),
+            AccountId = token.AccountId
         };
-
-        await Add(newAuthToken);
-
-        return newAuthToken;
+        return await _authTokenRepository.Post(token);
     }
 
     public async Task<bool> Logout(AuthenticationToken token)
     {
-        await Delete(token.Token, token.RefreshToken);
+        await _authTokenRepository.Delete(token);
         return true;
     }
 
@@ -181,16 +171,4 @@ public class AuthenticationTokenService
 
     public async Task<List<AuthenticationToken>> Get() => 
         await _authTokenRepository.Get();
-
-    private async Task<AuthenticationToken> Add(AuthenticationToken token) => 
-        await _authTokenRepository.Post(token);
-
-    private async Task<AuthenticationToken> Get(string token, string refreshToken) => 
-        await _authTokenRepository.Get(token, refreshToken);
-
-    private async Task Delete(string token, string refreshToken)
-    {
-        var authToken = await Get(token, refreshToken);
-        await _authTokenRepository.Delete(authToken);
-    }
 }

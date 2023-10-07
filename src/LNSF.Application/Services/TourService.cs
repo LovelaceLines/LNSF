@@ -11,27 +11,19 @@ public class TourService
 {
     private readonly IToursRepository _tourRepository;
     private readonly IPeoplesRepository _peopleRepository;
-    private readonly TourFilterValidator _tourFilter;
     private readonly TourValidator _tourValidator;
 
     public TourService(IToursRepository tourRepository,
         IPeoplesRepository peoplesRepository,
-        TourFilterValidator tourFilter,
         TourValidator tourValidator)
     {
         _tourRepository = tourRepository;
         _peopleRepository = peoplesRepository;
-        _tourFilter = tourFilter;
         _tourValidator = tourValidator;
     }
 
-    public async Task<List<Tour>> Query(TourFilter filter)
-    {
-        var validationResult = _tourFilter.Validate(filter);
-        if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
-
-        return await _tourRepository.Query(filter);
-    }
+    public async Task<List<Tour>> Query(TourFilter filter) => 
+        await _tourRepository.Query(filter);
 
     public async Task<Tour> Get(int id) =>
         await _tourRepository.Get(id);
@@ -43,10 +35,9 @@ public class TourService
     {
         var validationResult = _tourValidator.Validate(tour);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
-
-        await _peopleRepository.Get(tour.PeopleId);
-
-        var query = await _tourRepository.Query(new TourFilter { PeopleId = tour.PeopleId, Input = null });
+        if (!await _peopleRepository.Exists(tour.PeopleId)) throw new AppException("Pessoa não encontrada.", HttpStatusCode.UnprocessableEntity);
+        var filter = new TourFilter { PeopleId = tour.PeopleId, Input = null };
+        var query = await _tourRepository.Query(filter);
         if (query.Count > 0) throw new AppException("Pessoa possui pesseio em aberto!", HttpStatusCode.UnprocessableEntity);
 
         tour.Id = 0;
@@ -59,11 +50,10 @@ public class TourService
     {
         var validationResult = _tourValidator.Validate(tour);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
+        if (!await _tourRepository.Exists(tour.Id)) throw new AppException("Id não encontrado.", HttpStatusCode.UnprocessableEntity);
+        if (!await _peopleRepository.Exists(tour.PeopleId)) throw new AppException("Pessoa não encontrada.", HttpStatusCode.UnprocessableEntity);
 
-        await _tourRepository.Get(tour.Id);
-        await _peopleRepository.Get(tour.PeopleId);
-
-        var query = await _tourRepository.Query(new TourFilter { PeopleId = tour.PeopleId, Input = null });
+        var query = await _tourRepository.Query(new TourFilter { PeopleId = tour.PeopleId, InOpen = true });
         if (query.Count != 1) throw new AppException("Pessoa não possui pesseio em aberto!", HttpStatusCode.UnprocessableEntity);
 
         tour.Input = DateTime.Now;
@@ -75,8 +65,8 @@ public class TourService
     {
         var validationResult = _tourValidator.Validate(tour);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
-
-        var query = await Query(new TourFilter { Id = tour.Id, PeopleId = tour.PeopleId });
+        var filter = new TourFilter { Id = tour.Id, PeopleId = tour.PeopleId };
+        var query = await Query(filter);
         if (query.Count != 1) throw new AppException("Id e PeopleId não existem!", HttpStatusCode.UnprocessableEntity);
 
         return await _tourRepository.Put(tour);

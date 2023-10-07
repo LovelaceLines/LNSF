@@ -23,4 +23,23 @@ public class AuthenticationTokenRepository : BaseRepository<AuthenticationToken>
         if (authToken.Count != 1) throw new AppException("Token not found", HttpStatusCode.NotFound);
         return authToken.First();
     }
+
+    public async Task<AuthenticationToken> Get(AuthenticationToken token)
+    {
+        var authToken = await _context.AuthenticationTokens.AsNoTracking()
+            .Where(x => x == token)
+            .ToListAsync();
+        
+        if (authToken.Count != 1) throw new AppException("Token not found", HttpStatusCode.NotFound);
+        return authToken.First();
+    }
+
+    public async Task<bool> Exists(AuthenticationToken token)
+    {
+        var authToken = await _context.AuthenticationTokens.AsNoTracking()
+            .Where(x => x == token)
+            .ToListAsync();
+            
+        return authToken.Count == 1;
+    }
 }

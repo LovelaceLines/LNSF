@@ -38,7 +38,7 @@ public class PeopleController : ControllerBase
     public async Task<ActionResult<PeopleViewModel>> Post([FromBody]PeoplePostViewModel people)
     {
         var peopleMapped = _mapper.Map<People>(people);
-        var peopleCreated = await _peopleService.CreateNewPeople(peopleMapped);
+        var peopleCreated = await _peopleService.Create(peopleMapped);
         var peopleViewModel = _mapper.Map<PeopleViewModel>(peopleCreated);
         
         return Ok(peopleViewModel);
@@ -48,7 +48,7 @@ public class PeopleController : ControllerBase
     public async Task<ActionResult<PeopleViewModel>> Put([FromBody]PeoplePutViewModel people)
     {
         var peopleMapper = _mapper.Map<People>(people);
-        var peopleUpdated = await _peopleService.EditBasicInformation(peopleMapper);
+        var peopleUpdated = await _peopleService.Update(peopleMapper);
         var peopleViewModel = _mapper.Map<PeopleViewModel>(peopleUpdated);
 
         return Ok(peopleViewModel);
