@@ -15,8 +15,7 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                 name: "Accounts",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
                     Role = table.Column<int>(type: "INTEGER", nullable: false),
                     UserName = table.Column<string>(type: "TEXT", nullable: false),
                     Password = table.Column<string>(type: "TEXT", nullable: false),
@@ -43,27 +42,6 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Rooms", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AuthenticationTokens",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Token = table.Column<string>(type: "TEXT", nullable: false),
-                    RefreshToken = table.Column<string>(type: "TEXT", nullable: false),
-                    AccountId = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AuthenticationTokens", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AuthenticationTokens_Accounts_AccountId",
-                        column: x => x.AccountId,
-                        principalTable: "Accounts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -146,12 +124,6 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_AuthenticationTokens_AccountId",
-                table: "AuthenticationTokens",
-                column: "AccountId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_EmergencyContacts_PeopleId_Phone",
                 table: "EmergencyContacts",
                 columns: new[] { "PeopleId", "Phone" },
@@ -190,16 +162,13 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AuthenticationTokens");
+                name: "Accounts");
 
             migrationBuilder.DropTable(
                 name: "EmergencyContacts");
 
             migrationBuilder.DropTable(
                 name: "Tours");
-
-            migrationBuilder.DropTable(
-                name: "Accounts");
 
             migrationBuilder.DropTable(
                 name: "Peoples");

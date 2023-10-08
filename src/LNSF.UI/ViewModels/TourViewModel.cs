@@ -9,3 +9,17 @@ public class TourViewModel
 
     public int PeopleId { get; set; }
 }
+
+public class TourPostViewModel
+{
+    public string Note { get; set; } = "";
+    public int PeopleId { get; set; }
+}
+
+public class TourPutViewModel
+{
+    public int Id { get; set; }
+    public string Note { get; set; } = "";
+
+    public int PeopleId { get; set; }
+}

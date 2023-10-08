@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LNSF.src.LNSF.Infra.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231005104911_DBLNSF.V0.1")]
+    [Migration("20231007195448_DBLNSF.V0.1")]
     partial class DBLNSFV01
     {
         /// <inheritdoc />
@@ -22,9 +22,9 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
 
             modelBuilder.Entity("LNSF.Domain.Entities.Account", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
@@ -46,31 +46,6 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Accounts");
-                });
-
-            modelBuilder.Entity("LNSF.Domain.Entities.AuthenticationToken", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("AccountId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("RefreshToken")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Token")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccountId")
-                        .IsUnique();
-
-                    b.ToTable("AuthenticationTokens");
                 });
 
             modelBuilder.Entity("LNSF.Domain.Entities.EmergencyContact", b =>
@@ -215,17 +190,6 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                     b.HasIndex("PeopleId");
 
                     b.ToTable("Tours");
-                });
-
-            modelBuilder.Entity("LNSF.Domain.Entities.AuthenticationToken", b =>
-                {
-                    b.HasOne("LNSF.Domain.Entities.Account", "Account")
-                        .WithOne()
-                        .HasForeignKey("LNSF.Domain.Entities.AuthenticationToken", "AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("LNSF.Domain.Entities.EmergencyContact", b =>
