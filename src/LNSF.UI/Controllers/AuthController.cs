@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
+using LNSF.Application.Interfaces;
 using LNSF.Application.Services;
 using LNSF.Domain.Entities;
 using LNSF.UI.ViewModels;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LNSF.UI.Controllers;
@@ -11,13 +11,13 @@ namespace LNSF.UI.Controllers;
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
-    private readonly AuthenticationTokenService _authTokenService;
+    private readonly IAuthenticationTokenService _service;
     private readonly IMapper _mapper;
 
-    public AuthController(AuthenticationTokenService authTokenService,
+    public AuthController(IAuthenticationTokenService service,
         IMapper mapper)
     {
-        _authTokenService = authTokenService;
+        _service = service;
         _mapper = mapper;
     }
 
@@ -25,7 +25,7 @@ public class AuthController : ControllerBase
     public async Task<ActionResult<AuthenticationTokenViewModel>> Login(AccountLoginViewModel account)
     {
         var accountMapped = _mapper.Map<Account>(account);
-        var token = await _authTokenService.Login(accountMapped);
+        var token = await _service.Login(accountMapped);
 
         return Ok(token);
     }
@@ -34,7 +34,7 @@ public class AuthController : ControllerBase
     public async Task<ActionResult<AuthenticationTokenViewModel>> RefreshToken(AuthenticationTokenViewModel tokenViewModel)
     {
         var tokenMapped = _mapper.Map<AuthenticationToken>(tokenViewModel);
-        var token = await _authTokenService.RefreshToken(tokenMapped);
+        var token = await _service.RefreshToken(tokenMapped);
 
         return Ok(token);
     }

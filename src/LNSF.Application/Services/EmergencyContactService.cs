@@ -4,22 +4,23 @@ using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
 using LNSF.Domain.Repositories;
 using System.Net;
+using LNSF.Application.Interfaces;
 
 namespace LNSF.Application.Services;
 
-public class EmergencyContactService
+public class EmergencyContactService : IEmergencyContactService
 {
     private readonly IEmergencyContactsRepository _emergencyContactRepository;
     private readonly IPeoplesRepository _peoplesRepository;
-    private readonly EmergencyContactValidator _emergencyContactValidator;
+    private readonly EmergencyContactValidator _validator;
 
     public EmergencyContactService(IEmergencyContactsRepository emergencyContactsRepository,
         IPeoplesRepository peoplesRepository,
-        EmergencyContactValidator emergencyContactValidator)
+        EmergencyContactValidator validator)
     {
         _emergencyContactRepository = emergencyContactsRepository;
         _peoplesRepository = peoplesRepository;
-        _emergencyContactValidator = emergencyContactValidator;
+        _validator = validator;
     }
 
     public async Task<List<EmergencyContact>> Query(EmergencyContactFilter filter) => 
@@ -30,7 +31,7 @@ public class EmergencyContactService
 
     public async Task<EmergencyContact> Create(EmergencyContact contact)
     {
-        var validationResult = _emergencyContactValidator.Validate(contact);
+        var validationResult = _validator.Validate(contact);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
         if (!await _peoplesRepository.Exists(contact.PeopleId)) throw new AppException("Pessoa não encontrada!", HttpStatusCode.UnprocessableEntity);
 
@@ -40,7 +41,7 @@ public class EmergencyContactService
 
     public async Task<EmergencyContact> Update(EmergencyContact newContact)
     {
-        var validationResult = _emergencyContactValidator.Validate(newContact);
+        var validationResult = _validator.Validate(newContact);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
         var filter = new EmergencyContactFilter { Id = newContact.Id, PeopleId = newContact.PeopleId };
         var query = await _emergencyContactRepository.Query(filter);

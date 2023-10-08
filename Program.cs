@@ -15,6 +15,7 @@ using Microsoft.OpenApi.Models;
 using LNSF.Domain.Filters;
 using Serilog;
 using Serilog.Formatting.Json;
+using LNSF.Application.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -69,10 +70,10 @@ builder.Services.AddSingleton(autoMapperConfig.CreateMapper());
 IConfiguration configuration = builder.Configuration.GetSection("Jwt");
 builder.Services.AddSingleton(configuration);
 
-builder.Services.AddTransient<AuthenticationTokenService>();
+builder.Services.AddTransient<IAuthenticationTokenService, AuthenticationTokenService>();
 builder.Services.AddTransient<AuthenticationTokenValidator>();
 
-builder.Services.AddTransient<AccountService>();
+builder.Services.AddTransient<IAccountService, AccountService>();
 builder.Services.AddTransient<AccountValidator>();
 builder.Services.AddTransient<PasswordValidator>();
 builder.Services.AddTransient<IAccountRepository, AccountRepository>();
@@ -83,23 +84,22 @@ builder.Services.AddTransient<IToursRepository, ToursRepository>();
 builder.Services.AddTransient<TourFilterValidator>();
 builder.Services.AddTransient<TourValidator>();
 builder.Services.AddTransient<GlobalValidator>();
-builder.Services.AddTransient<TourService>();
+builder.Services.AddTransient<ITourService, TourService>();
 
 builder.Services.AddTransient<IRoomsRepository, RoomsRepository>();
 builder.Services.AddTransient<RoomValidator>();
 builder.Services.AddTransient<RoomFilterValidator>();
-builder.Services.AddTransient<RoomService>();
+builder.Services.AddTransient<IRoomService, RoomService>();
 
 builder.Services.AddTransient<IPeoplesRepository, PeoplesRepository>();
 builder.Services.AddTransient<PeopleFilterValidator>();
 builder.Services.AddTransient<PeopleValidator>();
-builder.Services.AddTransient<PeopleService>();
+builder.Services.AddTransient<IPeopleService, PeopleService>();
 
 builder.Services.AddTransient<IEmergencyContactsRepository, EmergencyContactsRepository>();
 builder.Services.AddTransient<EmergencyContactValidator>();
-builder.Services.AddTransient<EmergencyContactService>();
+builder.Services.AddTransient<IEmergencyContactService, EmergencyContactService>();
 
-builder.Services.AddTransient<IAccountRepository, AccountRepository>();
 
 #endregion
 

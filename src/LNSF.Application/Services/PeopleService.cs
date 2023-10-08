@@ -3,14 +3,15 @@ using LNSF.Domain.Filters;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
 using System.Net;
+using LNSF.Application.Interfaces;
 
 namespace LNSF.Application;
 
-public class PeopleService
+public class PeopleService : IPeopleService
 {
     private readonly IPeoplesRepository _peopleRepository;
     private readonly IRoomsRepository _roomRepository;
-    private readonly PeopleValidator _peopleValidator;
+    private readonly PeopleValidator _validator;
 
     public PeopleService(IPeoplesRepository peopleRepository,
         IRoomsRepository roomRepository,
@@ -18,7 +19,7 @@ public class PeopleService
     {
         _peopleRepository = peopleRepository;
         _roomRepository = roomRepository;
-        _peopleValidator = peopleValidator;
+        _validator = peopleValidator;
     }
 
     public async Task<List<People>> Query(PeopleFilter filter) => 
@@ -32,7 +33,7 @@ public class PeopleService
 
     public async Task<People> Create(People people)
     {
-        var validationResult = _peopleValidator.Validate(people);
+        var validationResult = _validator.Validate(people);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
         return await _peopleRepository.Add(people);
@@ -40,7 +41,7 @@ public class PeopleService
 
     public async Task<People> Update(People newPeople)
     {
-        var validationResult = _peopleValidator.Validate(newPeople);
+        var validationResult = _validator.Validate(newPeople);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
         if (!await _peopleRepository.Exists(newPeople.Id)) throw new AppException("Pessoa não encontrada!", HttpStatusCode.UnprocessableEntity);
 

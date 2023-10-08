@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using LNSF.Application.Services;
 using LNSF.Domain.Filters;
 using LNSF.Domain.Entities;
 using LNSF.UI.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using LNSF.Application.Interfaces;
 
 namespace LNSF.UI.Controllers;
 
@@ -11,20 +11,20 @@ namespace LNSF.UI.Controllers;
 [Route("api/[controller]")]
 public class RoomController : ControllerBase
 {
-    private readonly RoomService _roomService;
+    private readonly IRoomService _service;
     private readonly IMapper _mapper;
 
-    public RoomController(RoomService roomService,
+    public RoomController(IRoomService service,
         IMapper mapper)
     {
-        _roomService = roomService;
+        _service = service;
         _mapper = mapper;
     }
 
     [HttpGet]
     public async Task<ActionResult<List<RoomViewModel>>> Get([FromQuery]RoomFilter filter)
     {
-        var rooms = await _roomService.Query(filter);
+        var rooms = await _service.Query(filter);
         var roomsMapped = _mapper.Map<List<RoomViewModel>>(rooms);
 
         return Ok(roomsMapped);
@@ -33,13 +33,13 @@ public class RoomController : ControllerBase
 
     [HttpGet("count")]
     public async Task<ActionResult<int>> GetCount() => 
-        Ok(await _roomService.GetCount());
+        Ok(await _service.GetCount());
 
     [HttpPost]
     public async Task<ActionResult<RoomViewModel>> Post([FromBody]RoomPostViewModel room)
     {
         var roomMapped = _mapper.Map<Room>(room);
-        roomMapped = await _roomService.Create(roomMapped);
+        roomMapped = await _service.Create(roomMapped);
         var roomViewModel = _mapper.Map<RoomViewModel>(roomMapped);
 
         return Ok(roomViewModel);
@@ -49,7 +49,7 @@ public class RoomController : ControllerBase
     public async Task<ActionResult<RoomViewModel>> Put([FromBody]RoomViewModel room)
     {
         var roomMapped = _mapper.Map<Room>(room);
-        roomMapped = await _roomService.Update(roomMapped);
+        roomMapped = await _service.Update(roomMapped);
         var roomViewModel = _mapper.Map<RoomViewModel>(roomMapped);
 
         return Ok(roomViewModel);

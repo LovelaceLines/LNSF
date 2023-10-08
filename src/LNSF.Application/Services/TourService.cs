@@ -4,22 +4,23 @@ using LNSF.Application.Validators;
 using LNSF.Domain.Filters;
 using LNSF.Domain.Exceptions;
 using System.Net;
+using LNSF.Application.Interfaces;
 
 namespace LNSF.Application.Services;
 
-public class TourService
+public class TourService : ITourService
 {
     private readonly IToursRepository _tourRepository;
     private readonly IPeoplesRepository _peopleRepository;
-    private readonly TourValidator _tourValidator;
+    private readonly TourValidator _validator;
 
     public TourService(IToursRepository tourRepository,
         IPeoplesRepository peoplesRepository,
-        TourValidator tourValidator)
+        TourValidator validator)
     {
         _tourRepository = tourRepository;
         _peopleRepository = peoplesRepository;
-        _tourValidator = tourValidator;
+        _validator = validator;
     }
 
     public async Task<List<Tour>> Query(TourFilter filter) => 
@@ -33,7 +34,7 @@ public class TourService
 
     public async Task<Tour> Create(Tour tour)
     {
-        var validationResult = _tourValidator.Validate(tour);
+        var validationResult = _validator.Validate(tour);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
         if (!await _peopleRepository.Exists(tour.PeopleId)) throw new AppException("Pessoa não encontrada!", HttpStatusCode.UnprocessableEntity);
         var filter = new TourFilter { PeopleId = tour.PeopleId, Input = null };
@@ -48,7 +49,7 @@ public class TourService
 
     public async Task<Tour> Update(Tour tour)
     {
-        var validationResult = _tourValidator.Validate(tour);
+        var validationResult = _validator.Validate(tour);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
         if (!await _tourRepository.Exists(tour.Id)) throw new AppException("Id não encontrado!", HttpStatusCode.UnprocessableEntity);
         if (!await _peopleRepository.Exists(tour.PeopleId)) throw new AppException("Pessoa não encontrada!", HttpStatusCode.UnprocessableEntity);
@@ -63,7 +64,7 @@ public class TourService
 
     public async Task<Tour> UpdateAll(Tour tour)
     {
-        var validationResult = _tourValidator.Validate(tour);
+        var validationResult = _validator.Validate(tour);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
         var filter = new TourFilter { Id = tour.Id, PeopleId = tour.PeopleId };
         var query = await Query(filter);

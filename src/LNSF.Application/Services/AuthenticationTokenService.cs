@@ -3,6 +3,7 @@ using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using LNSF.Application.Interfaces;
 using LNSF.Application.Validators;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
@@ -13,19 +14,19 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace LNSF.Application.Services;
 
-public class AuthenticationTokenService
+public class AuthenticationTokenService : IAuthenticationTokenService
 {
     private readonly IConfiguration _configuration;
     private readonly IAccountRepository _accountRepository;
-    private readonly AuthenticationTokenValidator _tokenValidator;
+    private readonly AuthenticationTokenValidator _validator;
 
     public AuthenticationTokenService(IConfiguration configuration,
         IAccountRepository accountRepository,
-        AuthenticationTokenValidator tokenValidator)
+        AuthenticationTokenValidator validator)
     {
         _configuration = configuration;
         _accountRepository = accountRepository;
-        _tokenValidator = tokenValidator;
+        _validator = validator;
     }
 
     public async Task<AuthenticationToken> Login(Account account)
@@ -45,7 +46,7 @@ public class AuthenticationTokenService
     
     public async Task<AuthenticationToken> RefreshToken(AuthenticationToken token)
     {
-        var validationResult = _tokenValidator.Validate(token);
+        var validationResult = _validator.Validate(token);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.UnprocessableEntity);
 
         var key = GetSecretKey();

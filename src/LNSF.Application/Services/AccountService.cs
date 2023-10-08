@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using LNSF.Application.Interfaces;
 using LNSF.Application.Validators;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
@@ -7,19 +8,16 @@ using LNSF.Domain.Repositories;
 
 namespace LNSF.Application.Services;
 
-public class AccountService
+public class AccountService : IAccountService
 {
     private readonly IAccountRepository _accountRepository;
     private readonly AccountValidator _accountValidator;
-    private readonly PasswordValidator _passwordValidator;
 
     public AccountService(IAccountRepository accountRepository,
-        AccountValidator accountValidator,
-        PasswordValidator passwordValidator)
+        AccountValidator accountValidator)
     {
         _accountRepository = accountRepository;
         _accountValidator = accountValidator;
-        _passwordValidator = passwordValidator;
     }
 
     public async Task<List<Account>> Query(AccountFilter filter)
@@ -48,15 +46,6 @@ public class AccountService
         account = await _accountRepository.Add(account);
         account.Password = "";
         return account;
-    }
-
-    public async Task<Account> Update(Account account, string oldPassword)
-    {
-        var validationResult = await _passwordValidator.ValidateAsync(oldPassword);
-        if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
-
-        account.Password = oldPassword;
-        return await Update(account);
     }
 
     public async Task<Account> Update(Account account)

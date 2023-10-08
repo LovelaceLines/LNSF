@@ -3,7 +3,8 @@ using LNSF.Application.Services;
 using LNSF.Domain.Filters;
 using LNSF.Domain.Entities;
 using LNSF.UI.ViewModels;
-using Microsoft.AspNetCore.Mvc; 
+using Microsoft.AspNetCore.Mvc;
+using LNSF.Application.Interfaces;
 
 namespace LNSF.UI.Controllers;
 
@@ -11,10 +12,10 @@ namespace LNSF.UI.Controllers;
 [Route("api/[controller]")]
 public class TourController : ControllerBase
 {
-    private readonly TourService _service;
+    private readonly ITourService _service;
     private readonly IMapper _mapper;
 
-    public TourController(TourService service, 
+    public TourController(ITourService service, 
         IMapper mapper)
     {
         _service = service;
