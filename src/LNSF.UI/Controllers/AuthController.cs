@@ -2,6 +2,7 @@
 using LNSF.Application.Services;
 using LNSF.Domain.Entities;
 using LNSF.UI.ViewModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LNSF.UI.Controllers;
@@ -11,15 +12,12 @@ namespace LNSF.UI.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly AuthenticationTokenService _authTokenService;
-    private readonly AccountService _accountService;
     private readonly IMapper _mapper;
 
     public AuthController(AuthenticationTokenService authTokenService,
-        AccountService accountService,
         IMapper mapper)
     {
         _authTokenService = authTokenService;
-        _accountService = accountService;
         _mapper = mapper;
     }
 

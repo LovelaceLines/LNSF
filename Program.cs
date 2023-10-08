@@ -133,9 +133,9 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseInMemoryDatabase("InMemoryDatabaseName");
+    // options.UseInMemoryDatabase("InMemoryDatabaseName");
     // options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionMSSQL"));
-    // options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnectionSQLite"));
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnectionSQLite"));
     options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 });
 
@@ -148,15 +148,20 @@ builder.Services.AddSwaggerGen(setup =>
 {
     setup.SwaggerDoc("v1", new() 
     { 
-        Title = "LNSF.API",
-        Description = "...",
+        Title = "LNSF.API - Lar Nossa Senhora de Fátima",
         Version = "v1",
+        Description = "O sistema LNSF foi desenvolvido com um propósito fundamental: aprimorar a eficiência das operações realizadas pelos servidores dedicados ao Lar Nossa Senhora de Fátima. Este sistema visa a melhoria do processo de gestão dos pacientes e quartos, além de automatizar tarefas complexas, anteriormente realizadas de forma manual, como a emissão de relatórios essenciais para os servidores e entidades superiores.",
         Contact = new OpenApiContact
         {
-            Name = "",
-            Email = "",
-            Url = new Uri("https://github.com/LovelaceLines/LNSF")
+            Name = "LoveLace Lines",
+            Email = "lovelacelines@gmail.com",
+            Url = new Uri("https://github.com/LovelaceLines/")
         },
+        License = new OpenApiLicense
+        {
+            Name = "MIT",
+            Url = new Uri("https://opensource.org/license/mit/"),
+        }
     });
 
     setup.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
