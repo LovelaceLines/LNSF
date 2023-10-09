@@ -1,0 +1,28 @@
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS webapi
+WORKDIR /app
+
+# Copy csproj and restore as distinct layers
+COPY *.csproj ./
+RUN dotnet restore
+
+# Copy everything else and build
+COPY ./Program.cs* /app/
+COPY appsettings.* /app/
+COPY ./LNSF.sln /app/LNSF.sln
+COPY ./src/LNSF.Domain/* /app/src/LNSF.Domain/
+COPY ./src/LNSF.Infra/* /app/src/LNSF.Infra/
+COPY ./src/LNSF.Application/* /app/src/LNSF.Application/
+COPY ./src/LNSF.UI/* /app/src/LNSF.UI/
+COPY ./src/LNSF.Test/* /app/src/LNSF.Test/
+
+RUN dotnet publish -c Release -o out
+
+# Build runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:7.0
+WORKDIR /app
+COPY --from=webapi /app/out /app/out
+COPY sqlite3.exe /app/out
+ENTRYPOINT ["dotnet", "/app/out/LNSF.dll"]
+EXPOSE 80
+
+# docker build -t lnsfwebapi .

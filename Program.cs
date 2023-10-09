@@ -16,6 +16,7 @@ using LNSF.Domain.Filters;
 using Serilog;
 using Serilog.Formatting.Json;
 using LNSF.Application.Interfaces;
+using LNSF.Domain.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -103,6 +104,24 @@ builder.Services.AddTransient<IEmergencyContactService, EmergencyContactService>
 
 #endregion
 
+#region CORS
+
+var cors = builder.Configuration.GetSection("Cors");
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: cors["PolicyName"] ?? throw new AppException("Cors: PolicyName is null!"), builder =>
+    {
+        builder.WithOrigins(cors["AllowedOrigins"] ?? throw new AppException("Cors: WithOrigins is null!"))
+            //.WithMethods(cors["AllowedMethods"] ?? throw new AppException("Cors: WithMethods is null!"))
+            .AllowAnyMethod()
+            //.WithHeaders(cors["AllowedHeaders"] ?? throw new AppException("Cors: WithHeaders is null!"))
+            .AllowAnyHeader()
+            .DisallowCredentials();
+    });
+});
+
+#endregion
+
 builder.Services.AddControllers();
 
 #region Authentication
@@ -153,7 +172,7 @@ builder.Services.AddSwaggerGen(setup =>
         Description = "O sistema LNSF foi desenvolvido com um propósito fundamental: aprimorar a eficiência das operações realizadas pelos servidores dedicados ao Lar Nossa Senhora de Fátima. Este sistema visa a melhoria do processo de gestão dos pacientes e quartos, além de automatizar tarefas complexas, anteriormente realizadas de forma manual, como a emissão de relatórios essenciais para os servidores e entidades superiores.",
         Contact = new OpenApiContact
         {
-            Name = "LoveLace Lines",
+            Name = "Lovelace Lines",
             Email = "lovelacelines@gmail.com",
             Url = new Uri("https://github.com/LovelaceLines/")
         },
@@ -206,7 +225,9 @@ if (app.Environment.IsDevelopment() ||
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseHttpsRedirection(); 
+
+app.UseCors(cors["PolicyName"] ?? throw new AppException("Cors: PolicyName is null!"));
 
 // app.UseAuthentication();
 app.UseAuthorization();
