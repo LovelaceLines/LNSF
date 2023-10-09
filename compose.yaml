@@ -7,6 +7,6 @@ services:
       context: .
       dockerfile: .
     ports:
-      - "8081:80"
+      - "5000:5000"
 
 # docker-compose up -d

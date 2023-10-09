@@ -1,28 +1,18 @@
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS webapi
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /app
 
 # Copy csproj and restore as distinct layers
-COPY *.csproj ./
-RUN dotnet restore
-
-# Copy everything else and build
-COPY ./Program.cs* /app/
-COPY appsettings.* /app/
-COPY ./LNSF.sln /app/LNSF.sln
-COPY ./src/LNSF.Domain/* /app/src/LNSF.Domain/
-COPY ./src/LNSF.Infra/* /app/src/LNSF.Infra/
-COPY ./src/LNSF.Application/* /app/src/LNSF.Application/
-COPY ./src/LNSF.UI/* /app/src/LNSF.UI/
-COPY ./src/LNSF.Test/* /app/src/LNSF.Test/
-
-RUN dotnet publish -c Release -o out
+COPY . .
+RUN dotnet publish -c Release
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:7.0
-WORKDIR /app
-COPY --from=webapi /app/out /app/out
-COPY sqlite3.exe /app/out
-ENTRYPOINT ["dotnet", "/app/out/LNSF.dll"]
-EXPOSE 80
+FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
+# WORKDIR /app
+# COPY --from=build /app/bin/Debug/net7.0/publish ./
+COPY --from=build /app/bin/Release/net7.0/ ./
+
+# Exponha a porta e configure o ponto de entrada
+EXPOSE 5000
+ENTRYPOINT ["dotnet", "LNSF.dll"]
 
 # docker build -t lnsfwebapi .
