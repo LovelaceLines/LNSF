@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LNSF.src.LNSF.Infra.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231007195448_DBLNSF.V0.1")]
+    [Migration("20231009202308_DBLNSF.V0.1")]
     partial class DBLNSFV01
     {
         /// <inheritdoc />

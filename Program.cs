@@ -17,6 +17,7 @@ using Serilog;
 using Serilog.Formatting.Json;
 using LNSF.Application.Interfaces;
 using LNSF.Domain.Exceptions;
+using LNSF.Infra.Data.Migrations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -211,6 +212,8 @@ builder.Services.AddSwaggerGen(setup =>
 #endregion
 
 var app = builder.Build();
+
+var helperMigration = new HelperMigration(app.Services);
 
 app.UseExceptionHandler("/api/Error");
 
