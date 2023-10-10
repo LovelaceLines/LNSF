@@ -1,5 +1,5 @@
 ﻿using Bogus;
-using LNSF.UI.ViewModels;
+using LNSF.Api.ViewModels;
 
 namespace LNSF.Test;
 

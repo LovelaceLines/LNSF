@@ -2,7 +2,7 @@
 using System.Net.Http.Json;
 using AutoMapper;
 using LNSF.Test.Fakers;
-using LNSF.UI.ViewModels;
+using LNSF.Api.ViewModels;
 using Newtonsoft.Json;
 using Xunit;
 

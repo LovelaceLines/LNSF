@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
 using AutoMapper;
-using LNSF.UI.ViewModels;
+using LNSF.Api.ViewModels;
 using Newtonsoft.Json;
 using Xunit;
 

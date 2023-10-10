@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using LNSF.Domain.Filters;
 using LNSF.Domain.Entities;
-using LNSF.UI.ViewModels;
+using LNSF.Api.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using LNSF.Application.Interfaces;
 
-namespace LNSF.UI.Controllers;
+namespace LNSF.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

@@ -5,7 +5,7 @@ using LNSF.Domain.Entities;
 using LNSF.Domain.Repositories;
 using LNSF.Infra.Data.Context;
 using LNSF.Infra.Data.Repositories;
-using LNSF.UI.ViewModels;
+using LNSF.Api.ViewModels;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

@@ -1,4 +1,4 @@
-﻿namespace LNSF.UI.ViewModels;
+﻿namespace LNSF.Api.ViewModels;
 
 public class RoomViewModel
 {

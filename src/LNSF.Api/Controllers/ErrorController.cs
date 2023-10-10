@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LNSF.UI.Controllers;
+namespace LNSF.Api.Controllers;
 
 [ApiController]
 [ApiExplorerSettings(IgnoreApi = true)]

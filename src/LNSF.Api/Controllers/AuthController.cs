@@ -2,10 +2,10 @@
 using LNSF.Application.Interfaces;
 using LNSF.Application.Services;
 using LNSF.Domain.Entities;
-using LNSF.UI.ViewModels;
+using LNSF.Api.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LNSF.UI.Controllers;
+namespace LNSF.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

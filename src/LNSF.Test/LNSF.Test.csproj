@@ -25,7 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LNSF.Domain\LNSF.Domain.csproj" />
-    <ProjectReference Include="..\LNSF.UI\LNSF.UI.csproj" />
+    <ProjectReference Include="..\LNSF.Api\LNSF.Api.csproj" />
   </ItemGroup>
 
 </Project>

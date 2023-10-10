@@ -2,7 +2,7 @@
 using Bogus;
 using Bogus.Extensions.Brazil;
 using LNSF.Domain.Enums;
-using LNSF.UI.ViewModels;
+using LNSF.Api.ViewModels;
 
 namespace LNSF.Test.Fakers;
 

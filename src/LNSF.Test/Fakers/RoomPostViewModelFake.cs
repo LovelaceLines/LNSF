@@ -1,6 +1,6 @@
 ﻿using Bogus;
 using LNSF.Domain.Filters;
-using LNSF.UI.ViewModels;
+using LNSF.Api.ViewModels;
 
 namespace LNSF.Test.Fakers;
 

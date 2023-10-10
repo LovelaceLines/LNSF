@@ -1,6 +1,6 @@
 ﻿using LNSF.Domain.Enums;
 
-namespace LNSF.UI.ViewModels;
+namespace LNSF.Api.ViewModels;
 
 public class PeopleViewModel
 {

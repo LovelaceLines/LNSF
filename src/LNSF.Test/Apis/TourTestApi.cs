@@ -1,5 +1,5 @@
 ﻿using LNSF.Test.Fakers;
-using LNSF.UI.ViewModels;
+using LNSF.Api.ViewModels;
 using Xunit;
 
 namespace LNSF.Test.Apis;
