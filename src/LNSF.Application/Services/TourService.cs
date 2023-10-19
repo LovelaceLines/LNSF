@@ -55,7 +55,7 @@ public class TourService : ITourService
         if (!await _peopleRepository.Exists(tour.PeopleId)) throw new AppException("Pessoa não encontrada!", HttpStatusCode.UnprocessableEntity);
 
         var query = await _tourRepository.Query(new TourFilter { PeopleId = tour.PeopleId, InOpen = true });
-        if (query.Count != 1) throw new AppException("Pessoa não possui pesseio em aberto!", HttpStatusCode.UnprocessableEntity);
+        if (query.Count != 1) throw new AppException("Pessoa não saiu!", HttpStatusCode.UnprocessableEntity);
 
         tour.Input = DateTime.Now;
 
