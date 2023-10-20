@@ -44,17 +44,19 @@ public class AccountRepository : BaseRepository<Account>, IAccountRepository
         return account;
     }
 
-    public async Task<Account> Get(string userName, string Password)
+    public async Task<Account> Get(string userName, string password)
     {
+        password = HashPassword(password);
+
         var accounts = await _context.Accounts.AsNoTracking()
-            .Where(x => x.UserName == userName && x.Password == Password)
+            .Where(x => x.UserName == userName && x.Password == password)
             .ToListAsync();
 
         if (accounts.Count == 1) return accounts.First();
         throw new AppException("Usuário ou senha inválidos!", HttpStatusCode.Unauthorized);
     }
 
-    public async Task<bool> Exists(string id)
+    public async Task<bool> ExistsId(string id)
     {
         var accounts = await _context.Accounts.AsNoTracking()
             .Where(x => x.Id == id)
@@ -63,12 +65,33 @@ public class AccountRepository : BaseRepository<Account>, IAccountRepository
         return accounts.Count == 1;
     }
 
-    public async Task<bool> Exists(string userName, string password)
+    public async Task<bool> Exists(string userName, string password, string hashPassword)
     {
+        password = HashPassword(password);
+
         var accounts = await _context.Accounts.AsNoTracking()
             .Where(x => x.UserName == userName && x.Password == password)
             .ToListAsync();
 
         return accounts.Count == 1;
+    }
+
+    public async Task<bool> Exists(string userName)
+    {
+        var accounts = await _context.Accounts.AsNoTracking()
+            .Where(x => x.UserName == userName)
+            .ToListAsync();
+
+        return accounts.Count == 1;
+    }
+
+    public string HashPassword(string password)
+    {
+        return BCrypt.Net.BCrypt.HashPassword(password);
+    }
+
+    public bool VerifyPassword(string password, string hashPassword)
+    {
+        return BCrypt.Net.BCrypt.Verify(password, hashPassword);
     }
 }

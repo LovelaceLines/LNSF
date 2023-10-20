@@ -2,6 +2,7 @@
 using System.Net.Http.Json;
 using AutoMapper;
 using LNSF.Api.ViewModels;
+using LNSF.Domain.Entities;
 using Newtonsoft.Json;
 using Xunit;
 
@@ -12,6 +13,8 @@ namespace LNSF.Test;
 public class GlobalClientRequest
 {
     public const string BaseUrl = "http://localhost:5206/api/";
+    public readonly HttpClient _authClient = new() { BaseAddress = new Uri($"{BaseUrl}Auth/") };
+    public readonly HttpClient _accountClient = new() { BaseAddress = new Uri($"{BaseUrl}Account/") };
     public readonly HttpClient _peopleClient = new() { BaseAddress = new Uri($"{BaseUrl}People/") };
     public readonly HttpClient _roomClient = new() { BaseAddress = new Uri($"{BaseUrl}Room/") };
     public readonly HttpClient _emergencyContactClient = new() { BaseAddress = new Uri($"{BaseUrl}EmergencyContact/") };
@@ -22,6 +25,9 @@ public class GlobalClientRequest
     {
         var mapperConfig = new MapperConfiguration(cfg =>
         {
+            cfg.CreateMap<AccountPostViewModel, AccountLoginViewModel>().ReverseMap();
+            cfg.CreateMap<AuthenticationTokenViewModel, AuthenticationToken>().ReverseMap();
+            
             cfg.CreateMap<RoomViewModel, RoomPostViewModel>().ReverseMap();
 
             cfg.CreateMap<PeoplePostViewModel, PeoplePutViewModel>().ReverseMap();
@@ -34,6 +40,13 @@ public class GlobalClientRequest
         });
 
         _mapper = mapperConfig.CreateMapper();
+    }
+
+    public virtual async Task<AuthenticationTokenViewModel> Auth(HttpClient client, dynamic obj)
+    {
+        var objJson = JsonContent.Create(obj);
+        var response = await client.PostAsync("", objJson);
+        return await DeserializeResponse<AuthenticationTokenViewModel>(response);
     }
 
     public virtual async Task<T> Get<T>(HttpClient client, int id) where T : class

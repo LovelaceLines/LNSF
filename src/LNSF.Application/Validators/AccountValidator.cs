@@ -11,9 +11,6 @@ public class AccountValidator : AbstractValidator<Account>
             .MinimumLength(4).WithMessage(GlobalValidator.MinLength("Nome", 2))
             .MaximumLength(32).WithMessage(GlobalValidator.MaxLength("Nome", 32));
         
-        RuleFor(account => account.Password)
-            .SetValidator(new PasswordValidator());
-        
         RuleFor(account => account.Role)
             .IsInEnum().WithMessage("Cargo inválido!");
     }

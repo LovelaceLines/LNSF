@@ -28,18 +28,26 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
     public virtual async Task<T> Add(T entity)
     {
-        await _context.AddAsync(entity);
-        await _context.SaveChangesAsync();
-
-        return entity;
+        try
+        {
+            await _context.AddAsync(entity);
+            await _context.SaveChangesAsync();
+        
+            return entity;
+        }
+        catch (Exception ex) { throw CatchError(ex); }
     }
 
     public virtual async Task<T> Update(T entity)
     {
-        _context.Entry(entity).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
-
-        return entity;
+        try 
+        {
+            _context.Entry(entity).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        
+            return entity;
+        }
+        catch (Exception ex) { throw CatchError(ex); } 
     }
 
     public virtual async Task<T> Remove(T entity)
@@ -67,4 +75,12 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 
     public async Task RollbackTransaction() => 
         await _context.Database.RollbackTransactionAsync();
+    
+    private Exception CatchError(Exception ex)
+    {
+        var message = ex.InnerException?.Message ?? ex.Message;
+
+        if (message.Contains("UNIQUE constraint")) throw new AppException("Valor já existe!", HttpStatusCode.Conflict);
+        throw new Exception();
+    }
 }

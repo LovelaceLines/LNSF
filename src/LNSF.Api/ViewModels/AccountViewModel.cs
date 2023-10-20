@@ -26,9 +26,14 @@ public class AccountPutViewModel
 {
     public string Id { get; set; } = "";
     public string UserName { get; set; } = "";
-    public string Password { get; set; } = "";
-    public string OldPassword { get; set; } = "";
     public Role Role { get; set; }
+}
+
+public class AccountPutPasswordViewModel
+{
+    public string Id { get; set; } = "";
+    public string OldPassword { get; set; } = "";
+    public string NewPassword { get; set; } = "";
 }
 
 public class AccountDeleteViewModel

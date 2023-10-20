@@ -9,5 +9,6 @@ public interface IAccountService
     public Task<Account> Get(string userName, string password);
     public Task<Account> Create(Account account);
     public Task<Account> Update(Account account);
+    public Task<Account> Update(string id, string newPasswor, string oldPassword);
     public Task<Account> Delete(string id);
 }

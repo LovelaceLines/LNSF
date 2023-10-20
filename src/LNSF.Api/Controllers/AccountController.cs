@@ -50,6 +50,15 @@ public class AccountController : ControllerBase
         return Ok(accountViewModel);
     }
 
+    [HttpPut("password")]
+    public async Task<ActionResult<AccountViewModel>> Put([FromBody]AccountPutPasswordViewModel account)
+    {
+        var accountUpdated = await _service.Update(account.Id, account.NewPassword, account.OldPassword);
+        var accountViewModel = _mapper.Map<AccountViewModel>(accountUpdated);
+        
+        return Ok(accountViewModel);
+    }
+
     [HttpDelete]
     public async Task<ActionResult<AccountViewModel>> Delete([FromBody]AccountDeleteViewModel id)
     {
