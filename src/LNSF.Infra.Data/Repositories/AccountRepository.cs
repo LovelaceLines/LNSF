@@ -34,7 +34,7 @@ public class AccountRepository : BaseRepository<Account>, IAccountRepository
         return accounts;
     }
 
-    public async Task<Account> Get(string id)
+    public async Task<Account> GetById(string id)
     {
         var account = await _context.Accounts.AsNoTracking()
             .Where(x => x.Id == id)
@@ -44,16 +44,14 @@ public class AccountRepository : BaseRepository<Account>, IAccountRepository
         return account;
     }
 
-    public async Task<Account> Get(string userName, string password)
+    public async Task<Account> GetByUserName(string userName)
     {
-        password = HashPassword(password);
-
         var accounts = await _context.Accounts.AsNoTracking()
-            .Where(x => x.UserName == userName && x.Password == password)
+            .Where(x => x.UserName == userName)
             .ToListAsync();
 
         if (accounts.Count == 1) return accounts.First();
-        throw new AppException("Usuário ou senha inválidos!", HttpStatusCode.Unauthorized);
+        throw new AppException("Usuário inválidos!", HttpStatusCode.Unauthorized);
     }
 
     public async Task<bool> ExistsId(string id)
@@ -65,12 +63,10 @@ public class AccountRepository : BaseRepository<Account>, IAccountRepository
         return accounts.Count == 1;
     }
 
-    public async Task<bool> Exists(string userName, string password, string hashPassword)
+    public async Task<bool> Exists(string userName, string password)
     {
-        password = HashPassword(password);
-
         var accounts = await _context.Accounts.AsNoTracking()
-            .Where(x => x.UserName == userName && x.Password == password)
+            .Where(x => x.UserName == userName && VerifyPassword(password, x.Password))
             .ToListAsync();
 
         return accounts.Count == 1;

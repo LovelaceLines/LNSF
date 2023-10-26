@@ -34,7 +34,7 @@ public class AuthenticationTokenService : IAuthenticationTokenService
         if (!await _accountRepository.Exists(account.UserName, account.Password))
             throw new AppException("Usuário ou senha inválidos!", HttpStatusCode.Unauthorized);
         
-        account = await _accountRepository.Get(account.UserName, account.Password);
+        account = await _accountRepository.GetByUserName(account.UserName);
         var token = new AuthenticationToken
         {
             AccessToken = GenerateAccessToken(account),
@@ -61,7 +61,7 @@ public class AuthenticationTokenService : IAuthenticationTokenService
         
         var expires = DateTime.Parse(result.Claims["exp"].ToString() ?? throw new AppException("Token de atualização inválido!", HttpStatusCode.InternalServerError));
         var accountId = result.Claims["nameid"].ToString(); // accountId = NameIdentifier
-        var account = await _accountRepository.Get(accountId ?? throw new AppException("Token de atualização inválido!", HttpStatusCode.InternalServerError));
+        var account = await _accountRepository.GetById(accountId ?? throw new AppException("Token de atualização inválido!", HttpStatusCode.InternalServerError));
 
         var newToken = new AuthenticationToken
         {

@@ -34,7 +34,7 @@ public class AccountService : IAccountService
 
     public async Task<Account> Get(string userName, string password)
     {
-        var account = await _accountRepository.Get(userName, password);
+        var account = await _accountRepository.GetByUserName(userName);
         account.Password = "";
         return account;
     }
@@ -56,7 +56,7 @@ public class AccountService : IAccountService
         var validationResult = await _accountValidator.ValidateAsync(newAccount);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
         if (!await _accountRepository.ExistsId(newAccount.Id)) throw new AppException("Conta não encontrada!", HttpStatusCode.NotFound); 
-        var oldAccount = await _accountRepository.Get(newAccount.Id);
+        var oldAccount = await _accountRepository.GetById(newAccount.Id);
         if (oldAccount.UserName != newAccount.UserName && await _accountRepository.Exists(newAccount.UserName)) throw new AppException("Usuário já cadastrado!", HttpStatusCode.Conflict);
  
         newAccount.Password = oldAccount.Password;
@@ -69,7 +69,7 @@ public class AccountService : IAccountService
         var validationResult = await _passwordValidator.ValidateAsync(newPassword);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
         if (!await _accountRepository.ExistsId(id)) throw new AppException("Conta não encontrada!", HttpStatusCode.NotFound); 
-        var account = await _accountRepository.Get(id);
+        var account = await _accountRepository.GetById(id);
         if (!_accountRepository.VerifyPassword(oldPassword, account.Password)) throw new AppException("Senha antiga inválida!", HttpStatusCode.BadRequest);
 
         account.Password = _accountRepository.HashPassword(newPassword);
@@ -81,7 +81,7 @@ public class AccountService : IAccountService
     {
         if (!await _accountRepository.ExistsId(id)) throw new AppException("Conta não encontrada!", HttpStatusCode.NotFound);
 
-        var account = await _accountRepository.Get(id);
+        var account = await _accountRepository.GetById(id);
         account = await _accountRepository.Remove(account);
         account.Password = "";
         return account;
