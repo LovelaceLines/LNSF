@@ -61,6 +61,9 @@ var autoMapperConfig = new MapperConfiguration(configure =>
     configure.CreateMap<Tour, TourPostViewModel>().ReverseMap();
     configure.CreateMap<Tour, TourPutViewModel>().ReverseMap();
     configure.CreateMap<TourViewModel, TourPutViewModel>().ReverseMap();
+
+    configure.CreateMap<Hospital, HospitalViewModel>().ReverseMap();
+    configure.CreateMap<Hospital, HospitalPostViewModel>().ReverseMap();
 });
 
 builder.Services.AddSingleton(autoMapperConfig.CreateMapper());
@@ -102,7 +105,8 @@ builder.Services.AddTransient<IEmergencyContactsRepository, EmergencyContactsRep
 builder.Services.AddTransient<EmergencyContactValidator>();
 builder.Services.AddTransient<IEmergencyContactService, EmergencyContactService>();
 
-
+builder.Services.AddTransient<IHospitalRepository, HospitalRepository>();
+builder.Services.AddTransient<IHospitalService, HospitalService>();
 #endregion
 
 #region CORS
