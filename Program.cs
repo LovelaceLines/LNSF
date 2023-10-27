@@ -108,6 +108,9 @@ builder.Services.AddTransient<IEmergencyContactService, EmergencyContactService>
 builder.Services.AddTransient<IHospitalRepository, HospitalRepository>();
 builder.Services.AddTransient<IHospitalService, HospitalService>();
 
+builder.Services.AddTransient<IPatientsRepository, PatientsRepository>();
+builder.Services.AddTransient<IPatientService, PatientService>();
+
 #endregion
 
 #region CORS
