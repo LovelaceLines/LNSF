@@ -30,11 +30,8 @@ public class AuthenticationTokenService : IAuthenticationTokenService
     }
 
     public async Task<AuthenticationToken> Login(Account account)
-    {
-        if (!await _accountRepository.Exists(account.UserName, account.Password))
-            throw new AppException("Usuário ou senha inválidos!", HttpStatusCode.Unauthorized);
-        
-        account = await _accountRepository.GetByUserName(account.UserName);
+    {   
+        account = await _accountRepository.Auth(account.UserName, account.Password);
         var token = new AuthenticationToken
         {
             AccessToken = GenerateAccessToken(account),
@@ -59,7 +56,7 @@ public class AuthenticationTokenService : IAuthenticationTokenService
         });
         if (!result.IsValid) throw new AppException("Token de atualização expirado!", HttpStatusCode.Unauthorized);
         
-        var expires = DateTime.Parse(result.Claims["exp"].ToString() ?? throw new AppException("Token de atualização inválido!", HttpStatusCode.InternalServerError));
+        var expires = DateTimeOffset.FromUnixTimeSeconds(Convert.ToInt64(result.Claims["exp"])).DateTime;
         var accountId = result.Claims["nameid"].ToString(); // accountId = NameIdentifier
         var account = await _accountRepository.GetById(accountId ?? throw new AppException("Token de atualização inválido!", HttpStatusCode.InternalServerError));
 

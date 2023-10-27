@@ -90,4 +90,15 @@ public class AccountRepository : BaseRepository<Account>, IAccountRepository
     {
         return BCrypt.Net.BCrypt.Verify(password, hashPassword);
     }
+
+    public async Task<Account> Auth(string userName, string password)
+    {
+        var account = await _context.Accounts.AsNoTracking()
+            .Where(x => x.UserName == userName)
+            .FirstOrDefaultAsync() ?? throw new AppException("Usuário ou senha inválidos!", HttpStatusCode.Unauthorized);
+
+        return !VerifyPassword(password, account.Password)
+            ? throw new AppException("Usuário ou senha inválidos!", HttpStatusCode.Unauthorized)
+            : account;
+    }
 }

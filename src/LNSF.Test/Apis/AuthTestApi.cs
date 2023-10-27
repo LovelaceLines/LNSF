@@ -11,18 +11,36 @@ public class AuthTestApi : GlobalClientRequest
     private readonly HttpClient _refreshTokenClient = new() { BaseAddress = new Uri($"{BaseUrl}Auth/refresh-token") };
 
     [Fact]
-    public async Task Post_ValidLogin_ReturnsToken()
+    public async Task Post_ValidLogin_Ok()
     {
-        // Arrange
+        // Arrange - Account
         var accountFake = new AccountPostViewModelFake().Generate();
-        var accountMapped = _mapper.Map<AccountLoginViewModel>(accountFake);
         var accountPosted = await Post<AccountViewModel>(_accountClient, accountFake);
 
         // Act
-        var login = await Auth(_loginClient, accountMapped);
+        var login = new AccountLoginViewModel { UserName = accountFake.UserName, Password = accountFake.Password };
+        var token = await Post<AuthenticationTokenViewModel>(_loginClient, login);
 
         // Assert
-        Assert.NotNull(login.AccessToken);
-        Assert.NotNull(login.RefreshToken); 
+        Assert.NotNull(token);
+    }
+
+    [Fact]
+    public async Task Post_ValidRefreshToken_Ok()
+    {
+        // Arrange - Account
+        var accountFake = new AccountPostViewModelFake().Generate();
+        var accountPosted = await Post<AccountViewModel>(_accountClient, accountFake);
+
+        // Arrange - Login
+        var login = new AccountLoginViewModel { UserName = accountFake.UserName, Password = accountFake.Password };
+        var token = await Post<AuthenticationTokenViewModel>(_loginClient, login);
+
+        // Act
+        var refreshToken = new AuthenticationTokenViewModel { AccessToken = token.AccessToken , RefreshToken = token.RefreshToken };
+        var newToken = await Post<AuthenticationTokenViewModel>(_refreshTokenClient, refreshToken);
+
+        // Assert
+        Assert.NotNull(newToken);
     }
 }

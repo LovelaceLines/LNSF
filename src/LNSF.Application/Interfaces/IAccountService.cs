@@ -8,6 +8,7 @@ public interface IAccountService
     public Task<List<Account>> Query(AccountFilter filter);
     public Task<int> GetCount();
     public Task<Account> Get(string userName, string password);
+    public Task<Account> Auth(string userName, string password);
     public Task<Account> Create(Account account);
     public Task<Account> Update(Account account);
     public Task<Account> Update(string id, string newPasswor, string oldPassword);

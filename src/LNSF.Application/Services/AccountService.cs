@@ -40,6 +40,9 @@ public class AccountService : IAccountService
         return account;
     }
 
+    public async Task<Account> Auth(string userName, string password) => 
+        await _accountRepository.Auth(userName, password);
+
     public async Task<Account> Create(Account account)
     {
         var validationResult = await _accountValidator.ValidateAsync(account);
