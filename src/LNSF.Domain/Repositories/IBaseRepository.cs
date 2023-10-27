@@ -3,13 +3,13 @@
 public interface IBaseRepository<T> where T : class
 {
     public Task<List<T>> Get();
-    public Task<T> Get(int id);
-    public Task<bool> Exists(int id);
+    public Task<T> Get(dynamic id);
+    public Task<bool> Exists(dynamic id);
     public Task<int> GetCount();
     public Task<T> Add(T entity);
     public Task<T> Update(T entity);
     public Task<T> Remove(T entity);
-    public Task<T> Remove(int id);
+    public Task<T> Remove(dynamic id);
     
     public Task BeguinTransaction();
     public Task CommitTransaction();

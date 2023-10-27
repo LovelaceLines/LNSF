@@ -30,6 +30,10 @@ public class AccountController : ControllerBase
         return Ok(accountsViewModel);
     }
 
+    [HttpGet("count")]
+    public async Task<ActionResult<int>> GetCount() => 
+        Ok(await _service.GetCount());
+
     [HttpPost]
     public async Task<ActionResult<AccountViewModel>> Post([FromBody]AccountPostViewModel account)
     {
@@ -59,10 +63,10 @@ public class AccountController : ControllerBase
         return Ok(accountViewModel);
     }
 
-    [HttpDelete]
-    public async Task<ActionResult<AccountViewModel>> Delete([FromBody]AccountDeleteViewModel id)
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<AccountViewModel>> Delete(string id)
     {
-        var accountDeleted = await _service.Delete(id.AccountId);
+        var accountDeleted = await _service.Delete(id);
         var accountViewModel = _mapper.Map<AccountViewModel>(accountDeleted);
 
         return Ok(accountViewModel);

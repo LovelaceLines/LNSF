@@ -1,12 +1,10 @@
 ﻿using System.Net;
-using System.Text;
 using LNSF.Application.Interfaces;
 using LNSF.Application.Validators;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
 using LNSF.Domain.Filters;
 using LNSF.Domain.Repositories;
-using Microsoft.Extensions.Configuration;
 
 namespace LNSF.Application.Services;
 
@@ -31,6 +29,9 @@ public class AccountService : IAccountService
         accounts.ForEach(x => x.Password = "");
         return accounts;
     }
+
+    public async Task<int> GetCount() => 
+        await _accountRepository.GetCount();
 
     public async Task<Account> Get(string userName, string password)
     {
@@ -81,8 +82,8 @@ public class AccountService : IAccountService
     {
         if (!await _accountRepository.ExistsId(id)) throw new AppException("Conta não encontrada!", HttpStatusCode.NotFound);
 
-        var account = await _accountRepository.GetById(id);
-        account = await _accountRepository.Remove(account);
+        // var account = await _accountRepository.Get(id);
+        var account = await _accountRepository.Remove(id);
         account.Password = "";
         return account;
     }
