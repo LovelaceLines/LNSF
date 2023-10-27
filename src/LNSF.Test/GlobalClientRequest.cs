@@ -26,6 +26,7 @@ public class GlobalClientRequest
         var mapperConfig = new MapperConfiguration(cfg =>
         {
             cfg.CreateMap<AccountPostViewModel, AccountLoginViewModel>().ReverseMap();
+            cfg.CreateMap<AccountPostViewModel, AccountPutViewModel>().ReverseMap();
             cfg.CreateMap<AuthenticationTokenViewModel, AuthenticationToken>().ReverseMap();
             
             cfg.CreateMap<RoomViewModel, RoomPostViewModel>().ReverseMap();
@@ -77,7 +78,7 @@ public class GlobalClientRequest
         return await DeserializeResponse<T>(response);
     }
 
-    public async Task<T> Delete<T>(HttpClient client, int id) where T : class
+    public async Task<T> Delete<T>(HttpClient client, dynamic id) where T : class
     {
         var response = await client.DeleteAsync($"{id}");
         return await DeserializeResponse<T>(response);
@@ -97,6 +98,6 @@ public class GlobalClientRequest
             throw new Exception(content);
         }
 
-        throw new Exception($"Unexpected response status code: {response.StatusCode}");
+        throw new Exception($"Unexpected response status code: {response.StatusCode}, {response}");
     }
 }
