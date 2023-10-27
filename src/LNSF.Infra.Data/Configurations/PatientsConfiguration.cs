@@ -13,7 +13,7 @@ public class PatientsConfiguration : IEntityTypeConfiguration<Patient>
 
         builder.HasOne(p => p.People)
             .WithOne()
-            .HasForeignKey(p => p.PeopleId);
+            .HasForeignKey<Patient>(p => p.PeopleId);
 
         builder.HasOne(p => p.Hospital)
             .WithMany()

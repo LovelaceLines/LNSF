@@ -1,3 +1,7 @@
+using LNSF.Application.Interfaces;
+using LNSF.Domain.Entities;
+using LNSF.Domain.Repositories;
+
 namespace LNSF.Application.Services;
 public class PatientService : IPatientService
 {
@@ -17,6 +21,6 @@ public class PatientService : IPatientService
     }
     public async Task<int> Count()
     {
-        return await _patientRepository.Count();
+        return await _patientRepository.GetCount();
     }
 }
