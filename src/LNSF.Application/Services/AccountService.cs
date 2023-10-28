@@ -11,16 +11,19 @@ namespace LNSF.Application.Services;
 public class AccountService : IAccountService
 {
     private readonly IAccountRepository _accountRepository;
-    private readonly AccountValidator _accountValidator;
+    private readonly AccountCreateValidator _accountCreateValidator;
+    private readonly AccountUpdateValidator _accountUpdateValidator;
     private readonly PasswordValidator _passwordValidator;
 
     public AccountService(IAccountRepository accountRepository,
-        AccountValidator accountValidator,
-        PasswordValidator passwordValidator)
+        AccountCreateValidator accountCreateValidator,
+        PasswordValidator passwordValidator,
+        AccountUpdateValidator accountUpdateValidator)
     {
         _accountRepository = accountRepository;
-        _accountValidator = accountValidator;
+        _accountCreateValidator = accountCreateValidator;
         _passwordValidator = passwordValidator;
+        _accountUpdateValidator = accountUpdateValidator;
     }
 
     public async Task<List<Account>> Query(AccountFilter filter)
@@ -45,7 +48,7 @@ public class AccountService : IAccountService
 
     public async Task<Account> Create(Account account)
     {
-        var validationResult = await _accountValidator.ValidateAsync(account);
+        var validationResult = await _accountCreateValidator.ValidateAsync(account);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
         if (await _accountRepository.Exists(account.UserName)) throw new AppException("Usuário já cadastrado!", HttpStatusCode.Conflict);
 
@@ -57,7 +60,7 @@ public class AccountService : IAccountService
 
     public async Task<Account> Update(Account newAccount)
     {
-        var validationResult = await _accountValidator.ValidateAsync(newAccount);
+        var validationResult = await _accountUpdateValidator.ValidateAsync(newAccount);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
         if (!await _accountRepository.ExistsId(newAccount.Id)) throw new AppException("Conta não encontrada!", HttpStatusCode.NotFound); 
         var oldAccount = await _accountRepository.GetById(newAccount.Id);

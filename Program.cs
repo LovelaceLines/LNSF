@@ -79,7 +79,8 @@ builder.Services.AddTransient<IAuthenticationTokenService, AuthenticationTokenSe
 builder.Services.AddTransient<AuthenticationTokenValidator>();
 
 builder.Services.AddTransient<IAccountService, AccountService>();
-builder.Services.AddTransient<AccountValidator>();
+builder.Services.AddTransient<AccountCreateValidator>();
+builder.Services.AddTransient<AccountUpdateValidator>();
 builder.Services.AddTransient<PasswordValidator>();
 builder.Services.AddTransient<IAccountRepository, AccountRepository>();
 
