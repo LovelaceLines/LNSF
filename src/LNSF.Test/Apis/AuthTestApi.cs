@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using LNSF.Api.ViewModels;
+﻿using LNSF.Api.ViewModels;
 using LNSF.Test.Fakers;
 using Xunit;
 
@@ -25,6 +24,20 @@ public class AuthTestApi : GlobalClientRequest
         Assert.NotNull(token);
     }
 
+    [Theory]
+    [InlineData("", "")]
+    [InlineData("invalid", "")]
+    [InlineData("", "invalid")]
+    [InlineData("invalid", "invalid")]
+    public async Task Post_InvalidLogin_BadRequest(string userName, string password)
+    {
+        // Arrange
+        var login = new AccountLoginViewModel { UserName = userName, Password = password };
+
+        // Act - Assert
+        await Assert.ThrowsAsync<Exception>(() => Post<AuthenticationTokenViewModel>(_loginClient, login));
+    }
+
     [Fact]
     public async Task Post_ValidRefreshToken_Ok()
     {
@@ -42,5 +55,19 @@ public class AuthTestApi : GlobalClientRequest
 
         // Assert
         Assert.NotNull(newToken);
+    }
+
+    [Theory]
+    [InlineData("", "")]
+    [InlineData("invalid", "")]
+    [InlineData("", "invalid")]
+    [InlineData("invalid", "invalid")]
+    public async Task Post_InvalidRefreshToken_BadRequest(string accessToken, string refreshToken)
+    {
+        // Arrange
+        var refreshTokenViewModel = new AuthenticationTokenViewModel { AccessToken = accessToken, RefreshToken = refreshToken };
+
+        // Act - Assert
+        await Assert.ThrowsAsync<Exception>(() => Post<AuthenticationTokenViewModel>(_refreshTokenClient, refreshTokenViewModel));
     }
 }
