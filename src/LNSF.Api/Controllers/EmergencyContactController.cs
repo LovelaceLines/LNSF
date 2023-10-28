@@ -21,6 +21,9 @@ public class EmergencyContactController : ControllerBase
         _mapper = mapper;
     }
 
+    /// <summary>
+    /// Retrieves a list of emergency contacts based on the provided filter.
+    /// </summary>
     [HttpGet]
     public async Task<ActionResult<List<EmergencyContactViewModel>>> Get([FromQuery] EmergencyContactFilter filter)
     {
@@ -30,10 +33,16 @@ public class EmergencyContactController : ControllerBase
         return Ok(contactsViewModel);
     }
 
+    /// <summary>
+    /// Gets the count of emergency contacts.
+    /// </summary>
     [HttpGet("count")]
     public async Task<ActionResult<int>> GetCount() => 
         Ok(await _service.GetCount());
 
+    /// <summary>
+    /// Creates a new emergency contact to be associated with a person.
+    /// </summary>
     [HttpPost]
     public async Task<ActionResult<EmergencyContactViewModel>> Post([FromBody]EmergencyContactPostViewModel contact)
     {
@@ -44,6 +53,9 @@ public class EmergencyContactController : ControllerBase
         return Ok(contactViewModel);
     }
 
+    /// <summary>
+    /// Updates an existing emergency contact.
+    /// </summary>
     [HttpPut]
     public async Task<ActionResult<EmergencyContactViewModel>> Put([FromBody]EmergencyContactViewModel contact)
     {
@@ -54,6 +66,9 @@ public class EmergencyContactController : ControllerBase
         return Ok(contactViewModel);
     }
 
+    /// <summary>
+    /// Deletes an emergency contact by ID.
+    /// </summary>
     [HttpDelete("{id}")]
     public async Task<ActionResult<EmergencyContactViewModel>> Delete(int id)
     {

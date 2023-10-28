@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using LNSF.Application.Interfaces;
-using LNSF.Application.Services;
 using LNSF.Domain.Entities;
 using LNSF.Api.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +20,9 @@ public class AuthController : ControllerBase
         _mapper = mapper;
     }
 
+    /// <summary>
+    /// Authenticates a user and returns an authentication token.
+    /// </summary>
     [HttpPost("login")]
     public async Task<ActionResult<AuthenticationTokenViewModel>> Login(AccountLoginViewModel account)
     {
@@ -30,6 +32,9 @@ public class AuthController : ControllerBase
         return Ok(token);
     }
 
+    /// <summary>
+    /// Refreshes an authentication token.
+    /// </summary>
     [HttpPost("refresh-token")]
     public async Task<ActionResult<AuthenticationTokenViewModel>> RefreshToken(AuthenticationTokenViewModel tokenViewModel)
     {

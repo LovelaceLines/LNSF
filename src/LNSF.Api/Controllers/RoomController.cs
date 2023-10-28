@@ -21,6 +21,9 @@ public class RoomController : ControllerBase
         _mapper = mapper;
     }
 
+    /// <summary>
+    /// Retrieves a list of rooms based on the provided filter.
+    /// </summary>
     [HttpGet]
     public async Task<ActionResult<List<RoomViewModel>>> Get([FromQuery]RoomFilter filter)
     {
@@ -30,11 +33,16 @@ public class RoomController : ControllerBase
         return Ok(roomsMapped);
     }
 
-
+    /// <summary>
+    /// Gets the count of rooms.
+    /// </summary>
     [HttpGet("count")]
     public async Task<ActionResult<int>> GetCount() => 
         Ok(await _service.GetCount());
 
+    /// <summary>
+    /// Creates a new room.
+    /// </summary>
     [HttpPost]
     public async Task<ActionResult<RoomViewModel>> Post([FromBody]RoomPostViewModel room)
     {
@@ -45,6 +53,9 @@ public class RoomController : ControllerBase
         return Ok(roomViewModel);
     }
 
+    /// <summary>
+    /// Updates a room.
+    /// </summary>
     [HttpPut]
     public async Task<ActionResult<RoomViewModel>> Put([FromBody]RoomViewModel room)
     {

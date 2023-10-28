@@ -18,6 +18,7 @@ using Serilog.Formatting.Json;
 using LNSF.Application.Interfaces;
 using LNSF.Domain.Exceptions;
 using LNSF.Infra.Data.Migrations;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -192,6 +193,10 @@ builder.Services.AddSwaggerGen(setup =>
             Url = new Uri("https://opensource.org/license/mit/"),
         }
     });
+
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    setup.IncludeXmlComments(xmlPath);
 
     setup.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {

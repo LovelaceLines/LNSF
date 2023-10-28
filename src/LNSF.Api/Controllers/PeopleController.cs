@@ -21,6 +21,9 @@ public class PeopleController : ControllerBase
         _service = service;
     }
 
+    /// <summary>
+    /// Retrieves a list of people based on the provided filter.
+    /// </summary>
     [HttpGet]
     public async Task<ActionResult<List<PeopleViewModel>>> Get([FromQuery]PeopleFilter filter)
     {
@@ -30,10 +33,16 @@ public class PeopleController : ControllerBase
         return Ok(peoplesViewModel);
     }
 
+    /// <summary>
+    /// Gets the count of people.
+    /// </summary>
     [HttpGet("count")]
     public async Task<ActionResult<int>> GetCount() => 
         Ok(await _service.GetCount());
 
+    /// <summary>
+    /// Creates a new person. Note: do not create a person with a room.
+    /// </summary>
     [HttpPost]
     public async Task<ActionResult<PeopleViewModel>> Post([FromBody]PeoplePostViewModel people)
     {
@@ -44,6 +53,9 @@ public class PeopleController : ControllerBase
         return Ok(peopleViewModel);
     }
 
+    /// <summary>
+    /// Updates a person's information. Note: do not update the person's room.
+    /// </summary>
     [HttpPut]
     public async Task<ActionResult<PeopleViewModel>> Put([FromBody]PeoplePutViewModel people)
     {
@@ -54,6 +66,9 @@ public class PeopleController : ControllerBase
         return Ok(peopleViewModel);
     }
 
+    /// <summary>
+    /// Adds people to a room.
+    /// </summary>
     [HttpPut("add-people-to-room")]
     public async Task<ActionResult<PeopleViewModel>> Put([FromBody]PeopleAddPeopleToRoomViewModel Ids)
     {
@@ -63,6 +78,9 @@ public class PeopleController : ControllerBase
         return Ok(peopleViewModel);
     }
 
+    /// <summary>
+    /// Removes a person from a room.
+    /// </summary>
     [HttpPut("remove-people-from-room")]
     public async Task<ActionResult<PeopleViewModel>> Put([FromBody]PeopleRemovePeopleFromRoom peopleId)
     {

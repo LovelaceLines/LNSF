@@ -21,6 +21,9 @@ public class AccountController : ControllerBase
         _mapper = mapper;
     }
 
+    /// <summary>
+    /// Retrieves a list of accounts based on the provided filter.
+    /// </summary>
     [HttpGet]
     public async Task<ActionResult<List<AccountViewModel>>> Get([FromQuery]AccountFilter filter)
     {
@@ -30,10 +33,16 @@ public class AccountController : ControllerBase
         return Ok(accountsViewModel);
     }
 
+    /// <summary>
+    /// Gets the count of accounts.
+    /// </summary>
     [HttpGet("count")]
     public async Task<ActionResult<int>> GetCount() => 
         Ok(await _service.GetCount());
 
+    /// <summary>
+    /// Creates a new account.
+    /// </summary>
     [HttpPost]
     public async Task<ActionResult<AccountViewModel>> Post([FromBody]AccountPostViewModel account)
     {
@@ -44,6 +53,9 @@ public class AccountController : ControllerBase
         return Ok(accountViewModel);
     }
 
+    /// <summary>
+    /// Updates an account (UserName or Role). Note: do not update your password. 
+    /// </summary>
     [HttpPut]
     public async Task<ActionResult<AccountViewModel>> Put([FromBody]AccountPutViewModel account)
     {
@@ -54,6 +66,9 @@ public class AccountController : ControllerBase
         return Ok(accountViewModel);
     }
 
+    /// <summary>
+    /// Updates the password of an account.
+    /// </summary>
     [HttpPut("password")]
     public async Task<ActionResult<AccountViewModel>> Put([FromBody]AccountPutPasswordViewModel account)
     {
@@ -63,6 +78,9 @@ public class AccountController : ControllerBase
         return Ok(accountViewModel);
     }
 
+    /// <summary>
+    /// Deletes an account by ID.
+    /// </summary>
     [HttpDelete("{id}")]
     public async Task<ActionResult<AccountViewModel>> Delete(string id)
     {

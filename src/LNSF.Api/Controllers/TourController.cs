@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using LNSF.Application.Services;
 using LNSF.Domain.Filters;
 using LNSF.Domain.Entities;
 using LNSF.Api.ViewModels;
@@ -22,6 +21,9 @@ public class TourController : ControllerBase
         _mapper = mapper;
     }
 
+    /// <summary>
+    /// Retrieves a list of tours based on the provided filter.
+    /// </summary>
     [HttpGet]
     public async Task<ActionResult<List<TourViewModel>>> Get([FromQuery]TourFilter filter)
     {
@@ -31,10 +33,16 @@ public class TourController : ControllerBase
         return Ok(tourViewModels);
     }
 
+    /// <summary>
+    /// Gets the count of tours.
+    /// </summary>
     [HttpGet("count")]
     public async Task<ActionResult<int>> GetCount() => 
         Ok(await _service.GetCount());
 
+    /// <summary>
+    /// Creates the output of a tour.
+    /// </summary>
     [HttpPost]
     public async Task<ActionResult<TourViewModel>> Post([FromBody]TourPostViewModel tour)
     {
@@ -45,6 +53,9 @@ public class TourController : ControllerBase
         return Ok(tourViewModel);
     }
 
+    /// <summary>
+    /// Updates the input and note of a tour.
+    /// </summary>
     [HttpPut]
     public async Task<ActionResult<TourViewModel>> Put([FromBody]TourPutViewModel tour)
     {
@@ -55,6 +66,9 @@ public class TourController : ControllerBase
         return Ok(tourViewModel);
     }
 
+    /// <summary>
+    /// Updates all properties of a tour.
+    /// </summary>
     [HttpPut("put-all")]
     public async Task<ActionResult<TourViewModel>> Put([FromBody]TourViewModel tour)
     {
