@@ -10,6 +10,6 @@ public class AccountPostViewModelFake : Faker<AccountPostViewModel>
     {
         RuleFor(x => x.UserName, f => f.Person.UserName);
         RuleFor(x => x.Password, f => f.Random.ReplaceNumbers("######"));
-        RuleFor(x => x.Role, f => Role.ADMINISTRATION);
+        RuleFor(x => x.Role, f => f.PickRandom<Role>());
     }
 }
