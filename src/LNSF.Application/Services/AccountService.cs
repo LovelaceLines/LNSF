@@ -36,15 +36,15 @@ public class AccountService : IAccountService
     public async Task<int> GetCount() => 
         await _accountRepository.GetCount();
 
-    public async Task<Account> Get(string userName, string password)
+    public async Task<Account> Get(string userName)
     {
+        if (!await _accountRepository.Exists(userName)) throw new AppException("Usuário não encontrado!", HttpStatusCode.NotFound);
+
+        
         var account = await _accountRepository.GetByUserName(userName);
         account.Password = "";
         return account;
     }
-
-    public async Task<Account> Auth(string userName, string password) => 
-        await _accountRepository.Auth(userName, password);
 
     public async Task<Account> Create(Account account)
     {

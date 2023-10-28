@@ -41,6 +41,13 @@ public class AccountController : ControllerBase
         Ok(await _service.GetCount());
 
     /// <summary>
+    /// Gets an account by UserName.
+    /// </summary>
+    [HttpGet("{userName}")]
+    public async Task<ActionResult<AccountViewModel>> Get(string userName) => 
+        Ok(await _service.Get(userName));
+
+    /// <summary>
     /// Creates a new account.
     /// </summary>
     [HttpPost]
