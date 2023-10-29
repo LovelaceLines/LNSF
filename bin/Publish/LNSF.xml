@@ -1,0 +1,177 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LNSF</name>
+    </assembly>
+    <members>
+        <member name="M:LNSF.Api.Controllers.AccountController.Get(LNSF.Domain.Filters.AccountFilter)">
+            <summary>
+            Retrieves a list of accounts based on the provided filter.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.AccountController.GetCount">
+            <summary>
+            Gets the count of accounts.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.AccountController.Get(System.String)">
+            <summary>
+            Gets an account by UserName.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.AccountController.Post(LNSF.Api.ViewModels.AccountPostViewModel)">
+            <summary>
+            Creates a new account.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.AccountController.Put(LNSF.Api.ViewModels.AccountPutViewModel)">
+            <summary>
+            Updates an account (UserName or Role). Note: do not update your password. 
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.AccountController.Put(LNSF.Api.ViewModels.AccountPutPasswordViewModel)">
+            <summary>
+            Updates the password of an account.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.AccountController.Delete(System.String)">
+            <summary>
+            Deletes an account by ID.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.AuthController.Login(LNSF.Api.ViewModels.AccountLoginViewModel)">
+            <summary>
+            Authenticates a user and returns an authentication token.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.AuthController.RefreshToken(LNSF.Api.ViewModels.AuthenticationTokenViewModel)">
+            <summary>
+            Refreshes an authentication token.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.EmergencyContactController.Get(LNSF.Domain.Filters.EmergencyContactFilter)">
+            <summary>
+            Retrieves a list of emergency contacts based on the provided filter.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.EmergencyContactController.GetCount">
+            <summary>
+            Gets the count of emergency contacts.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.EmergencyContactController.Post(LNSF.Api.ViewModels.EmergencyContactPostViewModel)">
+            <summary>
+            Creates a new emergency contact to be associated with a person.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.EmergencyContactController.Put(LNSF.Api.ViewModels.EmergencyContactViewModel)">
+            <summary>
+            Updates an existing emergency contact.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.EmergencyContactController.Delete(System.Int32)">
+            <summary>
+            Deletes an emergency contact by ID.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.PeopleController.Get(LNSF.Domain.Filters.PeopleFilter)">
+            <summary>
+            Retrieves a list of people based on the provided filter.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.PeopleController.GetCount">
+            <summary>
+            Gets the count of people.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.PeopleController.Post(LNSF.Api.ViewModels.PeoplePostViewModel)">
+            <summary>
+            Creates a new person. Note: do not create a person with a room.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.PeopleController.Put(LNSF.Api.ViewModels.PeoplePutViewModel)">
+            <summary>
+            Updates a person's information. Note: do not update the person's room.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.PeopleController.Put(LNSF.Api.ViewModels.PeopleAddPeopleToRoomViewModel)">
+            <summary>
+            Adds people to a room.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.PeopleController.Put(LNSF.Api.ViewModels.PeopleRemovePeopleFromRoom)">
+            <summary>
+            Removes a person from a room.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.RoomController.Get(LNSF.Domain.Filters.RoomFilter)">
+            <summary>
+            Retrieves a list of rooms based on the provided filter.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.RoomController.GetCount">
+            <summary>
+            Gets the count of rooms.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.RoomController.Post(LNSF.Api.ViewModels.RoomPostViewModel)">
+            <summary>
+            Creates a new room.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.RoomController.Put(LNSF.Api.ViewModels.RoomViewModel)">
+            <summary>
+            Updates a room.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.TourController.Get(LNSF.Domain.Filters.TourFilter)">
+            <summary>
+            Retrieves a list of tours based on the provided filter.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.TourController.GetCount">
+            <summary>
+            Gets the count of tours.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.TourController.Post(LNSF.Api.ViewModels.TourPostViewModel)">
+            <summary>
+            Creates the output of a tour.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.TourController.Put(LNSF.Api.ViewModels.TourPutViewModel)">
+            <summary>
+            Updates the input and note of a tour.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.TourController.Put(LNSF.Api.ViewModels.TourViewModel)">
+            <summary>
+            Updates all properties of a tour.
+            </summary>
+        </member>
+        <member name="T:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV01">
+            <inheritdoc />
+        </member>
+        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV01.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV01.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV01.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV02">
+            <inheritdoc />
+        </member>
+        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV02.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV02.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV02.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

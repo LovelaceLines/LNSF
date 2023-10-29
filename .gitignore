@@ -11,7 +11,7 @@
 [Dd]ebug/
 [Rr]elease/
 x64/
-[Bb]in/
+[Bb]in/[Dd]ebug/
 [Oo]bj/
 
 # MSTest test Results
@@ -66,10 +66,8 @@ _ReSharper*/
 *.DotSettings.user
 
 # Click-Once directory
-publish/
 
 # Publish Web Output
-*.Publish.xml
 *.pubxml
 *.azurePubxml
 
@@ -95,9 +93,7 @@ ClientBin/
 ~$*
 *~
 *.dbmdl
-*.[Pp]ublish.xml
 
-*.publishsettings
 
 # RIA/Silverlight projects
 Generated_Code/
