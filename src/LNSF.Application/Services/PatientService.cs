@@ -1,6 +1,7 @@
 using LNSF.Application.Interfaces;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Repositories;
+using LNSF.Domain.Filters;
 
 namespace LNSF.Application.Services;
 public class PatientService : IPatientService
@@ -10,6 +11,10 @@ public class PatientService : IPatientService
     public PatientService(IPatientRepository patientRepository)
     {
         _patientRepository = patientRepository;
+    }
+    public async Task<List<Patient>> Query(PatientFilter filter)
+    {
+        return await _patientRepository.Query(filter);
     }
     public async Task<Patient> Create(Patient patient)
     {
