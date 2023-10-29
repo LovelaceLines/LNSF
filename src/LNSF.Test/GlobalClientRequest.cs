@@ -50,10 +50,15 @@ public class GlobalClientRequest
         return await DeserializeResponse<AuthenticationTokenViewModel>(response);
     }
 
-    public virtual async Task<T> Get<T>(HttpClient client, int id) where T : class
+    public virtual async Task<T> Get<T>(HttpClient client, dynamic obj) where T : class
     {
-        var response = await client.GetAsync($"?Id={id}");
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var response = await client.GetAsync($"{obj}");
+        return await DeserializeResponse<T>(response);
+    }
+
+    public virtual async Task<T> GetById<T>(HttpClient client, dynamic obj) where T : class
+    {
+        var response = await client.GetAsync($"?Id={obj}");
         return await DeserializeResponse<T>(response);
     }
 

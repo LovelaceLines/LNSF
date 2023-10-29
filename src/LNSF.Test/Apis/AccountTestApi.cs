@@ -8,6 +8,33 @@ namespace LNSF.Test.Apis;
 public class AccountTestApi : GlobalClientRequest
 {
     public readonly HttpClient _putPasswordClient = new() { BaseAddress = new Uri($"{BaseUrl}Account/password") };
+    public readonly HttpClient _getExistClient = new() { BaseAddress = new Uri($"{BaseUrl}Account/exist/") };
+
+    [Fact]
+    public async Task Get_ValidAccount_Ok()
+    {
+        // Arrange - Account
+        var accountFake = new AccountPostViewModelFake().Generate();
+        var accountPosted = await Post<AccountViewModel>(_accountClient, accountFake);
+
+        // Act
+        var accountGetted = await Get<AccountViewModel>(_getExistClient, accountPosted.UserName);
+
+        // Assert
+        Assert.Equal(accountPosted.Id, accountGetted.Id);
+        Assert.Equal(accountPosted.UserName, accountGetted.UserName);
+        Assert.Equal(accountPosted.Role, accountGetted.Role);
+    }
+
+    [Theory]
+    [InlineData(" ")]
+    [InlineData("invalid")]
+    public async Task Get_InvalidAccount_NotFound(string userName)
+    {
+        // Act - Assert
+        await Assert.ThrowsAsync<Exception>(() => Get<AccountViewModel>(_getExistClient, userName));
+    }
+
 
     [Fact]
     public async Task Post_ValidAccount_Ok()

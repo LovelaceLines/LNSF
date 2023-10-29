@@ -312,7 +312,7 @@ public class PeopleTestApi : GlobalClientRequest
         // Act
         var ids = new PeopleAddPeopleToRoomViewModel { PeopleId = peoplePosted.Id, RoomId = roomPosted.Id };
         var peoplePuted = await Put<PeopleViewModel>(_addPeopleToRoomClient, ids);
-        var roomsPuted = await Get<List<RoomViewModel>>(_roomClient, roomPosted.Id);
+        var roomsPuted = await GetById<List<RoomViewModel>>(_roomClient, roomPosted.Id);
         var roomPuted = roomsPuted.First();
         var countRoomsAfter = await GetCount(_roomClient);
         var countPeoplesAfter = await GetCount(_peopleClient);
@@ -348,7 +348,7 @@ public class PeopleTestApi : GlobalClientRequest
         // Act
         var ids = new PeopleAddPeopleToRoomViewModel { PeopleId = peoplePosted.Id, RoomId = roomPosted.Id };
         var peoplePuted = await Put<PeopleViewModel>(_addPeopleToRoomClient, ids);
-        var roomsPuted = await Get<List<RoomViewModel>>(_roomClient, roomPosted.Id);
+        var roomsPuted = await GetById<List<RoomViewModel>>(_roomClient, roomPosted.Id);
         var roomPuted = roomsPuted.First();
         var countRoomsAfter = await GetCount(_roomClient);
         var countPeoplesAfter = await GetCount(_peopleClient);
@@ -385,7 +385,7 @@ public class PeopleTestApi : GlobalClientRequest
         // Arrange - AddPeopleToRoom
         var ids = new PeopleAddPeopleToRoomViewModel { PeopleId = peoplePosted.Id, RoomId = otherRoomPosted.Id };
         var peoplePuted = await Put<PeopleViewModel>(_addPeopleToRoomClient, ids);
-        var otherRoomPuted = await Get<List<RoomViewModel>>(_roomClient, otherRoomPosted.Id);
+        var otherRoomPuted = await GetById<List<RoomViewModel>>(_roomClient, otherRoomPosted.Id);
 
         // Arrange - Count
         var countRoomsBefore = await GetCount(_roomClient);
@@ -445,7 +445,7 @@ public class PeopleTestApi : GlobalClientRequest
         // Arrange - AddPeopleToRoom
         var ids = new PeopleAddPeopleToRoomViewModel { PeopleId = peoplePosted.Id, RoomId = roomPosted.Id };
         var peoplePuted = await Put<PeopleViewModel>(_addPeopleToRoomClient, ids);
-        var roomsPuted = await Get<List<RoomViewModel>>(_roomClient, roomPosted.Id);
+        var roomsPuted = await GetById<List<RoomViewModel>>(_roomClient, roomPosted.Id);
         var roomPuted = roomsPuted.First();
 
         // Arrange - Count
@@ -454,7 +454,7 @@ public class PeopleTestApi : GlobalClientRequest
         // Act
         var id = new PeopleRemovePeopleFromRoom { PeopleId = peoplePosted.Id };
         var peopleRemoved = await Put<PeopleViewModel>(_removePeopleFromRoom, id);
-        var roomsRemoved = await Get<List<RoomViewModel>>(_roomClient, roomPosted.Id);
+        var roomsRemoved = await GetById<List<RoomViewModel>>(_roomClient, roomPosted.Id);
         var roomRemoved = roomsRemoved.First();
         var countAfter = await GetCount(_peopleClient);
 
