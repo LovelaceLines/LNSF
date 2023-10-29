@@ -25,7 +25,6 @@ x64/
 *.meta
 *.obj
 *.pch
-*.pdb
 *.pgc
 *.pgd
 *.rsp
@@ -129,8 +128,8 @@ $RECYCLE.BIN/
 _NCrunch*
 Migrations/*
 .vscode/*
-appsettings.Development.json
-appsettings.json
+./appsettings.Development.json
+./appsettings.json
 TestLog.txt
 TestResults.trx
 logs/*
