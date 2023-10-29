@@ -43,9 +43,14 @@ public class AccountController : ControllerBase
     /// <summary>
     /// Gets an account by UserName.
     /// </summary>
-    [HttpGet("{userName}")]
-    public async Task<ActionResult<AccountViewModel>> Get(string userName) => 
-        Ok(await _service.Get(userName));
+    [HttpGet("exist/{userName}")]
+    public async Task<ActionResult<AccountViewModel>> Get(string userName)
+    {
+        var account = await _service.Get(userName);
+        var accountViewModel = _mapper.Map<AccountViewModel>(account);
+
+        return Ok(accountViewModel);
+    }
 
     /// <summary>
     /// Creates a new account.
