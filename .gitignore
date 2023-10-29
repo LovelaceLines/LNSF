@@ -136,3 +136,4 @@ TestResults.trx
 logs/*
 src/LNSF.Infra.Data/DBLNSF.Development/DBLNSF.Development.db-shm
 src/LNSF.Infra.Data/DBLNSF.Development/DBLNSF.Development.db-wal
+src/LNSF.UI/LNSF
