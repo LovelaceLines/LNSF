@@ -69,8 +69,8 @@ var autoMapperConfig = new MapperConfiguration(configure =>
     configure.CreateMap<Patient, PatientPostViewModel>().ReverseMap();
     configure.CreateMap<Patient, PatientViewModel>().ReverseMap();
 
-    configure.CreateMap<Patient, PatientPostViewModel>().ReverseMap();
-    configure.CreateMap<Patient, PatientViewModel>().ReverseMap();
+    configure.CreateMap<Escort, EscortPostViewModel>().ReverseMap();
+    configure.CreateMap<Escort, EscortViewModel>().ReverseMap();
 });
 
 builder.Services.AddSingleton(autoMapperConfig.CreateMapper());
