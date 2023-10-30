@@ -7,8 +7,8 @@ import { Environment } from '../../../environment';
 import { SearchButton } from '../../../Component';
 import { useSearchParams } from 'react-router-dom';
 import { useDebounce } from '../../../Component/hooks/UseDebounce';
-import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
-import UnpublishedRoundedIcon from '@mui/icons-material/UnpublishedRounded';
+import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
+import UnpublishedOutlinedIcon from '@mui/icons-material/UnpublishedOutlined';
 import HotelRoundedIcon from '@mui/icons-material/HotelRounded';
 
 export const ViewRoom: React.FC = () => {
@@ -94,7 +94,6 @@ export const ViewRoom: React.FC = () => {
                     setIsLoading(false);
                     console.error('Detalhes do erro:', error);
                 });
-
         });
 
     }, [busca, pagina, selectedFilter]);
@@ -112,11 +111,8 @@ export const ViewRoom: React.FC = () => {
             display='flex'
             flexDirection='column'
             width='100%'
-
         >
-
             <Box>
-                {/* <AppBar position="static"> */}
                 <Toolbar sx={{ margin: 0 }}>
                     <Typography
                         variant= {smDown ? "h5" : "h4"}
@@ -135,7 +131,6 @@ export const ViewRoom: React.FC = () => {
                         aoMudarFiltro={(novoFiltro) => { setSelectedFilter(novoFiltro); }}
                     />
                 </Toolbar>
-                {/* </AppBar> */}
             </Box>
 
 
@@ -158,7 +153,7 @@ export const ViewRoom: React.FC = () => {
                                 <TableCell sx={{ textAlign: 'center' }}>{row.occupation}</TableCell>
                                 <TableCell sx={{ textAlign: 'center' }}>{row.storey}</TableCell>
                                 <TableCell sx={{ textAlign: 'center' }}>{row.bathroom ? 'Individual' : 'Coletivo'}</TableCell>
-                                <TableCell sx={{ textAlign: 'center' }}>{row.available ? <CheckCircleRoundedIcon color='primary' /> : <UnpublishedRoundedIcon sx={{ color: 'rgba(255, 0, 0, 0.8)' }} />}</TableCell>
+                                <TableCell sx={{ textAlign: 'center' }}>{row.available ? <CheckCircleOutlineRoundedIcon color='primary' /> : <UnpublishedOutlinedIcon sx={{ color: 'rgba(255, 0, 0, 0.8)' }} />}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
@@ -194,13 +189,11 @@ export const ViewRoom: React.FC = () => {
                                     color="primary"
                                     onChange={(_, newPage) => setSearchParams({ busca, pagina: newPage.toString() })}
                                 />
-
                             </TableCell>
                         </TableRow>
                     </Box>
                 )}
             </TableContainer>
-
         </Box>
     )
 }

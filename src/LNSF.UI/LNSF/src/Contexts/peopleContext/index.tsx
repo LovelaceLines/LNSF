@@ -4,12 +4,10 @@ import { toast } from "react-toastify";
 import { Api } from "../../services/api/axios";
 import { Environment } from "../../environment";
 
-
 export const PeopleContext = createContext({} as iPeopleTypes);
 
 export const PeopleProvider = ({ children }: iPeopleProvider) => {
     const [people, setPeople] = useState<iPeopleObject>({} as iPeopleObject)
-
 
     const viewPeople = async (page = 1, filter = '', textFilter = '') => {
         try {
@@ -35,8 +33,6 @@ export const PeopleProvider = ({ children }: iPeopleProvider) => {
         try {
 
             const objetoJSON = JSON.stringify(data);
-            console.log('enviar no post: ', objetoJSON)
-
             const response = await Api.post('/People', objetoJSON)
 
             if (response.status === 200) {
@@ -58,14 +54,12 @@ export const PeopleProvider = ({ children }: iPeopleProvider) => {
     const updatePeople = useCallback(async (data: iPeopleUpdate) => {
         try {
             const objetoJSON = JSON.stringify(data);
-            console.log('enviar: ', objetoJSON)
+            
             const response = await Api.put('/People', objetoJSON);
 
             if (response.status === 200) {
                 toast.success('Quarto atualizado!');
                 return response.data as iPeopleObject;
-            } else {
-                console.log(response)
             }
         } catch (error: any) {
             if (error.response) {
@@ -84,7 +78,6 @@ export const PeopleProvider = ({ children }: iPeopleProvider) => {
     const addPeopleRoom = useCallback(async (data: iAddPeopleRoom) => {
         try {
             const objetoJSON = JSON.stringify(data);
-            console.log('enviar: ', objetoJSON)
             const response = await Api.put('/People/add-people-to-room', objetoJSON);
 
             if (response.status === 200) {
@@ -104,13 +97,9 @@ export const PeopleProvider = ({ children }: iPeopleProvider) => {
 
     }, []);
 
-
-
-
     const removePeopleRoom = useCallback(async (data: iRemovePeopleRoom) => {
         try {
             const objetoJSON = JSON.stringify(data);
-            console.log('enviar: ', objetoJSON)
             const response = await Api.put('/People/remove-people-from-room', objetoJSON);
 
             if (response.status === 200) {
@@ -145,7 +134,6 @@ export const PeopleProvider = ({ children }: iPeopleProvider) => {
                 toast.error('Ocorreu um erro ao processar a requisição.');
                 console.error('Error Message:', error.message);
             }
-            // return new Error((error as { message: string }).message || 'Erro ao retornar os quantidade de quartos.')
         }
         return 0;
     }, []);

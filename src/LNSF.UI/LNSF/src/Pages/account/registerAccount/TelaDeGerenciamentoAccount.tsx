@@ -9,10 +9,6 @@ import { IFormErrorsCustom, TextFieldCustom, useCustomForm } from "../../../Comp
 import * as yup from 'yup';
 import { TextSelectCustom } from "../../../Component/forms/TextSelectCustom";
 
-
-
-
-
 export const TelaDeGerenciamentoAccount: React.FC = () => {
 
     const { id = 'cadastrar' } = useParams<'id'>();
@@ -22,11 +18,9 @@ export const TelaDeGerenciamentoAccount: React.FC = () => {
     const [isLoadind, setIsLoading] = useState(false);
     const [valueId, setvalueId] = useState('');
     const { viewAccount, registerAccount, updateAccount } = useContext(AccountContext);
-
     const { formRef, save, isSaveAndClose, saveAndClose } = useCustomForm();
-
-
     const [isPasswordChange, setIsPasswordChange] = useState(false);
+
     const handleSwitchChange = (event: ChangeEvent<HTMLInputElement>) => {
         console.log(event.target.checked)
         setIsPasswordChange(event.target.checked);
@@ -34,8 +28,8 @@ export const TelaDeGerenciamentoAccount: React.FC = () => {
 
     const formValidateSchema: yup.Schema<iattAccount> = yup.object().shape({
         userName: yup.string().required().min(1),
-        password: isPasswordChange === false ?  yup.string() : yup.string().required().min(6),
-        oldPassword: (isPasswordChange === false ||  id === 'cadastrar') ? yup.string() : yup.string().required().min(6),
+        password: isPasswordChange === false ? yup.string() : yup.string().required().min(6),
+        oldPassword: (isPasswordChange === false || id === 'cadastrar') ? yup.string() : yup.string().required().min(6),
         role: yup.number().required(),
     })
 
@@ -58,7 +52,7 @@ export const TelaDeGerenciamentoAccount: React.FC = () => {
                     setIsLoading(false);
                     console.error('Detalhes do erro:', error);
                 });
-        }else{
+        } else {
             setIsPasswordChange(true)
         }
     }, [id])
@@ -109,7 +103,6 @@ export const TelaDeGerenciamentoAccount: React.FC = () => {
                         newPassword: dadosValidados.password,
                         oldPassword: dadosValidados.oldPassword,
                     }
-                    
 
                     updateAccount(isPasswordChange ? data1 : data, isPasswordChange)
                         .then((response) => {
@@ -157,14 +150,12 @@ export const TelaDeGerenciamentoAccount: React.FC = () => {
                     </Typography>
 
                     < ButtonAction
-                        // mostrarBotaoNovo={id !== 'cadastrar'}
                         mostrarBotaoNovo={false}
                         mostrarBotaoApagar={false}
                         mostrarBotaoSalvar={id === 'cadastrar' ? false : true}
                         mostrarBotaoSalvarEFechar={id !== 'cadastrar' ? false : true}
                         aoClicarEmSalvar={id !== 'cadastrar' ? save : undefined}
                         aoClicarEmSalvarEFechar={id === 'cadastrar' ? saveAndClose : undefined}
-                        //aoClicarEmNovo={() => { navigate('/inicio/apartamentos/gerenciar/cadastrar') }}
                         aoClicarEmVoltar={() => { navigate('/inicio/usuarios/gerenciar') }}
                     />
                 </Toolbar>
@@ -179,8 +170,7 @@ export const TelaDeGerenciamentoAccount: React.FC = () => {
                                 <Grid item>
                                     <LinearProgress variant="indeterminate" />
                                 </Grid>
-                            )
-                            }
+                            )}
                             <Grid item>
                                 <Typography variant={smDown ? "h6" : "h5"} >
                                     {(id !== 'cadastrar') ? 'Editar este usuário' : 'Cadastrar um novo usuário'}
@@ -220,7 +210,6 @@ export const TelaDeGerenciamentoAccount: React.FC = () => {
                                         ]}
                                         disabled={isLoadind}
                                         label="Função"
-
                                     />
                                 </Grid>
                             </Grid>
@@ -238,8 +227,6 @@ export const TelaDeGerenciamentoAccount: React.FC = () => {
                                     />
                                 </FormControl>
                             </Grid>)}
-
-
 
                             <Grid container item direction='row' spacing={2}>
                                 <Grid item xs={6} >
@@ -260,14 +247,10 @@ export const TelaDeGerenciamentoAccount: React.FC = () => {
                                     />
                                 </Grid>)}
                             </Grid>
-
                         </Grid>
                     </Box>
                 </Form>
             </Box>
-
-
-
         </Box>
     )
 }

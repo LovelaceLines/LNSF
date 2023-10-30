@@ -11,7 +11,6 @@ export const Dashboard: React.FC<IDashboardProps> = ({ children }) => {
             <BasePageLayout>
                     {children}
             </BasePageLayout>
-                  
         </LateralMenu>
     )
 }

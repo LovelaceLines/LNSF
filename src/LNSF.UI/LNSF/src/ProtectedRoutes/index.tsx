@@ -10,19 +10,16 @@ export const ProtectedRoutes = () => {
     const userName = localStorage.getItem('@lnsf:userName') || '';
 
     const navigate = useNavigate();
-
     
     useEffect(() => {
         if (accessToken) {
             getUsers(userName)
                 .then((response) => {
-                    console.log('recebdooooooo ',response)
                     if (response instanceof Error) {
                         localStorage.clear();
                         toast.error(response.message);
                         navigate("/")
                     } else {
-                        console.log('recebdo ',response)
                         setUser(response);
                     }
                 })
@@ -30,9 +27,7 @@ export const ProtectedRoutes = () => {
                     console.error('Detalhes do erro:', error);
                 });
         }
-
     }, []);
-
 
     return (
         <>

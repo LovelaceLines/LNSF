@@ -1,7 +1,7 @@
 
 import { useContext, useState } from 'react'
 import { useEffect } from "react"
-import { Box, IconButton, LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Button, LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import SupervisedUserCircleRoundedIcon from '@mui/icons-material/SupervisedUserCircleRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
@@ -15,14 +15,11 @@ export const Account: React.FC = () => {
     const { viewAccount, deleteAccount } = useContext(AccountContext);
     const [account, setAccount] = useState<iaccount[]>([]);
     const [isLoadind, setIsLoading] = useState(true);
-
     const { debounce } = useDebounce();
     const theme = useTheme();
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
     const navigate = useNavigate();
     const [modify, setModify] = useState(false);
-
-
 
     useEffect(() => {
         setIsLoading(true);
@@ -42,7 +39,6 @@ export const Account: React.FC = () => {
                     setIsLoading(false);
                     console.error('Detalhes do erro:', error);
                 });
-
         });
 
     }, [modify]);
@@ -59,7 +55,6 @@ export const Account: React.FC = () => {
                     if (response instanceof Error) {
                         setIsLoading(false);
                     } else {
-                        //setRows([response]);
                         setModify(!modify)
                         setIsLoading(false);
                     }
@@ -89,9 +84,7 @@ export const Account: React.FC = () => {
                     >
                         {!smDown && (<SupervisedUserCircleRoundedIcon color='primary' sx={{ fontSize: '2.7rem', paddingRight: '10px' }} />)}
                         Usuários
-
                     </Typography>
-
 
                     < ButtonAction
                         mostrarBotaoNovo={true}
@@ -122,21 +115,34 @@ export const Account: React.FC = () => {
                                 <TableCell sx={{ textAlign: 'center' }}>{row.userName}</TableCell>
                                 <TableCell sx={{ textAlign: 'center' }}>
                                     {row.role === 0 ? 'Voluntário' :
-                                     row.role === 1 ? 'Administrador' :
-                                     row.role === 2 ? 'Assistente Social' :
-                                     'Secretária'
+                                        row.role === 1 ? 'Administrador' :
+                                            row.role === 2 ? 'Assistente Social' :
+                                                'Secretária'
                                     }
                                 </TableCell>
 
                                 <TableCell sx={{ textAlign: 'center' }}>
-                                    <IconButton size='small' onClick={() => navigate(`/inicio/usuarios/gerenciar/${row.userName}`)}>
-                                        <EditRoundedIcon fontSize='small' />
-                                    </IconButton>
+                                    <Button
+                                        size='small'
+                                        color='primary'
+                                        disableElevation
+                                        variant='outlined'
+                                        onClick={() => navigate(`/inicio/usuarios/gerenciar/${row.userName}`)}
+                                    >
+                                         <EditRoundedIcon fontSize='small' />
+                                    </Button>
                                 </TableCell>
+
                                 <TableCell sx={{ textAlign: 'center' }}>
-                                    <IconButton size='small' onClick={() => deletePeopleUser(row.id)}>
+                                    <Button
+                                        size='small'
+                                        color='primary'
+                                        disableElevation
+                                        variant='outlined'
+                                        onClick={() => deletePeopleUser(row.id)}
+                                    >
                                         <DeleteRoundedIcon sx={{ color: 'red' }} fontSize='small' />
-                                    </IconButton>
+                                    </Button>
                                 </TableCell>
 
                             </TableRow>
@@ -151,8 +157,6 @@ export const Account: React.FC = () => {
                                 </TableCell>
                             </TableRow>
                         )}
-
-
                     </TableFooter>
                 </Table>
             </TableContainer>

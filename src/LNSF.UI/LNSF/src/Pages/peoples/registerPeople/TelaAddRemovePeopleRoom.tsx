@@ -68,7 +68,7 @@ export const TelaAddRemovePeopleRoom: React.FC<iTelaAddRemovePeopleRoomProps> = 
                             setIsLoading(false);
                         } else {
                             setIsLoading(false);
-                            navigate(`/inicio/pessoas/gerenciar`)
+                            navigate('/inicio/pessoas/visualizar')
                         }
                     })
                     .catch((error) => {
@@ -124,7 +124,6 @@ export const TelaAddRemovePeopleRoom: React.FC<iTelaAddRemovePeopleRoomProps> = 
                             )}
                             <Grid container item direction='row' spacing={2}>
                                 <Grid item xs={12}>
-
                                     <AutoCompleteRoom
                                         isExternalLoading={isLoadind}
                                     />

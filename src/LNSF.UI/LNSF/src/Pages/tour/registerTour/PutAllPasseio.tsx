@@ -8,15 +8,12 @@ import { Form } from "@unform/web";
 import { IFormErrorsCustom, TextFieldCustom, useCustomForm } from "../../../Component/forms";
 import * as yup from 'yup';
 
-
 const formValidateSchema: yup.Schema<iAttObject> = yup.object().shape({
     output: yup.date().required('Campo de data é obrigatório'),
     input: yup.date().required('Campo de data é obrigatório'),
     note: yup.string().required().min(1),
     peopleId: yup.number().required().min(1),
-
 })
-
 
 export const PutAllPasseio: React.FC = () => {
 
@@ -62,7 +59,6 @@ export const PutAllPasseio: React.FC = () => {
                 if (id !== 'false') {
 
                     const data: iTourObject = {
-
                         id: Number(id),
                         output: dadosValidados.output,
                         input: dadosValidados.input,
@@ -84,8 +80,6 @@ export const PutAllPasseio: React.FC = () => {
                             setIsLoading(false);
                             console.error('Detalhes do erro:', error);
                         });
-
-
                 }
             })
             .catch((errors: yup.ValidationError) => {
@@ -105,7 +99,6 @@ export const PutAllPasseio: React.FC = () => {
             display='flex'
             flexDirection='column'
             width='100%'
-
         >
             <Box>
                 <Toolbar sx={{ flexGrow: 1, display: 'flex', flexDirection: smDown ? 'column' : 'row', alignItems: smDown ? 'left' : 'flex-end' }}>
@@ -120,14 +113,13 @@ export const PutAllPasseio: React.FC = () => {
                     </Typography>
 
                     < ButtonAction
-                        // mostrarBotaoNovo={id !== 'cadastrar'}
+
                         mostrarBotaoNovo={false}
                         mostrarBotaoApagar={false}
                         mostrarBotaoSalvar={true}
                         mostrarBotaoSalvarEFechar={false}
                         aoClicarEmSalvar={save}
 
-                        //aoClicarEmNovo={() => { navigate('/inicio/apartamentos/gerenciar/cadastrar') }}
                         aoClicarEmVoltar={() => { navigate('/inicio/registrodiario/visualizar') }}
                     />
                 </Toolbar>
@@ -178,15 +170,11 @@ export const PutAllPasseio: React.FC = () => {
                                         disabled={isLoadind}
                                     />
                                 </Grid>
-
                             </Grid>
                         </Grid>
                     </Box>
                 </Form>
             </Box>
-
-
-
         </Box>
     )
 }

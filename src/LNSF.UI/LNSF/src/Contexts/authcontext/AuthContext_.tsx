@@ -1,4 +1,4 @@
-import { createContext, useCallback, useEffect, useState } from 'react';
+import { createContext, useCallback, useState } from 'react';
 import { iAuthProvider, iAuthTypes, iDataLogin, iObjectUser, iTokens } from './type';
 import { Api } from '../../services/api/axios';
 import { toast } from 'react-toastify';
@@ -9,29 +9,8 @@ export const AuthContext = createContext({} as iAuthTypes);
 export const AuthProvider = ({ children }: iAuthProvider) => {
     const [user, setUser] = useState<iObjectUser>({} as iObjectUser);
     const [tokens, setTokens] = useState<iTokens>({} as iTokens);
-   // const accessToken = localStorage.getItem("@lnsf:accessToken") || ''
 
     const navigate = useNavigate();
-
-    //const userName = localStorage.getItem('@lnsf:userName') || ''
-
-    // useEffect(() => {
-    //     if (accessToken) {
-    //         getUsers(userName)
-    //             .then((response) => {
-    //                 if (response instanceof Error) {
-    //                     localStorage.clear();
-    //                     toast.error(response.message);
-    //                 } else {
-    //                     setUser(response);
-    //                 }
-    //             })
-    //             .catch((error) => {
-    //                 console.error('Detalhes do erro:', error);
-    //             });
-    //     }
-    // }, []);
-
 
     const loginUser = useCallback(async (data: iDataLogin) => {
 

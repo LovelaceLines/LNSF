@@ -2,14 +2,11 @@
 import { useContext, useState } from 'react'
 import { useEffect } from "react"
 import { PeopleContext, RoomContext, TourContext, iTourPeopleRoom } from '../../../Contexts';
-import { Box, Divider, IconButton, LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableRow, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Button, Divider, LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableRow, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material';
 import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
 import { format, parseISO } from 'date-fns';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import { useNavigate } from 'react-router-dom';
-
-
-
 
 export const ViewTour: React.FC = () => {
 
@@ -23,7 +20,6 @@ export const ViewTour: React.FC = () => {
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
     const BuscarPessoa = async (id: number) => {
         try {
-
             const response = await viewPeople(1, String(id), 'id');
 
             if (response instanceof Error) {
@@ -37,10 +33,8 @@ export const ViewTour: React.FC = () => {
         }
     };
 
-
     const BuscarQuarto = async (id: number) => {
         try {
-           
             const response = await viewRoom(1, String(id), 'id');
 
             if (response instanceof Error) {
@@ -60,7 +54,6 @@ export const ViewTour: React.FC = () => {
             setIsLoading(true);
 
             try {
-
                 const secondResponse = await viewTourOutput(false);
 
                 if (secondResponse instanceof Error) {
@@ -118,10 +111,9 @@ export const ViewTour: React.FC = () => {
             width='100%'
         >
             <Box>
-                {/* <AppBar position="static"> */}
                 <Toolbar sx={{ margin: 0 }}>
                     <Typography
-                         variant= {smDown ? "h5" : "h4"}
+                        variant={smDown ? "h5" : "h4"}
                         noWrap
                         component="div"
                         sx={{ flexGrow: 1, display: 'flex', alignItems: 'flex-end' }}
@@ -130,7 +122,6 @@ export const ViewTour: React.FC = () => {
                         Histórico
                     </Typography>
                 </Toolbar>
-                {/* </AppBar> */}
             </Box>
 
             <Box
@@ -154,7 +145,6 @@ export const ViewTour: React.FC = () => {
                     </Typography>
                     <Box padding={2}>
                         <TableContainer component={Paper} variant='outlined' >
-
                             <Table>
                                 <TableBody >
                                     {datainput_.map(row => (
@@ -172,10 +162,9 @@ export const ViewTour: React.FC = () => {
                                                         >
                                                             <Box display='flex'
                                                                 flexDirection='row'
-                                                               
                                                             >
-                                                                <Box 
-                                                                width='100%'>
+                                                                <Box
+                                                                    width='100%'>
                                                                     <p>
                                                                         <strong>Nome:</strong> {row.name}
                                                                     </p>
@@ -203,12 +192,15 @@ export const ViewTour: React.FC = () => {
                                                             justifyContent='center'
                                                             alignItems='center'
                                                         >
-                                                            <IconButton
-                                                                size='medium'
+                                                            <Button
+                                                                size='small'
+                                                                color='primary'
+                                                                disableElevation
+                                                                variant='outlined'
                                                                 onClick={() => { navigate(`/inicio/registrodiario/visualizar/${row.id}`) }}
                                                             >
                                                                 <EditRoundedIcon color='primary' fontSize='small' />
-                                                            </IconButton>
+                                                            </Button>
                                                         </Box>
                                                     </Box>
                                                 )}
@@ -226,16 +218,12 @@ export const ViewTour: React.FC = () => {
                                             </TableCell>
                                         </TableRow>
                                     )}
-
-
                                 </TableFooter>
                             </Table>
                         </TableContainer>
                     </Box>
-
                 </Box>
             </Box>
-
         </Box>
     )
 }

@@ -1,20 +1,25 @@
 
 import { useContext, useMemo, useState } from 'react'
 import { useEffect } from "react"
-import { PeopleContext, iPeopleObject } from '../../../Contexts';
-import { Box, Button, Fade, IconButton, LinearProgress, Modal, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { PeopleContext, iPeopleObject, iRemovePeopleRoom } from '../../../Contexts';
+import { Box, Button, LinearProgress, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { Environment } from '../../../environment';
-import { SearchButton } from '../../../Component';
-import { useSearchParams } from 'react-router-dom';
+import { ButtonAction, SearchButton } from '../../../Component';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useDebounce } from '../../../Component/hooks/UseDebounce';
 import PersonIcon from '@mui/icons-material/Person';
-import { format, parseISO } from 'date-fns';
+import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import AddRoundedIcon from '@mui/icons-material/AddRounded';
+import PersonOffRoundedIcon from '@mui/icons-material/PersonOffRounded';
+import { Modal, Fade } from '@mui/material';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import PreviewRoundedIcon from '@mui/icons-material/PreviewRounded';
+import { TelaAddRemovePeopleRoom } from '../registerPeople/TelaAddRemovePeopleRoom';
 
-export const ViewPatients: React.FC = () => {
+export const ViewPeople: React.FC = () => {
 
-    const { viewPeople, returnQuantity } = useContext(PeopleContext);
+    const { viewPeople, returnQuantity, removePeopleRoom } = useContext(PeopleContext);
     const [rows, setRows] = useState<iPeopleObject[]>([]);
     const [totalCount, setTotalCount] = useState(0);
     const [isLoadind, setIsLoading] = useState(true);
@@ -23,9 +28,11 @@ export const ViewPatients: React.FC = () => {
     const { debounce } = useDebounce();
     const theme = useTheme();
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+    const navigate = useNavigate();
+    const [modify, setModify] = useState(false);
 
-    const [isModalOpenNota, setIsModalOpenNota] = useState(false);
-    const [notaModal, setNotaModal] = useState('');
+    const [idModal, setIdModal] = useState(0);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const datafilter = [
         {
@@ -60,11 +67,9 @@ export const ViewPatients: React.FC = () => {
         }
     }, [searchParams])
 
-
     const pagina = useMemo(() => {
         return Number(searchParams.get('pagina') || '1');
     }, [searchParams])
-
 
     const filter = useMemo(() => {
         if (selectedFilter !== 'Nenhum') {
@@ -75,7 +80,6 @@ export const ViewPatients: React.FC = () => {
         }
     }, [searchParams])
 
-
     useEffect(() => {
         setIsLoading(true);
 
@@ -83,7 +87,6 @@ export const ViewPatients: React.FC = () => {
             if (selectedFilter === 'Nenhum') {
                 setSearchParams({ busca: '', pagina: '1' }, { replace: true });
             }
-
             viewPeople(pagina, busca, filter)
                 .then((response) => {
                     if (response instanceof Error) {
@@ -97,10 +100,9 @@ export const ViewPatients: React.FC = () => {
                     setIsLoading(false);
                     console.error('Detalhes do erro:', error);
                 });
-
         });
 
-    }, [busca, pagina, selectedFilter]);
+    }, [busca, pagina, selectedFilter, modify]);
 
     useEffect(() => {
         returnQuantity()
@@ -110,21 +112,41 @@ export const ViewPatients: React.FC = () => {
     }, []);
 
 
-    const viewNota = (nota: string) => {
-        setNotaModal(nota)
-        setIsModalOpenNota(true)
+    const deletePeopleRoom = (id_: number) => {
+
+        if (confirm('Realmente deseja remover esssa pessoa do quarto?')) {
+            const data: iRemovePeopleRoom = {
+                peopleId: id_
+            }
+            setIsLoading(true);
+            removePeopleRoom(data)
+                .then((response) => {
+                    if (response instanceof Error) {
+                        setIsLoading(false);
+                    } else {
+                        setModify(!modify)
+                        setIsLoading(false);
+                    }
+                })
+                .catch((error) => {
+                    setIsLoading(false);
+                    console.error('Detalhes do erro:', error);
+                });
+        }
     }
 
+    const addPeopleRoom = (id_: number) => {
+        setIdModal(id_)
+        setIsModalOpen(true)
+    }
 
     return (
-
         <Box
             display='flex'
             flexDirection='column'
             width='100%'
         >
             <Box>
-                {/* <AppBar position="static"> */}
                 <Toolbar sx={{ margin: 0 }}>
                     <Typography
                         variant={smDown ? "h5" : "h4"}
@@ -142,48 +164,64 @@ export const ViewPatients: React.FC = () => {
                         filter={datafilter}
                         aoMudarFiltro={(novoFiltro) => { setSelectedFilter(novoFiltro); }}
                     />
-                </Toolbar>
-                {/* </AppBar> */}
-            </Box>
 
+                    < ButtonAction
+                        mostrarBotaoNovo={true}
+                        mostrarBotaoSalvar={false}
+                        mostrarBotaoVoltar={false}
+
+                        mostrarBotaoApagar={false}
+                        aoClicarEmNovo={() => { navigate('/inicio/pessoas/gerenciar/cadastrar') }}
+                    />
+
+                </Toolbar>
+            </Box>
 
             <TableContainer component={Paper} variant='outlined' >
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell sx={{ textAlign: 'center', width: '30%' }}>Nome</TableCell>
-                            <TableCell sx={{ textAlign: 'center' }}>RG</TableCell>
-                            <TableCell sx={{ textAlign: 'center' }}>CPF</TableCell>
-                            <TableCell sx={{ textAlign: 'center' }}>Data de Nascimento</TableCell>
-                            <TableCell sx={{ textAlign: 'center' }}>Gênero</TableCell>
-                            <TableCell sx={{ textAlign: 'center' }}>Estado</TableCell>
-                            <TableCell sx={{ textAlign: 'center' }}>Cidade</TableCell>
-                            <TableCell sx={{ textAlign: 'center' }}>Bairro</TableCell>
-                            <TableCell sx={{ textAlign: 'center' }}>N°</TableCell>
-                            <TableCell sx={{ textAlign: 'center' }}>Telefone</TableCell>
-                            <TableCell sx={{ textAlign: 'center',  width: '5%' }}>Nota</TableCell>
+                            <TableCell sx={{ textAlign: 'left' }}>Nome</TableCell>
+                            <TableCell sx={{ textAlign: 'center' }}>Perfil</TableCell>
+                            <TableCell sx={{ textAlign: 'center' }}>Apartamentos</TableCell>
+                            <TableCell sx={{ textAlign: 'center' }}>Ação</TableCell>
                         </TableRow>
                     </TableHead>
 
-                    <TableBody >
+                    <TableBody>
                         {rows.map(row => (
                             <TableRow key={row.id}>
-                                <TableCell sx={{ textAlign: 'center', width: '30%' }}>{row.name}</TableCell>
-                                <TableCell sx={{ textAlign: 'center' }}>{row.rg}</TableCell>
-                                <TableCell sx={{ textAlign: 'center' }}>{row.cpf}</TableCell>
-                                <TableCell sx={{ textAlign: 'center' }}>{format(parseISO(String(row.birthDate)), 'dd/MM/yyyy')}</TableCell>
-                                <TableCell sx={{ textAlign: 'center' }}>{row.gender}</TableCell>
-                                <TableCell sx={{ textAlign: 'center' }}>{row.state}</TableCell>
-                                <TableCell sx={{ textAlign: 'center' }}>{row.city}</TableCell>
-                                <TableCell sx={{ textAlign: 'center' }}>{row.neighborhood}</TableCell>
-                                <TableCell sx={{ textAlign: 'center' }}>{row.houseNumber}</TableCell>
-                                <TableCell sx={{ textAlign: 'center' }}>{row.phone}</TableCell>
-                                <TableCell sx={{ textAlign: 'center',  width: '5%' }}>
-                                    <IconButton size='small' onClick={() => { viewNota(row.note) }}>
-                                        <PreviewRoundedIcon color='primary' fontSize='small' />
-                                    </IconButton>
 
+                                <TableCell sx={{ textAlign: 'left' }}>
+                                    {row.name}
+                                </TableCell>
+                                
+                                <TableCell sx={{ textAlign: 'center' }}>
+                                    <Button
+                                        size='small'
+                                        color='primary'
+                                        disableElevation
+                                        variant='outlined'
+                                        onClick={() => navigate(`/inicio/pessoas/dados/${row.id}`)}
+                                    >
+                                        <InfoOutlinedIcon color='primary' fontSize='small' />
+                                    </Button>
+                                </TableCell>
 
+                                <TableCell sx={{ textAlign: 'center' }}>{row.roomId === null ? <PersonOffRoundedIcon /> : row.roomId}</TableCell>
+
+                                <TableCell sx={{ textAlign: 'center' }}>
+                                    <Button
+                                        size='small'
+                                        color='primary'
+                                        disableElevation
+                                        variant='outlined'
+                                        onClick={() => {
+                                            row.roomId === null ? addPeopleRoom(row.id) : deletePeopleRoom(row.id)
+                                        }}
+                                    >
+                                        {row.roomId === null ? <AddRoundedIcon color='primary' fontSize='small' /> : <DeleteRoundedIcon sx={{ color: 'red' }} fontSize='small' />}
+                                    </Button>
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -196,12 +234,11 @@ export const ViewPatients: React.FC = () => {
                     <TableFooter>
                         {isLoadind && (
                             <TableRow>
-                                <TableCell colSpan={5}>
+                                <TableCell colSpan={7}>
                                     <LinearProgress />
                                 </TableCell>
                             </TableRow>
                         )}
-
 
                     </TableFooter>
                 </Table>
@@ -220,7 +257,6 @@ export const ViewPatients: React.FC = () => {
                                     color="primary"
                                     onChange={(_, newPage) => setSearchParams({ busca, pagina: newPage.toString() })}
                                 />
-
                             </TableCell>
                         </TableRow>
                     </Box>
@@ -228,8 +264,8 @@ export const ViewPatients: React.FC = () => {
             </TableContainer>
 
             <Modal
-                open={isModalOpenNota}
-                onClose={() => setIsModalOpenNota(false)}
+                open={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
                 closeAfterTransition
                 sx={
                     {
@@ -239,7 +275,7 @@ export const ViewPatients: React.FC = () => {
                     }
                 }
             >
-                <Fade in={isModalOpenNota}>
+                <Fade in={isModalOpen}>
                     <Box sx={{
                         minWidth: 300,
                         maxWidth: 500,
@@ -257,31 +293,14 @@ export const ViewPatients: React.FC = () => {
                             right: 10,
                             zIndex: 1
                         }}>
-                            <Button onClick={() => { setIsModalOpenNota(false) }}>
+                            <Button onClick={() => { setIsModalOpen(false), setModify(!modify) }}>
                                 < CloseRoundedIcon sx={{ fontSize: '2rem' }} />
                             </Button>
                         </Box>
-                        <Box
-                            display='flex'
-                            margin={2}
-                            gap={2}
-                            flexDirection='column'
-                            alignItems='center'
-                            justifyContent='center'
-                        >
-                            <Typography variant='h6'>
-                                Observação
-                            </Typography>
-                            <Typography variant='subtitle1'>
-                                {notaModal}
-                            </Typography>
-                        </Box>
+                        <TelaAddRemovePeopleRoom idPeople={idModal} />
                     </Box>
-
-
                 </Fade>
             </Modal>
-
         </Box>
     )
 }

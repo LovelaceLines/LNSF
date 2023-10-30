@@ -10,10 +10,8 @@ export const RoomContext = createContext({} as iRoomTypes);
 export const RoomProvider = ({ children }: iRoomProvider) => {
     const [room, setRoom] = useState<iRoomObject>({} as iRoomObject)
 
-
     const viewRoom = async (page = 1, filter = '', textFilter = '', qntLine = 0) => {
         try {
-
             const urlRelativa = `/Room?Page.Page=${page}&Page.PageSize=${qntLine === 0 ? Environment.LIMITE_DE_LINHA : qntLine}&${textFilter}=${filter}`;
             const response = await Api.get(urlRelativa);
 
@@ -76,7 +74,6 @@ export const RoomProvider = ({ children }: iRoomProvider) => {
             return new Error((error as { message: string }).message || 'Ops, não foi possível acessar o banco.')
         }
         return {} as iRoomObject;
-
     }, []);
 
 
@@ -94,7 +91,6 @@ export const RoomProvider = ({ children }: iRoomProvider) => {
                 toast.error('Ocorreu um erro ao processar a requisição.');
                 console.error('Error Message:', error.message);
             }
-            return new Error((error as { message: string }).message || 'Ops, não foi possível acessar o banco.')
         }
         return 0;
     }, []);

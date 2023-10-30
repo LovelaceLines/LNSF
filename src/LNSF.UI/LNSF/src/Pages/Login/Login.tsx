@@ -1,12 +1,11 @@
 
-import { Box, Button, Card, CardContent, CircularProgress, FormControl, FormHelperText, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Button, CircularProgress, FormControl, FormHelperText, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import * as yup from 'yup';
 import { AuthContext } from "../../Contexts/authcontext/AuthContext_";
 import nomelogo from '../../assets/lnsf_icone.svg';
 import fundo from '../../assets/fundoLogin.jpg';
 import { useNavigate } from 'react-router-dom'
-
 import { Link as MaterialUILink } from '@mui/material';
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import React from "react";
@@ -22,13 +21,10 @@ export const LoginPage: React.FC = () => {
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
-
     const theme = useTheme();
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
-
     const [showPassword, setShowPassword] = React.useState(false);
     const navigate = useNavigate();
 
@@ -38,13 +34,8 @@ export const LoginPage: React.FC = () => {
     };
 
     useEffect(() => {
-        if (accessToken) {
-            navigate("/inicio")
-        }
-
+        if (accessToken) { navigate("/inicio") }
     }, []);
-
-
 
     const handlesubimit = () => {
 
@@ -56,11 +47,9 @@ export const LoginPage: React.FC = () => {
                     password: dadosValidados.password,
                 }
                 loginUser(data)
-
                 setIsLoading(false)
             })
             .catch((errors: yup.ValidationError) => {
-
                 errors.inner.forEach(error => {
                     if (error.path === 'email') {
                         setEmailError(error.message);
@@ -121,14 +110,14 @@ export const LoginPage: React.FC = () => {
                                 >
                                     Seja bem-vindo ao nosso lar digital!
                                 </Typography>
-                                <Typography variant="subtitle1" align="center"
-
+                                <Typography
+                                    variant="subtitle1"
+                                    align="center"
                                     fontSize='1rem'
                                     fontStyle='normal'
                                     fontWeight='400'
                                     lineHeight='normal'
                                     letterSpacing='0.00938rem'
-
                                     display='flex'
                                     flexDirection='column'
                                 >
@@ -162,7 +151,6 @@ export const LoginPage: React.FC = () => {
                                             type={showPassword ? 'text' : 'password'}
                                             value={password}
                                             error={!!passwordError}
-                                            //helperText={passwordError}
                                             onKeyDown={() => setPasswordError('')}
                                             onChange={e => setPassword(e.target.value)}
                                             endAdornment={
@@ -179,7 +167,6 @@ export const LoginPage: React.FC = () => {
                                             }
                                             label="Password"
                                             aria-describedby="component-error-text"
-
                                         />
                                         <FormControl error>
                                             <FormHelperText id="component-error-text">{passwordError}</FormHelperText>
@@ -204,8 +191,6 @@ export const LoginPage: React.FC = () => {
                                         fullWidth
                                     >
                                         {isLoading ? <CircularProgress color="info" /> : 'Entrar'}
-
-
                                     </Button>
                                 </Box>
                             </form>

@@ -3,7 +3,7 @@ import { useContext, useState } from 'react'
 import { useEffect } from "react"
 import { Form } from "@unform/web";
 import { PeopleContext, RoomContext, TourContext, iTourPeopleRoom, iTourRegister, iTourUpdate } from '../../../Contexts';
-import { Box, Divider, Grid, IconButton, LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableRow, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Button, Divider, Grid, IconButton, LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableRow, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { AutoCompletePeople, ButtonAction } from '../../../Component';
 import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
 import { IFormErrorsCustom, TextFieldCustom, useCustomForm } from '../../../Component/forms';
@@ -15,8 +15,6 @@ const formValidateSchema: yup.Schema = yup.object().shape({
     id: yup.number().required().min(1),
     note: yup.string().required().min(1),
 })
-
-
 
 export const RegisterTour: React.FC = () => {
 
@@ -179,10 +177,9 @@ export const RegisterTour: React.FC = () => {
             width='100%'
         >
             <Box>
-                {/* <AppBar position="static"> */}
                 <Toolbar sx={{ margin: 0 }}>
                     <Typography
-                         variant= {smDown ? "h5" : "h4"}
+                        variant={smDown ? "h5" : "h4"}
                         noWrap
                         component="div"
                         sx={{ flexGrow: 1, display: 'flex', alignItems: 'flex-end' }}
@@ -191,7 +188,6 @@ export const RegisterTour: React.FC = () => {
                         Registro de saídas
                     </Typography>
                 </Toolbar>
-                {/* </AppBar> */}
             </Box>
 
             <Box
@@ -200,7 +196,6 @@ export const RegisterTour: React.FC = () => {
                 width='100%'
                 gap={smDown ? 5 : 0}
             >
-
                 <Box
                     width={smDown ? '100%' : '40%'}
                     component={Paper}
@@ -211,7 +206,6 @@ export const RegisterTour: React.FC = () => {
                         Criar uma anotação
                         <Divider />
                     </Typography>
-
 
                     <Form ref={formRef} onSubmit={(dados) => handSave(dados)}>
                         <Box display='flex' flexDirection='column' justifyContent='center'>
@@ -228,7 +222,6 @@ export const RegisterTour: React.FC = () => {
                                         disabled={isLoadind}
                                         multiline
                                         rows={10}
-
                                     />
                                 </Grid>
                             </Grid>
@@ -271,7 +264,6 @@ export const RegisterTour: React.FC = () => {
                                             <TableCell sx={{ textAlign: 'left' }}>
                                                 <Box display='flex'
                                                     flexDirection='row'
-
                                                 >
                                                     <Box
                                                         width='90%'
@@ -280,7 +272,6 @@ export const RegisterTour: React.FC = () => {
                                                             flexDirection='row'
                                                             justifyContent='space-between'
                                                             gap={2}
-
                                                         >
                                                             {row.number !== '' && (<span > <strong>Apt:</strong> {row.number}</span>)}
                                                             <Box>
@@ -296,7 +287,6 @@ export const RegisterTour: React.FC = () => {
                                                                 <strong>Obs:</strong> {row.note}
                                                             </p>
                                                         </Box>
-
                                                     </Box>
                                                     <Box
                                                         display='flex'
@@ -304,8 +294,11 @@ export const RegisterTour: React.FC = () => {
                                                         alignItems='center'
                                                         width='10%'
                                                     >
-                                                        <IconButton
+                                                        <Button
                                                             size='small'
+                                                            color='primary'
+                                                            disableElevation
+                                                            variant='outlined'
                                                             onClick={() => {
                                                                 const data = {
                                                                     id: row.id,
@@ -313,10 +306,9 @@ export const RegisterTour: React.FC = () => {
                                                                     peopleId: row.peopleId,
                                                                 }
                                                                 confirmReturn(data)
-                                                            }}
-                                                        >
+                                                            }}>
                                                             <CheckRoundedIcon color='primary' fontSize='medium' />
-                                                        </IconButton>
+                                                        </Button>
                                                     </Box>
                                                 </Box>
                                             </TableCell>
@@ -332,114 +324,12 @@ export const RegisterTour: React.FC = () => {
                                             </TableCell>
                                         </TableRow>
                                     )}
-
-
                                 </TableFooter>
                             </Table>
                         </TableContainer>
                     </Box>
-
                 </Box>
-
-
-
-
-                {/* <Box
-                    width='100%'
-                    component={Paper}
-                    bgcolor={theme.palette.background.default}
-                    margin={smDown ? 0 : 1}
-                    height={498}
-                    overflow='scroll'
-                    gap={smDown ? 5 : 0}
-                >
-                    <Typography variant="h6" padding={1}>
-                        Histórico de entrada e saída
-                        <Divider />
-                    </Typography>
-                    <Box padding={2}>
-                        <TableContainer component={Paper} variant='outlined' >
-
-                            <Table>
-                                <TableBody >
-                                    {datainput_.map(row => (
-                                        <TableRow key={row.id}>
-                                            <TableCell sx={{ textAlign: 'left' }}>
-                                                {row.input !== null && (
-                                                    <Box display='flex'
-                                                        flexDirection='column'
-
-                                                    >
-                                                        <Box
-                                                            display='flex'
-                                                            flexDirection='column'
-                                                        >
-                                                            <Box display='flex'
-                                                                flexDirection='row'
-                                                                justifyContent='space-between'
-                                                                gap={2}
-                                                            >
-                                                                {row.number !== '' && (<span > <strong>Apt</strong> {row.number}</span>)}
-                                                                <Box>
-                                                                    <strong>Saída: </strong>  {format(parseISO(String(row.output)), 'HH:mm')} - {format(parseISO(String(row.output)), 'dd/MM/yyyy')}
-                                                                </Box>
-
-                                                                <Box>
-                                                                    <strong>Retorno:</strong>  {format(parseISO(String(row.input)), 'HH:mm')} - {format(parseISO(String(row.input)), 'dd/MM/yyyy')}
-                                                                </Box>
-                                                            </Box>
-                                                            <Box>
-                                                                <p>
-                                                                    <strong>Nome:</strong> {row.name}
-                                                                </p>
-                                                                <p>
-                                                                    <strong>Obs:</strong> {row.note}
-                                                                </p>
-                                                            </Box>
-                                                            <Box
-                                                                display='flex'
-                                                                justifyContent='center'>
-                                                                <IconButton
-                                                                    size='small'
-                                                                    onClick={() => {
-
-                                                                    }}
-                                                                >
-                                                                    <EditRoundedIcon color='primary' fontSize='small' />
-                                                                </IconButton>
-                                                            </Box>
-
-                                                        </Box>
-                                                    </Box>
-                                                )}
-                                            </TableCell>
-
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-
-                                {totalCount === 0 && !isLoadind && (
-                                    <caption>{Environment.LISTAGEM_VAZIA}</caption>
-                                )}
-
-                                <TableFooter>
-                                    {isLoadind && (
-                                        <TableRow>
-                                            <TableCell colSpan={5}>
-                                                <LinearProgress />
-                                            </TableCell>
-                                        </TableRow>
-                                    )}
-
-
-                                </TableFooter>
-                            </Table>
-                        </TableContainer>
-                    </Box>
-
-                </Box> */}
             </Box>
-
         </Box>
     )
 }

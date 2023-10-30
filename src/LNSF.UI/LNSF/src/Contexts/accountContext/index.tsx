@@ -15,7 +15,7 @@ export const AccountProvider = ({ children }: iAccountProvider) => {
             const response = await Api.get(urlRelativa);
 
             if (response.status === 200) {
-                return response.data as iattAccount[];
+                return response.data as iaccount[];
             }
         } catch (error: any) {
             if (error.response) {
@@ -33,8 +33,7 @@ export const AccountProvider = ({ children }: iAccountProvider) => {
         try {
 
             const objetoJSON = JSON.stringify(data);
-            console.log('enviar no post: ', objetoJSON)
-
+           
             const response = await Api.post('/Account', objetoJSON)
 
             if (response.status === 200) {
@@ -56,7 +55,7 @@ export const AccountProvider = ({ children }: iAccountProvider) => {
     const updateAccount = useCallback(async (data: iattAccount, verificador = false) => {
         try {
             const objetoJSON = JSON.stringify(data);
-            console.log('enviar: ', objetoJSON)
+           
             const url = verificador ? '/Account/password' : '/Account';
             const response = await Api.put(url, objetoJSON);
 
@@ -81,7 +80,6 @@ export const AccountProvider = ({ children }: iAccountProvider) => {
     const deleteAccount = useCallback(async (data: idelAccount) => {
         try {
             
-            console.log('enviar: ', data)
             const response = await Api.delete(`/Account/${data.id}`);
 
             if (response.status === 200) {

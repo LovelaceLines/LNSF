@@ -39,7 +39,6 @@ const estadosBrasil = [
     { id: 'Tocantins', nome: 'TO' },
 ];
 
-
 const formValidateSchema: yup.Schema = yup.object().shape({
     name: yup.string().required().min(1),
     gender: yup.number().required(),
@@ -70,7 +69,6 @@ const formValidateSchema: yup.Schema = yup.object().shape({
     note: yup.string().required().min(1),
 
 })
-
 
 export const TelaDeGerenciamentoPeople: React.FC = () => {
 
@@ -137,9 +135,9 @@ export const TelaDeGerenciamentoPeople: React.FC = () => {
                             } else {
                                 setIsLoading(false);
                                 if (isSaveAndClose()) {
-                                    navigate('/inicio/pessoas/gerenciar')
+                                    navigate('/inicio/pessoas/visualizar')
                                 } else {
-                                    navigate(`/inicio/pessoas/gerenciar/${response.id}`)
+                                    navigate(`/inicio/pessoas/visualizar/${response.id}`)
                                 }
                             }
                         })
@@ -220,7 +218,7 @@ export const TelaDeGerenciamentoPeople: React.FC = () => {
                         aoClicarEmSalvar={id !== 'cadastrar' ? save : undefined}
                         aoClicarEmSalvarEFechar={id === 'cadastrar' ? saveAndClose : undefined}
                         //aoClicarEmNovo={() => { navigate('/inicio/apartamentos/gerenciar/cadastrar') }}
-                        aoClicarEmVoltar={() => { navigate('/inicio/pessoas/gerenciar') }}
+                        aoClicarEmVoltar={() => { navigate(`/inicio/pessoas/dados/${id}`) }}
                     />
                 </Toolbar>
 

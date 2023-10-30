@@ -9,8 +9,6 @@ import { IFormErrorsCustom, TextFieldCustom, useCustomForm } from "../../../Comp
 import * as yup from 'yup';
 import { TextSelectCustom } from "../../../Component/forms/TextSelectCustom";
 
-
-
 const formValidateSchema: yup.Schema<iRoomRegister> = yup.object().shape({
     number: yup.string().required().min(1),
     bathroom: yup.boolean().required(),
@@ -19,7 +17,6 @@ const formValidateSchema: yup.Schema<iRoomRegister> = yup.object().shape({
     storey: yup.number().required().min(1),
     available: yup.boolean().required(),
 })
-
 
 export const TelaDeGerenciamentoRoom: React.FC = () => {
 
@@ -89,9 +86,7 @@ export const TelaDeGerenciamentoRoom: React.FC = () => {
                             setIsLoading(false);
                             console.error('Detalhes do erro:', error);
                         });
-
                 } else {
-
                     const data: iRoomObject = {
                         id: Number(id),
                         number: dadosValidados.number,
@@ -133,12 +128,11 @@ export const TelaDeGerenciamentoRoom: React.FC = () => {
             display='flex'
             flexDirection='column'
             width='100%'
-
         >
             <Box>
                 <Toolbar sx={{ flexGrow: 1, display: 'flex', flexDirection: smDown ? 'column' : 'row', alignItems: smDown ? 'left' : 'flex-end' }}>
                     <Typography
-                         variant= {smDown ? "h5" : "h4"}
+                        variant={smDown ? "h5" : "h4"}
                         noWrap
                         component="div"
                         sx={{ flexGrow: 1, display: 'flex', alignItems: 'flex-end' }}
@@ -148,18 +142,15 @@ export const TelaDeGerenciamentoRoom: React.FC = () => {
                     </Typography>
 
                     < ButtonAction
-                        // mostrarBotaoNovo={id !== 'cadastrar'}
                         mostrarBotaoNovo={false}
                         mostrarBotaoApagar={false}
                         mostrarBotaoSalvar={id === 'cadastrar' ? false : true}
                         mostrarBotaoSalvarEFechar={id !== 'cadastrar' ? false : true}
                         aoClicarEmSalvar={id !== 'cadastrar' ? save : undefined}
                         aoClicarEmSalvarEFechar={id === 'cadastrar' ? saveAndClose : undefined}
-                        //aoClicarEmNovo={() => { navigate('/inicio/apartamentos/gerenciar/cadastrar') }}
                         aoClicarEmVoltar={() => { navigate('/inicio/apartamentos/gerenciar') }}
                     />
                 </Toolbar>
-
             </Box>
             <Divider />
             <Box style={{ maxHeight: '350px', overflowY: 'auto' }}>
@@ -170,10 +161,9 @@ export const TelaDeGerenciamentoRoom: React.FC = () => {
                                 <Grid item>
                                     <LinearProgress variant="indeterminate" />
                                 </Grid>
-                            )
-                            }
+                            )}
                             <Grid item>
-                                <Typography  variant= {smDown ? "h6" : "h5"} >
+                                <Typography variant={smDown ? "h6" : "h5"} >
                                     {(id !== 'cadastrar') ? 'Editar este quarto' : 'Cadastrar um novo quarto'}
                                     <Divider />
                                 </Typography>
@@ -207,7 +197,6 @@ export const TelaDeGerenciamentoRoom: React.FC = () => {
                                     />
                                 </Grid>
                             </Grid>
-
 
                             <Grid container item direction='row' spacing={2}>
                                 <Grid item xs={6} >
@@ -262,9 +251,6 @@ export const TelaDeGerenciamentoRoom: React.FC = () => {
                     </Box>
                 </Form>
             </Box>
-
-
-
         </Box>
     )
 }

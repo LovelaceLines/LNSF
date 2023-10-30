@@ -80,18 +80,9 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
                     label: 'Pessoas',
                     options: [
                         {
-                            pathOption: '/inicio/pessoas/visualizar/teste',
+                            pathOption: '/inicio/pessoas/visualizar',
                             labelOption: 'Visualizar',
                         },
-                        {
-                            pathOption: '/inicio/pessoas/visualizar',
-                            labelOption: 'VisualizarTeste',
-                        },
-                        {
-                            pathOption: '/inicio/pessoas/gerenciar',
-                            labelOption: 'Gerenciar',
-                        },
-
                     ],
                 },
             )

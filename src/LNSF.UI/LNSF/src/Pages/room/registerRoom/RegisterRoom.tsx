@@ -2,15 +2,15 @@
 import { useContext, useMemo, useState } from 'react'
 import { useEffect } from "react"
 import { RoomContext, iRoomObject } from '../../../Contexts';
-import { Box, IconButton, LinearProgress, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Button, LinearProgress, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { Environment } from '../../../environment';
 import { ButtonAction, SearchButton } from '../../../Component';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useDebounce } from '../../../Component/hooks/UseDebounce';
-import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
-import UnpublishedRoundedIcon from '@mui/icons-material/UnpublishedRounded';
 import HotelRoundedIcon from '@mui/icons-material/HotelRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
+import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
+import UnpublishedOutlinedIcon from '@mui/icons-material/UnpublishedOutlined';
 
 export const RegisterRoom: React.FC = () => {
 
@@ -58,11 +58,9 @@ export const RegisterRoom: React.FC = () => {
         }
     }, [searchParams])
 
-
     const pagina = useMemo(() => {
         return Number(searchParams.get('pagina') || '1');
     }, [searchParams])
-
 
     const filter = useMemo(() => {
         if (selectedFilter !== 'Nenhum') {
@@ -73,7 +71,6 @@ export const RegisterRoom: React.FC = () => {
         }
     }, [searchParams])
 
-
     useEffect(() => {
         setIsLoading(true);
 
@@ -81,7 +78,6 @@ export const RegisterRoom: React.FC = () => {
             if (selectedFilter === 'Nenhum') {
                 setSearchParams({ busca: '', pagina: '1' }, { replace: true });
             }
-
             viewRoom(pagina, busca, filter)
                 .then((response) => {
                     if (response instanceof Error) {
@@ -95,7 +91,6 @@ export const RegisterRoom: React.FC = () => {
                     setIsLoading(false);
                     console.error('Detalhes do erro:', error);
                 });
-
         });
 
     }, [busca, pagina, selectedFilter]);
@@ -114,17 +109,15 @@ export const RegisterRoom: React.FC = () => {
             width='100%'
         >
             <Box>
-                {/* <AppBar position="static"> */}
                 <Toolbar>
                     <Typography
-                        variant= {smDown ? "h5" : "h4"}
+                        variant={smDown ? "h5" : "h4"}
                         noWrap
                         component="div"
                         sx={{ flexGrow: 1, display: 'flex', alignItems: 'flex-end' }}
                     >
                         {!smDown && (<HotelRoundedIcon color='primary' sx={{ fontSize: '2.7rem', paddingRight: '10px' }} />)}
                         Apartamentos
-
                     </Typography>
 
                     <SearchButton
@@ -142,9 +135,7 @@ export const RegisterRoom: React.FC = () => {
                         mostrarBotaoApagar={false}
                         aoClicarEmNovo={() => { navigate('/inicio/usuarios/gerenciar/cadastrar') }}
                     />
-
                 </Toolbar>
-                {/* </AppBar> */}
             </Box>
 
             <TableContainer component={Paper} variant='outlined' >
@@ -168,12 +159,19 @@ export const RegisterRoom: React.FC = () => {
                                 <TableCell sx={{ textAlign: 'center' }}>{row.occupation}</TableCell>
                                 <TableCell sx={{ textAlign: 'center' }}>{row.storey}</TableCell>
                                 <TableCell sx={{ textAlign: 'center' }}>{row.bathroom ? 'Individual' : 'Coletivo'}</TableCell>
-                                <TableCell sx={{ textAlign: 'center' }}>{row.available ? <CheckCircleRoundedIcon color='primary' /> : <UnpublishedRoundedIcon sx={{ color: 'rgba(255, 0, 0, 0.8)' }} />}</TableCell>
+                                <TableCell sx={{ textAlign: 'center' }}>{row.available ? <CheckCircleOutlineRoundedIcon color='primary' /> : <UnpublishedOutlinedIcon sx={{ color: 'rgba(255, 0, 0, 0.8)' }} />}</TableCell>
                                 <TableCell sx={{ textAlign: 'center' }}>{row.beds}</TableCell>
+
                                 <TableCell sx={{ textAlign: 'center' }}>
-                                    <IconButton size='small' onClick={() => navigate(`/inicio/apartamentos/gerenciar/${row.id}`)}>
-                                        <EditRoundedIcon fontSize='small' />
-                                    </IconButton>
+                                    <Button
+                                        size='small'
+                                        color='primary'
+                                        disableElevation
+                                        variant='outlined'
+                                        onClick={() => navigate(`/inicio/apartamentos/gerenciar/${row.id}`)}
+                                    >
+                                        <EditRoundedIcon color='primary' fontSize='small' />
+                                    </Button>
                                 </TableCell>
 
                             </TableRow>
@@ -192,8 +190,6 @@ export const RegisterRoom: React.FC = () => {
                                 </TableCell>
                             </TableRow>
                         )}
-
-
                     </TableFooter>
                 </Table>
                 {(totalCount > 0 && totalCount > Environment.LIMITE_DE_LINHA) && (
@@ -211,13 +207,11 @@ export const RegisterRoom: React.FC = () => {
                                     color="primary"
                                     onChange={(_, newPage) => setSearchParams({ busca, pagina: newPage.toString() })}
                                 />
-
                             </TableCell>
                         </TableRow>
                     </Box>
                 )}
             </TableContainer>
-
         </Box>
     )
 }

@@ -23,7 +23,7 @@ export const TourProvider = ({ children }: iTourProvider) => {
         } catch (error: any) {
             if (error.response) {
                 toast.error(error.response.data.message);
-            }else {
+            } else {
                 toast.error('Ocorreu um erro ao processar a requisição.');
                 console.error('Error Message:', error.message);
             }
@@ -44,7 +44,7 @@ export const TourProvider = ({ children }: iTourProvider) => {
         } catch (error: any) {
             if (error.response) {
                 toast.error(error.response.data.message);
-            }else {
+            } else {
                 toast.error('Ocorreu um erro ao processar a requisição.');
                 console.error('Error Message:', error.message);
             }
@@ -57,18 +57,16 @@ export const TourProvider = ({ children }: iTourProvider) => {
         try {
 
             const objetoJSON = JSON.stringify(data);
-            console.log('enviar no post: ', objetoJSON)
-
             const response = await Api.post('/Tour', objetoJSON)
 
             if (response.status === 200) {
                 toast.success('Quarto cadastrado!');
                 return response.data as iTourObject;
             }
-        }catch (error: any) {
+        } catch (error: any) {
             if (error.response) {
                 toast.error(error.response.data.message);
-            }else {
+            } else {
                 toast.error('Ocorreu um erro ao processar a requisição.');
                 console.error('Error Message:', error.message);
             }
@@ -80,7 +78,6 @@ export const TourProvider = ({ children }: iTourProvider) => {
     const updateTour = useCallback(async (data: iTourUpdate) => {
         try {
             const objetoJSON = JSON.stringify(data);
-            console.log('enviar: ', objetoJSON)
             const response = await Api.put('/Tour', objetoJSON);
 
             if (response.status === 200) {
@@ -90,7 +87,7 @@ export const TourProvider = ({ children }: iTourProvider) => {
         } catch (error: any) {
             if (error.response) {
                 toast.error(error.response.data.message);
-            }else {
+            } else {
                 toast.error('Ocorreu um erro ao processar a requisição.');
                 console.error('Error Message:', error.message);
             }
@@ -104,17 +101,16 @@ export const TourProvider = ({ children }: iTourProvider) => {
     const updateAllTour = useCallback(async (data: iTourObject) => {
         try {
             const objetoJSON = JSON.stringify(data);
-            console.log('enviar: ', objetoJSON)
             const response = await Api.put('/Tour', objetoJSON);
 
             if (response.status === 200) {
                 toast.success('Retorno confirmado!');
                 return response.data as iTourObject;
             }
-        }catch (error: any) {
+        } catch (error: any) {
             if (error.response) {
                 toast.error(error.response.data.message);
-            }else {
+            } else {
                 toast.error('Ocorreu um erro ao processar a requisição.');
                 console.error('Error Message:', error.message);
             }
@@ -133,8 +129,7 @@ export const TourProvider = ({ children }: iTourProvider) => {
                 return response.data as number;
             }
         } catch (error) {
-            console.log(error)
-            // return new Error((error as { message: string }).message || 'Erro ao retornar os quantidade de quartos.')
+            toast.error('Ocorreu um erro ao processar a requisição.');
         }
         return 0;
     }, []);

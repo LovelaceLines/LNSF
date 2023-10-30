@@ -35,7 +35,6 @@ export interface iAddPeopleRoomAutoComplete {
 export interface iRemovePeopleRoom {
     peopleId: number
 }
-
 export interface iPeopleUpdate {
     id: number,
     name: string,
@@ -65,8 +64,6 @@ export interface iPeopleRegister {
     phone: string,
     note: string,
 }
-
-
 
 export interface iPeopleTypes {
     people: iPeopleObject,

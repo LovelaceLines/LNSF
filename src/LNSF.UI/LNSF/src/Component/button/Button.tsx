@@ -1,44 +1,4 @@
 
-// import React, { useState } from 'react';
-// import Button from '@mui/material/Button';
-// import CircularProgress from '@mui/material/CircularProgress';
-// import { Icon } from '@mui/material';
-
-// interface IButtonProps {
-//     icon?: string,
-//     name?: string,
-//     color: "inherit" | "primary" | "secondary" | "success" | "error" | "info" | "warning",
-
-// }
-// export const ButtonAction: React.FC<IButtonProps> = ({ icon, name, color }) => {
-//     const [loading, setLoading] = useState(false);
-
-//     const handleClick = async () => {
-//         setLoading(true);
-//         // Chame sua API aqui para salvar as alterações
-//         try {
-//             // await onClick(); // Suponha que essa função retorne uma promessa
-//             // Se a operação for bem-sucedida, você pode lidar com isso aqui
-//         } catch (error) {
-//             // Lidar com erros da API aqui
-//         } finally {
-//             setLoading(false);
-//         }
-//     };
-
-//     return (
-//         <Button
-//             color={color}
-//             onClick={handleClick}
-//             variant="contained"
-//             disabled={loading}
-//             startIcon={loading ? <CircularProgress size={20} /> : <Icon>{icon}</Icon>}
-//         >
-//             {loading ? 'Aguarde...' : name}
-//         </Button>
-//     );
-// };
-
 import { Box, Button, Icon, Skeleton, Theme, Typography, useMediaQuery, useTheme } from '@mui/material';
 
 
