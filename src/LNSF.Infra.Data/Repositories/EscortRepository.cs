@@ -1,18 +1,18 @@
-using LNSF.Domain.Filters;
 using LNSF.Domain.Entities;
+using LNSF.Domain.Enums;
+using LNSF.Domain.Filters;
+using LNSF.Domain.Repositories;
 using LNSF.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
-using LNSF.Domain.Repositories;
-using LNSF.Domain.Enums;
+
 namespace LNSF.Infra.Data.Repositories;
 
 public class EscortRepository : BaseRepository<Escort>, IEscortRepository
 {
     private readonly AppDbContext _context;
-    public EscortRepository(AppDbContext context) : base(context)
-    {
+    
+    public EscortRepository(AppDbContext context) : base(context) => 
         _context = context;
-    }
 
     public async Task<List<Escort>> Query (EscortFilter filter)
     {
