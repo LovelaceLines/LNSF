@@ -173,5 +173,17 @@
         <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV02.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV03">
+            <inheritdoc />
+        </member>
+        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV03.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV03.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV03.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>

@@ -17,7 +17,6 @@ public class PeoplesRepository : BaseRepository<People>, IPeoplesRepository
     public async Task<List<People>> Query(PeopleFilter filter)
     {
         var query = _context.Peoples.AsNoTracking();
-        var count = await query.CountAsync();
 
         if (filter.Id != null) query = query.Where(x => x.Id == filter.Id);
         if (!string.IsNullOrEmpty(filter.Name)) query = query.Where(x => x.Name.Contains(filter.Name));
