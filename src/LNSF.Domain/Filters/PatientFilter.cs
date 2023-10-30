@@ -1,5 +1,7 @@
 using LNSF.Domain.Enums;
+
 namespace LNSF.Domain.Filters;
+
 public class PatientFilter 
 {
     public int? Id { get; set; }
