@@ -21,6 +21,9 @@ public class HospitalController : ControllerBase
         _mapper = mapper;
     }
 
+    /// <summary>
+    /// Retrieves a list of hospitals based on the provided filter.
+    /// </summary>
     [HttpGet]
     public async Task<ActionResult<List<HospitalViewModel>>> Get([FromQuery]HospitalFilter filter)
     {
@@ -30,10 +33,16 @@ public class HospitalController : ControllerBase
         return Ok(hospitalsViewModel);
     }
 
+    /// <summary>
+    /// Gets the count of hospitals.
+    /// </summary>
     [HttpGet("count")]
-    public async Task<ActionResult<Hospital>> GetCoutn() => 
+    public async Task<ActionResult<Hospital>> GetCount() => 
         Ok(await _service.GetCount());
 
+    /// <summary>
+    /// Creates a new hospital.
+    /// </summary>
     [HttpPost]
     public async Task<ActionResult<HospitalViewModel>> Post([FromBody]HospitalPostViewModel hospital)
     {
@@ -44,6 +53,9 @@ public class HospitalController : ControllerBase
         return Ok(hospitalViewModel);
     }
 
+    /// <summary>
+    /// Updates a hospital.
+    /// </summary>
     [HttpPut]
     public async Task<ActionResult<HospitalViewModel>> Put([FromBody]HospitalViewModel hospital)
     {
