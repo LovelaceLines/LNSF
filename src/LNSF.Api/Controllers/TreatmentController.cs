@@ -21,6 +21,9 @@ public class TreatmentController : ControllerBase
         _mapper = mapper;
     }
 
+    /// <summary>
+    /// Retrieves a list of TreatmentViewModel objects based on the provided filter.
+    /// </summary>
     [HttpGet]
     public async Task<ActionResult<List<TreatmentViewModel>>> Query([FromQuery] TreatmentFilter filter)
     {
@@ -30,10 +33,16 @@ public class TreatmentController : ControllerBase
         return Ok(treatmentViewModels);
     }
 
+    /// <summary>
+    /// Gets the count of treatments.
+    /// </summary>
     [HttpGet("Count")]
     public async Task<ActionResult<int>> GetCount() => 
         Ok(await _treatmentService.GetCount());
 
+    /// <summary>
+    /// Creates a new Treatment.
+    /// </summary>
     [HttpPost]
     public async Task<ActionResult<TreatmentViewModel>> Post(TreatmentPostViewModel treatment)
     {
@@ -44,6 +53,9 @@ public class TreatmentController : ControllerBase
         return Ok(treatmentViewModel);
     }
 
+    /// <summary>
+    /// Updates a Treatment.
+    /// </summary>
     [HttpPut]
     public async Task<ActionResult<TreatmentViewModel>> Put(TreatmentViewModel treatment)
     {
@@ -53,5 +65,4 @@ public class TreatmentController : ControllerBase
         
         return Ok(treatmentViewModel);
     }
-
 }
