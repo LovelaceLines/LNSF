@@ -24,9 +24,9 @@ public class EscortRepository : BaseRepository<Escort>, IEscortRepository
         else query = query.OrderByDescending(x => x.Id);
 
         var escorts = await query
-        .Skip((filter.Page.Page - 1) * filter.Page.PageSize)
-        .Take(filter.Page.PageSize)
-        .ToListAsync();
+            .Skip((filter.Page.Page - 1) * filter.Page.PageSize)
+            .Take(filter.Page.PageSize)
+            .ToListAsync();
 
         return escorts;
     }

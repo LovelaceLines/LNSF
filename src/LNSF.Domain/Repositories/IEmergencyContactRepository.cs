@@ -3,7 +3,7 @@ using LNSF.Domain.Entities;
 
 namespace LNSF.Domain.Repositories;
 
-public interface IEmergencyContactsRepository : IBaseRepository<EmergencyContact>
+public interface IEmergencyContactRepository : IBaseRepository<EmergencyContact>
 {
     public Task<List<EmergencyContact>> Query(EmergencyContactFilter filter);
 }

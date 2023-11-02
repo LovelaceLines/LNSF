@@ -2,7 +2,7 @@ using LNSF.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace   LNSF.Infra.Data.Configurations; 
+namespace LNSF.Infra.Data.Configurations; 
 
 public class PatientsConfiguration : IEntityTypeConfiguration<Patient>
 {

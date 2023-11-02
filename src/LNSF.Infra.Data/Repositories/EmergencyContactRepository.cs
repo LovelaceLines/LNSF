@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LNSF.Infra.Data.Repositories;
 
-public class EmergencyContactsRepository : BaseRepository<EmergencyContact>, IEmergencyContactsRepository
+public class EmergencyContactRepository : BaseRepository<EmergencyContact>, IEmergencyContactRepository
 {
     private readonly AppDbContext _context;
 
-    public EmergencyContactsRepository(AppDbContext context) : base(context) => 
+    public EmergencyContactRepository(AppDbContext context) : base(context) => 
         _context = context;
 
     public async Task<List<EmergencyContact>> Query(EmergencyContactFilter filter)

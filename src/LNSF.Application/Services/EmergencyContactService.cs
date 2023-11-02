@@ -10,11 +10,11 @@ namespace LNSF.Application.Services;
 
 public class EmergencyContactService : IEmergencyContactService
 {
-    private readonly IEmergencyContactsRepository _emergencyContactRepository;
+    private readonly IEmergencyContactRepository _emergencyContactRepository;
     private readonly IPeoplesRepository _peoplesRepository;
     private readonly EmergencyContactValidator _validator;
 
-    public EmergencyContactService(IEmergencyContactsRepository emergencyContactsRepository,
+    public EmergencyContactService(IEmergencyContactRepository emergencyContactsRepository,
         IPeoplesRepository peoplesRepository,
         EmergencyContactValidator validator)
     {
