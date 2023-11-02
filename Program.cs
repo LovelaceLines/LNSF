@@ -71,6 +71,9 @@ var autoMapperConfig = new MapperConfiguration(configure =>
 
     configure.CreateMap<Escort, EscortPostViewModel>().ReverseMap();
     configure.CreateMap<Escort, EscortViewModel>().ReverseMap();
+
+    configure.CreateMap<Treatment, TreatmentViewModel>().ReverseMap();
+    configure.CreateMap<Treatment, TreatmentPostViewModel>().ReverseMap();
 });
 
 builder.Services.AddSingleton(autoMapperConfig.CreateMapper());
@@ -121,6 +124,9 @@ builder.Services.AddTransient<IPatientService, PatientService>();
 
 builder.Services.AddTransient<IEscortRepository, EscortRepository>();
 builder.Services.AddTransient<IEscortService, EscortService>();
+
+builder.Services.AddTransient<ITreatmentRepository, TreatmentRepository>();
+builder.Services.AddTransient<ITreatmentService, TreatmentService>();
 
 #endregion
 

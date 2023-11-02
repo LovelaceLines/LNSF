@@ -19,6 +19,7 @@ public class AppDbContext : DbContext
     public DbSet<Hospital> Hospitals { get; set; }
     public DbSet<Patient> Patients { get; set; }
     public DbSet<Escort> Escorts { get; set; }
+    public DbSet<Treatment> Treatments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -32,5 +33,6 @@ public class AppDbContext : DbContext
         builder.ApplyConfiguration(new HospitalsConfiguration());
         builder.ApplyConfiguration(new PatientsConfiguration());
         builder.ApplyConfiguration(new EscortsConfiguration());
+        builder.ApplyConfiguration(new TreatmentsConfiguration());
     }
 }
