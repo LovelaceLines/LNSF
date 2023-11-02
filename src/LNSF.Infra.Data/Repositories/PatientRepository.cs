@@ -18,11 +18,11 @@ public class PatientRepository : BaseRepository<Patient>, IPatientRepository
     {
         var query = _context.Patients.AsNoTracking();
         
-        if (filter.Id.HasValue)query = query.Where(x => x.Id == filter.Id);
-        if (filter.PatientId.HasValue)query = query.Where(x => x.PeopleId == filter.PatientId);
-        if (filter.HospitalId.HasValue)query = query.Where(x => x.HospitalId == filter.HospitalId);
-        if (filter.SocioEconomicRecord.HasValue)query = query.Where(x => x.SocioeconomicRecord == filter.SocioEconomicRecord);
-        if (filter.Term.HasValue)query = query.Where(x => x.Term == filter.Term);
+        if (filter.Id.HasValue) query = query.Where(x => x.Id == filter.Id);
+        if (filter.PatientId.HasValue) query = query.Where(x => x.PeopleId == filter.PatientId);
+        if (filter.HospitalId.HasValue) query = query.Where(x => x.HospitalId == filter.HospitalId);
+        if (filter.SocioEconomicRecord.HasValue) query = query.Where(x => x.SocioeconomicRecord == filter.SocioEconomicRecord);
+        if (filter.Term.HasValue) query = query.Where(x => x.Term == filter.Term);
         if (filter.Order == OrderBy.Descending) query = query.OrderByDescending(x => x.Id);
         else query = query.OrderBy(x => x.Id);
 
