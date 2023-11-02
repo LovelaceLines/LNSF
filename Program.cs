@@ -121,6 +121,7 @@ builder.Services.AddTransient<IEmergencyContactService, EmergencyContactService>
 
 builder.Services.AddTransient<IHospitalRepository, HospitalRepository>();
 builder.Services.AddTransient<IHospitalService, HospitalService>();
+builder.Services.AddTransient<HospitalValidator>();
 
 builder.Services.AddTransient<IPatientRepository, PatientRepository>();
 builder.Services.AddTransient<IPatientService, PatientService>();

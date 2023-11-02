@@ -1,4 +1,5 @@
 ﻿using LNSF.Domain.Entities;
+using LNSF.Domain.Enums;
 using LNSF.Domain.Filters;
 using LNSF.Domain.Repositories;
 using LNSF.Infra.Data.Context;
@@ -9,6 +10,7 @@ namespace LNSF.Infra.Data.Repositories;
 public class HospitalRepository : BaseRepository<Hospital>, IHospitalRepository
 {
     private readonly AppDbContext _context;
+    
     public HospitalRepository(AppDbContext context) : base(context) => 
         _context = context;
 
@@ -19,7 +21,8 @@ public class HospitalRepository : BaseRepository<Hospital>, IHospitalRepository
         if (filter.Id != null) query = query.Where(x => x.Id == filter.Id);
         if (filter.Name != null) query = query.Where(x => x.Name.Contains(filter.Name));
         if (filter.Acronym != null) query = query.Where(x => x.Acronym != null && x.Acronym.Contains(filter.Acronym));
-        query = query.OrderBy(x => x.Name);
+        if (filter.OrderBy == OrderBy.Ascending) query = query.OrderBy(x => x.Name);
+        else query = query.OrderByDescending(x => x.Name);
 
         var hospitals = await query
             .Skip((filter.Page.Page - 1) * filter.Page.PageSize)
@@ -27,5 +30,14 @@ public class HospitalRepository : BaseRepository<Hospital>, IHospitalRepository
             .ToListAsync();
 
         return hospitals;
+    }
+
+    public async Task<bool> Exists(string name)
+    {
+        var hospital = await _context.Hospitals.AsNoTracking()
+            .Where(x => x.Name.ToLower() == name.ToLower())
+            .FirstOrDefaultAsync();
+
+        return hospital != null;
     }
 }
