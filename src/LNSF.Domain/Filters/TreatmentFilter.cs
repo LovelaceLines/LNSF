@@ -1,4 +1,5 @@
 using LNSF.Domain.Enums;
+
 namespace LNSF.Domain.Filters;
 
 public class TreatmentFilter 

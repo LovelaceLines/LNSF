@@ -1,4 +1,5 @@
 using LNSF.Domain.Enums;
+
 namespace LNSF.Api.ViewModels;
 
 public class TreatmentViewModel
