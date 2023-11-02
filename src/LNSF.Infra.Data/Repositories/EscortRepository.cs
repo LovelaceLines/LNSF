@@ -30,4 +30,13 @@ public class EscortRepository : BaseRepository<Escort>, IEscortRepository
 
         return escorts;
     }
+
+    public async Task<bool> PeopleExists(int peopleId)
+    {
+        var escort = await _context.Escorts.AsNoTracking()
+            .Where(x => x.PeopleId == peopleId)
+            .FirstOrDefaultAsync();
+
+        return escort != null;
+    }
 }

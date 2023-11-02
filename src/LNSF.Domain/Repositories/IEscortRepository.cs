@@ -5,5 +5,6 @@ namespace LNSF.Domain.Repositories;
 
 public interface IEscortRepository : IBaseRepository<Escort>
 {
-    Task<List<Escort>> Query (EscortFilter filter);
+    Task<List<Escort>> Query(EscortFilter filter);
+    Task<bool> PeopleExists(int peopleId);  
 }
