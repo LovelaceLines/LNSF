@@ -77,7 +77,6 @@ var autoMapperConfig = new MapperConfiguration(configure =>
 
     configure.CreateMap<Hosting, HostingViewModel>().ReverseMap();
     configure.CreateMap<Hosting, HostingPostViewModel>().ReverseMap();
-
 });
 
 builder.Services.AddSingleton(autoMapperConfig.CreateMapper());
@@ -116,7 +115,7 @@ builder.Services.AddTransient<PeopleFilterValidator>();
 builder.Services.AddTransient<PeopleValidator>();
 builder.Services.AddTransient<IPeopleService, PeopleService>();
 
-builder.Services.AddTransient<IEmergencyContactsRepository, EmergencyContactsRepository>();
+builder.Services.AddTransient<IEmergencyContactRepository, EmergencyContactRepository>();
 builder.Services.AddTransient<EmergencyContactValidator>();
 builder.Services.AddTransient<IEmergencyContactService, EmergencyContactService>();
 

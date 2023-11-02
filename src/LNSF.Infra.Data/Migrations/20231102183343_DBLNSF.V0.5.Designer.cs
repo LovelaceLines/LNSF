@@ -11,14 +11,29 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LNSF.src.LNSF.Infra.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231102020902_DBLNSF.V0.4")]
-    partial class DBLNSFV04
+    [Migration("20231102183343_DBLNSF.V0.5")]
+    partial class DBLNSFV05
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.11");
+
+            modelBuilder.Entity("EscortHosting", b =>
+                {
+                    b.Property<int>("EscortsId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("HostingsId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("EscortsId", "HostingsId");
+
+                    b.HasIndex("HostingsId");
+
+                    b.ToTable("HostingsEscorts", (string)null);
+                });
 
             modelBuilder.Entity("LNSF.Domain.Entities.Account", b =>
                 {
@@ -107,6 +122,28 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Hospitals");
+                });
+
+            modelBuilder.Entity("LNSF.Domain.Entities.Hosting", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CheckIn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CheckOut")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("PatientId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("Hostings");
                 });
 
             modelBuilder.Entity("LNSF.Domain.Entities.Patient", b =>
@@ -285,7 +322,22 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
 
                     b.HasIndex("TreatmentsId");
 
-                    b.ToTable("PatientTreatment");
+                    b.ToTable("PatientsTreatments", (string)null);
+                });
+
+            modelBuilder.Entity("EscortHosting", b =>
+                {
+                    b.HasOne("LNSF.Domain.Entities.Escort", null)
+                        .WithMany()
+                        .HasForeignKey("EscortsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LNSF.Domain.Entities.Hosting", null)
+                        .WithMany()
+                        .HasForeignKey("HostingsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("LNSF.Domain.Entities.EmergencyContact", b =>
@@ -308,6 +360,15 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("People");
+                });
+
+            modelBuilder.Entity("LNSF.Domain.Entities.Hosting", b =>
+                {
+                    b.HasOne("LNSF.Domain.Entities.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientId");
+
+                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("LNSF.Domain.Entities.Patient", b =>

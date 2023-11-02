@@ -36,14 +36,14 @@ public class HostingController : ControllerBase
     public async Task<ActionResult<int>> GetCount() => 
         Ok(await _hostingService.GetCount());
 
-
     [HttpPost]
     public async Task<ActionResult<HostingViewModel>> Post(HostingPostViewModel hosting)
     {
         var hostingMapped = _mapper.Map<Hosting>(hosting);
         var hostingCreated = await _hostingService.Create(hostingMapped);
         var hostingViewModel = _mapper.Map<HostingViewModel>(hostingCreated);
-    return Ok(hostingViewModel);
+
+        return Ok(hostingViewModel);
     }
 
     [HttpPut]
