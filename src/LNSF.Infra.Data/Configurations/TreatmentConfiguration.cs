@@ -15,5 +15,8 @@ namespace LNSF.Infra.Data.Configurations;
 
             builder.Property(t => t.Type)
                 .IsRequired();
+            
+            builder.Property(t => t.Name)
+                .IsRequired();
         }
     }

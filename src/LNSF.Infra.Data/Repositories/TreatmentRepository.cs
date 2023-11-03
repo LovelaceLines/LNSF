@@ -31,4 +31,13 @@ public class TreatmentRepository : BaseRepository<Treatment>, ITreatmentReposito
 
         return treatments;
     }
+
+    public async Task<bool> NameExists(string name) 
+    {
+        var treatment = await _context.Treatments.AsNoTracking()
+            .Where(x => x.Name == name)
+            .FirstOrDefaultAsync();
+        
+        return treatment != null;
+    }
 }
