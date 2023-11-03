@@ -74,6 +74,66 @@
             Deletes an emergency contact by ID.
             </summary>
         </member>
+        <member name="M:LNSF.Api.Controllers.EscortController.Get(LNSF.Domain.Filters.EscortFilter)">
+            <summary>
+            Represents a collection of escorts returned from the query.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.EscortController.GetCount">
+            <summary>
+            Gets the count of escorts.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.EscortController.Post(LNSF.Api.ViewModels.EscortPostViewModel)">
+            <summary>
+            Creates a new escort.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.EscortController.Put(LNSF.Api.ViewModels.EscortViewModel)">
+            <summary>
+            Updates an escort.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.HospitalController.Get(LNSF.Domain.Filters.HospitalFilter)">
+            <summary>
+            Retrieves a list of hospitals based on the provided filter.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.HospitalController.GetCount">
+            <summary>
+            Gets the count of hospitals.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.HospitalController.Post(LNSF.Api.ViewModels.HospitalPostViewModel)">
+            <summary>
+            Creates a new hospital.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.HospitalController.Put(LNSF.Api.ViewModels.HospitalViewModel)">
+            <summary>
+            Updates a hospital.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.HostingController.Get(LNSF.Domain.Filters.HostingFilter)">
+            <summary>
+            Retrieves a list of hostings based on the provided filter.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.HostingController.GetCount">
+            <summary>
+            Gets the count of hosting.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.HostingController.Post(LNSF.Api.ViewModels.HostingPostViewModel)">
+            <summary>
+            Creates a new hosting.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.HostingController.Put(LNSF.Api.ViewModels.HostingViewModel)">
+            <summary>
+            Updates a hosting.
+            </summary>
+        </member>
         <member name="M:LNSF.Api.Controllers.PeopleController.Get(LNSF.Domain.Filters.PeopleFilter)">
             <summary>
             Retrieves a list of people based on the provided filter.
@@ -149,6 +209,46 @@
             Updates all properties of a tour.
             </summary>
         </member>
+        <member name="M:LNSF.Api.Controllers.TreatmentController.Query(LNSF.Domain.Filters.TreatmentFilter)">
+            <summary>
+            Retrieves a list of TreatmentViewModel objects based on the provided filter.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.TreatmentController.GetCount">
+            <summary>
+            Gets the count of treatments.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.TreatmentController.Post(LNSF.Api.ViewModels.TreatmentPostViewModel)">
+            <summary>
+            Creates a new Treatment.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.TreatmentController.Put(LNSF.Api.ViewModels.TreatmentViewModel)">
+            <summary>
+            Updates a Treatment.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controller.PatientController.Get(LNSF.Domain.Filters.PatientFilter)">
+            <summary>
+            Retrieves a list of patients based on the provided filter.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controller.PatientController.GetCount">
+            <summary>
+            Gets the count of patients.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controller.PatientController.Post(LNSF.Api.ViewModels.PatientPostViewModel)">
+            <summary>
+            Creates a new patient.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controller.PatientController.Put(LNSF.Api.ViewModels.PatientViewModel)">
+            <summary>
+            Updates a patient.
+            </summary>
+        </member>
         <member name="T:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV01">
             <inheritdoc />
         </member>
@@ -183,6 +283,18 @@
             <inheritdoc />
         </member>
         <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV03.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV05">
+            <inheritdoc />
+        </member>
+        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV05.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV05.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV05.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>
