@@ -10,10 +10,10 @@ namespace LNSF.Application.Services;
 public class EscortService : IEscortService
 {
     private readonly IEscortRepository _escortRepository;
-    private readonly IPeoplesRepository _peoplesRepository;
+    private readonly IPeopleRepository _peoplesRepository;
 
     public EscortService(IEscortRepository escortRepository, 
-        IPeoplesRepository peoplesRepository)
+        IPeopleRepository peoplesRepository)
     {
         _escortRepository = escortRepository;
         _peoplesRepository = peoplesRepository;

@@ -3,7 +3,7 @@ using LNSF.Domain.Entities;
 
 namespace LNSF.Domain.Repositories;
 
-public interface IPeoplesRepository : IBaseRepository<People>
+public interface IPeopleRepository : IBaseRepository<People>
 {
     public Task<List<People>> Query(PeopleFilter filter);
 }

@@ -9,5 +9,5 @@ public class Patient
     public Hospital? Hospital { get; set; }
     public bool SocioeconomicRecord { get; set; }
     public bool Term { get; set; }
-    public List<Treatment>? Treatments { get; set; }
+    public List<Treatment> Treatments { get; set; } = new List<Treatment>();
 }

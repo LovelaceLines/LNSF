@@ -23,7 +23,7 @@ public class PatientRepository : BaseRepository<Patient>, IPatientRepository
         if (filter.HospitalId.HasValue) query = query.Where(x => x.HospitalId == filter.HospitalId);
         if (filter.SocioEconomicRecord.HasValue) query = query.Where(x => x.SocioeconomicRecord == filter.SocioEconomicRecord);
         if (filter.Term.HasValue) query = query.Where(x => x.Term == filter.Term);
-        if (filter.Order == OrderBy.Descending) query = query.OrderByDescending(x => x.Id);
+        if (filter.Order == OrderBy.Ascending) query = query.OrderBy(x => x.Id);
         else query = query.OrderBy(x => x.Id);
 
         var patients = await query
@@ -32,5 +32,14 @@ public class PatientRepository : BaseRepository<Patient>, IPatientRepository
             .ToListAsync();
 
         return patients;
+    }
+
+    public async Task<bool> PeopleExists(int peopleId)
+    {
+        var people = await _context.Patients.AsNoTracking()
+            .Where(x => x.PeopleId == peopleId)
+            .FirstOrDefaultAsync();
+        
+        return people != null;
     }
 }

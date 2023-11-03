@@ -7,11 +7,11 @@ using LNSF.Domain.Enums;
 
 namespace LNSF.Infra.Data.Repositories;
 
-public class PeoplesRepository : BaseRepository<People>, IPeoplesRepository
+public class PeopleRepository : BaseRepository<People>, IPeopleRepository
 {
     private readonly AppDbContext _context;
 
-    public PeoplesRepository(AppDbContext context) : base(context) =>
+    public PeopleRepository(AppDbContext context) : base(context) =>
         _context = context;
 
     public async Task<List<People>> Query(PeopleFilter filter)

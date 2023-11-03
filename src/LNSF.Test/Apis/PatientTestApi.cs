@@ -155,13 +155,14 @@ public class PatientTestApi : GlobalClientRequest
         var countBefore = await GetCount(_patientClient);
 
         // Act - Patient
-        await Assert.ThrowsAsync<Exception>(() => Post<PatientViewModel>(_patientClient, patientFake2));
+        var patientPosted2 = await Post<PatientViewModel>(_patientClient, patientFake2);
 
         // Act - Count
         var countAfter = await GetCount(_patientClient);
 
         // Assert
-        Assert.Equal(countBefore, countAfter);
+        Assert.Equal(countBefore + 1, countAfter);
+        Assert.Equivalent(patientFake2, patientPosted2);
     }
 
     [Fact]

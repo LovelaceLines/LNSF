@@ -110,7 +110,7 @@ builder.Services.AddTransient<RoomValidator>();
 builder.Services.AddTransient<RoomFilterValidator>();
 builder.Services.AddTransient<IRoomService, RoomService>();
 
-builder.Services.AddTransient<IPeoplesRepository, PeoplesRepository>();
+builder.Services.AddTransient<IPeopleRepository, PeopleRepository>();
 builder.Services.AddTransient<PeopleFilterValidator>();
 builder.Services.AddTransient<PeopleValidator>();
 builder.Services.AddTransient<IPeopleService, PeopleService>();

@@ -9,11 +9,11 @@ namespace LNSF.Application;
 
 public class PeopleService : IPeopleService
 {
-    private readonly IPeoplesRepository _peopleRepository;
+    private readonly IPeopleRepository _peopleRepository;
     private readonly IRoomsRepository _roomRepository;
     private readonly PeopleValidator _validator;
 
-    public PeopleService(IPeoplesRepository peopleRepository,
+    public PeopleService(IPeopleRepository peopleRepository,
         IRoomsRepository roomRepository,
         PeopleValidator peopleValidator)
     {
