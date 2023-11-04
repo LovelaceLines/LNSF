@@ -1,5 +1,6 @@
 using System.Net;
 using LNSF.Application.Interfaces;
+using LNSF.Application.Validators;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
 using LNSF.Domain.Filters;
@@ -10,9 +11,14 @@ namespace LNSF.Application.Services;
 public class TreatmentService : ITreatmentService
 {
     private readonly ITreatmentRepository _treatmentRepository;
-    
-    public TreatmentService(ITreatmentRepository treatmentRepository) => 
+    private readonly TreatmentValidator _validator;
+
+    public TreatmentService(ITreatmentRepository treatmentRepository, 
+        TreatmentValidator validator)
+    {
         _treatmentRepository = treatmentRepository;
+        _validator = validator;
+    }
 
     public async Task<List<Treatment>> Query(TreatmentFilter filter) => 
         await _treatmentRepository.Query(filter);
@@ -22,16 +28,22 @@ public class TreatmentService : ITreatmentService
     
     public async Task<Treatment> Create(Treatment treatment)
     {
-        if (await _treatmentRepository.NameExists(treatment.Name)) throw new AppException("Tratamento já cadastrado", HttpStatusCode.BadRequest);
+        var validationResult = await _validator.ValidateAsync(treatment);
+        if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
+        
+        if (await _treatmentRepository.ExistsByNameAndType(treatment.Name, treatment.Type)) throw new AppException("Tratamento já cadastrado", HttpStatusCode.BadRequest);
 
         return await _treatmentRepository.Add(treatment);
     }
     
      public async Task<Treatment> Update(Treatment treatment) 
     {
+        var validationResult = await _validator.ValidateAsync(treatment);
+        if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
+        
         if (!await _treatmentRepository.Exists(treatment.Id)) throw new AppException("Tratamento não encontrado", HttpStatusCode.NotFound);
-        var oldTraetment = await _treatmentRepository.Get(treatment.Id);
-        if (oldTraetment.Name != treatment.Name && await _treatmentRepository.NameExists(treatment.Name)) throw new AppException("Tratamento já cadastrado", HttpStatusCode.BadRequest);
+        if (await _treatmentRepository.ExistsByNameAndType(treatment.Name, treatment.Type)) throw new AppException("Tratamento já cadastrado", HttpStatusCode.BadRequest);
+
 
         return await _treatmentRepository.Update(treatment);
     }

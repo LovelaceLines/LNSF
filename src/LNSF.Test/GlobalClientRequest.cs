@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using AutoMapper;
 using LNSF.Api.ViewModels;
 using LNSF.Domain.Entities;
+using LNSF.Domain.Exceptions;
 using Newtonsoft.Json;
 using Xunit;
 
@@ -22,6 +23,7 @@ public class GlobalClientRequest
     public readonly HttpClient _escortClient = new() { BaseAddress = new Uri($"{BaseUrl}Escort/") };
     public readonly HttpClient _hospitalClient = new() { BaseAddress = new Uri($"{BaseUrl}Hospital/") };
     public readonly HttpClient _patientClient = new() { BaseAddress = new Uri($"{BaseUrl}Patient/") };
+    public readonly HttpClient _treatmentClient = new() { BaseAddress = new Uri($"{BaseUrl}Treatment/") };
     public readonly IMapper _mapper;
 
     public GlobalClientRequest()
@@ -41,6 +43,8 @@ public class GlobalClientRequest
 
             cfg.CreateMap<TourViewModel, TourPostViewModel>().ReverseMap();
             cfg.CreateMap<TourViewModel, TourPutViewModel>().ReverseMap();
+
+            cfg.CreateMap<TreatmentViewModel, TreatmentPostViewModel>().ReverseMap();
         });
 
         _mapper = mapperConfig.CreateMapper();
@@ -97,14 +101,13 @@ public class GlobalClientRequest
         var content = await response.Content.ReadAsStringAsync();
 
         if (response.StatusCode == HttpStatusCode.OK)
-        {
             return JsonConvert.DeserializeObject<T>(content) ?? 
                 throw new Exception("Deserialized object is null");
-        }
+        else if (typeof(T) == typeof(AppException))
+            return JsonConvert.DeserializeObject<T>(content) ?? 
+                throw new Exception("Deserialized object is null");
         else if (response.StatusCode == HttpStatusCode.BadRequest)
-        {
             throw new Exception(content);
-        }
 
         throw new Exception($"Unexpected response status code: {response.StatusCode}, {response}");
     }

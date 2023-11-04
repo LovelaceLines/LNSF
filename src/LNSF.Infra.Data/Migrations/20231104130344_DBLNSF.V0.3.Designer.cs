@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LNSF.src.LNSF.Infra.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231102183343_DBLNSF.V0.5")]
-    partial class DBLNSFV05
+    [Migration("20231104130344_DBLNSF.V0.3")]
+    partial class DBLNSFV03
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -174,6 +174,21 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                     b.ToTable("Patients");
                 });
 
+            modelBuilder.Entity("LNSF.Domain.Entities.PatientTreatment", b =>
+                {
+                    b.Property<int>("PatientId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TreatmentId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("PatientId", "TreatmentId");
+
+                    b.HasIndex("TreatmentId");
+
+                    b.ToTable("PatientsTreatments");
+                });
+
             modelBuilder.Entity("LNSF.Domain.Entities.People", b =>
                 {
                     b.Property<int>("Id")
@@ -300,6 +315,7 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Type")
@@ -308,21 +324,6 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Treatments");
-                });
-
-            modelBuilder.Entity("PatientTreatment", b =>
-                {
-                    b.Property<int>("PatientsId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("TreatmentsId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("PatientsId", "TreatmentsId");
-
-                    b.HasIndex("TreatmentsId");
-
-                    b.ToTable("PatientsTreatments", (string)null);
                 });
 
             modelBuilder.Entity("EscortHosting", b =>
@@ -390,6 +391,25 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                     b.Navigation("People");
                 });
 
+            modelBuilder.Entity("LNSF.Domain.Entities.PatientTreatment", b =>
+                {
+                    b.HasOne("LNSF.Domain.Entities.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LNSF.Domain.Entities.Treatment", "Treatment")
+                        .WithMany()
+                        .HasForeignKey("TreatmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Patient");
+
+                    b.Navigation("Treatment");
+                });
+
             modelBuilder.Entity("LNSF.Domain.Entities.People", b =>
                 {
                     b.HasOne("LNSF.Domain.Entities.Room", "Room")
@@ -408,21 +428,6 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("People");
-                });
-
-            modelBuilder.Entity("PatientTreatment", b =>
-                {
-                    b.HasOne("LNSF.Domain.Entities.Patient", null)
-                        .WithMany()
-                        .HasForeignKey("PatientsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("LNSF.Domain.Entities.Treatment", null)
-                        .WithMany()
-                        .HasForeignKey("TreatmentsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

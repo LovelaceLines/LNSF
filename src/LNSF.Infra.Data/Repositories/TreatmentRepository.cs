@@ -32,10 +32,19 @@ public class TreatmentRepository : BaseRepository<Treatment>, ITreatmentReposito
         return treatments;
     }
 
-    public async Task<bool> NameExists(string name) 
+    public async Task<bool> ExistsByName(string name) 
     {
         var treatment = await _context.Treatments.AsNoTracking()
             .Where(x => x.Name == name)
+            .FirstOrDefaultAsync();
+        
+        return treatment != null;
+    }
+
+    public async Task<bool> ExistsByNameAndType(string name, TypeTreatment type) 
+    {
+        var treatment = await _context.Treatments.AsNoTracking()
+            .Where(x => x.Name == name && x.Type == type)
             .FirstOrDefaultAsync();
         
         return treatment != null;

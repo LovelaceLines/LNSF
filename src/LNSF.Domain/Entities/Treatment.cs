@@ -7,7 +7,6 @@ public class Treatment
     public int Id { get; set; }
     public string Name { get; set; } = "";
     public TypeTreatment Type { get; set; }
-    public List<Patient>? Patients { get; set; }
 } 
 
 

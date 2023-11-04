@@ -131,9 +131,12 @@ builder.Services.AddTransient<IEscortService, EscortService>();
 
 builder.Services.AddTransient<ITreatmentRepository, TreatmentRepository>();
 builder.Services.AddTransient<ITreatmentService, TreatmentService>();
+builder.Services.AddTransient<TreatmentValidator>();
 
 builder.Services.AddTransient<IHostingService, HostingService>();
 builder.Services.AddTransient<IHostingRepository, HostingRepository>();
+
+builder.Services.AddTransient<IPatientTreatmentRepository, PatientTreatmentRepository>();
 
 #endregion
 

@@ -41,7 +41,7 @@ public class TreatmentController : ControllerBase
         Ok(await _treatmentService.GetCount());
 
     /// <summary>
-    /// Creates a new Treatment.
+    /// Creates a new Treatment. Note: the new Treatment's must have a unique name or different type from the existing ones.
     /// </summary>
     [HttpPost]
     public async Task<ActionResult<TreatmentViewModel>> Post(TreatmentPostViewModel treatment)
