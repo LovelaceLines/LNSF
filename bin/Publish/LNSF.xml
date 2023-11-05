@@ -131,7 +131,7 @@
         </member>
         <member name="M:LNSF.Api.Controllers.HostingController.Put(LNSF.Api.ViewModels.HostingViewModel)">
             <summary>
-            Updates a hosting.
+            Updates a hosting. Note: the patient cannot be changed.
             </summary>
         </member>
         <member name="M:LNSF.Api.Controllers.PeopleController.Get(LNSF.Domain.Filters.PeopleFilter)">
