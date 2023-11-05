@@ -22,8 +22,8 @@ public class GlobalClientRequest
     public readonly HttpClient _tourClient = new() { BaseAddress = new Uri($"{BaseUrl}Tour/") };
     public readonly HttpClient _escortClient = new() { BaseAddress = new Uri($"{BaseUrl}Escort/") };
     public readonly HttpClient _hospitalClient = new() { BaseAddress = new Uri($"{BaseUrl}Hospital/") };
-    public readonly HttpClient _patientClient = new() { BaseAddress = new Uri($"{BaseUrl}Patient/") };
     public readonly HttpClient _treatmentClient = new() { BaseAddress = new Uri($"{BaseUrl}Treatment/") };
+    public readonly HttpClient _patientClient = new() { BaseAddress = new Uri($"{BaseUrl}Patient/") };
     public readonly IMapper _mapper;
 
     public GlobalClientRequest()
@@ -100,14 +100,9 @@ public class GlobalClientRequest
     {
         var content = await response.Content.ReadAsStringAsync();
 
-        if (response.StatusCode == HttpStatusCode.OK)
+        if (response.StatusCode == HttpStatusCode.OK || typeof(T) == typeof(AppException))
             return JsonConvert.DeserializeObject<T>(content) ?? 
                 throw new Exception("Deserialized object is null");
-        else if (typeof(T) == typeof(AppException))
-            return JsonConvert.DeserializeObject<T>(content) ?? 
-                throw new Exception("Deserialized object is null");
-        else if (response.StatusCode == HttpStatusCode.BadRequest)
-            throw new Exception(content);
 
         throw new Exception($"Unexpected response status code: {response.StatusCode}, {response}");
     }

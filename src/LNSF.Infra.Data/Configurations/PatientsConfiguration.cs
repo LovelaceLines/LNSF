@@ -20,9 +20,7 @@ public class PatientsConfiguration : IEntityTypeConfiguration<Patient>
         builder.HasOne(p => p.Hospital)
             .WithMany()
             .HasForeignKey(p => p.HospitalId);
-
-        builder.HasMany(p => p.Treatments)
-            .WithMany(t => t.Patients)
-            .UsingEntity(j => j.ToTable("PatientsTreatments"));
+        
+        builder.Ignore(p => p.TreatmentIds);
     }
 }

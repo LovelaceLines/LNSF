@@ -6,10 +6,7 @@ namespace LNSF.Infra.Data.Context;
 
 public class AppDbContext : DbContext
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-    {
-
-    }
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) {}
 
     public DbSet<Account> Accounts { get; set; }
     public DbSet<Room> Rooms { get; set; }
@@ -21,6 +18,7 @@ public class AppDbContext : DbContext
     public DbSet<Escort> Escorts { get; set; }
     public DbSet<Treatment> Treatments { get; set; }
     public DbSet<Hosting> Hostings { get; set; }
+    public DbSet<PatientTreatment> PatientsTreatments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -36,5 +34,6 @@ public class AppDbContext : DbContext
         builder.ApplyConfiguration(new EscortsConfiguration());
         builder.ApplyConfiguration(new TreatmentsConfiguration());
         builder.ApplyConfiguration(new HostingsConfiguration());
+        builder.ApplyConfiguration(new PatientsTreatmentsConfiguration());
     }
 }
