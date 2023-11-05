@@ -15,7 +15,7 @@ public class PatientTreatmentRepository : BaseRepository<PatientTreatment>, IPat
 
     public Task<List<PatientTreatment>> RemoveByPatientId(int patientId)
     {
-        var patientsTreatments = _context.PatientsTreatments.AsNoTracking()
+        var patientsTreatments = _context.PatientsTreatments
             .Where(pt => pt.PatientId == patientId);
         
         _context.PatientsTreatments.RemoveRange(patientsTreatments);
@@ -25,7 +25,7 @@ public class PatientTreatmentRepository : BaseRepository<PatientTreatment>, IPat
 
     public Task<List<PatientTreatment>> RemoveByTreatmentId(int treatmentId)
     {
-        var patientsTreatments = _context.PatientsTreatments.AsNoTracking()
+        var patientsTreatments = _context.PatientsTreatments
             .Where(pt => pt.TreatmentId == treatmentId);
         
         _context.PatientsTreatments.RemoveRange(patientsTreatments);

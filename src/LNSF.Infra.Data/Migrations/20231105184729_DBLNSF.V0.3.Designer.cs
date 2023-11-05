@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LNSF.src.LNSF.Infra.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231104130344_DBLNSF.V0.3")]
+    [Migration("20231105184729_DBLNSF.V0.3")]
     partial class DBLNSFV03
     {
         /// <inheritdoc />
@@ -19,21 +19,6 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.11");
-
-            modelBuilder.Entity("EscortHosting", b =>
-                {
-                    b.Property<int>("EscortsId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("HostingsId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("EscortsId", "HostingsId");
-
-                    b.HasIndex("HostingsId");
-
-                    b.ToTable("HostingsEscorts", (string)null);
-                });
 
             modelBuilder.Entity("LNSF.Domain.Entities.Account", b =>
                 {
@@ -133,10 +118,10 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                     b.Property<DateTime>("CheckIn")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("CheckOut")
+                    b.Property<DateTime?>("CheckOut")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("PatientId")
+                    b.Property<int>("PatientId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -144,6 +129,21 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                     b.HasIndex("PatientId");
 
                     b.ToTable("Hostings");
+                });
+
+            modelBuilder.Entity("LNSF.Domain.Entities.HostingEscort", b =>
+                {
+                    b.Property<int>("HostingId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("EscortId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("HostingId", "EscortId");
+
+                    b.HasIndex("EscortId");
+
+                    b.ToTable("HostingsEscorts");
                 });
 
             modelBuilder.Entity("LNSF.Domain.Entities.Patient", b =>
@@ -326,21 +326,6 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                     b.ToTable("Treatments");
                 });
 
-            modelBuilder.Entity("EscortHosting", b =>
-                {
-                    b.HasOne("LNSF.Domain.Entities.Escort", null)
-                        .WithMany()
-                        .HasForeignKey("EscortsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("LNSF.Domain.Entities.Hosting", null)
-                        .WithMany()
-                        .HasForeignKey("HostingsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("LNSF.Domain.Entities.EmergencyContact", b =>
                 {
                     b.HasOne("LNSF.Domain.Entities.People", "People")
@@ -367,9 +352,30 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                 {
                     b.HasOne("LNSF.Domain.Entities.Patient", "Patient")
                         .WithMany()
-                        .HasForeignKey("PatientId");
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("LNSF.Domain.Entities.HostingEscort", b =>
+                {
+                    b.HasOne("LNSF.Domain.Entities.Escort", "Escort")
+                        .WithMany()
+                        .HasForeignKey("EscortId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LNSF.Domain.Entities.Hosting", "Hosting")
+                        .WithMany()
+                        .HasForeignKey("HostingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Escort");
+
+                    b.Navigation("Hosting");
                 });
 
             modelBuilder.Entity("LNSF.Domain.Entities.Patient", b =>

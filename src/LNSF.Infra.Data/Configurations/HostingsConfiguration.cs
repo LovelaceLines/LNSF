@@ -13,15 +13,16 @@ public class HostingsConfiguration : IEntityTypeConfiguration<Hosting>
         builder.Property(h => h.Id)
             .ValueGeneratedOnAdd();
 
-        builder.HasMany(h => h.Escorts)
-            .WithMany(e => e.Hostings)
-            .UsingEntity(j => j.ToTable("HostingsEscorts"));
-
         builder.HasOne(h => h.Patient)
             .WithMany()
             .HasForeignKey(h => h.PatientId);
 
         builder.Property(h => h.CheckIn)
             .IsRequired();
+        
+        builder.Property(h => h.CheckOut)
+            .IsRequired(false);
+        
+        builder.Ignore(h => h.EscortsIds);
     }
 }

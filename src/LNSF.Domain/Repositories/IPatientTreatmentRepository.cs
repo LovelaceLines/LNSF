@@ -10,5 +10,4 @@ public interface IPatientTreatmentRepository : IBaseRepository<PatientTreatment>
     Task<bool> ExistsByPatientIdAndTreatmentId(int patientId, int treatmentId);
     Task<List<PatientTreatment>> RemoveByPatientId(int patientId);
     Task<List<PatientTreatment>> RemoveByTreatmentId(int treatmentId);
-
 }

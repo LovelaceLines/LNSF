@@ -5,5 +5,4 @@ public class Escort
     public int Id { get; set; }
     public int PeopleId { get; set; }
     public People? People { get; set; }
-    public List<Hosting>? Hostings { get; set; }
 }

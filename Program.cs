@@ -135,8 +135,11 @@ builder.Services.AddTransient<TreatmentValidator>();
 
 builder.Services.AddTransient<IHostingService, HostingService>();
 builder.Services.AddTransient<IHostingRepository, HostingRepository>();
+builder.Services.AddTransient<HostingValidator>();
 
 builder.Services.AddTransient<IPatientTreatmentRepository, PatientTreatmentRepository>();
+
+builder.Services.AddTransient<IHostingEscortRepository, HostingEscortRepository>();
 
 #endregion
 

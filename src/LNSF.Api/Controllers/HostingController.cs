@@ -55,7 +55,7 @@ public class HostingController : ControllerBase
     }
 
     /// <summary>
-    /// Updates a hosting.
+    /// Updates a hosting. Note: the patient cannot be changed.
     /// </summary>
     [HttpPut]
     public async Task<ActionResult<HostingViewModel>> Put(HostingViewModel hosting)

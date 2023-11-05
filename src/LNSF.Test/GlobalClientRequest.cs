@@ -24,6 +24,7 @@ public class GlobalClientRequest
     public readonly HttpClient _hospitalClient = new() { BaseAddress = new Uri($"{BaseUrl}Hospital/") };
     public readonly HttpClient _treatmentClient = new() { BaseAddress = new Uri($"{BaseUrl}Treatment/") };
     public readonly HttpClient _patientClient = new() { BaseAddress = new Uri($"{BaseUrl}Patient/") };
+    public readonly HttpClient _hostingClient = new() { BaseAddress = new Uri($"{BaseUrl}Hosting/") };
     public readonly IMapper _mapper;
 
     public GlobalClientRequest()
@@ -104,6 +105,6 @@ public class GlobalClientRequest
             return JsonConvert.DeserializeObject<T>(content) ?? 
                 throw new Exception("Deserialized object is null");
 
-        throw new Exception($"Unexpected response status code: {response.StatusCode}, {response}");
+        throw new Exception($"Unexpected response status code: {content}, {response.StatusCode}, {response}");
     }
 }

@@ -79,8 +79,8 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     CheckIn = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    CheckOut = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    PatientId = table.Column<int>(type: "INTEGER", nullable: true)
+                    CheckOut = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    PatientId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -89,7 +89,8 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                         name: "FK_Hostings_Patients_PatientId",
                         column: x => x.PatientId,
                         principalTable: "Patients",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -120,21 +121,21 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                 name: "HostingsEscorts",
                 columns: table => new
                 {
-                    EscortsId = table.Column<int>(type: "INTEGER", nullable: false),
-                    HostingsId = table.Column<int>(type: "INTEGER", nullable: false)
+                    HostingId = table.Column<int>(type: "INTEGER", nullable: false),
+                    EscortId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_HostingsEscorts", x => new { x.EscortsId, x.HostingsId });
+                    table.PrimaryKey("PK_HostingsEscorts", x => new { x.HostingId, x.EscortId });
                     table.ForeignKey(
-                        name: "FK_HostingsEscorts_Escorts_EscortsId",
-                        column: x => x.EscortsId,
+                        name: "FK_HostingsEscorts_Escorts_EscortId",
+                        column: x => x.EscortId,
                         principalTable: "Escorts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_HostingsEscorts_Hostings_HostingsId",
-                        column: x => x.HostingsId,
+                        name: "FK_HostingsEscorts_Hostings_HostingId",
+                        column: x => x.HostingId,
                         principalTable: "Hostings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -152,9 +153,9 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                 column: "PatientId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_HostingsEscorts_HostingsId",
+                name: "IX_HostingsEscorts_EscortId",
                 table: "HostingsEscorts",
-                column: "HostingsId");
+                column: "EscortId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Patients_HospitalId",
