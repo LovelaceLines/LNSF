@@ -18,8 +18,21 @@ public class EscortRepository : BaseRepository<Escort>, IEscortRepository
     {
         var query = _context.Escorts.AsNoTracking();
 
+        var hostingsEscorts = _context.HostingsEscorts.AsNoTracking();
+        var hostings = _context.Hostings.AsNoTracking();
+
         if (filter.Id != null) query = query.Where(x => x.Id == filter.Id);
         if (filter.PeopleId != null) query = query.Where(x => x.PeopleId == filter.PeopleId);
+
+        if (filter.Active == true) query = query.Where(e =>
+            hostingsEscorts.Any(he => he.EscortId == e.Id &&
+                hostings.Any(h => h.Id == he.HostingId && 
+                    h.CheckIn <= DateTime.Now && DateTime.Now <= h.CheckOut)));
+        else if (filter.Active == false) query = query.Where(e =>
+            !hostingsEscorts.Any(he => he.EscortId == e.Id &&
+                hostings.Any(h => h.Id == he.HostingId && 
+                    h.CheckIn <= DateTime.Now && DateTime.Now <= h.CheckOut)));
+
         if (filter.OrderBy == OrderBy.Ascending) query = query.OrderBy(x => x.Id);
         else query = query.OrderByDescending(x => x.Id);
 
