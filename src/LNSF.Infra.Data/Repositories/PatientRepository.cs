@@ -26,6 +26,7 @@ public class PatientRepository : BaseRepository<Patient>, IPatientRepository
         var query = _context.Patients.AsNoTracking();
 
         var hostings = _context.Hostings.AsNoTracking();
+        var patientTreatment = _context.PatientsTreatments.AsNoTracking();
         
         if (filter.Id.HasValue) query = query.Where(x => x.Id == filter.Id);
         if (filter.PatientId.HasValue) query = query.Where(x => x.PeopleId == filter.PatientId);
@@ -49,6 +50,15 @@ public class PatientRepository : BaseRepository<Patient>, IPatientRepository
             .Skip((filter.Page.Page - 1) * filter.Page.PageSize)
             .Take(filter.Page.PageSize)
             .ToListAsync();
+
+        foreach (var patient in patients)
+        {
+            var treatmentIds = patientTreatment.Where(x => x.PatientId == patient.Id)
+                .Select(x => x.TreatmentId)
+                .ToList();
+            
+            patient.TreatmentIds = treatmentIds;
+        }
 
         return patients;
     }
