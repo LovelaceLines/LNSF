@@ -19,8 +19,8 @@ public class HospitalRepository : BaseRepository<Hospital>, IHospitalRepository
         var query = _context.Hospitals.AsNoTracking();
         
         if (filter.Id != null) query = query.Where(x => x.Id == filter.Id);
-        if (filter.Name != null) query = query.Where(x => x.Name.Contains(filter.Name));
-        if (filter.Acronym != null) query = query.Where(x => x.Acronym != null && x.Acronym.Contains(filter.Acronym));
+        if (filter.Name != null) query = query.Where(x => x.Name.ToLower().Contains(filter.Name.ToLower()));
+        if (filter.Acronym != null) query = query.Where(x => x.Acronym != null && x.Acronym.ToLower().Contains(filter.Acronym.ToLower()));
         if (filter.OrderBy == OrderBy.Ascending) query = query.OrderBy(x => x.Name);
         else query = query.OrderByDescending(x => x.Name);
 

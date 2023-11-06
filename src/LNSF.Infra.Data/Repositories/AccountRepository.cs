@@ -21,7 +21,7 @@ public class AccountRepository : BaseRepository<Account>, IAccountRepository
         var query = _context.Accounts.AsNoTracking();
         var count = await query.CountAsync();
 
-        if (filter.UserName != null) query = query.Where(x => x.UserName.Contains(filter.UserName));
+        if (filter.UserName != null) query = query.Where(x => x.UserName.ToLower().Contains(filter.UserName.ToLower()));
         if (filter.Role != null) query = query.Where(x => x.Role == filter.Role);
         if (filter.OrderBy == OrderBy.Descending) query = query.OrderByDescending(x => x.UserName);
         else query = query.OrderBy(x => x.UserName);
