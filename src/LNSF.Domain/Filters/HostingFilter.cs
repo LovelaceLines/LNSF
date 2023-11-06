@@ -8,6 +8,7 @@ public class HostingFilter
 	public DateTime? CheckIn { get; set; }
 	public DateTime? CheckOut { get; set; }
 	public int? PatientId { get; set; }
+	public bool? Active { get; set; }
 	public OrderBy OrderBy { get; set; } = OrderBy.Ascending;
 	public Pagination Page { get; set; } = new();
 }

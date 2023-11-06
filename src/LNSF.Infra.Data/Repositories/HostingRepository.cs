@@ -29,6 +29,12 @@ public class HostingRepository : BaseRepository<Hosting>, IHostingRepository
         if (filter.PatientId != null) query = query.Where(x => x.PatientId == filter.PatientId);
         if (filter.CheckIn != null) query = query.Where(x => x.CheckIn >= filter.CheckIn);
         if (filter.CheckOut != null) query = query.Where(x => x.CheckOut <= filter.CheckOut);
+
+        if (filter.Active == true) query = query.Where(x =>
+            x.CheckIn <= DateTime.Now && DateTime.Now <= x.CheckOut);
+        else if (filter.Active == false) query = query.Where(x =>
+            !(x.CheckIn <= DateTime.Now && DateTime.Now <= x.CheckOut));
+
         if (filter.OrderBy == OrderBy.Ascending) query = query.OrderBy(x => x.Id);
         else query = query.OrderByDescending(x => x.Id);
 
