@@ -24,6 +24,8 @@ public class PatientRepository : BaseRepository<Patient>, IPatientRepository
     public async Task<List<Patient>> Query(PatientFilter filter) 
     {
         var query = _context.Patients.AsNoTracking();
+
+        var hostings = _context.Hostings.AsNoTracking();
         
         if (filter.Id.HasValue) query = query.Where(x => x.Id == filter.Id);
         if (filter.PatientId.HasValue) query = query.Where(x => x.PeopleId == filter.PatientId);
@@ -32,6 +34,14 @@ public class PatientRepository : BaseRepository<Patient>, IPatientRepository
         if (filter.Term.HasValue) query = query.Where(x => x.Term == filter.Term);
         if (filter.TreatmentId.HasValue) query = query.Where(p =>
            _context.PatientsTreatments.Any(pt => pt.PatientId == p.Id && pt.TreatmentId == filter.TreatmentId));
+
+        if (filter.Active == true) query = query.Where(p =>
+            hostings.Any(h => h.PatientId == p.Id && 
+                h.CheckIn <= DateTime.Now && DateTime.Now <= h.CheckOut));
+        else if (filter.Active == false) query = query.Where(p =>
+            !hostings.Any(h => h.PatientId == p.Id && 
+                h.CheckIn <= DateTime.Now && DateTime.Now <= h.CheckOut));
+
         if (filter.Order == OrderBy.Ascending) query = query.OrderBy(x => x.Id);
         else query = query.OrderByDescending(x => x.Id);
 

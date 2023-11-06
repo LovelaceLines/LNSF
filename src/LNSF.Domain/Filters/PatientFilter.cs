@@ -10,6 +10,7 @@ public class PatientFilter
     public bool? SocioEconomicRecord { get; set; }
     public bool? Term { get; set; }
     public int? TreatmentId { get; set; }
+    public bool? Active { get; set; }
     
     public Pagination Page { get; set; } = new();
     public OrderBy Order { get; set; } = OrderBy.Ascending;
