@@ -43,6 +43,15 @@ public class HostingRepository : BaseRepository<Hosting>, IHostingRepository
             .Take(filter.Page.PageSize)
             .ToListAsync();
 
+        foreach (var hosting in hostings)
+        {
+            var escortIds = _context.HostingsEscorts.Where(x => x.HostingId == hosting.Id)
+                .Select(x => x.EscortId)
+                .ToList();
+
+            hosting.EscortsIds = escortIds;
+        }
+
         return hostings;
     }
 
