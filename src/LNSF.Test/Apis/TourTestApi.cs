@@ -38,6 +38,34 @@ public class TourTestApi : GlobalClientRequest
     }
 
     [Fact]
+    public async Task Post_ValidTourWithoutNote_Ok()
+    {
+        // Arrange - People
+        var peopleFake = new PeoplePostViewModelFake().Generate();
+        var peoplePosted = await Post<PeopleViewModel>(_peopleClient, peopleFake);
+
+        // Arrange - Count
+        var countBefore = await GetCount(_tourClient);
+
+        // Arrange - Tour
+        var tourFake = new TourPostViewModelFake().Generate();
+        tourFake.PeopleId = peoplePosted.Id;
+        tourFake.Note = "";
+
+        // Act - Tour
+        var tourPosted = await Post<TourViewModel>(_tourClient, tourFake);
+
+        // Act - Count
+        var countAfter = await GetCount(_tourClient);
+
+        // Assert
+        Assert.Equal(countBefore + 1, countAfter);
+        Assert.Equivalent(tourFake.PeopleId, tourPosted.PeopleId);
+        Assert.Equal(tourPosted.Output.Date, DateTime.Now.Date);
+        Assert.Null(tourPosted.Input);
+    }
+
+    [Fact]
     public async Task Post_InvalidTourWithPeopleOwningAnOpenTour_BadRequest()
     {
         // Arrange - People
@@ -126,7 +154,7 @@ public class TourTestApi : GlobalClientRequest
     }
 
     [Fact]
-    public async Task PutAll_ValidTour_Ok()
+    public async Task PutAll_ValidTourWithOpenTour_Ok()
     {
         // Arrange - People
         var peopleFake = new PeoplePostViewModelFake().Generate();
