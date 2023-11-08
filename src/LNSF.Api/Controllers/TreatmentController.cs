@@ -65,4 +65,16 @@ public class TreatmentController : ControllerBase
         
         return Ok(treatmentViewModel);
     }
+
+    /// <summary>
+    /// Deletes a treatment by its ID.
+    /// </summary>
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<TreatmentViewModel>> Delete(int id)
+    {
+        var treatmentDeleted = await _treatmentService.Delete(id);
+        var treatmentViewModel = _mapper.Map<TreatmentViewModel>(treatmentDeleted);
+
+        return Ok(treatmentViewModel);
+    }
 }

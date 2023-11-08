@@ -9,4 +9,5 @@ public interface IHospitalService
     public Task<int> GetCount();
     public Task<Hospital> Create(Hospital hospital);
     public Task<Hospital> Update(Hospital hospital);
+    public Task<Hospital> Delete(int id);
 }

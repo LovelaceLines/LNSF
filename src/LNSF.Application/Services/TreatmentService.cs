@@ -36,7 +36,7 @@ public class TreatmentService : ITreatmentService
         return await _treatmentRepository.Add(treatment);
     }
     
-     public async Task<Treatment> Update(Treatment treatment) 
+    public async Task<Treatment> Update(Treatment treatment) 
     {
         var validationResult = await _validator.ValidateAsync(treatment);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
@@ -46,5 +46,12 @@ public class TreatmentService : ITreatmentService
 
 
         return await _treatmentRepository.Update(treatment);
+    }
+
+    public async Task<Treatment> Delete(int id)
+    {
+        if (!await _treatmentRepository.Exists(id)) throw new AppException("Tratamento não encontrado", HttpStatusCode.NotFound);
+
+        return await _treatmentRepository.Remove(id);
     }
 }

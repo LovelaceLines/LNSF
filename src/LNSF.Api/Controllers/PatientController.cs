@@ -65,4 +65,16 @@ public class PatientController : ControllerBase
 
         return Ok(patientViewModel);
     }
+
+    /// <summary>
+    /// Deletes a patient by id. Note: this action results in a cascade delete (Hosting).
+    /// </summary>
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<PatientViewModel>> Delete(int id)
+    {
+        var patientDeleted = await _patientService.Delete(id);
+        var patientViewModel = _mapper.Map<PatientViewModel>(patientDeleted);
+
+        return Ok(patientViewModel);
+    }
 }

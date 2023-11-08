@@ -9,4 +9,5 @@ public interface IEscortService
     Task<int> GetCount();
     Task<Escort> Create(Escort escort);
     Task<Escort> Update(Escort escort);
+    Task<Escort> Delete(int id);
 }
