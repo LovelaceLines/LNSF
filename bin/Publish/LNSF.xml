@@ -94,6 +94,11 @@
             Updates an escort.
             </summary>
         </member>
+        <member name="M:LNSF.Api.Controllers.EscortController.Delete(System.Int32)">
+            <summary>
+            Deletes an escort by its ID.
+            </summary>
+        </member>
         <member name="M:LNSF.Api.Controllers.HospitalController.Get(LNSF.Domain.Filters.HospitalFilter)">
             <summary>
             Retrieves a list of hospitals based on the provided filter.
@@ -112,6 +117,11 @@
         <member name="M:LNSF.Api.Controllers.HospitalController.Put(LNSF.Api.ViewModels.HospitalViewModel)">
             <summary>
             Updates a hospital.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.HospitalController.Delete(System.Int32)">
+            <summary>
+            Deletes a hospital by id. Note: this action results in a cascade delete (Patient).
             </summary>
         </member>
         <member name="M:LNSF.Api.Controllers.HostingController.Get(LNSF.Domain.Filters.HostingFilter)">
@@ -229,6 +239,11 @@
             Updates a Treatment.
             </summary>
         </member>
+        <member name="M:LNSF.Api.Controllers.TreatmentController.Delete(System.Int32)">
+            <summary>
+            Deletes a treatment by its ID.
+            </summary>
+        </member>
         <member name="M:LNSF.Api.Controller.PatientController.Get(LNSF.Domain.Filters.PatientFilter)">
             <summary>
             Retrieves a list of patients based on the provided filter.
@@ -247,6 +262,11 @@
         <member name="M:LNSF.Api.Controller.PatientController.Put(LNSF.Api.ViewModels.PatientViewModel)">
             <summary>
             Updates a patient.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controller.PatientController.Delete(System.Int32)">
+            <summary>
+            Deletes a patient by id. Note: this action results in a cascade delete (Hosting).
             </summary>
         </member>
         <member name="T:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV01">
