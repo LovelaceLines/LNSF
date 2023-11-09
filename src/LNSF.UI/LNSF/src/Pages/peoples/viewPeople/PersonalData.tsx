@@ -1,11 +1,29 @@
-import { Box, Button, Divider, Grid, Icon, LinearProgress, Toolbar, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { BottomNavigation, BottomNavigationAction, Box, Button, Divider, Grid, Icon, LinearProgress, Toolbar, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom"
 import PersonIcon from '@mui/icons-material/Person';
 import { useContext, useEffect, useState, } from "react";
 import { EmergencyContactContext, PeopleContext, iEmergencyContactObject } from "../../../Contexts";
 import { ButtonAction } from "../../../Component";
 import { format, isValid, parseISO } from "date-fns";
+import { Stethoscope } from "@phosphor-icons/react";
+import HailIcon from '@mui/icons-material/Hail';
+import { EscortContext } from "../../../Contexts/escortContext";
+import { iEscortObject } from "../../../Contexts/escortContext/type";
+import { Form } from "@unform/web";
+import { iPatientObject } from "../../../Contexts/patientContext/type";
+import * as yup from 'yup';
+import { AutoCompleteHospital } from "../../../Component/autoCompletes/AutoCompleteHospital";
+import { PatientContext } from "../../../Contexts/patientContext";
+import { AutoCompleteTreatament } from "../../../Component/autoCompletes/AutoCompleteTreatament";
+import { useCustomForm } from "../../../Component/forms";
+import { HospitalContext } from "../../../Contexts/hospitalContext";
+import { iHospitalObject } from "../../../Contexts/hospitalContext/type";
+import { TreatmentContext } from "../../../Contexts/treatmentContext";
 
+
+const formValidateSchema: yup.Schema = yup.object().shape({
+
+})
 
 export const PersonalData: React.FC = () => {
 
@@ -15,20 +33,31 @@ export const PersonalData: React.FC = () => {
     const navigate = useNavigate();
     const [isLoadind, setIsLoading] = useState(false);
     const { viewPeople, people, setPeople } = useContext(PeopleContext);
+    const { registerEscort, viewEscort } = useContext(EscortContext);
+    const { viewTreatment, treatment, setTreatment } = useContext(TreatmentContext);
+    const { hospital, setHospital, viewHospital } = useContext(HospitalContext);
+    const { viewPatient, Patient, setPatient, updatePatient, registerPatient } = useContext(PatientContext);
     const { viewEmergencyContact, emergencyContact, setEmergencyContact, deleteEmergencyContact } = useContext(EmergencyContactContext);
-    const [peopleId, setPeopleId] = useState<number>();
+    const [isEscort, setIsEscort] = useState(false)
+    const [isPatient, setIsPatient] = useState(false)
+    const [activeForm, setActiveForm] = useState(false)
+    const [activeFormUpdate, setActiveFormUpdate] = useState(false)
+    // const [peopleId, setPeopleId] = useState<number>();
     const [modify, setModify] = useState(false);
+    const [modify1, setModify1] = useState(false);
+    const [modify2, setModify2] = useState(false);
+    const { formRef, save } = useCustomForm();
+
 
     useEffect(() => {
-
         setIsLoading(true);
         viewPeople(1, id, 'id')
             .then((response) => {
                 if (response instanceof Error) {
                     setIsLoading(false);
                 } else {
-                    setPeopleId(response[0].id)
                     setPeople(response[0])
+                    console.log('buscando pessoas: ', response[0])
                     setIsLoading(false);
                 }
             })
@@ -38,10 +67,104 @@ export const PersonalData: React.FC = () => {
             });
     }, [id])
 
+    console.log("id: ", id)
+
     useEffect(() => {
-        if (peopleId) {
+
+        setIsLoading(true);
+        viewPatient(1, String(people.id), 'PatientId')
+            .then((response) => {
+                if (response instanceof Error) {
+                    setIsLoading(false);
+                    setIsPatient(false)
+                } else if (response.length > 0) {
+                    setIsPatient(true)
+                    setActiveForm(false)
+                    setIsEscort(false)
+                    setPatient(response[0])
+
+
+                    console.log('buscando hospital')
+                    viewHospital(1, String(response[0].hospitalId), 'id')
+                        .then((responsee) => {
+                            if (responsee instanceof Error) {
+                                setIsLoading(false);
+                            } else {
+                                setHospital(responsee[0])
+                                setIsLoading(false);
+                            }
+                        })
+                        .catch((error) => {
+                            setIsLoading(false);
+                            console.error('Detalhes do erro:', error);
+                        });
+
+                    console.log('response[0].treatmentIds ', response[0].treatmentIds)
+                    setTreatment([])
+                    response[0].treatmentIds.map((item) => {
+                        console.log('item: ', item)
+                        viewTreatment(1, String(item), 'id')
+                            .then((responsee) => {
+                                if (responsee instanceof Error) {
+                                    setIsLoading(false);
+                                } else {
+                                    console.log('treat: ', responsee)
+                                    setTreatment(prevTreatment => [...prevTreatment, ...responsee]);
+                                    setIsLoading(false);
+                                }
+                            })
+                            .catch((error) => {
+                                setIsLoading(false);
+                                console.error('Detalhes do erro:', error);
+                            });
+                    });
+
+                } else {
+                    setHospital({} as iHospitalObject)
+                    setIsPatient(false)
+                }
+
+                setIsLoading(false);
+            })
+            .catch((error) => {
+                setIsLoading(false);
+                console.error('Detalhes do erro:', error);
+            });
+
+    }, [people.id, modify1])
+
+
+    useEffect(() => {
+
+        if (people.id) {
             setIsLoading(true);
-            viewEmergencyContact(1, String(peopleId), 'peopleId')
+            viewEscort(1, String(people.id), 'PeopleId')
+                .then((response) => {
+                    if (response instanceof Error) {
+                        setIsLoading(false);
+                        setIsEscort(false)
+                    } else if (response.length > 0) {
+                        setIsEscort(true)
+                        setIsPatient(false)
+                    } else {
+                        setIsEscort(false)
+                    }
+
+                    setIsLoading(false);
+                })
+                .catch((error) => {
+                    setIsLoading(false);
+                    console.error('Detalhes do erro:', error);
+                });
+        }
+    }, [people.id, modify2])
+
+
+    useEffect(() => {
+
+        if (people.id) {
+            setIsLoading(true);
+            viewEmergencyContact(1, String(people.id), 'peopleId')
                 .then((response) => {
                     if (response instanceof Error) {
                         setIsLoading(false);
@@ -55,7 +178,7 @@ export const PersonalData: React.FC = () => {
                     console.error('Detalhes do erro:', error);
                 });
         }
-    }, [peopleId, modify]);
+    }, [people.id, modify]);
 
     let formattedDate = '';
 
@@ -86,6 +209,112 @@ export const PersonalData: React.FC = () => {
                     console.error('Detalhes do erro:', error);
                 });
         }
+    }
+
+    const handSave = (dados: iPatientObject) => {
+        formValidateSchema.
+            validate(dados, { abortEarly: false })
+            .then((dadosValidados) => {
+                setIsLoading(true)
+
+                if (activeFormUpdate === false) {
+                    const data = {
+                        peopleId: people.id,
+                        hospitalId: dadosValidados.id,
+                        socioeconomicRecord: true,
+                        term: true,
+                        treatmentIds: [dadosValidados.id_]
+                    }
+
+                    registerPatient(data)
+                        .then((response) => {
+                            if (response instanceof Error) {
+                                setIsLoading(false);
+                            } else {
+                                setIsPatient(true)
+                                setActiveForm(false)
+                                setModify1(!modify1)
+                                setIsLoading(false);
+                            }
+                        })
+                        .catch((error) => {
+                            setIsLoading(false);
+                            console.error('Detalhes do erro:', error);
+                        });
+                    setIsLoading(false);
+                }
+                else {
+                    const data = {
+                        id: Patient.id,
+                        peopleId: Patient.peopleId,
+                        hospitalId: dadosValidados.id,
+                        socioeconomicRecord: true,
+                        term: true,
+                        treatmentIds: [dadosValidados.id_]
+                    }
+
+                    updatePatient(data)
+                        .then((response) => {
+                            if (response instanceof Error) {
+                                setIsLoading(false);
+                            } else {
+                                setIsPatient(true)
+                                setActiveForm(false)
+                                setModify1(!modify1)
+                                setIsLoading(false);
+                            }
+                        })
+                        .catch((error) => {
+                            setIsLoading(false);
+                            console.error('Detalhes do erro:', error);
+                        });
+                    setIsLoading(false);
+                }
+            })
+    }
+
+    // const removePatient = (id_: number) => {
+
+    //     const data: iEscortObject = {   // editar tudo isso
+    //         peopleId: id_
+    //     }
+    //     setIsLoading(true);
+    //     registerEscort(data)
+    //         .then((response) => {
+    //             if (response instanceof Error) {
+    //                 setIsLoading(false);
+    //             } else {
+    //                 setModify2(!modify2)
+    //                 setIsLoading(false);
+    //             }
+    //         })
+    //         .catch((error) => {
+    //             setIsLoading(false);
+    //             console.error('Detalhes do erro:', error);
+    //         });
+
+    // }
+
+
+    const addEscort = (id_: number) => {
+
+        const data: iEscortObject = {
+            peopleId: id_
+        }
+        setIsLoading(true);
+        registerEscort(data)
+            .then((response) => {
+                if (response instanceof Error) {
+                    setIsLoading(false);
+                } else {
+                    setModify2(!modify2)
+                    setIsLoading(false);
+                }
+            })
+            .catch((error) => {
+                setIsLoading(false);
+                console.error('Detalhes do erro:', error);
+            });
     }
 
     return (
@@ -124,6 +353,110 @@ export const PersonalData: React.FC = () => {
                     marginTop: '15px'
                 }}
             >
+                <Box
+                    display='flex'
+                    sx={{ display: 'flex', flexDirection: 'column', border: '1px solid #EEEEEE', padding: '10px', justifyContent: 'space-between' }}
+                >
+                    <Typography
+                        variant="h6"
+                    >
+                        Esta pessoa é: {(isPatient && 'Paciente') || (isEscort && 'Acompanhante')}
+                    </Typography>
+                    {(!isPatient && !isEscort) && <BottomNavigation
+                        sx={{ width: '100%', display: 'flex', justifyContent: 'space-around' }}
+                        showLabels
+                    //value={value}
+
+                    >
+
+                        {(!isPatient && !isEscort) ? (
+                            <BottomNavigationAction
+                                sx={{
+                                    border: isPatient ? '0.1px solid #03a9f4' : '0.1px solid #bdbdbd',
+                                    borderRadius: '5px',
+                                    color: isPatient ? "#03a9f4" : '#9e9e9e',
+
+                                    "&:hover": {
+                                        backgroundColor: '#82b1f',
+                                        border: '0.1px solid #2196f3',
+                                    }
+                                }}
+                                onClick={() => {
+                                    if (!isPatient) {
+                                        setActiveForm(!activeForm);
+                                    }
+                                }}
+                                label="Paciente"
+                                icon={<Stethoscope size={24} color={isPatient ? "#03a9f4" : "#9e9e9e"} />} />
+                        ) : null}
+
+                        {(!isPatient && !isEscort) ? (
+                            <BottomNavigationAction
+                                sx={{
+                                    border: '0.1px solid #bdbdbd',
+                                    borderRadius: '5px',
+                                    "&:hover": {
+                                        backgroundColor: '#82b1f',
+                                        border: '0.1px solid #2196f3',
+                                    },
+                                    color: isEscort ? "#03a9f4" : '#9e9e9e'
+                                }}
+                                onClick={() => addEscort(people.id)}
+                                label="Acompanhante"
+                                icon={<HailIcon sx={{ color: isEscort ? "#03a9f4" : '#9e9e9e' }} />}
+                            />
+                        ) : null}
+
+                        {/* {isPatient ? (
+                            <BottomNavigationAction
+                                sx={{
+                                    border: '0.1px solid #bdbdbd',
+                                    borderRadius: '5px',
+                                    color: "#03a9f4",
+
+                                    "&:hover": {
+                                        backgroundColor: '#82b1f',
+                                        border: '0.1px solid #2196f3',
+                                    }
+                                }}
+                                onClick={() => {
+                                    // removePatient()
+                                }}
+                                label="Remover Paciente"
+                                icon={<Stethoscope size={24} color={isPatient ? "#03a9f4" : "#9e9e9e"} />} />
+                        ) : null} */}
+
+                    </BottomNavigation>}
+
+                    {activeForm && <Box
+                        display='flex'
+                        sx={{ border: '1px solid #EEEEEE', marginTop: '15px', padding: '10px', justifyContent: 'space-between', alignItems: 'center' }}
+                    >
+                        <Box width={'100%'}>
+                            <Form ref={formRef} onSubmit={(dados) => handSave(dados)}>
+                                <Grid container item direction='row' spacing={2} >
+                                    <Grid item xs={4}>
+                                        <AutoCompleteHospital />
+                                    </Grid>
+                                    <Grid item xs={4}>
+                                        <AutoCompleteTreatament />
+                                    </Grid>
+                                </Grid>
+                            </Form>
+                        </Box>
+
+                        < ButtonAction
+                            mostrarBotaoNovo={false}
+                            mostrarBotaoApagar={false}
+                            mostrarBotaoSalvar={true}
+                            mostrarBotaoSalvarEFechar={false}
+                            mostrarBotaoVoltar={false}
+                            aoClicarEmSalvar={save}
+                        />
+                    </Box>}
+
+                </Box>
+
                 <Box
                     display='flex'
                     sx={{ border: '1px solid #EEEEEE', padding: '10px', justifyContent: 'space-between' }}>
@@ -275,6 +608,73 @@ export const PersonalData: React.FC = () => {
 
                 </Box>
 
+                {isPatient && <Box
+                    display='flex'
+                    sx={{ border: '1px solid #EEEEEE', padding: '10px', justifyContent: 'space-between' }}>
+                    <Box
+                        width='100%'
+                    >
+                        {isLoadind && <LinearProgress />}
+                        <Typography
+                            variant="subtitle2"
+                            marginBottom={3}
+                        >
+                            Dados Hospitalares
+                        </Typography>
+
+                        <Grid container spacing={3}>
+                            <Grid item md={4} xs={6}>
+                                <Typography
+                                    color={'gray'}
+                                >
+                                    Hospital
+                                </Typography>
+
+                                {hospital.name !== undefined ? hospital.name : '-'}
+                            </Grid>
+
+                            {treatment.map((treatmentItem) => (
+
+                                <Grid item md={4} xs={6} key={treatmentItem.id}>
+                                    <Typography
+                                        color={'gray'}
+                                    >
+                                        Nome
+                                    </Typography>
+                                    {treatmentItem.name}
+                                    <Typography
+                                        color={'gray'}
+                                    >
+                                        Tipo
+                                    </Typography>
+                                    {treatmentItem.type}
+                                </Grid>
+
+
+                            ))}
+
+
+                        </Grid>
+                    </Box>
+                    <Box>
+                        <Button
+                            size='small'
+                            color='primary'
+                            disableElevation
+                            variant='outlined'
+                            onClick={() => {
+                                setActiveForm(true)
+                                setActiveFormUpdate(true)
+                            }}
+                            startIcon={<Icon>edit</Icon>}
+                        >
+                            <Typography variant='button' whiteSpace="nowrap" textOverflow="ellipsis" overflow="hidden">
+                                Editar
+                            </Typography>
+                        </Button>
+                    </Box>
+                </Box>}
+
                 <Box
                     display='flex'
                     sx={{ border: '1px solid #EEEEEE', marginBottom: '15px', padding: '10px', justifyContent: 'space-between' }}>
@@ -339,8 +739,7 @@ export const PersonalData: React.FC = () => {
                                     if (emergencyContact && emergencyContact.id) {
                                         deleteContato(emergencyContact.id);
                                     }
-                                }
-                                }
+                                }}
                                 startIcon={<Icon>delete</Icon>}
                             >
                                 <Typography variant='button' whiteSpace="nowrap" textOverflow="ellipsis" overflow="hidden">
