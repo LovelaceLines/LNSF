@@ -52,7 +52,7 @@ public class TourService : ITourService
         
         if (!await _peopleRepository.Exists(tour.PeopleId)) throw new AppException("Pessoa não encontrada!", HttpStatusCode.UnprocessableEntity);
         if (!await _tourRepository.Exists(tour.Id)) throw new AppException("Passeio não encontrado!", HttpStatusCode.UnprocessableEntity);
-        if (!await _tourRepository.IsClosed(tour.Id)) throw new AppException("Pessoa não saiu!", HttpStatusCode.UnprocessableEntity);
+        if (await _tourRepository.IsClosed(tour.Id)) throw new AppException("Pessoa já retornou!", HttpStatusCode.UnprocessableEntity);
 
         tour.Input = DateTime.Now;
 
