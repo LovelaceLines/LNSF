@@ -24,7 +24,7 @@ public class PeopleRepository : BaseRepository<People>, IPeopleRepository
         var hostings = _context.Hostings.AsNoTracking();
 
         if (filter.Id != null) query = query.Where(p => p.Id == filter.Id);
-        if (!string.IsNullOrEmpty(filter.Name)) query = query.Where(p => p.Name.Contains(filter.Name));
+        if (!string.IsNullOrEmpty(filter.Name)) query = query.Where(p => p.Name.ToLower().Contains(filter.Name.ToLower()));
         if (!string.IsNullOrEmpty(filter.RG)) query = query.Where(p => p.RG.Contains(filter.RG));
         if (!string.IsNullOrEmpty(filter.CPF)) query = query.Where(p => p.CPF.Contains(filter.CPF));
         if (!string.IsNullOrEmpty(filter.Phone)) query = query.Where(p => p.Phone.Contains(filter.Phone));

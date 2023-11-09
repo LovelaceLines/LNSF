@@ -36,4 +36,19 @@ public class ToursRepository : BaseRepository<Tour>, IToursRepository
 
         return tours;
     }
+
+    public async Task<bool> IsClosed(int id) => 
+        await _context.Tours.AsNoTracking()
+            .Where(x => x.Id == id && x.Input != null)
+            .AnyAsync();
+
+    public async Task<bool> IsOpen(int id) => 
+        await _context.Tours.AsNoTracking()
+            .Where(x => x.Id == id && x.Input == null)
+            .AnyAsync();
+    
+    public async Task<bool> PeopleHasOpenTour(int peopleId) => 
+        await _context.Tours.AsNoTracking()
+            .Where(x => x.PeopleId == peopleId && x.Input == null)
+            .AnyAsync();
 }

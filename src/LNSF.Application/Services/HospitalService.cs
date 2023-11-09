@@ -45,4 +45,11 @@ public class HospitalService : IHospitalService
         
         return await _repository.Update(hospital);
     }
+
+    public async Task<Hospital> Delete(int id)
+    {
+        if (!await _repository.Exists(id)) throw new AppException("Hospital não encontrado!", HttpStatusCode.NotFound);
+
+        return await _repository.Remove(id);
+    }
 }

@@ -18,7 +18,7 @@ public class EmergencyContactRepository : BaseRepository<EmergencyContact>, IEme
         var query = _context.EmergencyContacts.AsNoTracking();
         
         if (filter.Id != null) query = query.Where(x => x.Id == filter.Id);
-        if (filter.Name != null) query = query.Where(x => x.Name.Contains(filter.Name));
+        if (filter.Name != null) query = query.Where(x => x.Name.ToLower().Contains(filter.Name.ToLower()));
         if (filter.Phone != null) query = query.Where(x => x.Phone.Contains(filter.Phone));
         if (filter.PeopleId != null) query = query.Where(x => x.PeopleId == filter.PeopleId);
         query = query.OrderBy(x => x.Name);

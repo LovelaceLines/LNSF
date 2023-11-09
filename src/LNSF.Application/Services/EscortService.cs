@@ -42,4 +42,11 @@ public class EscortService : IEscortService
 
         return await _escortRepository.Update(escort);
     }
+
+    public async Task<Escort> Delete(int id)
+    {
+        if (!await _escortRepository.Exists(id)) throw new AppException("Acompanhante não encontrado", HttpStatusCode.NotFound);
+
+        return await _escortRepository.Remove(id);
+    }
 }

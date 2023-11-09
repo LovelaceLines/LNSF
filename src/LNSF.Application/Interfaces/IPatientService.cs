@@ -9,4 +9,5 @@ public interface IPatientService
     Task<int> Count();
     Task<Patient> Create(Patient patient);
     Task<Patient> Update(Patient patient);
+    Task<Patient> Delete(int Id);
 }

@@ -13,3 +13,15 @@ public class TourViewModelFake : Faker<TourViewModel>
         RuleFor(x => x.Note, f => f.Lorem.Sentence(10));
     }
 }
+
+public class TourPostViewModelFake : Faker<TourPostViewModel>
+{
+    public TourPostViewModelFake() => 
+        RuleFor(x => x.Note, f => f.Lorem.Sentence(10));
+}
+
+public class TourPutViewModelFake : Faker<TourPutViewModel>
+{
+    public TourPutViewModelFake() => 
+        RuleFor(x => x.Note, f => f.Lorem.Sentence(10));
+}

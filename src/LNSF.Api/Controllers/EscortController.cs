@@ -67,4 +67,15 @@ public class EscortController : ControllerBase
         return Ok(escortViewModel);
     }
 
+    /// <summary>
+    /// Deletes an escort by its ID.
+    /// </summary>
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<EscortViewModel>> Delete(int id)
+    {
+        var escortDeleted = await _escortService.Delete(id);
+        var escortViewModel = _mapper.Map<EscortViewModel>(escortDeleted);
+
+        return Ok(escortViewModel);
+    }
 }

@@ -9,4 +9,5 @@ public interface ITreatmentService
     Task<int> GetCount();
     Task<Treatment> Create(Treatment Treatment);
     Task<Treatment> Update(Treatment treatment);
+    Task<Treatment> Delete(int id);
 }

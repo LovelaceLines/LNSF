@@ -19,7 +19,7 @@ public class TreatmentRepository : BaseRepository<Treatment>, ITreatmentReposito
         var query = _context.Treatments.AsNoTracking();
         
         if (filter.Id != null) query = query.Where(x => x.Id == filter.Id);
-        if (filter.Name != null) query = query.Where(x => x.Name != null && x.Name.Contains(filter.Name));
+        if (filter.Name != null) query = query.Where(x => x.Name != null && x.Name.ToLower().Contains(filter.Name.ToLower()));
         if (filter.Type != null) query = query.Where(x => x.Type == filter.Type);
         if (filter.OrderBy == OrderBy.Ascending) query = query.OrderBy(x => x.Name);
         else query = query.OrderByDescending(x => x.Name);

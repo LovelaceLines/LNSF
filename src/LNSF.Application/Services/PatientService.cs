@@ -56,4 +56,11 @@ public class PatientService : IPatientService
 
         return await _patientRepository.Update(patient);
     }
+
+    public async Task<Patient> Delete(int id)
+    {
+        if (!await _patientRepository.Exists(id)) throw new AppException("Paciente não encontrado", HttpStatusCode.NotFound);
+
+        return await _patientRepository.Remove(id);
+    }
 }
