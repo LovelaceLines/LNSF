@@ -17,44 +17,14 @@ export const ViewRoom: React.FC = () => {
     const [rows, setRows] = useState<iRoomObject[]>([]);
     const [totalCount, setTotalCount] = useState(0);
     const [isLoadind, setIsLoading] = useState(true);
-    const [selectedFilter, setSelectedFilter] = useState('');
     const [searchParams, setSearchParams] = useSearchParams();
     const { debounce } = useDebounce();
     const theme = useTheme();
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
 
-    const datafilter = [
-        {
-            filter: 'number',
-            tipo: 'Nenhum',
-        },
-        {
-            filter: 'number',
-            tipo: 'N°',
-        },
-        {
-            filter: 'storey',
-            tipo: 'Andar',
-        },
-        {
-            filter: 'available',
-            tipo: 'Disponível',
-        },
-        {
-            filter: 'available',
-            tipo: 'Indisponível',
-        },
-    ]
-
     const busca = useMemo(() => {
-        if (selectedFilter === 'Disponível') {
-            return 'true';
-        } else if (selectedFilter === 'Indisponível') {
-            return 'false';
-        } else {
-            return (searchParams.get('busca') || '');
-        }
+        return (searchParams.get('busca') || '');
     }, [searchParams])
 
 
@@ -63,25 +33,12 @@ export const ViewRoom: React.FC = () => {
     }, [searchParams])
 
 
-    const filter = useMemo(() => {
-        if (selectedFilter !== 'Nenhum') {
-            const filtroEncontrado = datafilter.find((item) => item.tipo === selectedFilter);
-            return filtroEncontrado?.filter ?? '';
-        } else {
-            return 'number';
-        }
-    }, [searchParams])
-
-
     useEffect(() => {
         setIsLoading(true);
 
         debounce(() => {
-            if (selectedFilter === 'Nenhum') {
-                setSearchParams({ busca: '', pagina: '1' }, { replace: true });
-            }
-
-            viewRoom(pagina, busca, filter)
+        
+            viewRoom(pagina, busca, 'number')
                 .then((response) => {
                     if (response instanceof Error) {
                         setIsLoading(false);
@@ -96,7 +53,7 @@ export const ViewRoom: React.FC = () => {
                 });
         });
 
-    }, [busca, pagina, selectedFilter]);
+    }, [busca, pagina]);
 
     useEffect(() => {
         returnQuantity()
@@ -127,8 +84,7 @@ export const ViewRoom: React.FC = () => {
                     <SearchButton
                         textoDaBusca={busca}
                         aoMudarTextoDeBusca={texto => setSearchParams({ busca: texto, pagina: '1' }, { replace: true })}
-                        filter={datafilter}
-                        aoMudarFiltro={(novoFiltro) => { setSelectedFilter(novoFiltro); }}
+
                     />
                 </Toolbar>
             </Box>

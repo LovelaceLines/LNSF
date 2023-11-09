@@ -23,7 +23,6 @@ export const ViewPeople: React.FC = () => {
     const [rows, setRows] = useState<iPeopleObject[]>([]);
     const [totalCount, setTotalCount] = useState(0);
     const [isLoadind, setIsLoading] = useState(true);
-    const [selectedFilter, setSelectedFilter] = useState('');
     const [searchParams, setSearchParams] = useSearchParams();
     const { debounce } = useDebounce();
     const theme = useTheme();
@@ -34,60 +33,20 @@ export const ViewPeople: React.FC = () => {
     const [idModal, setIdModal] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const datafilter = [
-        {
-            filter: 'number',
-            tipo: 'Nenhum',
-        },
-        // {
-        //     filter: 'number',
-        //     tipo: 'N°',
-        // },
-        // {
-        //     filter: 'storey',
-        //     tipo: 'Andar',
-        // },
-        // {
-        //     filter: 'available',
-        //     tipo: 'Disponível',
-        // },
-        // {
-        //     filter: 'available',
-        //     tipo: 'Indisponível',
-        // },
-    ]
-
     const busca = useMemo(() => {
-        if (selectedFilter === 'Disponível') {
-            return 'true';
-        } else if (selectedFilter === 'Indisponível') {
-            return 'false';
-        } else {
-            return (searchParams.get('busca') || '');
-        }
+        return (searchParams.get('busca') || '');
     }, [searchParams])
 
     const pagina = useMemo(() => {
         return Number(searchParams.get('pagina') || '1');
     }, [searchParams])
 
-    const filter = useMemo(() => {
-        if (selectedFilter !== 'Nenhum') {
-            const filtroEncontrado = datafilter.find((item) => item.tipo === selectedFilter);
-            return filtroEncontrado?.filter ?? '';
-        } else {
-            return 'number';
-        }
-    }, [searchParams])
-
     useEffect(() => {
         setIsLoading(true);
 
         debounce(() => {
-            if (selectedFilter === 'Nenhum') {
-                setSearchParams({ busca: '', pagina: '1' }, { replace: true });
-            }
-            viewPeople(pagina, busca, filter)
+            
+            viewPeople(pagina, busca, 'name')
                 .then((response) => {
                     if (response instanceof Error) {
                         setIsLoading(false);
@@ -102,7 +61,7 @@ export const ViewPeople: React.FC = () => {
                 });
         });
 
-    }, [busca, pagina, selectedFilter, modify]);
+    }, [busca, pagina, modify]);
 
     useEffect(() => {
         returnQuantity()
@@ -161,8 +120,6 @@ export const ViewPeople: React.FC = () => {
                     <SearchButton
                         textoDaBusca={busca}
                         aoMudarTextoDeBusca={texto => setSearchParams({ busca: texto, pagina: '1' }, { replace: true })}
-                        filter={datafilter}
-                        aoMudarFiltro={(novoFiltro) => { setSelectedFilter(novoFiltro); }}
                     />
 
                     < ButtonAction

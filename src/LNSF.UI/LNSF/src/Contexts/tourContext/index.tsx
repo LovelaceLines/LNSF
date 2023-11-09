@@ -60,7 +60,7 @@ export const TourProvider = ({ children }: iTourProvider) => {
             const response = await Api.post('/Tour', objetoJSON)
 
             if (response.status === 200) {
-                toast.success('Quarto cadastrado!');
+                toast.success('Saída cadastrada!');
                 return response.data as iTourObject;
             }
         } catch (error: any) {
@@ -104,7 +104,7 @@ export const TourProvider = ({ children }: iTourProvider) => {
             const response = await Api.put('/Tour', objetoJSON);
 
             if (response.status === 200) {
-                toast.success('Retorno confirmado!');
+                toast.success('Atualizado!');
                 return response.data as iTourObject;
             }
         } catch (error: any) {

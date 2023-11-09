@@ -218,7 +218,7 @@ export const TelaDeGerenciamentoPeople: React.FC = () => {
                         aoClicarEmSalvar={id !== 'cadastrar' ? save : undefined}
                         aoClicarEmSalvarEFechar={id === 'cadastrar' ? saveAndClose : undefined}
                         //aoClicarEmNovo={() => { navigate('/inicio/apartamentos/gerenciar/cadastrar') }}
-                        aoClicarEmVoltar={() => { navigate(`/inicio/pessoas/dados/${id}`) }}
+                        aoClicarEmVoltar={() => { navigate(`/inicio/pessoas/visualizar`) }}
                     />
                 </Toolbar>
 

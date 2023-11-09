@@ -3,7 +3,7 @@ import { useContext, useState } from 'react'
 import { useEffect } from "react"
 import { Form } from "@unform/web";
 import { PeopleContext, RoomContext, TourContext, iTourPeopleRoom, iTourRegister, iTourUpdate } from '../../../Contexts';
-import { Box, Button, Divider, Grid, IconButton, LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableRow, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Button, Divider, Grid, LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableRow, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { AutoCompletePeople, ButtonAction } from '../../../Component';
 import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
 import { IFormErrorsCustom, TextFieldCustom, useCustomForm } from '../../../Component/forms';

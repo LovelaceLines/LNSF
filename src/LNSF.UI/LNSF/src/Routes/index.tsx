@@ -3,6 +3,10 @@ import { AuthContext } from '../Contexts';
 import { useContext } from 'react';
 import { Account, Dashboard, LoginPage, PersonalData, PutAllPasseio, RegisterRoom, RegisterTour, TelaDeGerenciamentoAccount, TelaDeGerenciamentoPeople, TelaDeGerenciamentoRoom, TelaRegisterUpdateContactEmergence, ViewPeople, ViewRoom, ViewTour } from '../Pages/index';
 import { ProtectedRoutes } from '../ProtectedRoutes';
+import { ViewHospital } from '../Pages/hospital/viewHospital/ViewHospital';
+import { TelaDeGerenciamentoHospital } from '../Pages/hospital/registerHospital/TelaDeGerenciamentoHospital';
+import { TelaDeGerenciamentoTratamentos } from '../Pages/tratamentos/registerTratamentos/TelaDeGerenciamentoTratamento';
+import { ViewTratamentos } from '../Pages/tratamentos/viewTratamentos/ViewTratamentos';
 
 export const AppRoutes = () => {
 
@@ -28,6 +32,13 @@ export const AppRoutes = () => {
 
                     {user.role === 1 && <Route path="/inicio/usuarios/gerenciar" element={<Dashboard children={<Account />} />} />}
                     {user.role !== 0 && <Route path="/inicio/usuarios/gerenciar/:id" element={<Dashboard children={<TelaDeGerenciamentoAccount />} />} />}
+
+                    {user.role !== 0 && <Route path="/inicio/hospital/visualizar" element={<Dashboard children={<ViewHospital />} />} />}
+                    {user.role !== 0 && <Route path="/inicio/hospital/gerenciar/:id" element={<Dashboard children={<TelaDeGerenciamentoHospital />} />} />}
+
+                    {user.role !== 0 && <Route path="/inicio/tratamentos/visualizar" element={<Dashboard children={<ViewTratamentos />} />} />}
+                    {user.role !== 0 && <Route path="/inicio/tratamentos/gerenciar/:id" element={<Dashboard children={<TelaDeGerenciamentoTratamentos />} />} />}
+
 
                     <Route path="/inicio/registrodiario/visualizar" element={<Dashboard children={<ViewTour />} />} />
                     <Route path="/inicio/registrodiario/adicionar" element={<Dashboard children={<RegisterTour />} />} />

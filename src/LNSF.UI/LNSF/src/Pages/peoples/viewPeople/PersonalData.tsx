@@ -42,7 +42,6 @@ export const PersonalData: React.FC = () => {
     const [isPatient, setIsPatient] = useState(false)
     const [activeForm, setActiveForm] = useState(false)
     const [activeFormUpdate, setActiveFormUpdate] = useState(false)
-    // const [peopleId, setPeopleId] = useState<number>();
     const [modify, setModify] = useState(false);
     const [modify1, setModify1] = useState(false);
     const [modify2, setModify2] = useState(false);
@@ -67,7 +66,7 @@ export const PersonalData: React.FC = () => {
             });
     }, [id])
 
-    console.log("id: ", id)
+
 
     useEffect(() => {
 
@@ -83,8 +82,6 @@ export const PersonalData: React.FC = () => {
                     setIsEscort(false)
                     setPatient(response[0])
 
-
-                    console.log('buscando hospital')
                     viewHospital(1, String(response[0].hospitalId), 'id')
                         .then((responsee) => {
                             if (responsee instanceof Error) {
@@ -99,16 +96,16 @@ export const PersonalData: React.FC = () => {
                             console.error('Detalhes do erro:', error);
                         });
 
-                    console.log('response[0].treatmentIds ', response[0].treatmentIds)
+
                     setTreatment([])
                     response[0].treatmentIds.map((item) => {
-                        console.log('item: ', item)
+                  
                         viewTreatment(1, String(item), 'id')
                             .then((responsee) => {
                                 if (responsee instanceof Error) {
                                     setIsLoading(false);
                                 } else {
-                                    console.log('treat: ', responsee)
+                   
                                     setTreatment(prevTreatment => [...prevTreatment, ...responsee]);
                                     setIsLoading(false);
                                 }

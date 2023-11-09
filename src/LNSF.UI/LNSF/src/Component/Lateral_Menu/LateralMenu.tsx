@@ -70,7 +70,6 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
                     pathOption: '/inicio/apartamentos/gerenciar',
                     labelOption: 'Gerenciar',
                 },
-
             )
             menu.push(
                 {
@@ -86,11 +85,39 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
                     ],
                 },
             )
+            menu.push(
+                {
+                    index: 5,
+                    icon: 'domain',
+                    path: '/inicio/hospital',
+                    label: 'Hospitais',
+                    options: [
+                        {
+                            pathOption: '/inicio/hospital/visualizar',
+                            labelOption: 'Visualizar',
+                        },
+                    ],
+                },
+            )
+            menu.push(
+                {
+                    index: 6,
+                    icon: 'vaccines',
+                    path: '/inicio/tratamentos',
+                    label: 'Tratamentos',
+                    options: [
+                        {
+                            pathOption: '/inicio/tratamentos/visualizar',
+                            labelOption: 'Visualizar',
+                        },
+                    ],
+                },
+            )
         }
         if (user.role === 1) {
             menu.push(
                 {
-                    index: 5,
+                    index: 7,
                     icon: 'settings',
                     path: '/inicio/usuarios',
                     label: 'Usuários do sistema',
