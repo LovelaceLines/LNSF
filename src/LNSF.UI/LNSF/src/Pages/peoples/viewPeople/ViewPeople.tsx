@@ -1,7 +1,7 @@
 
 import { useContext, useMemo, useState } from 'react'
 import { useEffect } from "react"
-import { PeopleContext, iPeopleObject, iRemovePeopleRoom } from '../../../Contexts';
+import { PeopleContext, RoomContext, iPeopleObject, iRemovePeopleRoom, iRoomObject } from '../../../Contexts';
 import { Box, Button, LinearProgress, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { Environment } from '../../../environment';
 import { ButtonAction, SearchButton } from '../../../Component';
@@ -20,7 +20,9 @@ import { TelaAddRemovePeopleRoom } from '../registerPeople/TelaAddRemovePeopleRo
 export const ViewPeople: React.FC = () => {
 
     const { viewPeople, returnQuantity, removePeopleRoom } = useContext(PeopleContext);
+    const { viewRoom } = useContext(RoomContext);
     const [rows, setRows] = useState<iPeopleObject[]>([]);
+    const [roomValues, setRoomValues] = useState<iRoomObject[]>([]);
     const [totalCount, setTotalCount] = useState(0);
     const [isLoadind, setIsLoading] = useState(true);
     const [searchParams, setSearchParams] = useSearchParams();
@@ -45,7 +47,7 @@ export const ViewPeople: React.FC = () => {
         setIsLoading(true);
 
         debounce(() => {
-            
+
             viewPeople(pagina, busca, 'name')
                 .then((response) => {
                     if (response instanceof Error) {
@@ -62,6 +64,39 @@ export const ViewPeople: React.FC = () => {
         });
 
     }, [busca, pagina, modify]);
+
+
+    useEffect(() => {
+        setIsLoading(true);
+        debounce(() => {
+            viewRoom(pagina, busca, 'id', 100)
+                .then((response) => {
+                    if (response instanceof Error) {
+                        setIsLoading(false);
+                    } else {
+                        setRoomValues(response);
+                        setIsLoading(false);
+                        console.log('oii', response)
+                    }
+                })
+                .catch((error) => {
+                    setIsLoading(false);
+                    console.error('Detalhes do erro:', error);
+                });
+        });
+
+    }, []);
+
+
+    const getRoomNumber = (roomId: number) => {
+        if (roomId !== null) {
+            const room = roomValues.find(room => room.id === roomId);
+            return room ? room.number : 'N/A';
+        }
+        return 'N/A';
+    };
+
+
 
     useEffect(() => {
         returnQuantity()
@@ -152,7 +187,7 @@ export const ViewPeople: React.FC = () => {
                                 <TableCell sx={{ textAlign: 'left' }}>
                                     {row.name}
                                 </TableCell>
-                                
+
                                 <TableCell sx={{ textAlign: 'center' }}>
                                     <Button
                                         size='small'
@@ -165,7 +200,7 @@ export const ViewPeople: React.FC = () => {
                                     </Button>
                                 </TableCell>
 
-                                <TableCell sx={{ textAlign: 'center' }}>{row.roomId === null ? <PersonOffRoundedIcon /> : row.roomId}</TableCell>
+                                <TableCell sx={{ textAlign: 'center' }}>{row.roomId === null ? <PersonOffRoundedIcon /> : getRoomNumber(row.roomId)}</TableCell>
 
                                 <TableCell sx={{ textAlign: 'center' }}>
                                     <Button

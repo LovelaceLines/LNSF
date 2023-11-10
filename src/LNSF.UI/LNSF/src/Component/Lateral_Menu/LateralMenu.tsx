@@ -25,7 +25,7 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
                 index: 1,
                 icon: 'home',
                 path: '/inicio',
-                label: 'Home',
+                label: 'Início',
                 options: [
                     {
                         pathOption: '/inicio',
