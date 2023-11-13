@@ -10,5 +10,9 @@ public class HostingValidator : AbstractValidator<Hosting>
         RuleFor(x => x.CheckOut)
             .GreaterThan(x => x.CheckIn)
             .WithMessage("Data de saída deve ser maior que a data de entrada");
+        
+        RuleForEach(x => x.EscortInfos)
+            .Must(x => x.CheckIn < x.CheckOut)
+            .WithMessage("Data de saída deve ser maior que a data de entrada");
     }
 }

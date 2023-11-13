@@ -35,7 +35,7 @@ public class HostingService : IHostingService
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
         if (!await _peopleRepository.Exists(hosting.PatientId)) throw new AppException("Paciente não encontrado", HttpStatusCode.NotFound);
-        foreach (var escortId in hosting.EscortsIds)
+        foreach (var escortId in hosting.EscortInfos)
             if (!await _peopleRepository.Exists(escortId)) throw new AppException("Acompanhante não encontrado", HttpStatusCode.NotFound);
 
         return await _hostingRepository.Add(hosting);
@@ -50,7 +50,7 @@ public class HostingService : IHostingService
 
         var oldHosting = await _hostingRepository.Get(hosting.Id);
         if (oldHosting.PatientId != hosting.PatientId) throw new AppException("Não é possível alterar o paciente da hospedagem", HttpStatusCode.BadRequest);
-        foreach (var escortId in hosting.EscortsIds)
+        foreach (var escortId in hosting.EscortInfos)
             if (!await _peopleRepository.Exists(escortId)) throw new AppException("Acompanhante não encontrado", HttpStatusCode.NotFound);
 
         return await _hostingRepository.Update(hosting);

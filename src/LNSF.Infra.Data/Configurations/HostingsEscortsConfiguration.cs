@@ -17,5 +17,8 @@ public class HostingsEscortsConfiguration : IEntityTypeConfiguration<HostingEsco
         builder.HasOne(he => he.Escort)
             .WithMany()
             .HasForeignKey(he => he.EscortId);
+        
+        builder.Property(he => he.CheckIn)
+            .IsRequired();
     }
 }

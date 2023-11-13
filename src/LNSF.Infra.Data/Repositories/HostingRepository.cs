@@ -1,4 +1,5 @@
 using System.Net;
+using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Enums;
 using LNSF.Domain.Exceptions;
@@ -27,8 +28,8 @@ public class HostingRepository : BaseRepository<Hosting>, IHostingRepository
 
         if (filter.Id != null) query = query.Where(x => x.Id == filter.Id);
         if (filter.PatientId != null) query = query.Where(x => x.PatientId == filter.PatientId);
-        if (filter.CheckIn != null) query = query.Where(x => x.CheckIn >= filter.CheckIn);
-        if (filter.CheckOut != null) query = query.Where(x => x.CheckOut <= filter.CheckOut);
+        if (filter.PatientCheckIn != null) query = query.Where(x => x.CheckIn >= filter.PatientCheckIn);
+        if (filter.PatientCheckOut != null) query = query.Where(x => x.CheckOut <= filter.PatientCheckOut);
 
         if (filter.Active == true) query = query.Where(x =>
             x.CheckIn <= DateTime.Now && DateTime.Now <= x.CheckOut);
@@ -45,11 +46,12 @@ public class HostingRepository : BaseRepository<Hosting>, IHostingRepository
 
         foreach (var hosting in hostings)
         {
-            var escortIds = _context.HostingsEscorts.Where(x => x.HostingId == hosting.Id)
-                .Select(x => x.EscortId)
+            var escortInfos = _context.HostingsEscorts.Where(x => x.HostingId == hosting.Id)
+                .Select(x => 
+                    new EscortHostingInfo{ Id = x.EscortId, CheckIn = x.CheckIn, CheckOut = x.CheckOut })
                 .ToList();
 
-            hosting.EscortsIds = escortIds;
+            hosting.EscortInfos = escortInfos;
         }
 
         return hostings;
@@ -64,14 +66,14 @@ public class HostingRepository : BaseRepository<Hosting>, IHostingRepository
             await _context.Hostings.AddAsync(hosting);
             await _context.SaveChangesAsync();
 
-            foreach (var escortId in hosting.EscortsIds)
-            {
+            foreach (var escortInfo in hosting.EscortInfos)
                 await _hostingEscortRepository.Add(new HostingEscort
                 {
-                    EscortId = escortId,
-                    HostingId = hosting.Id
+                    EscortId = escortInfo.Id,
+                    HostingId = hosting.Id,
+                    CheckIn = escortInfo.CheckIn,
+                    CheckOut = escortInfo.CheckOut
                 });
-            }
   
             await CommitTransaction();
 
@@ -95,14 +97,14 @@ public class HostingRepository : BaseRepository<Hosting>, IHostingRepository
             _context.Hostings.Update(hosting);
             await _context.SaveChangesAsync();
 
-            foreach (var escortId in hosting.EscortsIds)
-            {
+            foreach (var escortInfo in hosting.EscortInfos)
                 await _hostingEscortRepository.Add(new HostingEscort
                 {
-                    EscortId = escortId,
-                    HostingId = hosting.Id
+                    EscortId = escortInfo.Id,
+                    HostingId = hosting.Id,
+                    CheckIn = escortInfo.CheckIn,
+                    CheckOut = escortInfo.CheckOut
                 });
-            }
 
             await _context.SaveChangesAsync();
             await CommitTransaction();

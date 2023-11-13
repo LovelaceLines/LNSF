@@ -1,3 +1,5 @@
+using LNSF.Domain.DTOs;
+
 namespace LNSF.Domain.Entities;
 
 public class Hosting 
@@ -7,5 +9,5 @@ public class Hosting
 	public DateTime? CheckOut { get; set; }
 	public int PatientId { get; set; }
 	public Patient? Patient { get; set; }
-	public List<int> EscortsIds { get; set; } = new();
+	public List<EscortHostingInfo> EscortInfos { get; set; } = new();
 }
