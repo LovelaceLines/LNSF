@@ -10,6 +10,7 @@ public class HostingFilter
 	public DateTime? EscortCheckIn { get; set; }
 	public DateTime? EscortCheckOut { get; set; }
 	public int? PatientId { get; set; }
+	public int? EscortId { get; set; }
 	public bool? Active { get; set; }
 	public OrderBy OrderBy { get; set; } = OrderBy.Ascending;
 	public Pagination Page { get; set; } = new();

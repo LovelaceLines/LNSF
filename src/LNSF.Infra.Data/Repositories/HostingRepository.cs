@@ -25,11 +25,18 @@ public class HostingRepository : BaseRepository<Hosting>, IHostingRepository
     public async Task<List<Hosting>> Query(HostingFilter filter)
     {
         var query = _context.Hostings.AsNoTracking();
+        var hostingsEscorts = _context.HostingsEscorts.AsNoTracking();
 
         if (filter.Id != null) query = query.Where(x => x.Id == filter.Id);
         if (filter.PatientId != null) query = query.Where(x => x.PatientId == filter.PatientId);
+        if (filter.EscortId != null) query = query.Where(x => 
+            hostingsEscorts.Any(y => y.HostingId == x.Id && y.EscortId == filter.EscortId));
         if (filter.PatientCheckIn != null) query = query.Where(x => x.CheckIn >= filter.PatientCheckIn);
         if (filter.PatientCheckOut != null) query = query.Where(x => x.CheckOut <= filter.PatientCheckOut);
+        if (filter.EscortCheckIn != null) query = query.Where(x => 
+            hostingsEscorts.Any(y => y.HostingId == x.Id && y.CheckIn >= filter.EscortCheckIn));
+        if (filter.EscortCheckOut != null) query = query.Where(x =>
+            hostingsEscorts.Any(y => y.HostingId == x.Id && y.CheckOut <= filter.EscortCheckOut));
 
         if (filter.Active == true) query = query.Where(x =>
             x.CheckIn <= DateTime.Now && DateTime.Now <= x.CheckOut);
@@ -46,9 +53,8 @@ public class HostingRepository : BaseRepository<Hosting>, IHostingRepository
 
         foreach (var hosting in hostings)
         {
-            var escortInfos = _context.HostingsEscorts.Where(x => x.HostingId == hosting.Id)
-                .Select(x => 
-                    new HostingEscortInfo{ Id = x.EscortId, CheckIn = x.CheckIn, CheckOut = x.CheckOut })
+            var escortInfos = hostingsEscorts.Where(x => x.HostingId == hosting.Id)
+                .Select(x => new HostingEscortInfo{ Id = x.EscortId, CheckIn = x.CheckIn, CheckOut = x.CheckOut })
                 .ToList();
 
             hosting.EscortInfos = escortInfos;

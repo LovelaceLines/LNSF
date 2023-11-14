@@ -1,4 +1,5 @@
 ﻿using LNSF.Api.ViewModels;
+using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
 using LNSF.Test.Fakers;
 using Xunit;
@@ -6,7 +7,7 @@ using Xunit;
 namespace LNSF.Test.Apis;
 
 public class HostingTestApi : GlobalClientRequest
-{/*
+{
     [Theory]
     [InlineData(1)]
     [InlineData(2)]
@@ -48,7 +49,14 @@ public class HostingTestApi : GlobalClientRequest
         // Arrange - Hosting
         var hostingFake = new HostingPostViewModelFake().Generate();
         hostingFake.PatientId = patientPosted.Id;
-        hostingFake.EscortsIds = escortsIds;
+        hostingFake.EscortInfos = new List<HostingEscortInfo>();
+        foreach (var escortId in escortsIds)
+            hostingFake.EscortInfos.Add(new HostingEscortInfo
+            {
+                Id = escortId,
+                CheckIn = hostingFake.CheckIn,
+                CheckOut = null
+            });
 
         // Arrange - Count
         var countBefore = await GetCount(_hostingClient);
@@ -107,7 +115,14 @@ public class HostingTestApi : GlobalClientRequest
         hostingFake.CheckIn = new Bogus.DataSets.Date().Future();
         hostingFake.CheckOut = null;
         hostingFake.PatientId = patientPosted.Id;
-        hostingFake.EscortsIds = escortsIds;
+        hostingFake.EscortInfos = new List<HostingEscortInfo>();
+        foreach (var escortId in escortsIds)
+            hostingFake.EscortInfos.Add(new HostingEscortInfo
+            {
+                Id = escortId,
+                CheckIn = hostingFake.CheckIn,
+                CheckOut = null
+            });
 
         // Arrange - Count
         var countBefore = await GetCount(_hostingClient);
@@ -146,12 +161,12 @@ public class HostingTestApi : GlobalClientRequest
         var patientPosted = await Post<PatientViewModel>(_patientClient, patientFake);
 
         // Arrange - Escorts
-        var escortsIds = new List<int>();
+        var escortInfos = new List<HostingEscortInfo>();
 
         // Arrange - Hosting
         var hostingFake = new HostingPostViewModelFake().Generate();
         hostingFake.PatientId = patientPosted.Id;
-        hostingFake.EscortsIds = escortsIds;
+        hostingFake.EscortInfos = escortInfos;
 
         // Arrange - Count
         var countBefore = await GetCount(_hostingClient);
@@ -190,12 +205,12 @@ public class HostingTestApi : GlobalClientRequest
         var patientPosted = await Post<PatientViewModel>(_patientClient, patientFake);
 
         // Arrange - Escorts
-        var escortsIds = new List<int>();
+        var escortInfos = new List<HostingEscortInfo>();
 
         // Arrange - Hosting
         var hostingFake1 = new HostingPostViewModelFake().Generate();
         hostingFake1.PatientId = patientPosted.Id;
-        hostingFake1.EscortsIds = escortsIds;
+        hostingFake1.EscortInfos = escortInfos;
         var hostingPosted = await Post<HostingViewModel>(_hostingClient, hostingFake1);
 
         // Arrange - Hosting
@@ -206,7 +221,7 @@ public class HostingTestApi : GlobalClientRequest
             CheckIn = hostingFake2.CheckIn,
             CheckOut = hostingFake2.CheckOut,
             PatientId = patientPosted.Id,
-            EscortsIds = escortsIds
+            EscortInfos = escortInfos
         };
 
         // Act - Hosting
@@ -214,5 +229,5 @@ public class HostingTestApi : GlobalClientRequest
 
         // Assert
         Assert.Equivalent(hostingUpdate, hostingUpdated);
-    }*/
+    }
 }
