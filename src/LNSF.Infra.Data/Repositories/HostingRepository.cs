@@ -48,7 +48,7 @@ public class HostingRepository : BaseRepository<Hosting>, IHostingRepository
         {
             var escortInfos = _context.HostingsEscorts.Where(x => x.HostingId == hosting.Id)
                 .Select(x => 
-                    new EscortHostingInfo{ Id = x.EscortId, CheckIn = x.CheckIn, CheckOut = x.CheckOut })
+                    new HostingEscortInfo{ Id = x.EscortId, CheckIn = x.CheckIn, CheckOut = x.CheckOut })
                 .ToList();
 
             hosting.EscortInfos = escortInfos;

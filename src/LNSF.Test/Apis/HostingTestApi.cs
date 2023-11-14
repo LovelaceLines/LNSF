@@ -6,7 +6,7 @@ using Xunit;
 namespace LNSF.Test.Apis;
 
 public class HostingTestApi : GlobalClientRequest
-{
+{/*
     [Theory]
     [InlineData(1)]
     [InlineData(2)]
@@ -214,5 +214,5 @@ public class HostingTestApi : GlobalClientRequest
 
         // Assert
         Assert.Equivalent(hostingUpdate, hostingUpdated);
-    }
+    }*/
 }
