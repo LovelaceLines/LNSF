@@ -1,62 +1,80 @@
-﻿using LNSF.Api.ViewModels;
+﻿using System.Collections;
+using System.Net;
+using LNSF.Api.ViewModels;
 using LNSF.Domain.DTOs;
-using LNSF.Domain.Entities;
+using LNSF.Domain.Exceptions;
 using LNSF.Test.Fakers;
 using Xunit;
 
 namespace LNSF.Test.Apis;
 
+public class HostingTestData : IEnumerable<object[]>
+{
+    private readonly List<object[]> _data = new()
+    {
+        new object[] { 0, true, true },
+        new object[] { 0, true, false },
+        new object[] { 0, false, true },
+        new object[] { 0, false, false },
+        new object[] { 1, true, true },
+        new object[] { 1, true, false },
+        new object[] { 1, false, true },
+        new object[] { 1, false, false },
+        new object[] { 2, true, true },
+        new object[] { 2, true, false },
+        new object[] { 2, false, true },
+        new object[] { 2, false, false },
+    };
+
+    public IEnumerator<object[]> GetEnumerator() => _data.GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+}
+
+public class HostingTestDataWithCheckOut : IEnumerable<object[]>
+{
+    private readonly List<object[]> _data = new()
+    {
+        new object[] { 0, true, true },
+        new object[] { 0, false, true },
+        new object[] { 1, true, true },
+        new object[] { 1, true, false },
+        new object[] { 1, false, true },
+        new object[] { 2, true, true },
+        new object[] { 2, true, false },
+        new object[] { 2, false, true },
+    };
+
+    public IEnumerator<object[]> GetEnumerator() => _data.GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+}
+
+
 public class HostingTestApi : GlobalClientRequest
 {
     [Theory]
-    [InlineData(1)]
-    [InlineData(2)]
-    public async Task Post_HostingValidWithEscortsAndChecks_Ok(int escortsCount)
+    [ClassData(typeof(HostingTestData))]
+    public async Task Post_HostingValidWithEscortsAndChecks_Ok(int numberEscorts, bool escortHasCheckOut, bool patientHasCheckOut)
     {
-        // Arrange - People
-        var peopleFake1 = new PeoplePostViewModelFake().Generate();
-        var peoplePosted = await Post<PeopleViewModel>(_peopleClient, peopleFake1);
-
-        // Arrange - Hospital
-        var hospitalFake = new HospitalPostViewModelFake().Generate();
-        var hospitalPosted = await Post<HospitalViewModel>(_hospitalClient, hospitalFake);
-
-        // Arrange - Treatment
-        var treatmentFake = new TreatmentPostViewModelFake().Generate();
-        var treatmentPosted = await Post<TreatmentViewModel>(_treatmentClient, treatmentFake);
-
         // Arrange - Patient
-        var patientFake = new PatientPostViewModelFake().Generate();
-        patientFake.PeopleId = peoplePosted.Id;
-        patientFake.HospitalId = hospitalPosted.Id;
-        patientFake.TreatmentIds = new List<int> { treatmentPosted.Id };
-        var patientPosted = await Post<PatientViewModel>(_patientClient, patientFake);
+        var patient = await GetPatient();
 
-        var escortsIds = new List<int>();
-        for (int i = 0; i < escortsCount; i++)
+        // Arrange - Escorts
+        var escortInfos = new List<HostingEscortInfo>();
+        for (int i = 0; i < numberEscorts; i++)
         {
-            // Arrange - People
-            var peopleFake2 = new PeoplePostViewModelFake().Generate();
-            var peoplePosted2 = await Post<PeopleViewModel>(_peopleClient, peopleFake2);
+            var escort = await GetEscort();
+            var escortInfoFake = new HostingEscortInfoFake().Generate();
+            escortInfoFake.Id = escort.Id;
+            escortInfoFake.CheckOut = escortHasCheckOut ? escortInfoFake.CheckOut : null; 
 
-            // Arrange - Escort
-            var escortFake = new EscortPostViewModelFake().Generate();
-            escortFake.PeopleId = peoplePosted2.Id;
-            var escortPosted = await Post<EscortViewModel>(_escortClient, escortFake);
-            escortsIds.Add(escortPosted.Id);
+            escortInfos.Add(escortInfoFake);
         }
 
         // Arrange - Hosting
         var hostingFake = new HostingPostViewModelFake().Generate();
-        hostingFake.PatientId = patientPosted.Id;
-        hostingFake.EscortInfos = new List<HostingEscortInfo>();
-        foreach (var escortId in escortsIds)
-            hostingFake.EscortInfos.Add(new HostingEscortInfo
-            {
-                Id = escortId,
-                CheckIn = hostingFake.CheckIn,
-                CheckOut = null
-            });
+        hostingFake.PatientId = patient.Id;
+        hostingFake.EscortInfos = escortInfos;
+        hostingFake.CheckOut = patientHasCheckOut ? hostingFake.CheckOut : null;
 
         // Arrange - Count
         var countBefore = await GetCount(_hostingClient);
@@ -70,164 +88,120 @@ public class HostingTestApi : GlobalClientRequest
         // Assert
         Assert.Equal(countBefore + 1, countAfter);
         Assert.Equivalent(hostingFake, hostingPosted);
+        var hostingGeted = (await GetById<List<HostingViewModel>>(_hostingClient, hostingPosted.Id)).First();
+        Assert.Equivalent(hostingPosted, hostingGeted);
     }
 
     [Theory]
-    [InlineData(1)]
-    [InlineData(2)]
-    public async Task Post_HostingValidWithEscortsAndCheckIn_Ok(int escortsCount)
+    [ClassData(typeof(HostingTestDataWithCheckOut))]
+    public async Task Post_HostingInvalidWithCheckInGreaterThanCheckOut_BadRequest(int numberEscorts, bool escortHasCheckOut, bool patientHasCheckOut)
     {
-        // Arrange - People
-        var peopleFake1 = new PeoplePostViewModelFake().Generate();
-        var peoplePosted = await Post<PeopleViewModel>(_peopleClient, peopleFake1);
-
-        // Arrange - Hospital
-        var hospitalFake = new HospitalPostViewModelFake().Generate();
-        var hospitalPosted = await Post<HospitalViewModel>(_hospitalClient, hospitalFake);
-
-        // Arrange - Treatment
-        var treatmentFake = new TreatmentPostViewModelFake().Generate();
-        var treatmentPosted = await Post<TreatmentViewModel>(_treatmentClient, treatmentFake);
-
         // Arrange - Patient
-        var patientFake = new PatientPostViewModelFake().Generate();
-        patientFake.PeopleId = peoplePosted.Id;
-        patientFake.HospitalId = hospitalPosted.Id;
-        patientFake.TreatmentIds = new List<int> { treatmentPosted.Id };
-        var patientPosted = await Post<PatientViewModel>(_patientClient, patientFake);
+        var patient = await GetPatient();
 
-        var escortsIds = new List<int>();
-        for (int i = 0; i < escortsCount; i++)
+        // Arrange - Escorts
+        var escortInfos = new List<HostingEscortInfo>();
+        for (int i = 0; i < numberEscorts; i++)
         {
-            // Arrange - People
-            var peopleFake2 = new PeoplePostViewModelFake().Generate();
-            var peoplePosted2 = await Post<PeopleViewModel>(_peopleClient, peopleFake2);
+            var escort = await GetEscort();
+            var escortInfoFake = new HostingEscortInfoFake().Generate();
+            escortInfoFake.Id = escort.Id;
+            escortInfoFake.CheckIn = escortHasCheckOut ? escortInfoFake.CheckOut!.Value.AddDays(1) : escortInfoFake.CheckIn; // CheckIn > CheckOut
 
-            // Arrange - Escort
-            var escortFake = new EscortPostViewModelFake().Generate();
-            escortFake.PeopleId = peoplePosted2.Id;
-            var escortPosted = await Post<EscortViewModel>(_escortClient, escortFake);
-            escortsIds.Add(escortPosted.Id);
+            escortInfos.Add(escortInfoFake);
         }
 
         // Arrange - Hosting
         var hostingFake = new HostingPostViewModelFake().Generate();
-        hostingFake.CheckIn = new Bogus.DataSets.Date().Future();
-        hostingFake.CheckOut = null;
-        hostingFake.PatientId = patientPosted.Id;
-        hostingFake.EscortInfos = new List<HostingEscortInfo>();
-        foreach (var escortId in escortsIds)
-            hostingFake.EscortInfos.Add(new HostingEscortInfo
-            {
-                Id = escortId,
-                CheckIn = hostingFake.CheckIn,
-                CheckOut = null
-            });
-
-        // Arrange - Count
-        var countBefore = await GetCount(_hostingClient);
-
-        // Act - Hosting
-        var hostingPosted = await Post<HostingViewModel>(_hostingClient, hostingFake);
-
-        // Act - Count
-        var countAfter = await GetCount(_hostingClient);
-
-        // Assert
-        Assert.Equal(countBefore + 1, countAfter);
-        Assert.Equivalent(hostingFake, hostingPosted);
-    }
-
-    [Fact]
-    public async Task Post_HostingValidWithoutEscorts_Ok()
-    {
-        // Arrange - People
-        var peopleFake1 = new PeoplePostViewModelFake().Generate();
-        var peoplePosted = await Post<PeopleViewModel>(_peopleClient, peopleFake1);
-
-        // Arrange - Hospital
-        var hospitalFake = new HospitalPostViewModelFake().Generate();
-        var hospitalPosted = await Post<HospitalViewModel>(_hospitalClient, hospitalFake);
-
-        // Arrange - Treatment
-        var treatmentFake = new TreatmentPostViewModelFake().Generate();
-        var treatmentPosted = await Post<TreatmentViewModel>(_treatmentClient, treatmentFake);
-
-        // Arrange - Patient
-        var patientFake = new PatientPostViewModelFake().Generate();
-        patientFake.PeopleId = peoplePosted.Id;
-        patientFake.HospitalId = hospitalPosted.Id;
-        patientFake.TreatmentIds = new List<int> { treatmentPosted.Id };
-        var patientPosted = await Post<PatientViewModel>(_patientClient, patientFake);
-
-        // Arrange - Escorts
-        var escortInfos = new List<HostingEscortInfo>();
-
-        // Arrange - Hosting
-        var hostingFake = new HostingPostViewModelFake().Generate();
-        hostingFake.PatientId = patientPosted.Id;
+        hostingFake.PatientId = patient.Id;
         hostingFake.EscortInfos = escortInfos;
+        hostingFake.CheckIn = patientHasCheckOut ? hostingFake.CheckOut!.Value.AddDays(1) : hostingFake.CheckIn; // CheckIn > CheckOut
 
         // Arrange - Count
         var countBefore = await GetCount(_hostingClient);
 
         // Act - Hosting
-        var hostingPosted = await Post<HostingViewModel>(_hostingClient, hostingFake);
+        var exception = await Post<AppException>(_hostingClient, hostingFake);
 
         // Act - Count
         var countAfter = await GetCount(_hostingClient);
 
         // Assert
-        Assert.Equal(countBefore + 1, countAfter);
-        Assert.Equivalent(hostingFake, hostingPosted);
+        Assert.Equal(countBefore, countAfter);
+        Assert.NotEmpty(exception.Message);
+        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
     }
 
-    [Fact]
-    public async Task Put_HostingValidWithEscortsAndCheckIn_Ok()
+    [Theory]
+    [ClassData(typeof(HostingTestData))]
+    public async Task Put_HostingValidWithCheckOut_Ok(int numberEscorts, bool escortHasCheckOut, bool patientHasCheckOut)
     {
-        // Arrange - People
-        var peopleFake = new PeoplePostViewModelFake().Generate();
-        var peoplePosted = await Post<PeopleViewModel>(_peopleClient, peopleFake);
-
-        // Arrange - Hospital
-        var hospitalFake = new HospitalPostViewModelFake().Generate();
-        var hospitalPosted = await Post<HospitalViewModel>(_hospitalClient, hospitalFake);
-
-        // Arrange - Treatment
-        var treatmentFake = new TreatmentPostViewModelFake().Generate();
-        var treatmentPosted = await Post<TreatmentViewModel>(_treatmentClient, treatmentFake);
-
-        // Arrange - Patient
-        var patientFake = new PatientPostViewModelFake().Generate();
-        patientFake.PeopleId = peoplePosted.Id;
-        patientFake.HospitalId = hospitalPosted.Id;
-        patientFake.TreatmentIds = new List<int> { treatmentPosted.Id };
-        var patientPosted = await Post<PatientViewModel>(_patientClient, patientFake);
-
-        // Arrange - Escorts
-        var escortInfos = new List<HostingEscortInfo>();
-
         // Arrange - Hosting
-        var hostingFake1 = new HostingPostViewModelFake().Generate();
-        hostingFake1.PatientId = patientPosted.Id;
-        hostingFake1.EscortInfos = escortInfos;
-        var hostingPosted = await Post<HostingViewModel>(_hostingClient, hostingFake1);
+        var hosting = await GetHosting(numberEscorts, patientHasCheckOut, escortHasCheckOut);
 
-        // Arrange - Hosting
-        var hostingFake2 = new HostingPostViewModelFake().Generate();
-        var hostingUpdate = new HostingViewModel
-        {
-            Id = hostingPosted.Id,
-            CheckIn = hostingFake2.CheckIn,
-            CheckOut = hostingFake2.CheckOut,
-            PatientId = patientPosted.Id,
-            EscortInfos = escortInfos
-        };
-
+        // Arrange - Count
+        var countBefore = await GetCount(_hostingClient);
+        
         // Act - Hosting
-        var hostingUpdated = await Put<HostingViewModel>(_hostingClient, hostingUpdate);
+        hosting.CheckOut = DateTime.Now;
+        hosting.EscortInfos?.ForEach(e => e.CheckOut = DateTime.Now);
+        var hostingPutted = await Put<HostingViewModel>(_hostingClient, hosting);
+
+        // Act - Count
+        var countAfter = await GetCount(_hostingClient);
 
         // Assert
-        Assert.Equivalent(hostingUpdate, hostingUpdated);
+        Assert.Equal(countBefore, countAfter);
+        var hostingGeted = (await GetById<List<HostingViewModel>>(_hostingClient, hostingPutted.Id)).First();
+        Assert.Equivalent(hostingPutted, hostingGeted);
+    }
+
+    [Theory]
+    [ClassData(typeof(HostingTestData))]
+    public async Task Put_HostingInvalidWithNewPatient_BadRequest(int numberEscorts, bool escortHasCheckOut, bool patientHasCheckOut)
+    {
+        // Arrange - Hosting
+        var hosting = await GetHosting(numberEscorts, patientHasCheckOut, escortHasCheckOut);
+
+        // Arrange - Count
+        var countBefore = await GetCount(_hostingClient);
+        
+        // Act - Hosting
+        var hostingFake = new HostingPostViewModelFake().Generate();
+        hostingFake.PatientId = (await GetPatient()).Id; // New Patient
+        var exception = await Put<AppException>(_hostingClient, hostingFake);
+
+        // Act - Count
+        var countAfter = await GetCount(_hostingClient);
+
+        // Assert
+        Assert.Equal(countBefore, countAfter);
+        Assert.NotEmpty(exception.Message);
+        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
+    }
+
+    [Theory]
+    [ClassData(typeof(HostingTestDataWithCheckOut))]
+    public async Task Put_HostingInvalidWithCheckInGreaterThanCheckOut_BadRequest(int numberEscorts, bool escortHasCheckOut, bool patientHasCheckOut)
+    {
+        // Arrange - Hosting
+        var hosting = await GetHosting(numberEscorts, patientHasCheckOut, escortHasCheckOut);
+
+        // Arrange - Count
+        var countBefore = await GetCount(_hostingClient);
+        
+        // Act - Hosting
+        hosting.CheckIn = patientHasCheckOut ? hosting.CheckOut!.Value.AddDays(1) : hosting.CheckIn; // CheckIn > CheckOut
+        hosting.EscortInfos?.ForEach(e => 
+            e.CheckIn = escortHasCheckOut ? e.CheckOut!.Value.AddDays(1) : e.CheckIn); // CheckIn > CheckOut
+        var exception = await Put<AppException>(_hostingClient, hosting);
+
+        // Act - Count
+        var countAfter = await GetCount(_hostingClient);
+
+        // Assert
+        Assert.Equal(countBefore, countAfter);
+        Assert.NotEmpty(exception.Message);
+        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
     }
 }
