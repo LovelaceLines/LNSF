@@ -7,7 +7,7 @@ using LNSF.Domain.Enums;
 
 namespace LNSF.Infra.Data.Repositories;
 
-public class RoomsRepository : BaseRepository<Room>, IRoomsRepository
+public class RoomsRepository : BaseRepository<Room>, IRoomRepository
 {
     private readonly AppDbContext _context;
 

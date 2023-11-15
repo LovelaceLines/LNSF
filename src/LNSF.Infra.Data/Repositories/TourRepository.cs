@@ -7,7 +7,7 @@ using LNSF.Domain.Enums;
 
 namespace LNSF.Infra.Data.Repositories;
 
-public class ToursRepository : BaseRepository<Tour>, IToursRepository
+public class ToursRepository : BaseRepository<Tour>, ITourRepository
 {
     private readonly AppDbContext _context;
 

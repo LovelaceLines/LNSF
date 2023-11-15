@@ -9,10 +9,10 @@ namespace LNSF.Application.Services;
 
 public class RoomService : IRoomService
 {
-    private readonly IRoomsRepository _roomRepository;
+    private readonly IRoomRepository _roomRepository;
     private readonly RoomValidator _validator;
 
-    public RoomService(IRoomsRepository roomRepository,
+    public RoomService(IRoomRepository roomRepository,
         RoomValidator validator)
     {
         _roomRepository = roomRepository;

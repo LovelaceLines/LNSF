@@ -10,11 +10,11 @@ namespace LNSF.Application.Services;
 
 public class TourService : ITourService
 {
-    private readonly IToursRepository _tourRepository;
+    private readonly ITourRepository _tourRepository;
     private readonly IPeopleRepository _peopleRepository;
     private readonly TourValidator _validator;
 
-    public TourService(IToursRepository tourRepository,
+    public TourService(ITourRepository tourRepository,
         IPeopleRepository peoplesRepository,
         TourValidator validator)
     {

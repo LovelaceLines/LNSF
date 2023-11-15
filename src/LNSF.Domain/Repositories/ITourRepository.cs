@@ -3,7 +3,7 @@ using LNSF.Domain.Entities;
 
 namespace LNSF.Domain.Repositories;
 
-public interface IToursRepository : IBaseRepository<Tour>
+public interface ITourRepository : IBaseRepository<Tour>
 {
     public Task<List<Tour>> Query(TourFilter filter);
     public Task<bool> IsOpen(int id);
