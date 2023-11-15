@@ -32,6 +32,11 @@ public class EscortRepository : BaseRepository<Escort>, IEscortRepository
             !hostingsEscorts.Any(he => he.EscortId == e.Id &&
                 hostings.Any(h => h.Id == he.HostingId && 
                     h.CheckIn <= DateTime.Now && DateTime.Now <= h.CheckOut)));
+        
+        if (filter.IsVeteran == true) query = query.Where(e =>
+            hostingsEscorts.Where(he => he.EscortId == e.Id).Count() > 1);
+        else if (filter.IsVeteran == false) query = query.Where(e =>
+            hostingsEscorts.Where(he => he.EscortId == e.Id).Count() == 1);
 
         if (filter.OrderBy == OrderBy.Ascending) query = query.OrderBy(x => x.Id);
         else query = query.OrderByDescending(x => x.Id);
@@ -44,7 +49,7 @@ public class EscortRepository : BaseRepository<Escort>, IEscortRepository
         return escorts;
     }
 
-    public async Task<bool> PeopleExists(int peopleId)
+    public async Task<bool> ExistsByPeopleId(int peopleId)
     {
         var escort = await _context.Escorts.AsNoTracking()
             .Where(x => x.PeopleId == peopleId)
@@ -52,4 +57,9 @@ public class EscortRepository : BaseRepository<Escort>, IEscortRepository
 
         return escort != null;
     }
+
+    public async Task<bool> ExistsByIdAndPeopleId(int id, int peopleId) =>
+        await _context.Escorts.AsNoTracking()
+            .AnyAsync(x => x.Id == id && x.PeopleId == peopleId);
+    
 }

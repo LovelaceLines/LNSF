@@ -32,12 +32,7 @@ public class HospitalRepository : BaseRepository<Hospital>, IHospitalRepository
         return hospitals;
     }
 
-    public async Task<bool> Exists(string name)
-    {
-        var hospital = await _context.Hospitals.AsNoTracking()
-            .Where(x => x.Name.ToLower() == name.ToLower())
-            .FirstOrDefaultAsync();
-
-        return hospital != null;
-    }
+    public async Task<bool> ExistsByName(string name) =>
+        await _context.Hospitals.AsNoTracking()
+            .AnyAsync(x => x.Name.ToLower() == name.ToLower());
 }

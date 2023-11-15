@@ -16,5 +16,8 @@ public class EscortsConfiguration : IEntityTypeConfiguration<Escort>
         builder.HasOne(e => e.People)
             .WithOne()
             .HasForeignKey<Escort>(e => e.PeopleId);
+        
+        builder.Property(e => e.PeopleId)
+            .IsUnicode();
     }
 }

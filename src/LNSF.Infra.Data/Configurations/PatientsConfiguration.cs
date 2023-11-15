@@ -21,6 +21,9 @@ public class PatientsConfiguration : IEntityTypeConfiguration<Patient>
             .WithMany()
             .HasForeignKey(p => p.HospitalId);
         
+        builder.Property(p => p.PeopleId)
+            .IsUnicode();
+        
         builder.Ignore(p => p.TreatmentIds);
     }
 }

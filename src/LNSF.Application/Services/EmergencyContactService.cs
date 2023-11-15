@@ -33,9 +33,9 @@ public class EmergencyContactService : IEmergencyContactService
     {
         var validationResult = _validator.Validate(contact);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
+
         if (!await _peoplesRepository.Exists(contact.PeopleId)) throw new AppException("Pessoa não encontrada!", HttpStatusCode.UnprocessableEntity);
 
-        contact.Id = 0;
         return await _emergencyContactRepository.Add(contact);
     }
 
@@ -43,9 +43,8 @@ public class EmergencyContactService : IEmergencyContactService
     {
         var validationResult = _validator.Validate(newContact);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
-        var filter = new EmergencyContactFilter { Id = newContact.Id, PeopleId = newContact.PeopleId };
-        var query = await _emergencyContactRepository.Query(filter);
-        if (query.Count != 1) throw new AppException("Contato de emergência não encontrado!", HttpStatusCode.UnprocessableEntity);
+        
+        if (!await _emergencyContactRepository.ExistsByIdAndPeopleId(newContact.Id, newContact.PeopleId)) throw new AppException("Contato de emergência ou pessoa não encontrado!", HttpStatusCode.UnprocessableEntity);
 
         return await _emergencyContactRepository.Update(newContact);
     }

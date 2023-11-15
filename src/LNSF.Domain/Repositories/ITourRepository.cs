@@ -5,8 +5,9 @@ namespace LNSF.Domain.Repositories;
 
 public interface ITourRepository : IBaseRepository<Tour>
 {
-    public Task<List<Tour>> Query(TourFilter filter);
-    public Task<bool> IsOpen(int id);
-    public Task<bool> IsClosed(int id);
-    public Task<bool> PeopleHasOpenTour(int peopleId);
+    Task<List<Tour>> Query(TourFilter filter);
+    Task<bool> IsOpen(int id);
+    Task<bool> IsClosed(int id);
+    Task<bool> PeopleHasOpenTour(int peopleId);
+    Task<bool> ExistsByIdAndPeopleId(int id, int peopleId);
 }

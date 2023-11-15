@@ -123,4 +123,8 @@ public class HostingRepository : BaseRepository<Hosting>, IHostingRepository
             throw new AppException("Erro ao atualizar hospedagem", HttpStatusCode.BadRequest);
         }
     }
+
+    public Task<bool> ExistsByIdAndPatientId(int id, int patientId) =>
+        _context.Hostings.AsNoTracking()
+            .AnyAsync(x => x.Id == id && x.PatientId == patientId);
 }

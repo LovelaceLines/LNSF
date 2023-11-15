@@ -24,7 +24,7 @@ public class ToursRepository : BaseRepository<Tour>, ITourRepository
         if (filter.Input != null) query = query.Where(x => x.Input <= filter.Input);
         if (filter.InOpen == true) query = query.Where(x => x.Input == null);
         else if (filter.InOpen == false) query = query.Where(x => x.Input != null);
-        if (filter.Note != null) query = query.Where(x => x.Note.Contains(filter.Note));
+        if (filter.Note != null) query = query.Where(x => x.Note.ToLower().Contains(filter.Note.ToLower()));
         if (filter.PeopleId != null) query = query.Where(x => x.PeopleId == filter.PeopleId);
         if (filter.Order == OrderBy.Ascending) query = query.OrderBy(x => x.Output);
         else query = query.OrderByDescending(x => x.Output);
@@ -51,4 +51,8 @@ public class ToursRepository : BaseRepository<Tour>, ITourRepository
         await _context.Tours.AsNoTracking()
             .Where(x => x.PeopleId == peopleId && x.Input == null)
             .AnyAsync();
+    
+    public async Task<bool> ExistsByIdAndPeopleId(int id, int peopleId) => 
+        await _context.Tours.AsNoTracking()
+            .AnyAsync(x => x.Id == id && x.PeopleId == peopleId);
 }

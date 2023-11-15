@@ -46,13 +46,11 @@ public class HostingService : IHostingService
 
     public async Task<Hosting> Update(Hosting hosting)
     {
-        if (!await _hostingRepository.Exists(hosting.Id)) throw new AppException("Hospedagem não encontrada", HttpStatusCode.NotFound);
+        if (!await _hostingRepository.ExistsByIdAndPatientId(hosting.Id, hosting.PatientId)) throw new AppException("Hospedagem não encontrada", HttpStatusCode.NotFound);
 
         var validationResult = await _validator.ValidateAsync(hosting);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
-        var oldHosting = await _hostingRepository.Get(hosting.Id);
-        if (oldHosting.PatientId != hosting.PatientId) throw new AppException("Não é possível alterar o paciente da hospedagem", HttpStatusCode.BadRequest);
         foreach (var escortInfo in hosting.EscortInfos)
             if (!await _escortRepository.Exists(escortInfo.Id)) throw new AppException("Acompanhante não encontrado", HttpStatusCode.NotFound);
 

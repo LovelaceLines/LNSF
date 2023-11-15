@@ -36,4 +36,8 @@ public class RoomsRepository : BaseRepository<Room>, IRoomRepository
 
         return rooms;
     }
+
+    public async Task<bool> ExistsByNumber(string number) => 
+        await _context.Rooms.AsNoTracking()
+            .AnyAsync(x => x.Number == number);
 }

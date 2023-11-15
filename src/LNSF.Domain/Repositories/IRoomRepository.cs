@@ -5,5 +5,6 @@ namespace LNSF.Domain.Repositories;
 
 public interface IRoomRepository : IBaseRepository<Room>
 {
-    public Task<List<Room>> Query(RoomFilter filter);
+    Task<List<Room>> Query(RoomFilter filter);
+    Task<bool> ExistsByNumber(string number);
 }

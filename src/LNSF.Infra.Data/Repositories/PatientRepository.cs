@@ -42,6 +42,11 @@ public class PatientRepository : BaseRepository<Patient>, IPatientRepository
         else if (filter.Active == false) query = query.Where(p =>
             !hostings.Any(h => h.PatientId == p.Id && 
                 h.CheckIn <= DateTime.Now && DateTime.Now <= h.CheckOut));
+        
+        if (filter.IsVeteran == true) query = query.Where(p =>
+            hostings.Where(h => h.PatientId == p.Id).Count() > 1);
+        else if (filter.IsVeteran == false) query = query.Where(p =>
+            hostings.Where(h => h.PatientId == p.Id).Count() == 1);
 
         if (filter.Order == OrderBy.Ascending) query = query.OrderBy(x => x.Id);
         else query = query.OrderByDescending(x => x.Id);
@@ -63,14 +68,13 @@ public class PatientRepository : BaseRepository<Patient>, IPatientRepository
         return patients;
     }
 
-    public async Task<bool> PeopleExists(int peopleId)
-    {
-        var people = await _context.Patients.AsNoTracking()
-            .Where(x => x.PeopleId == peopleId)
-            .FirstOrDefaultAsync();
-        
-        return people != null;
-    }
+    public async Task<bool> ExistsByPeopleId(int peopleId) =>
+        await _context.Patients.AsNoTracking()
+            .AnyAsync(x => x.PeopleId == peopleId);
+
+    public async Task<bool> ExistsByIdAndPeopleId(int id, int peopleId) =>
+        await _context.Patients.AsNoTracking()
+            .AnyAsync(x => x.Id == id && x.PeopleId == peopleId);
 
     public new async Task<Patient> Add(Patient patient)
     {

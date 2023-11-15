@@ -100,14 +100,12 @@ builder.Services.AddTransient<IAccountRepository, AccountRepository>();
 builder.Services.AddTransient<PaginationValidator>();
 
 builder.Services.AddTransient<ITourRepository, ToursRepository>();
-builder.Services.AddTransient<TourFilterValidator>();
 builder.Services.AddTransient<TourValidator>();
 builder.Services.AddTransient<GlobalValidator>();
 builder.Services.AddTransient<ITourService, TourService>();
 
 builder.Services.AddTransient<IRoomRepository, RoomsRepository>();
 builder.Services.AddTransient<RoomValidator>();
-builder.Services.AddTransient<RoomFilterValidator>();
 builder.Services.AddTransient<IRoomService, RoomService>();
 
 builder.Services.AddTransient<IPeopleRepository, PeopleRepository>();

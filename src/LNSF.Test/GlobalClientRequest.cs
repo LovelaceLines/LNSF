@@ -112,6 +112,9 @@ public class GlobalClientRequest
 
     #region GetEntityFake
 
+    public async Task<RoomViewModel> GetRoom() =>
+        await Post<RoomViewModel>(_roomClient, new RoomPostViewModelFake().Generate());
+
     public async Task<PeopleViewModel> GetPeople() =>
         await Post<PeopleViewModel>(_peopleClient, new PeoplePostViewModelFake().Generate());
     

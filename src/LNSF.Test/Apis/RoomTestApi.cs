@@ -1,6 +1,8 @@
 ﻿using LNSF.Test.Fakers;
 using LNSF.Api.ViewModels;
 using Xunit;
+using LNSF.Domain.Exceptions;
+using System.Net;
 
 namespace LNSF.Test.Apis;
 
@@ -15,14 +17,17 @@ public class RoomTestApi : GlobalClientRequest
         // Arrange - Count
         var countBefore = await GetCount(_roomClient);
 
-        // Act
+        // Act - Room
         var roomPosted = await Post<RoomViewModel>(_roomClient, fakeRoom);
+
+        // Assert - Count
         var countAfter = await GetCount(_roomClient);
 
         // Assert
         Assert.Equal(countBefore + 1, countAfter);
         Assert.Equivalent(fakeRoom, roomPosted);
-        Assert.NotEqual(0, roomPosted.Id);
+        var roomGeted = (await GetById<List<RoomViewModel>>(_roomClient, roomPosted.Id)).First();
+        Assert.Equivalent(roomPosted, roomGeted);
     }
 
     [Fact]
@@ -35,12 +40,16 @@ public class RoomTestApi : GlobalClientRequest
         // Arrange - Count
         var countBefore = await GetCount(_roomClient);
 
-        // Act
-        await Assert.ThrowsAsync<Exception>(() => Post<RoomViewModel>(_roomClient, fakeRoom));
+        // Act - Room
+        var exception = await Post<AppException>(_roomClient, fakeRoom);
+
+        // Assert - Count
         var countAfter = await GetCount(_roomClient);
 
         // Assert
         Assert.Equal(countBefore, countAfter);
+        Assert.NotEmpty(exception.Message);
+        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
     }
 
     [Fact]
@@ -53,12 +62,16 @@ public class RoomTestApi : GlobalClientRequest
         // Arrange - Count
         var countBefore = await GetCount(_roomClient);
 
-        // Act
-        await Assert.ThrowsAsync<Exception>(() => Post<RoomViewModel>(_roomClient, fakeRoom));
+        // Act - Room
+        var exception = await Post<AppException>(_roomClient, fakeRoom);
+
+        // Assert - Count
         var countAfter = await GetCount(_roomClient);
 
         // Assert
         Assert.Equal(countBefore, countAfter);
+        Assert.NotEmpty(exception.Message);
+        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
     }
 
     [Fact]
@@ -71,12 +84,16 @@ public class RoomTestApi : GlobalClientRequest
         // Arrange - Count
         var countBefore = await GetCount(_roomClient);
 
-        // Act
-        await Assert.ThrowsAsync<Exception>(() => Post<RoomViewModel>(_roomClient, fakeRoom));
+        // Act - Room
+        var exception = await Post<AppException>(_roomClient, fakeRoom);
+
+        // Assert - Count
         var countAfter = await GetCount(_roomClient);
 
         // Assert
         Assert.Equal(countBefore, countAfter);
+        Assert.NotEmpty(exception.Message);
+        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
     }
 
     [Fact]
@@ -89,12 +106,16 @@ public class RoomTestApi : GlobalClientRequest
         // Arrange - Count
         var countBefore = await GetCount(_roomClient);
 
-        // Act
-        await Assert.ThrowsAsync<Exception>(() => Post<RoomViewModel>(_roomClient, fakeRoom));
+        // Act - Room
+        var exception = await Post<AppException>(_roomClient, fakeRoom);
+
+        // Assert - Count
         var countAfter = await GetCount(_roomClient);
 
         // Assert
         Assert.Equal(countBefore, countAfter);
+        Assert.NotEmpty(exception.Message);
+        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
     }
 
     [Fact]
@@ -108,11 +129,15 @@ public class RoomTestApi : GlobalClientRequest
         var countBefore = await GetCount(_roomClient);
 
         // Act - Room
-        await Assert.ThrowsAsync<Exception>(() => Post<RoomViewModel>(_roomClient, fakeRoom));
+        var exception = await Post<AppException>(_roomClient, fakeRoom);
+
+        // Assert - Count
         var countAfter = await GetCount(_roomClient);
 
         // Assert
         Assert.Equal(countBefore, countAfter);
+        Assert.NotEmpty(exception.Message);
+        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
     }
 
     [Fact]
@@ -126,12 +151,16 @@ public class RoomTestApi : GlobalClientRequest
         // Arrange - Count
         var countBefore = await GetCount(_roomClient);
 
-        // Act
-        await Assert.ThrowsAsync<Exception>(() => Post<RoomViewModel>(_roomClient, fakeRoom));
+        // Act - Room
+        var exception = await Post<AppException>(_roomClient, fakeRoom);
+
+        // Assert - Count
         var countAfter = await GetCount(_roomClient);
 
         // Assert
         Assert.Equal(countBefore, countAfter);
+        Assert.NotEmpty(exception.Message);
+        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
     }
 
     [Fact]
@@ -145,20 +174,23 @@ public class RoomTestApi : GlobalClientRequest
         // Arrange - Count
         var countBefore = await GetCount(_roomClient);
 
-        // Act
-        await Assert.ThrowsAsync<Exception>(() => Post<RoomViewModel>(_roomClient, fakeRoom));
+        // Act - Room
+        var exception = await Post<AppException>(_roomClient, fakeRoom);    
+
+        // Assert - Count
         var countAfter = await GetCount(_roomClient);
 
         // Assert
         Assert.Equal(countBefore, countAfter);
+        Assert.NotEmpty(exception.Message);
+        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
     }
 
     [Fact]
     public async Task Put_RoomValid_Ok()
     {
         // Arrange - Room
-        var fakeRoom = new RoomPostViewModelFake().Generate();
-        var roomPosted = await Post<RoomViewModel>(_roomClient, fakeRoom);
+        var room = await GetRoom();
 
         // Arrange - Count
         var countBefore = await GetCount(_roomClient);
@@ -166,21 +198,24 @@ public class RoomTestApi : GlobalClientRequest
         // Act - Room
         var newFakeRoom = new RoomPostViewModelFake().Generate();
         var roomMapped = _mapper.Map<RoomViewModel>(newFakeRoom);
-        roomMapped.Id = roomPosted.Id;
+        roomMapped.Id = room.Id;
         var roomPuted = await Put<RoomViewModel>(_roomClient, roomMapped);
+
+        // Arrange - Count
         var countAfter = await GetCount(_roomClient);
 
         // Assert
         Assert.Equivalent(newFakeRoom, roomPuted);
         Assert.Equal(countBefore, countAfter);
+        var roomGeted = (await GetById<List<RoomViewModel>>(_roomClient, roomPuted.Id)).First();
+        Assert.Equivalent(roomPuted, roomGeted);
     }
 
     [Fact]
     public async Task Put_RoomInvalidWithEmptyNumber_BadRequest()
     {
         // Arrange - Room
-        var fakeRoom = new RoomPostViewModelFake().Generate();
-        var roomPosted = await Post<RoomViewModel>(_roomClient, fakeRoom);
+        var room = await GetRoom();
 
         // Arrange - Count
         var countBefore = await GetCount(_roomClient);
@@ -188,21 +223,24 @@ public class RoomTestApi : GlobalClientRequest
         // Act - Room
         var newFakeRoom = new RoomPostViewModelFake().Generate();
         var roomMapped = _mapper.Map<RoomViewModel>(newFakeRoom);
-        roomMapped.Id = roomPosted.Id;
+        roomMapped.Id = room.Id;
         roomMapped.Number = "";
-        await Assert.ThrowsAsync<Exception>(() => Put<RoomViewModel>(_roomClient, roomMapped));
+        var exception = await Put<AppException>(_roomClient, roomMapped);
+
+        // Arrange - Count
         var countAfter = await GetCount(_roomClient);
 
         // Assert
         Assert.Equal(countBefore, countAfter);
+        Assert.NotEmpty(exception.Message);
+        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
     }
 
     [Fact]
     public async Task Put_RoomInvalidWithZeroBeds_BadRequest()
     {
         // Arrange - Room
-        var fakeRoom = new RoomPostViewModelFake().Generate();
-        var roomPosted = await Post<RoomViewModel>(_roomClient, fakeRoom);
+        var room = await GetRoom();
 
         // Arrange - Count
         var countBefore = await GetCount(_roomClient);
@@ -210,21 +248,24 @@ public class RoomTestApi : GlobalClientRequest
         // Act - Room
         var newFakeRoom = new RoomPostViewModelFake().Generate();
         var roomMapped = _mapper.Map<RoomViewModel>(newFakeRoom);
-        roomMapped.Id = roomPosted.Id;
+        roomMapped.Id = room.Id;
         roomMapped.Beds = 0;
-        await Assert.ThrowsAsync<Exception>(() => Put<RoomViewModel>(_roomClient, roomMapped));
+        var exception = await Put<AppException>(_roomClient, roomMapped);
+
+        // Arrange - Count
         var countAfter = await GetCount(_roomClient);
 
         // Assert
         Assert.Equal(countBefore, countAfter);
+        Assert.NotEmpty(exception.Message);
+        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
     }
 
     [Fact]
     public async Task Put_RoomInvalidWithNegativeStorey_BadRequest()
     {
         // Arrange - Room
-        var fakeRoom = new RoomPostViewModelFake().Generate();
-        var roomPosted = await Post<RoomViewModel>(_roomClient, fakeRoom);
+        var room = await GetRoom();
 
         // Arrange - Count
         var countBefore = await GetCount(_roomClient);
@@ -232,21 +273,24 @@ public class RoomTestApi : GlobalClientRequest
         // Act - Room
         var newFakeRoom = new RoomPostViewModelFake().Generate();
         var roomMapped = _mapper.Map<RoomViewModel>(newFakeRoom);
-        roomMapped.Id = roomPosted.Id;
+        roomMapped.Id = room.Id;
         roomMapped.Storey = new Random().Next(-int.MaxValue, -1);
-        await Assert.ThrowsAsync<Exception>(() => Put<RoomViewModel>(_roomClient, roomMapped));
+        var exception = await Put<AppException>(_roomClient, roomMapped);
+
+        // Arrange - Count
         var countAfter = await GetCount(_roomClient);
 
         // Assert
         Assert.Equal(countBefore, countAfter);
+        Assert.NotEmpty(exception.Message);
+        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
     }
 
     [Fact]
     public async Task Put_RoomInvalidWithNegativeOccupation_BadRequest()
     {
         // Arrange - Room
-        var fakeRoom = new RoomPostViewModelFake().Generate();
-        var roomPosted = await Post<RoomViewModel>(_roomClient, fakeRoom);
+        var room = await GetRoom();
 
         // Arrange - Count
         var countBefore = await GetCount(_roomClient);
@@ -254,21 +298,24 @@ public class RoomTestApi : GlobalClientRequest
         // Act - Room
         var newFakeRoom = new RoomPostViewModelFake().Generate();
         var roomMapped = _mapper.Map<RoomViewModel>(newFakeRoom);
-        roomMapped.Id = roomPosted.Id;
+        roomMapped.Id = room.Id;
         roomMapped.Occupation = new Random().Next(-int.MaxValue, -1);
-        await Assert.ThrowsAsync<Exception>(() => Put<RoomViewModel>(_roomClient, roomMapped));
+        var exception = await Put<AppException>(_roomClient, roomMapped);
+
+        // Arrange - Count
         var countAfter = await GetCount(_roomClient);
 
         // Assert
         Assert.Equal(countBefore, countAfter);
+        Assert.NotEmpty(exception.Message);
+        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
     }
 
     [Fact]
     public async Task Put_RoomInvalidWithOccupationGreaterThanBeds_BadRequest()
     {
         // Arrange - Room
-        var fakeRoom = new RoomPostViewModelFake().Generate();
-        var roomPosted = await Post<RoomViewModel>(_roomClient, fakeRoom);
+        var room = await GetRoom();
 
         // Arrange - Count
         var countBefore = await GetCount(_roomClient);
@@ -276,21 +323,24 @@ public class RoomTestApi : GlobalClientRequest
         // Act - Room
         var newFakeRoom = new RoomPostViewModelFake().Generate();
         var roomMapped = _mapper.Map<RoomViewModel>(newFakeRoom);
-        roomMapped.Id = roomPosted.Id;
+        roomMapped.Id = room.Id;
         roomMapped.Occupation = roomMapped.Beds + 1;
-        await Assert.ThrowsAsync<Exception>(() => Put<RoomViewModel>(_roomClient, roomMapped));
+        var exception = await Put<AppException>(_roomClient, roomMapped);
+
+        // Arrange - Count
         var countAfter = await GetCount(_roomClient);
 
         // Assert
         Assert.Equal(countBefore, countAfter);
+        Assert.NotEmpty(exception.Message);
+        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
     }
 
     [Fact]
     public async Task Put_RoomInvalidWithAvailableButNoVacantBeds_BadRequest()
     {
         // Arrange - Room
-        var fakeRoom = new RoomPostViewModelFake().Generate();
-        var roomPosted = await Post<RoomViewModel>(_roomClient, fakeRoom);
+        var room = await GetRoom();
 
         // Arrange - Count
         var countBefore = await GetCount(_roomClient);
@@ -298,22 +348,25 @@ public class RoomTestApi : GlobalClientRequest
         // Act - Room
         var newFakeRoom = new RoomPostViewModelFake().Generate();
         var roomMapped = _mapper.Map<RoomViewModel>(newFakeRoom);
-        roomMapped.Id = roomPosted.Id;
+        roomMapped.Id = room.Id;
         roomMapped.Available = true;
         roomMapped.Occupation = roomMapped.Beds;
-        await Assert.ThrowsAsync<Exception>(() => Put<RoomViewModel>(_roomClient, roomMapped));
+        var exception = await Put<AppException>(_roomClient, roomMapped);
+
+        // Arrange - Count
         var countAfter = await GetCount(_roomClient);
 
         // Assert
         Assert.Equal(countBefore, countAfter);
+        Assert.NotEmpty(exception.Message);
+        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
     }
 
     [Fact]
     public async Task Put_RoomInvalidWithAvailableButMoreOccupantsThanBeds_BadRequest()
     {
         // Arrange - Room
-        var fakeRoom = new RoomPostViewModelFake().Generate();
-        var roomPosted = await Post<RoomViewModel>(_roomClient, fakeRoom);
+        var room = await GetRoom();
 
         // Arrange - Count
         var countBefore = await GetCount(_roomClient);
@@ -321,13 +374,17 @@ public class RoomTestApi : GlobalClientRequest
         // Act - Room
         var newFakeRoom = new RoomPostViewModelFake().Generate();
         var roomMapped = _mapper.Map<RoomViewModel>(newFakeRoom);
-        roomMapped.Id = roomPosted.Id;
+        roomMapped.Id = room.Id;
         roomMapped.Available = true;
         roomMapped.Occupation = roomMapped.Beds + 1;
-        await Assert.ThrowsAsync<Exception>(() => Put<RoomViewModel>(_roomClient, roomMapped));
+        var exception = await Put<AppException>(_roomClient, roomMapped);
+
+        // Arrange - Count
         var countAfter = await GetCount(_roomClient);
 
         // Assert
         Assert.Equal(countBefore, countAfter);
+        Assert.NotEmpty(exception.Message);
+        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
     }
 }

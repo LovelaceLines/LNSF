@@ -38,7 +38,7 @@ public class TourService : ITourService
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
         if (!await _peopleRepository.Exists(tour.PeopleId)) throw new AppException("Pessoa não encontrada!", HttpStatusCode.UnprocessableEntity);
-        if (await _tourRepository.PeopleHasOpenTour(tour.PeopleId)) throw new AppException("Pessoa possui pesseio em aberto!", HttpStatusCode.UnprocessableEntity);
+        if (await _tourRepository.PeopleHasOpenTour(tour.PeopleId)) throw new AppException("Pessoa possui passeio em aberto!", HttpStatusCode.UnprocessableEntity);
 
         tour.Output = DateTime.Now;
 
@@ -49,9 +49,8 @@ public class TourService : ITourService
     {
         var validationResult = _validator.Validate(tour);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
-        
-        if (!await _peopleRepository.Exists(tour.PeopleId)) throw new AppException("Pessoa não encontrada!", HttpStatusCode.UnprocessableEntity);
-        if (!await _tourRepository.Exists(tour.Id)) throw new AppException("Passeio não encontrado!", HttpStatusCode.UnprocessableEntity);
+
+        if (!await _tourRepository.ExistsByIdAndPeopleId(tour.Id, tour.PeopleId)) throw new AppException("Passeio não encontrado!", HttpStatusCode.UnprocessableEntity);
         if (await _tourRepository.IsClosed(tour.Id)) throw new AppException("Pessoa já retornou!", HttpStatusCode.UnprocessableEntity);
 
         tour.Input = DateTime.Now;
@@ -64,8 +63,7 @@ public class TourService : ITourService
         var validationResult = _validator.Validate(tour);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
         
-        if (!await _tourRepository.Exists(tour.Id)) throw new AppException("Passeio não encontrado!", HttpStatusCode.UnprocessableEntity);
-        if (tour.Output > tour.Input) throw new AppException("Data de saída maior que data de entrada!", HttpStatusCode.UnprocessableEntity);
+        if (!await _tourRepository.ExistsByIdAndPeopleId(tour.Id, tour.PeopleId)) throw new AppException("Passeio não encontrado!", HttpStatusCode.UnprocessableEntity);
 
         return await _tourRepository.Update(tour);
     }
