@@ -4,8 +4,9 @@ using LNSF.Domain.Filters;
 namespace LNSF.Domain.Repositories;
 public interface IPatientRepository : IBaseRepository<Patient>
 {
-    public Task<List<Patient>> Query(PatientFilter filter);
-    public Task<bool> PeopleExists(int peopleId);
-    public new Task<Patient> Add(Patient patient);
-    public new Task<Patient> Update(Patient patient);
+    Task<List<Patient>> Query(PatientFilter filter);
+    Task<bool> ExistsByPeopleId(int peopleId);
+    Task<bool> ExistsByIdAndPeopleId(int id, int peopleId);
+    new Task<Patient> Add(Patient patient);
+    new Task<Patient> Update(Patient patient);
 }

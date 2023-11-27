@@ -7,7 +7,7 @@ using LNSF.Domain.Enums;
 
 namespace LNSF.Infra.Data.Repositories;
 
-public class RoomsRepository : BaseRepository<Room>, IRoomsRepository
+public class RoomsRepository : BaseRepository<Room>, IRoomRepository
 {
     private readonly AppDbContext _context;
 
@@ -36,4 +36,8 @@ public class RoomsRepository : BaseRepository<Room>, IRoomsRepository
 
         return rooms;
     }
+
+    public async Task<bool> ExistsByNumber(string number) => 
+        await _context.Rooms.AsNoTracking()
+            .AnyAsync(x => x.Number == number);
 }

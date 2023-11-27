@@ -5,5 +5,6 @@ namespace LNSF.Domain.Repositories;
 
 public interface IEmergencyContactRepository : IBaseRepository<EmergencyContact>
 {
-    public Task<List<EmergencyContact>> Query(EmergencyContactFilter filter);
+    Task<List<EmergencyContact>> Query(EmergencyContactFilter filter);
+    Task<bool> ExistsByIdAndPeopleId(int id, int peopleId);
 }

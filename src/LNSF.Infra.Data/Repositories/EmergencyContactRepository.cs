@@ -3,6 +3,7 @@ using LNSF.Domain.Filters;
 using LNSF.Domain.Entities;
 using LNSF.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
+using LNSF.Domain.Enums;
 
 namespace LNSF.Infra.Data.Repositories;
 
@@ -22,7 +23,9 @@ public class EmergencyContactRepository : BaseRepository<EmergencyContact>, IEme
         if (filter.Phone != null) query = query.Where(x => x.Phone.Contains(filter.Phone));
         if (filter.PeopleId != null) query = query.Where(x => x.PeopleId == filter.PeopleId);
         query = query.OrderBy(x => x.Name);
-
+        if (filter.OrderBy == OrderBy.Ascending) query = query.OrderBy(x => x.Name);
+        else query = query.OrderByDescending(x => x.Name);
+        
         var contacts = await query
             .Skip((filter.Page.Page - 1) * filter.Page.PageSize)
             .Take(filter.Page.PageSize)
@@ -30,4 +33,7 @@ public class EmergencyContactRepository : BaseRepository<EmergencyContact>, IEme
 
         return contacts;
     }
+
+    public async Task<bool> ExistsByIdAndPeopleId(int id, int peopleId) => 
+        await _context.EmergencyContacts.AnyAsync(x => x.Id == id && x.PeopleId == peopleId);
 }

@@ -10,11 +10,11 @@ namespace LNSF.Application;
 public class PeopleService : IPeopleService
 {
     private readonly IPeopleRepository _peopleRepository;
-    private readonly IRoomsRepository _roomRepository;
+    private readonly IRoomRepository _roomRepository;
     private readonly PeopleValidator _validator;
 
     public PeopleService(IPeopleRepository peopleRepository,
-        IRoomsRepository roomRepository,
+        IRoomRepository roomRepository,
         PeopleValidator peopleValidator)
     {
         _peopleRepository = peopleRepository;
@@ -71,15 +71,16 @@ public class PeopleService : IPeopleService
         {
             people = await _peopleRepository.Update(people);
             await _roomRepository.Update(room);
+            
+            // await _peopleRepository.CommitTransaction();
+
+            return people;
         }
-        catch (Exception)
+        catch (Exception e)
         {
             // await _peopleRepository.RollbackTransaction();
-            throw new AppException("Erro ao adicionar pessoa ao quarto!", HttpStatusCode.InternalServerError);
+            throw new AppException(e.Message, HttpStatusCode.InternalServerError);
         }
-        // await _peopleRepository.CommitTransaction();
-
-        return people;
     }
 
     public async Task<People> RemovePeopleFromRoom(int peopleId)
@@ -87,9 +88,8 @@ public class PeopleService : IPeopleService
         if (!await _peopleRepository.Exists(peopleId)) throw new AppException("Pessoa não encontrada!", HttpStatusCode.UnprocessableEntity);
         var people = await _peopleRepository.Get(peopleId);
         if (people.RoomId == null) throw new AppException("Pessoa não está no quarto!", HttpStatusCode.UnprocessableEntity);
-        if (!await _roomRepository.Exists(people.RoomId.Value)) throw new AppException("Quarto não encontrado!", HttpStatusCode.UnprocessableEntity);
 
-        var room = await _roomRepository.Get(people.RoomId.Value);
+        var room = await _roomRepository.Get(people.RoomId);
         people.RoomId = null;
         room.Occupation--;
 
@@ -98,14 +98,15 @@ public class PeopleService : IPeopleService
         {
             people = await _peopleRepository.Update(people);
             await _roomRepository.Update(room);
+        
+            // await _peopleRepository.CommitTransaction();
+        
+            return people;
         }
-        catch (Exception)
+        catch (Exception e)
         {
             // await _peopleRepository.RollbackTransaction();
-            throw new AppException("Erro ao remover pessoa do quarto!", HttpStatusCode.InternalServerError);
+            throw new AppException(e.Message, HttpStatusCode.InternalServerError);
         }
-        // await _peopleRepository.CommitTransaction();
-
-        return people;
     }
 }

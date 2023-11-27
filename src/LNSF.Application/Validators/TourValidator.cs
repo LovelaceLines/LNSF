@@ -8,16 +8,12 @@ public class TourValidator : AbstractValidator<Tour>
 {
     public TourValidator()
     {
+        RuleFor(tour => tour.Output)
+            .LessThan(tour => tour.Input)
+            .When(tour => tour.Input != null)
+            .WithMessage("Data de saída deve ser menor que a data de retorno!");
+
         RuleFor(tour => tour.Note)
             .MaximumLength(256).WithMessage(GlobalValidator.MaxLength("Observação", 256));
-    }
-}
-
-public class TourFilterValidator : AbstractValidator<TourFilter>
-{
-    public TourFilterValidator()
-    {
-        RuleFor(filter => filter.Page)
-            .SetValidator(new PaginationValidator());
     }
 }

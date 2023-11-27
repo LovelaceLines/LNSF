@@ -1,6 +1,6 @@
 ﻿namespace LNSF.Domain.DTOs;
 
-public class EscortHostingInfo
+public class HostingEscortInfo
 {
     public int Id { get; set; }
     public DateTime CheckIn { get; set; }

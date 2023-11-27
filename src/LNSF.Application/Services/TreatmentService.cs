@@ -44,7 +44,6 @@ public class TreatmentService : ITreatmentService
         if (!await _treatmentRepository.Exists(treatment.Id)) throw new AppException("Tratamento não encontrado", HttpStatusCode.NotFound);
         if (await _treatmentRepository.ExistsByNameAndType(treatment.Name, treatment.Type)) throw new AppException("Tratamento já cadastrado", HttpStatusCode.BadRequest);
 
-
         return await _treatmentRepository.Update(treatment);
     }
 

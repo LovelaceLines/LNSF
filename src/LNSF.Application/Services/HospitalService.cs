@@ -30,20 +30,22 @@ public class HospitalService : IHospitalService
     {
         var validationResult = await _validator.ValidateAsync(hospital);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
-        if (await _repository.Exists(hospital.Name)) throw new AppException("Nome do hospital já cadastrado!", HttpStatusCode.UnprocessableEntity);
+
+        if (await _repository.ExistsByName(hospital.Name)) throw new AppException("Nome do hospital já cadastrado!", HttpStatusCode.UnprocessableEntity);
 
         return await _repository.Add(hospital);
     }
 
-    public async Task<Hospital> Update(Hospital hospital)
+    public async Task<Hospital> Update(Hospital newHospital)
     {
-        var validationResult = await _validator.ValidateAsync(hospital);
+        var validationResult = await _validator.ValidateAsync(newHospital);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
-        if (!await _repository.Exists(hospital.Id)) throw new AppException("Hospital não encontrado!", HttpStatusCode.NotFound);
-        var oldHospital = await _repository.Get(hospital.Id);
-        if (oldHospital.Name != hospital.Name && await _repository.Exists(hospital.Name)) throw new AppException("Nome do hospital já cadastrado!", HttpStatusCode.UnprocessableEntity);
+
+        if (!await _repository.Exists(newHospital.Id)) throw new AppException("Hospital não encontrado!", HttpStatusCode.NotFound);
+        var oldHospital = await _repository.Get(newHospital.Id);
+        if (oldHospital.Name != newHospital.Name && await _repository.ExistsByName(newHospital.Name)) throw new AppException("Nome do hospital já cadastrado!", HttpStatusCode.UnprocessableEntity);
         
-        return await _repository.Update(hospital);
+        return await _repository.Update(newHospital);
     }
 
     public async Task<Hospital> Delete(int id)

@@ -73,34 +73,6 @@ public class EscortTestApi : GlobalClientRequest
         Assert.Equal(countBefore, countAfter);
     }
 
-    [Fact]
-    public async Task Put_ValidEscort_Ok()
-    {
-        // Arrange - People
-        var peopleFake1 = new PeoplePostViewModelFake().Generate();
-        var peoplePosted1 = await Post<PeopleViewModel>(_peopleClient, peopleFake1);
-        var peopleFake2 = new PeoplePostViewModelFake().Generate();
-        var peoplePosted2 = await Post<PeopleViewModel>(_peopleClient, peopleFake2);
-
-        // Arrange - Escort
-        var escortPost = new EscortPostViewModel{ PeopleId = peoplePosted1.Id};
-        var escortPosted = await Post<EscortViewModel>(_escortClient, escortPost);
-
-        // Arrange - Count
-        var countBefore = await GetCount(_escortClient);
-
-        // Act - Escort
-        var escortPut = new EscortViewModel{ Id = escortPosted.Id, PeopleId = peoplePosted2.Id };
-        var escortPutted = await Put<EscortViewModel>(_escortClient, escortPut);
-
-        // Act - Count
-        var countAfter = await GetCount(_escortClient);
-
-        // Assert
-        Assert.Equal(countBefore, countAfter);
-        Assert.Equivalent(escortPut, escortPutted);
-    }
-
     [Theory]
     [InlineData(0)]
     [InlineData(-1)]

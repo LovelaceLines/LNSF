@@ -2,8 +2,10 @@
 using System.Net.Http.Json;
 using AutoMapper;
 using LNSF.Api.ViewModels;
+using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
+using LNSF.Test.Fakers;
 using Newtonsoft.Json;
 using Xunit;
 
@@ -107,4 +109,70 @@ public class GlobalClientRequest
 
         throw new Exception($"Unexpected response status code: {content}, {response.StatusCode}, {response}");
     }
+
+    #region GetEntityFake
+
+    public async Task<RoomViewModel> GetRoom() =>
+        await Post<RoomViewModel>(_roomClient, new RoomPostViewModelFake().Generate());
+
+    public async Task<PeopleViewModel> GetPeople() =>
+        await Post<PeopleViewModel>(_peopleClient, new PeoplePostViewModelFake().Generate());
+    
+    public async Task<HospitalViewModel> GetHospital() =>
+        await Post<HospitalViewModel>(_hospitalClient, new HospitalPostViewModelFake().Generate());
+
+    public async Task<TreatmentViewModel> GetTreatment() =>
+        await Post<TreatmentViewModel>(_treatmentClient, new TreatmentPostViewModelFake().Generate());
+    
+    public async Task<PatientViewModel> GetPatient(int numberTreatment = 1)
+    {
+        var people = await GetPeople();
+        var hospital = await GetHospital();
+        var treatmentIds = new List<int>();
+        for (int i = 0; i < numberTreatment; i++)
+        {
+            var treatment = await GetTreatment();
+            treatmentIds.Add(treatment.Id);
+        }
+
+        var patientFake = new PatientPostViewModelFake().Generate();
+        patientFake.PeopleId = people.Id;
+        patientFake.HospitalId = hospital.Id;
+        patientFake.TreatmentIds = treatmentIds;
+
+        return await Post<PatientViewModel>(_patientClient, patientFake);
+    } 
+
+    public async Task<EscortViewModel> GetEscort()
+    {
+        var people = await GetPeople();
+        var escortFake = new EscortPostViewModelFake().Generate();
+        escortFake.PeopleId = people.Id;
+        
+        return await Post<EscortViewModel>(_escortClient, escortFake);
+    }
+
+    public async Task<HostingViewModel> GetHosting(int numberEscorts = 1, bool patientHasCheckOut = true, bool escortHasCheckOut = true)
+    {
+        var patient = await GetPatient();
+        var escortInfos = new List<HostingEscortInfo>();
+        for (int i = 0; i < numberEscorts; i++)
+        {
+            var escort = await GetEscort();
+            var escortInfoFake = new HostingEscortInfoFake().Generate();
+            escortInfoFake.Id = escort.Id;
+            escortInfoFake.CheckOut = escortHasCheckOut ? escortInfoFake.CheckOut : null; 
+
+            escortInfos.Add(escortInfoFake);
+        }
+
+        var hostingFake = new HostingPostViewModelFake().Generate();
+        hostingFake.PatientId = patient.Id;
+        hostingFake.EscortInfos = escortInfos;
+        hostingFake.CheckOut = patientHasCheckOut ? hostingFake.CheckOut : null;
+
+        return await Post<HostingViewModel>(_hostingClient, hostingFake);
+    }
+
+    #endregion
 }

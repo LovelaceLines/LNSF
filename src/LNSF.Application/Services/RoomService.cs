@@ -9,10 +9,10 @@ namespace LNSF.Application.Services;
 
 public class RoomService : IRoomService
 {
-    private readonly IRoomsRepository _roomRepository;
+    private readonly IRoomRepository _roomRepository;
     private readonly RoomValidator _validator;
 
-    public RoomService(IRoomsRepository roomRepository,
+    public RoomService(IRoomRepository roomRepository,
         RoomValidator validator)
     {
         _roomRepository = roomRepository;
@@ -32,9 +32,8 @@ public class RoomService : IRoomService
     {
         var validationResult = _validator.Validate(room);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
-        var filter = new RoomFilter { Number = room.Number };
-        var query = await _roomRepository.Query(filter);
-        if (query.Count > 0) throw new AppException("Número do quarto já existe!", HttpStatusCode.BadRequest);
+        
+        if (await _roomRepository.ExistsByNumber(room.Number)) throw new AppException("Número do quarto já existe!", HttpStatusCode.BadRequest);
         
         return await _roomRepository.Add(room);
     }
@@ -43,6 +42,8 @@ public class RoomService : IRoomService
     {
         var validationResult = _validator.Validate(room);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
+
+        if (await _roomRepository.ExistsByNumber(room.Number)) throw new AppException("Número do quarto já existe!", HttpStatusCode.BadRequest);
 
         return await _roomRepository.Update(room);
     }

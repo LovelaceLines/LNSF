@@ -28,17 +28,14 @@ public class EscortService : IEscortService
     public async Task<Escort> Create(Escort escort)
     {
         if (!await _peoplesRepository.Exists(escort.PeopleId)) throw new AppException("Pessoa não encontrada", HttpStatusCode.NotFound);
-        if (await _escortRepository.PeopleExists(escort.PeopleId)) throw new AppException("Acompanhante já cadastrado", HttpStatusCode.UnprocessableEntity);
+        if (await _escortRepository.ExistsByPeopleId(escort.PeopleId)) throw new AppException("Acompanhante já cadastrado", HttpStatusCode.UnprocessableEntity);
 
         return await _escortRepository.Add(escort);
     }
     
     public async Task<Escort> Update(Escort escort)  
     {
-        if (!await _escortRepository.Exists(escort.Id)) throw new AppException("Acompanhante não encontrado", HttpStatusCode.NotFound);
-        if (!await _peoplesRepository.Exists(escort.PeopleId)) throw new AppException("Pessoa não encontrada", HttpStatusCode.NotFound);
-        var oldEscort = await _escortRepository.Get(escort.Id);
-        if (oldEscort.PeopleId != escort.PeopleId && await _escortRepository.PeopleExists(escort.PeopleId)) throw new AppException("Acompanhante já cadastrado", HttpStatusCode.UnprocessableEntity);
+        if (!await _escortRepository.ExistsByIdAndPeopleId(escort.Id, escort.PeopleId)) throw new AppException("Acompanhante não encontrado", HttpStatusCode.NotFound);
 
         return await _escortRepository.Update(escort);
     }

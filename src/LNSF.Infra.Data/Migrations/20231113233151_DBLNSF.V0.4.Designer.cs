@@ -3,6 +3,7 @@ using System;
 using LNSF.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LNSF.src.LNSF.Infra.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231113233151_DBLNSF.V0.4")]
+    partial class DBLNSFV04
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.11");
@@ -77,7 +80,6 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("PeopleId")
-                        .IsUnicode(true)
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -160,7 +162,6 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("PeopleId")
-                        .IsUnicode(true)
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("SocioeconomicRecord")
@@ -327,9 +328,6 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name", "Type")
-                        .IsUnique();
 
                     b.ToTable("Treatments");
                 });

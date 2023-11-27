@@ -28,15 +28,3 @@ public class RoomValidator : AbstractValidator<Room>
                 room.Available == false).WithMessage("Quarto deve ser indisponível. Não há vagas.");
     }
 }
-
-public class RoomFilterValidator : AbstractValidator<RoomFilter>
-{
-    public RoomFilterValidator()
-    {
-        RuleFor(x => x.Page)
-            .SetValidator(new PaginationValidator());
-        
-        RuleFor(x => x.Order)
-            .SetValidator(new OrderByValidator());
-    }
-}

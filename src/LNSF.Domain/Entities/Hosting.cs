@@ -9,5 +9,5 @@ public class Hosting
 	public DateTime? CheckOut { get; set; }
 	public int PatientId { get; set; }
 	public Patient? Patient { get; set; }
-	public List<EscortHostingInfo> EscortInfos { get; set; } = new();
+	public List<HostingEscortInfo> EscortInfos { get; set; } = new();
 }
