@@ -33,19 +33,7 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
                     },
                 ],
             },
-            {
-                index: 2,
-                icon: 'apartment',
-                path: '/inicio/apartamento',
-                label: 'Apartamentos',
-                options: [
-                    {
-                        pathOption: '/inicio/apartamentos/visualizar',
-                        labelOption: 'Visualizar',
-                    }
 
-                ],
-            },
             {
                 index: 4,
                 icon: 'description',
@@ -62,10 +50,38 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
                     }
                 ],
             },
+
+            {
+                index: 8,
+                icon: 'bed',
+                path: '/inicio/hospedagem',
+                label: 'Hospedagens',
+                options: [
+                    {
+                        pathOption: '/inicio/hospedagens/visualizar',
+                        labelOption: 'Visualizar',
+                    }
+
+                ],
+            },
+
+            {
+                index: 2,
+                icon: 'apartment',
+                path: '/inicio/apartamento',
+                label: 'Apartamentos',
+                options: [
+                    {
+                        pathOption: '/inicio/apartamentos/visualizar',
+                        labelOption: 'Visualizar',
+                    }
+
+                ],
+            },
         ];
-    
+
         if (user.role === 1 || user.role === 2 || user.role === 3) {
-            menu[1].options.push(
+            menu[3].options.push(
                 {
                     pathOption: '/inicio/apartamentos/gerenciar',
                     labelOption: 'Gerenciar',

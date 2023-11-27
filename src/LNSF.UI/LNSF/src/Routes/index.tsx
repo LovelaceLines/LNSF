@@ -21,6 +21,7 @@ export const AppRoutes = () => {
                     <Route path="/inicio" element={<Dashboard />} />
 
                     <Route path="/inicio/apartamentos/visualizar" element={<Dashboard children={<ViewRoom />} />} />
+                    <Route path="/inicio/hospedagens/visualizar" element={<Dashboard children={<ViewRoom />} />} />
 
                     {user.role !== 0 && <Route path="/inicio/apartamentos/gerenciar" element={<Dashboard children={<RegisterRoom />} />} />}
                     {user.role !== 0 && <Route path="/inicio/apartamentos/gerenciar/:id" element={<Dashboard children={<TelaDeGerenciamentoRoom />} />} />}

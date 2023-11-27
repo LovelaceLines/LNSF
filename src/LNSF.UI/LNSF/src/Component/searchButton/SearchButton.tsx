@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextField, InputAdornment, Box, useMediaQuery, useTheme, Button } from "@mui/material";
+import { TextField,Box, useMediaQuery, useTheme, Button } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import FilterAltRoundedIcon from '@mui/icons-material/FilterAltRounded';
 import FilterAltOffRoundedIcon from '@mui/icons-material/FilterAltOffRounded';
@@ -29,13 +29,12 @@ export const SearchButton: React.FC<ISearchButtonProps> = ({
         >
 
             <Button
+                
                 onClick={() => {
                     setAtivado(!ativado)
                 }}
             >
-                <InputAdornment position="start">
                     {!ativado  ? <FilterAltRoundedIcon color='primary' /> : <FilterAltOffRoundedIcon color='primary' />}
-                </InputAdornment>
             </Button>
 
 

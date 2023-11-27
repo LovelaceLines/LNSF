@@ -76,7 +76,7 @@ export const ViewPeople: React.FC = () => {
                     } else {
                         setRoomValues(response);
                         setIsLoading(false);
-                        console.log('oii', response)
+                      
                     }
                 })
                 .catch((error) => {
