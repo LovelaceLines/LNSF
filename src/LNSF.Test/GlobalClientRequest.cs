@@ -117,7 +117,21 @@ public class GlobalClientRequest
 
     public async Task<PeopleViewModel> GetPeople() =>
         await Post<PeopleViewModel>(_peopleClient, new PeoplePostViewModelFake().Generate());
-    
+
+    public async Task<TourViewModel> GetTour(int id = 0, int peopleId = 0)
+    {
+        if (peopleId == 0)
+        {
+            var people = await GetPeople();
+            peopleId = people.Id;
+        }
+
+        if (id == 0)
+            return await Post<TourViewModel>(_tourClient, new TourPostViewModelFake(peopleId).Generate());
+        
+        return await Put<TourViewModel>(_tourClient, new TourPutViewModelFake(id, peopleId).Generate());
+    }
+
     public async Task<HospitalViewModel> GetHospital() =>
         await Post<HospitalViewModel>(_hospitalClient, new HospitalPostViewModelFake().Generate());
 

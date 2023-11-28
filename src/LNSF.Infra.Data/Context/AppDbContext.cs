@@ -9,8 +9,9 @@ public class AppDbContext : DbContext
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) {}
 
     public DbSet<Account> Accounts { get; set; }
-    public DbSet<Room> Rooms { get; set; }
     public DbSet<People> Peoples { get; set; }
+    public DbSet<Room> Rooms { get; set; }
+    public DbSet<PeopleRoom> PeoplesRooms { get; set; }
     public DbSet<Tour> Tours { get; set; }
     public DbSet<EmergencyContact> EmergencyContacts { get; set; }
     public DbSet<Hospital> Hospitals { get; set; }
@@ -26,8 +27,9 @@ public class AppDbContext : DbContext
         base.OnModelCreating(builder);
 
         builder.ApplyConfiguration(new AccountsConfiguration());
-        builder.ApplyConfiguration(new RoomsConfiguration());
         builder.ApplyConfiguration(new PeoplesConfiguration());
+        builder.ApplyConfiguration(new RoomsConfiguration());
+        builder.ApplyConfiguration(new PeoplesRoomsConfiguration());
         builder.ApplyConfiguration(new ToursConfiguration());
         builder.ApplyConfiguration(new EmergencyContactsConfiguration());
         builder.ApplyConfiguration(new HospitalsConfiguration());

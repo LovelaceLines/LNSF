@@ -21,8 +21,8 @@ public class HostingEscortRepository : BaseRepository<HostingEscort>, IHostingEs
             .Where(he => he.EscortId == escortId)
             .ToListAsync();
 
-    public Task<List<HostingEscort>> GetByHostingId(int hostingId) => 
-        _context.HostingsEscorts
+    public async Task<List<HostingEscort>> GetByHostingId(int hostingId) => 
+        await _context.HostingsEscorts
             .Where(he => he.HostingId == hostingId)
             .ToListAsync();
 

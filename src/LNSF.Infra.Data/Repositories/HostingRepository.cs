@@ -14,11 +14,19 @@ public class HostingRepository : BaseRepository<Hosting>, IHostingRepository
 {
     private readonly AppDbContext _context;
     private readonly IHostingEscortRepository _hostingEscortRepository;
+    private readonly IQueryable<Patient> _patients;
+    private readonly IQueryable<Hosting> _hostings;
+    private readonly IQueryable<Escort> _escorts;
+    private readonly IQueryable<HostingEscort> _hostingsEscorts;
 
     public HostingRepository(AppDbContext context, 
         IHostingEscortRepository hostingEscortRepository) : base(context)
     {
         _context = context;
+        _patients = _context.Patients.AsNoTracking();
+        _hostings = _context.Hostings.AsNoTracking();
+        _escorts = _context.Escorts.AsNoTracking();
+        _hostingsEscorts = _context.HostingsEscorts.AsNoTracking();
         _hostingEscortRepository = hostingEscortRepository;
     }
 
@@ -127,4 +135,32 @@ public class HostingRepository : BaseRepository<Hosting>, IHostingRepository
     public Task<bool> ExistsByIdAndPatientId(int id, int patientId) =>
         _context.Hostings.AsNoTracking()
             .AnyAsync(x => x.Id == id && x.PatientId == patientId);
+    
+    public Task<bool> ExistsByPeopleIdAndDate(int peopleId, DateTime date) =>
+        _hostings.AnyAsync(h => h.CheckIn <= date && date <= h.CheckOut
+            && (
+                _patients.Any(p => p.PeopleId == peopleId && p.Id == h.PatientId)
+                ||
+                _hostingsEscorts.Any(he => 
+                    _escorts.Any(e => e.PeopleId == peopleId && e.Id == he.EscortId) 
+                    && h.Id == he.HostingId)
+                )
+            );
+            
+    public Task<List<CheckInAndCheckOut>> GetCheckInAndCheckOutByPeopleId(int peopleId)
+    {
+        var checks = new List<CheckInAndCheckOut>();
+        
+        checks = _hostings.Where(h => 
+            _patients.Any(p => p.PeopleId == peopleId && p.Id == h.PatientId)
+            ||
+            _hostingsEscorts.Any(he => 
+                _escorts.Any(e => e.PeopleId == peopleId && e.Id == he.EscortId) 
+                && h.Id == he.HostingId)
+            )
+            .Select(h => new CheckInAndCheckOut { CheckIn = h.CheckIn, CheckOut = h.CheckOut })
+            .ToList();
+                
+        return Task.FromResult(checks);
+    }
 }

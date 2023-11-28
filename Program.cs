@@ -19,6 +19,7 @@ using LNSF.Application.Interfaces;
 using LNSF.Domain.Exceptions;
 using LNSF.Infra.Data.Migrations;
 using System.Reflection;
+using LNSF.Infra.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -97,6 +98,8 @@ builder.Services.AddTransient<AccountUpdateValidator>();
 builder.Services.AddTransient<PasswordValidator>();
 builder.Services.AddTransient<IAccountRepository, AccountRepository>();
 
+builder.Services.AddTransient<IGlobalRepository, GlobalRepository>();
+
 builder.Services.AddTransient<PaginationValidator>();
 
 builder.Services.AddTransient<ITourRepository, ToursRepository>();
@@ -112,6 +115,8 @@ builder.Services.AddTransient<IPeopleRepository, PeopleRepository>();
 builder.Services.AddTransient<PeopleFilterValidator>();
 builder.Services.AddTransient<PeopleValidator>();
 builder.Services.AddTransient<IPeopleService, PeopleService>();
+
+builder.Services.AddTransient<IPeopleRoomRepository, PeopleRoomRepository>();
 
 builder.Services.AddTransient<IEmergencyContactRepository, EmergencyContactRepository>();
 builder.Services.AddTransient<EmergencyContactValidator>();
