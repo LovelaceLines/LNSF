@@ -6,6 +6,7 @@ using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
 using LNSF.Test.Fakers;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Xunit;
 
@@ -19,6 +20,9 @@ public class GlobalClientRequest
     public readonly HttpClient _authClient = new() { BaseAddress = new Uri($"{BaseUrl}Auth/") };
     public readonly HttpClient _accountClient = new() { BaseAddress = new Uri($"{BaseUrl}Account/") };
     public readonly HttpClient _peopleClient = new() { BaseAddress = new Uri($"{BaseUrl}People/") };
+    public readonly HttpClient _addPeopleToRoomClient = new() { BaseAddress = new Uri($"{BaseUrl}People/add-people-to-room/") };
+    public readonly HttpClient _removePeopleFromRoom = new() { BaseAddress = new Uri($"{BaseUrl}People/remove-people-from-room/") };
+    public readonly HttpClient _peopleRoomClient = new() { BaseAddress = new Uri($"{BaseUrl}PeopleRoom/") };
     public readonly HttpClient _roomClient = new() { BaseAddress = new Uri($"{BaseUrl}Room/") };
     public readonly HttpClient _emergencyContactClient = new() { BaseAddress = new Uri($"{BaseUrl}EmergencyContact/") };
     public readonly HttpClient _tourClient = new() { BaseAddress = new Uri($"{BaseUrl}Tour/") };
@@ -99,6 +103,15 @@ public class GlobalClientRequest
         return await DeserializeResponse<T>(response);
     }
 
+    public async Task<T> DeleteByBody<T>(HttpClient client, dynamic obj) where T : class
+    {
+        var objJson = JsonContent.Create(obj);
+        var request = new HttpRequestMessage(HttpMethod.Delete, "");
+        request.Content = objJson;
+        var response = await client.SendAsync(request);
+        return await DeserializeResponse<T>(response);
+    }
+
     private async Task<T> DeserializeResponse<T>(HttpResponseMessage response)
     {
         var content = await response.Content.ReadAsStringAsync();
@@ -123,6 +136,33 @@ public class GlobalClientRequest
 
     public async Task<PeopleViewModel> GetPeople() =>
         await Post<PeopleViewModel>(_peopleClient, new PeoplePostViewModelFake().Generate());
+
+    public async Task<PeopleRoomViewModel> GetPeopleRoom(int? patientId = null, int? roomId = null, int? hostingId = null)
+    {
+        int peopleId = 0;
+
+        if (!patientId.HasValue)
+        {
+            var patient = await GetPatient();
+            patientId = patient.Id;
+            peopleId = patient.PeopleId;
+        }
+
+        if (!roomId.HasValue)
+        {
+            var room = await GetRoom(available: true, beds: 1);
+            roomId = room.Id;
+        }
+
+        if (!hostingId.HasValue)
+        {
+            var hosting = await GetHosting(patientId: patientId.Value);
+            hostingId = hosting.Id;
+        }
+
+        var peopleRoomFake = new PeopleRoomViewModelFake(roomId: roomId.Value, peopleId: peopleId, hostingId: hostingId.Value).Generate();
+        return await Post<PeopleRoomViewModel>(_addPeopleToRoomClient, peopleRoomFake);
+    }
 
     public async Task<TourViewModel> GetTour(int id = 0, int peopleId = 0)
     {
@@ -172,18 +212,22 @@ public class GlobalClientRequest
         return await Post<EscortViewModel>(_escortClient, escortFake);
     }
 
-    public async Task<HostingViewModel> GetHosting(int numberEscorts = 1, bool patientHasCheckOut = true)
+    public async Task<HostingViewModel> GetHosting(int? patientId = null, List<int>? escortIds = null, int numberEscorts = 1, bool patientHasCheckOut = true)
     {
         var patient = await GetPatient();
-        var escortIds = new List<int>();
-        for (int i = 0; i < numberEscorts; i++)
+        
+        if (escortIds == null) 
         {
-            var escort = await GetEscort();
-            escortIds.Add(escort.Id);
+            escortIds = new List<int>();
+            for (int i = 0; i < numberEscorts; i++)
+            {
+                var escort = await GetEscort();
+                escortIds.Add(escort.Id);
+            }
         }
 
         var hostingFake = new HostingPostViewModelFake().Generate();
-        hostingFake.PatientId = patient.Id;
+        hostingFake.PatientId = patientId.HasValue ? patientId.Value : patient.Id;
         hostingFake.EscortIds = escortIds;
         hostingFake.CheckOut = patientHasCheckOut ? hostingFake.CheckOut : null;
 

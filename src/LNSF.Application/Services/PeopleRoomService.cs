@@ -35,21 +35,31 @@ public class PeopleRoomService : IPeopleRoomService
     {
         if (await _peopleRoomRepository.ExistsHosting(peopleRoom)) throw new AppException("Pessoa já está hospedada!", HttpStatusCode.Conflict);
         if (await _peopleRoomRepository.ExistsByPeopleRoom(peopleRoom)) throw new AppException("Registro já existe!", HttpStatusCode.Conflict);
-        if (await _hostingRepository.ExistsByIdAndPeopleId(peopleRoom.HostingId, peopleRoom.PeopleId)) throw new AppException("Pessoa não encontrada na hospedagem!", HttpStatusCode.NotFound);
+        if (!await _hostingRepository.ExistsByIdAndPeopleId(peopleRoom.HostingId, peopleRoom.PeopleId)) throw new AppException("Pessoa não encontrada na hospedagem!", HttpStatusCode.NotFound);
 
         if (!await _peopleRepository.Exists(peopleRoom.PeopleId)) throw new AppException("Pessoa não encontrada!", HttpStatusCode.NotFound);
         if (!await _roomRepository.Exists(peopleRoom.RoomId)) throw new AppException("Quarto não encontrado!", HttpStatusCode.NotFound);
         if (!await _hostingRepository.Exists(peopleRoom.HostingId)) throw new AppException("Hospedagem não encontrada!", HttpStatusCode.NotFound);
 
+        peopleRoom.Room = await _roomRepository.Get(peopleRoom.RoomId);
+        peopleRoom.Hosting = await _hostingRepository.Get(peopleRoom.HostingId);
+        peopleRoom.People = await _peopleRepository.Get(peopleRoom.PeopleId);
+
+        if (!peopleRoom.Room.Available) throw new AppException("Quarto indisponível!", HttpStatusCode.Conflict);
+        
         if (!await _peopleRoomRepository.HaveVacancy(peopleRoom)) throw new AppException("Quarto sem vagas!", HttpStatusCode.Conflict);
+
+        peopleRoom.Room = null;
+        peopleRoom.Hosting = null;
+        peopleRoom.People = null;
         
         return await _peopleRoomRepository.Add(peopleRoom);
     }
 
-    public async Task<PeopleRoom> Delete(int id)
+    public async Task<PeopleRoom> Delete(PeopleRoom peopleRoom)
     {
-        if (!await _peopleRoomRepository.Exists(id)) throw new AppException("Registro não encontrado!", HttpStatusCode.NotFound);
+        if (!await _peopleRoomRepository.Exists(peopleRoom.RoomId, peopleRoom.PeopleId, peopleRoom.HostingId)) throw new AppException("Registro não encontrado!", HttpStatusCode.NotFound);
 
-        return await _peopleRoomRepository.Remove(id);
+        return await _peopleRoomRepository.Remove(peopleRoom);
     }
 }

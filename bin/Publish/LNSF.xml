@@ -164,14 +164,24 @@
             Updates a person's information. Note: do not update the person's room.
             </summary>
         </member>
-        <member name="M:LNSF.Api.Controllers.PeopleController.Put(LNSF.Api.ViewModels.PeopleAddPeopleToRoomViewModel)">
+        <member name="M:LNSF.Api.Controllers.PeopleController.Post(LNSF.Api.ViewModels.PeopleRoomViewModel)">
             <summary>
             Adds people to a room.
             </summary>
         </member>
-        <member name="M:LNSF.Api.Controllers.PeopleController.Put(LNSF.Api.ViewModels.PeopleRemovePeopleFromRoom)">
+        <member name="M:LNSF.Api.Controllers.PeopleController.Delete(LNSF.Api.ViewModels.PeopleRoomViewModel)">
             <summary>
             Removes a person from a room.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.PeopleRoomController.Get(LNSF.Domain.Filters.PeopleRoomFilter)">
+            <summary>
+            Retrieves a list of objects based on the provided filter.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.PeopleRoomController.GetCount">
+            <summary>
+            Gets the count of PeoplesRooms.
             </summary>
         </member>
         <member name="M:LNSF.Api.Controllers.RoomController.Get(LNSF.Domain.Filters.RoomFilter)">
@@ -269,6 +279,13 @@
             Deletes a patient by id. Note: this action results in a cascade delete (Hosting).
             </summary>
         </member>
+        <member name="M:LNSF.Domain.Repositories.IPeopleRoomRepository.HaveVacancy(LNSF.Domain.Entities.PeopleRoom)">
+            <summary>
+            Checks if a given PeopleRoom has vacancy in the corresponding room.
+            <param name="peopleRoom">Require that Entities Hosting, People and Room exists</param>
+            </summary>
+            <returns>True if there is vacancy, false otherwise.</returns>
+        </member>
         <member name="T:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV01">
             <inheritdoc />
         </member>
@@ -328,6 +345,33 @@
         </member>
         <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV05.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
+        </member>
+        <member name="T:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV06">
+            <inheritdoc />
+        </member>
+        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV06.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV06.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV06.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV07">
+            <inheritdoc />
+        </member>
+        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV07.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV07.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV07.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:LNSF.Test.GlobalClientRequest.GetRoom(System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String,System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <returns>A new room if the id is null, otherwise the updated room.</returns>
         </member>
     </members>
 </doc>

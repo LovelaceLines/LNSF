@@ -3,9 +3,9 @@ using LNSF.Api.ViewModels;
 
 namespace LNSF.Test.Fakers;
 
-public class PeopleRoomPostViewModelFake : Faker<PeopleRoomViewModel>
+public class PeopleRoomViewModelFake : Faker<PeopleRoomViewModel>
 {
-    public PeopleRoomPostViewModelFake(int roomId, int peopleId, int hostingId)
+    public PeopleRoomViewModelFake(int roomId, int peopleId, int hostingId)
     {
         RuleFor(x => x.RoomId, f => roomId);
         RuleFor(x => x.PeopleId, f => peopleId);

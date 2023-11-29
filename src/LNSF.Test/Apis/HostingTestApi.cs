@@ -23,6 +23,19 @@ public class HostingTestData : IEnumerable<object[]>
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
 
+public class NumberEscortsTestData : IEnumerable<object[]>
+{
+    private readonly List<object[]> _data = new()
+    {
+        new object[] { 0 },
+        new object[] { 1 },
+        new object[] { 2 },
+    };
+
+    public IEnumerator<object[]> GetEnumerator() => _data.GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+}
+
 public class HostingTestApi : GlobalClientRequest
 {
     [Theory]
@@ -64,8 +77,8 @@ public class HostingTestApi : GlobalClientRequest
     }
 
     [Theory]
-    [ClassData(typeof(HostingTestData))]
-    public async Task Post_HostingInvalidWithCheckInGreaterThanCheckOut_BadRequest(int numberEscorts, bool patientHasCheckOut)
+    [ClassData(typeof(NumberEscortsTestData))]
+    public async Task Post_HostingInvalidWithCheckInGreaterThanCheckOut_BadRequest(int numberEscorts)
     {
         // Arrange - Patient
         var patient = await GetPatient();
@@ -104,7 +117,7 @@ public class HostingTestApi : GlobalClientRequest
     public async Task Put_HostingValidWithCheckOut_Ok(int numberEscorts, bool patientHasCheckOut)
     {
         // Arrange - Hosting
-        var hosting = await GetHosting(numberEscorts, patientHasCheckOut);
+        var hosting = await GetHosting(numberEscorts: numberEscorts, patientHasCheckOut: patientHasCheckOut);
 
         // Arrange - Count
         var countBefore = await GetCount(_hostingClient);
@@ -127,7 +140,7 @@ public class HostingTestApi : GlobalClientRequest
     public async Task Put_HostingInvalidWithNewPatient_BadRequest(int numberEscorts, bool patientHasCheckOut)
     {
         // Arrange - Hosting
-        var hosting = await GetHosting(numberEscorts, patientHasCheckOut);
+        var hosting = await GetHosting(numberEscorts: numberEscorts, patientHasCheckOut: patientHasCheckOut);
 
         // Arrange - Count
         var countBefore = await GetCount(_hostingClient);
@@ -151,7 +164,7 @@ public class HostingTestApi : GlobalClientRequest
     public async Task Put_HostingInvalidWithCheckInGreaterThanCheckOut_BadRequest(int numberEscorts, bool patientHasCheckOut)
     {
         // Arrange - Hosting
-        var hosting = await GetHosting(numberEscorts, patientHasCheckOut);
+        var hosting = await GetHosting(numberEscorts: numberEscorts, patientHasCheckOut: patientHasCheckOut);
 
         // Arrange - Count
         var countBefore = await GetCount(_hostingClient);

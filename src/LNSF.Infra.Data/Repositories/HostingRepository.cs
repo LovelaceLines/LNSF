@@ -39,20 +39,15 @@ public class HostingRepository : BaseRepository<Hosting>, IHostingRepository
         if (filter.PatientId != null) query = query.Where(x => x.PatientId == filter.PatientId);
         if (filter.EscortId != null) query = query.Where(x => 
             hostingsEscorts.Any(y => y.HostingId == x.Id && y.EscortId == filter.EscortId));
-        if (filter.PatientCheckIn != null) query = query.Where(x => x.CheckIn >= filter.PatientCheckIn);
-        if (filter.PatientCheckOut != null) query = query.Where(x => x.CheckOut <= filter.PatientCheckOut);
-        if (filter.EscortCheckIn != null) query = query.Where(x => 
-            hostingsEscorts.Any(y => y.HostingId == x.Id && y.CheckIn >= filter.EscortCheckIn));
-        if (filter.EscortCheckOut != null) query = query.Where(x =>
-            hostingsEscorts.Any(y => y.HostingId == x.Id && y.CheckOut <= filter.EscortCheckOut));
+        if (filter.CheckIn != null) query = query.Where(x => x.CheckIn >= filter.CheckIn);
+        if (filter.CheckOut != null) query = query.Where(x => x.CheckOut <= filter.CheckOut);
 
         if (filter.Active == true) query = query.Where(x =>
             x.CheckIn <= DateTime.Now && DateTime.Now <= x.CheckOut);
         else if (filter.Active == false) query = query.Where(x =>
             !(x.CheckIn <= DateTime.Now && DateTime.Now <= x.CheckOut));
 
-        if (filter.OrderBy == OrderBy.Ascending) query = query.OrderBy(x => x.Id);
-        else query = query.OrderByDescending(x => x.Id);
+        if (filter.OrderBy == OrderBy.Descending) query = query.OrderByDescending(x => x.Id);
 
         var hostings = await query
             .Skip((filter.Page.Page - 1) * filter.Page.PageSize)

@@ -20,8 +20,8 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         await _context.Set<T>().FindAsync(id) ??
             throw new AppException("Entidade não encontrada!", HttpStatusCode.NotFound);
 
-    public virtual async Task<bool> Exists(dynamic id) => 
-        await _context.Set<T>().FindAsync(id) != null;
+    public virtual async Task<bool> Exists(params object?[]? keyValues) => 
+        await _context.Set<T>().FindAsync(keyValues) != null;
 
     public virtual async Task<int> GetCount() => 
         await _context.Set<T>().CountAsync();

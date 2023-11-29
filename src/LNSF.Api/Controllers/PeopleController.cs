@@ -86,11 +86,12 @@ public class PeopleController : ControllerBase
     /// Removes a person from a room.
     /// </summary>
     [HttpDelete("remove-people-from-room")]
-    public async Task<ActionResult<PeopleRoomViewModel>> Delete([FromQuery]int peopleRoomId)
+    public async Task<ActionResult<PeopleRoomViewModel>> Delete(PeopleRoomViewModel peopleRoomViewModel)
     {
-        var peopleDeleted = await _peopleRoomService.Delete(peopleRoomId);
-        var peopleRoomViewModel = _mapper.Map<PeopleRoomViewModel>(peopleDeleted);
+        var peopleRoom = _mapper.Map<PeopleRoom>(peopleRoomViewModel);
+        var peopleRoomDeleted = await _peopleRoomService.Delete(peopleRoom);
+        var peopleRoomMapped = _mapper.Map<PeopleRoomViewModel>(peopleRoomDeleted);
 
-        return Ok(peopleRoomViewModel);
+        return Ok(peopleRoomMapped);
     }
 }
