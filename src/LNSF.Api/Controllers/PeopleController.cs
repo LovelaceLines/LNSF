@@ -12,13 +12,16 @@ namespace LNSF.Api.Controllers;
 public class PeopleController : ControllerBase
 {
     private readonly IMapper _mapper;
-    private readonly IPeopleService _service;
+    private readonly IPeopleService _peopleService;
+    private readonly IPeopleRoomService _peopleRoomService;
 
-    public PeopleController(IPeopleService service,
-        IMapper mapper)
+    public PeopleController(IPeopleService peopleService,
+        IMapper mapper,
+        IPeopleRoomService peopleRoomService)
     {
         _mapper = mapper;
-        _service = service;
+        _peopleService = peopleService;
+        _peopleRoomService = peopleRoomService;
     }
 
     /// <summary>
@@ -27,7 +30,7 @@ public class PeopleController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<PeopleViewModel>>> Get([FromQuery]PeopleFilter filter)
     {
-        var peoples = await _service.Query(filter);
+        var peoples = await _peopleService.Query(filter);
         var peoplesViewModel = _mapper.Map<List<PeopleViewModel>>(peoples);
         
         return Ok(peoplesViewModel);
@@ -38,7 +41,7 @@ public class PeopleController : ControllerBase
     /// </summary>
     [HttpGet("count")]
     public async Task<ActionResult<int>> GetCount() => 
-        Ok(await _service.GetCount());
+        Ok(await _peopleService.GetCount());
 
     /// <summary>
     /// Creates a new person. Note: do not create a person with a room.
@@ -47,7 +50,7 @@ public class PeopleController : ControllerBase
     public async Task<ActionResult<PeopleViewModel>> Post([FromBody]PeoplePostViewModel people)
     {
         var peopleMapped = _mapper.Map<People>(people);
-        var peopleCreated = await _service.Create(peopleMapped);
+        var peopleCreated = await _peopleService.Create(peopleMapped);
         var peopleViewModel = _mapper.Map<PeopleViewModel>(peopleCreated);
         
         return Ok(peopleViewModel);
@@ -60,7 +63,7 @@ public class PeopleController : ControllerBase
     public async Task<ActionResult<PeopleViewModel>> Put([FromBody]PeoplePutViewModel people)
     {
         var peopleMapper = _mapper.Map<People>(people);
-        var peopleUpdated = await _service.Update(peopleMapper);
+        var peopleUpdated = await _peopleService.Update(peopleMapper);
         var peopleViewModel = _mapper.Map<PeopleViewModel>(peopleUpdated);
 
         return Ok(peopleViewModel);
@@ -69,24 +72,25 @@ public class PeopleController : ControllerBase
     /// <summary>
     /// Adds people to a room.
     /// </summary>
-    [HttpPut("add-people-to-room")]
-    public async Task<ActionResult<PeopleViewModel>> Put([FromBody]PeopleAddPeopleToRoomViewModel Ids)
+    [HttpPost("add-people-to-room")]
+    public async Task<ActionResult<PeopleRoomViewModel>> Post([FromBody]PeopleRoomViewModel peopleRoomPostViewModel)
     {
-        var peopleUpdated = await _service.AddPeopleToRoom(Ids.PeopleId, Ids.RoomId);
-        var peopleViewModel = _mapper.Map<PeopleViewModel>(peopleUpdated);
+        var peopleRoom = _mapper.Map<PeopleRoom>(peopleRoomPostViewModel);
+        var peopleRoomUpdated = await _peopleRoomService.Create(peopleRoom);
+        var peopleRoomViewModel = _mapper.Map<PeopleRoomViewModel>(peopleRoomUpdated);
 
-        return Ok(peopleViewModel);
+        return Ok(peopleRoomViewModel);
     }
 
     /// <summary>
     /// Removes a person from a room.
     /// </summary>
-    [HttpPut("remove-people-from-room")]
-    public async Task<ActionResult<PeopleViewModel>> Put([FromBody]PeopleRemovePeopleFromRoom peopleId)
+    [HttpDelete("remove-people-from-room")]
+    public async Task<ActionResult<PeopleRoomViewModel>> Delete([FromQuery]int peopleRoomId)
     {
-        var peopleUpdated = await _service.RemovePeopleFromRoom(peopleId.PeopleId);
-        var peopleViewModel = _mapper.Map<PeopleViewModel>(peopleUpdated);
+        var peopleDeleted = await _peopleRoomService.Delete(peopleRoomId);
+        var peopleRoomViewModel = _mapper.Map<PeopleRoomViewModel>(peopleDeleted);
 
-        return Ok(peopleViewModel);
+        return Ok(peopleRoomViewModel);
     }
 }

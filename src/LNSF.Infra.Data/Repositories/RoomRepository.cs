@@ -19,13 +19,12 @@ public class RoomsRepository : BaseRepository<Room>, IRoomRepository
         var query = _context.Rooms.AsNoTracking();
         var count = await query.CountAsync();
 
-        if (filter.Id != null) query = query.Where(x => x.Id == filter.Id);
-        if (filter.Number != null) query = query.Where(x => x.Number == filter.Number);
-        if (filter.Bathroom != null) query = query.Where(x => x.Bathroom);
-        if (filter.Beds != null) query = query.Where(x => x.Beds == filter.Beds);
-        if (filter.Vacant != null) query = query.Where(x => x.Beds - x.Occupation > 0);
-        if (filter.Storey != null) query = query.Where(x => x.Storey == filter.Storey);
-        if (filter.Available != null) query = query.Where(x => x.Available == filter.Available);
+        if (filter.Id.HasValue) query = query.Where(x => x.Id == filter.Id);
+        if (!string.IsNullOrEmpty(filter.Number)) query = query.Where(x => x.Number.ToLower() == filter.Number!.ToLower());
+        if (filter.Bathroom.HasValue) query = query.Where(x => x.Bathroom);
+        if (filter.Beds.HasValue) query = query.Where(x => x.Beds == filter.Beds);
+        if (filter.Storey.HasValue) query = query.Where(x => x.Storey == filter.Storey);
+        if (filter.Available.HasValue) query = query.Where(x => x.Available == filter.Available);
         if (filter.Order == OrderBy.Ascending) query = query.OrderBy(x => x.Number);
         else query = query.OrderByDescending(x => x.Number);
 
@@ -39,5 +38,5 @@ public class RoomsRepository : BaseRepository<Room>, IRoomRepository
 
     public async Task<bool> ExistsByNumber(string number) => 
         await _context.Rooms.AsNoTracking()
-            .AnyAsync(x => x.Number == number);
+            .AnyAsync(x => x.Number.ToLower() == number.ToLower());
 }

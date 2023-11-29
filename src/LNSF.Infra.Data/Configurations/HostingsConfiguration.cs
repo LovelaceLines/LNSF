@@ -23,6 +23,6 @@ public class HostingsConfiguration : IEntityTypeConfiguration<Hosting>
         builder.Property(h => h.CheckOut)
             .IsRequired(false);
         
-        builder.Ignore(h => h.EscortInfos);
+        builder.Ignore(h => h.EscortIds);
     }
 }

@@ -9,6 +9,4 @@ public interface IPeopleService
     public Task<int> GetCount();
     public Task<People> Create(People people);
     public Task<People> Update(People people);
-    public Task<People> AddPeopleToRoom(int peopleId, int roomId);
-    public Task<People> RemovePeopleFromRoom(int peopleId);
 }

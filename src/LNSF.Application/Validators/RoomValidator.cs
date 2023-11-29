@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using LNSF.Application.Validators;
-using LNSF.Domain.Filters;
 using LNSF.Domain.Entities;
 
 namespace LNSF.Application;
@@ -16,15 +15,7 @@ public class RoomValidator : AbstractValidator<Room>
         RuleFor(room => room.Beds)
             .GreaterThan(0).WithMessage(GlobalValidator.MinLength("Camas", 1));
         
-        RuleFor(room => room.Occupation)
-            .LessThanOrEqualTo(room => room.Beds).WithMessage("Mais pessoas do que cama.")
-            .GreaterThanOrEqualTo(0).WithMessage(GlobalValidator.MinLength("Ocupação", 0));
-        
         RuleFor(room => room.Storey)
             .GreaterThanOrEqualTo(0).WithMessage(GlobalValidator.MinLength("Andar", 0));
-        
-        RuleFor(room => room)
-            .Must(room => (room.Available == true && room.Occupation < room.Beds) ||
-                room.Available == false).WithMessage("Quarto deve ser indisponível. Não há vagas.");
     }
 }

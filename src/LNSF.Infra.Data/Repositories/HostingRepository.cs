@@ -61,11 +61,11 @@ public class HostingRepository : BaseRepository<Hosting>, IHostingRepository
 
         foreach (var hosting in hostings)
         {
-            var escortInfos = hostingsEscorts.Where(x => x.HostingId == hosting.Id)
-                .Select(x => new HostingEscortInfo{ Id = x.EscortId, CheckIn = x.CheckIn, CheckOut = x.CheckOut })
+            var escortIds = hostingsEscorts.Where(x => x.HostingId == hosting.Id)
+                .Select(x => x.EscortId)
                 .ToList();
 
-            hosting.EscortInfos = escortInfos;
+            hosting.EscortIds = escortIds;
         }
 
         return hostings;
@@ -80,13 +80,11 @@ public class HostingRepository : BaseRepository<Hosting>, IHostingRepository
             await _context.Hostings.AddAsync(hosting);
             await _context.SaveChangesAsync();
 
-            foreach (var escortInfo in hosting.EscortInfos)
+            foreach (var escortId in hosting.EscortIds)
                 await _hostingEscortRepository.Add(new HostingEscort
                 {
-                    EscortId = escortInfo.Id,
+                    EscortId = escortId,
                     HostingId = hosting.Id,
-                    CheckIn = escortInfo.CheckIn,
-                    CheckOut = escortInfo.CheckOut
                 });
   
             await CommitTransaction();
@@ -111,13 +109,11 @@ public class HostingRepository : BaseRepository<Hosting>, IHostingRepository
             _context.Hostings.Update(hosting);
             await _context.SaveChangesAsync();
 
-            foreach (var escortInfo in hosting.EscortInfos)
+            foreach (var escortId in hosting.EscortIds)
                 await _hostingEscortRepository.Add(new HostingEscort
                 {
-                    EscortId = escortInfo.Id,
+                    EscortId = escortId,
                     HostingId = hosting.Id,
-                    CheckIn = escortInfo.CheckIn,
-                    CheckOut = escortInfo.CheckOut
                 });
 
             await _context.SaveChangesAsync();
@@ -136,6 +132,12 @@ public class HostingRepository : BaseRepository<Hosting>, IHostingRepository
         _context.Hostings.AsNoTracking()
             .AnyAsync(x => x.Id == id && x.PatientId == patientId);
     
+    public Task<bool> ExistsByIdAndPeopleId(int id, int peopleId) =>
+        _context.Hostings.AsNoTracking()
+            .AnyAsync(x => x.Id == id && (x.Patient!.PeopleId == peopleId ||
+                _hostingsEscorts.Any(he => he.HostingId == id && 
+                    _escorts.Any(e => e.PeopleId == peopleId && e.Id == he.EscortId))));
+                    
     public Task<bool> ExistsByPeopleIdAndDate(int peopleId, DateTime date) =>
         _hostings.AnyAsync(h => h.CheckIn <= date && date <= h.CheckOut
             && (

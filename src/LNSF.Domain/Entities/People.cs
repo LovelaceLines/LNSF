@@ -17,7 +17,4 @@ public class People
     public string State { get; set; }  = "";
     public string Phone { get; set; }  = "";
     public string Note { get; set; }  = "";
-    
-    public int? RoomId { get; set; }
-    public Room? Room { get; set; }
 }

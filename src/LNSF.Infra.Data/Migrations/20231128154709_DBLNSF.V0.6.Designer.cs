@@ -3,6 +3,7 @@ using System;
 using LNSF.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LNSF.src.LNSF.Infra.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231128154709_DBLNSF.V0.6")]
+    partial class DBLNSFV06
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.11");
@@ -208,14 +211,12 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("City")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Gender")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("HouseNumber")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -223,27 +224,25 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Neighborhood")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Note")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("RG")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("RoomId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("State")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Street")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -253,6 +252,8 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
 
                     b.HasIndex("RG")
                         .IsUnique();
+
+                    b.HasIndex("RoomId");
 
                     b.ToTable("Peoples");
                 });
@@ -447,6 +448,15 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                     b.Navigation("Patient");
 
                     b.Navigation("Treatment");
+                });
+
+            modelBuilder.Entity("LNSF.Domain.Entities.People", b =>
+                {
+                    b.HasOne("LNSF.Domain.Entities.Room", "Room")
+                        .WithMany()
+                        .HasForeignKey("RoomId");
+
+                    b.Navigation("Room");
                 });
 
             modelBuilder.Entity("LNSF.Domain.Entities.PeopleRoom", b =>

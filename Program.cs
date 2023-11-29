@@ -52,8 +52,9 @@ var autoMapperConfig = new MapperConfiguration(configure =>
     
     configure.CreateMap<People, PeoplePostViewModel>().ReverseMap();
     configure.CreateMap<People, PeoplePutViewModel>().ReverseMap();
-    configure.CreateMap<People, PeopleAddPeopleToRoomViewModel>().ReverseMap();
     configure.CreateMap<People, PeopleViewModel>().ReverseMap();
+
+    configure.CreateMap<PeopleRoom, PeopleRoomViewModel>().ReverseMap();
 
     configure.CreateMap<EmergencyContact, EmergencyContactPostViewModel>().ReverseMap();
     configure.CreateMap<EmergencyContact, EmergencyContactViewModel>().ReverseMap();
@@ -117,6 +118,7 @@ builder.Services.AddTransient<PeopleValidator>();
 builder.Services.AddTransient<IPeopleService, PeopleService>();
 
 builder.Services.AddTransient<IPeopleRoomRepository, PeopleRoomRepository>();
+builder.Services.AddTransient<IPeopleRoomService, PeopleRoomService>();
 
 builder.Services.AddTransient<IEmergencyContactRepository, EmergencyContactRepository>();
 builder.Services.AddTransient<EmergencyContactValidator>();

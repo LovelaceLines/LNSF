@@ -10,6 +10,7 @@ public interface IHostingRepository : IBaseRepository<Hosting>
     Task<bool> ExistsByIdAndPatientId(int id, int patientId);
     Task<bool> ExistsByPeopleIdAndDate(int peopleId, DateTime date);
     Task<List<CheckInAndCheckOut>> GetCheckInAndCheckOutByPeopleId(int peopleId);
+    Task<bool> ExistsByIdAndPeopleId(int id, int peopleId);
     new Task<Hosting> Add(Hosting hosting);
     new Task<Hosting> Update(Hosting hosting);
 }

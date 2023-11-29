@@ -8,14 +8,8 @@ public class PeoplesRoomsConfiguration : IEntityTypeConfiguration<PeopleRoom>
 {
     public void Configure(EntityTypeBuilder<PeopleRoom> builder)
     {
-        builder.HasKey(pr => pr.Id);
-
-        builder.Property(pr => pr.Id)
-            .ValueGeneratedOnAdd();
+        builder.HasKey(pr => new { pr.RoomId, pr.PeopleId, pr.HostingId });
         
-        builder.Property(pr => pr.Occupation)
-            .IsRequired();
-
         builder.HasOne(pr => pr.People)
             .WithMany()
             .HasForeignKey(pr => pr.PeopleId);
@@ -23,5 +17,9 @@ public class PeoplesRoomsConfiguration : IEntityTypeConfiguration<PeopleRoom>
         builder.HasOne(pr => pr.Room)
             .WithMany()
             .HasForeignKey(pr => pr.RoomId);
+        
+        builder.HasOne(pr => pr.Hosting)
+            .WithMany()
+            .HasForeignKey(pr => pr.HostingId);
     }
 }

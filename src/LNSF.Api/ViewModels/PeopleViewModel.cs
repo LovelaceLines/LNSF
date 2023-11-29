@@ -17,13 +17,6 @@ public class PeopleViewModel
     public string State { get; set; }  = "";
     public string Phone { get; set; }  = "";
     public string Note { get; set; }  = "";
-    
-    public int? RoomId { get; set; }
-}
-
-public class PeopleRemovePeopleFromRoom
-{
-    public int PeopleId { get; set; }
 }
 
 public class PeoplePutViewModel
@@ -57,10 +50,4 @@ public class PeoplePostViewModel
     public string State { get; set; }  = "";
     public string Phone { get; set; }  = "";
     public string Note { get; set; }  = "";
-}
-
-public class PeopleAddPeopleToRoomViewModel
-{
-    public int PeopleId { get; set; }
-    public int RoomId { get; set; } 
 }

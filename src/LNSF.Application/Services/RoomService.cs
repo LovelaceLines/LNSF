@@ -22,9 +22,6 @@ public class RoomService : IRoomService
     public async Task<List<Room>> Query(RoomFilter filter) => 
         await _roomRepository.Query(filter);
 
-    public async Task<Room> Get(int id) => 
-        await _roomRepository.Get(id);
-
     public async Task<int> GetCount() =>
         await _roomRepository.GetCount();
 

@@ -112,8 +112,14 @@ public class GlobalClientRequest
 
     #region GetEntityFake
 
-    public async Task<RoomViewModel> GetRoom() =>
-        await Post<RoomViewModel>(_roomClient, new RoomPostViewModelFake().Generate());
+    /// <returns>A new room if the id is null, otherwise the updated room.</returns>
+    public async Task<RoomViewModel> GetRoom(int? id = null, bool? available = null, string? number = null, int? beds = null, int? storey = null)
+    {
+        if (!id.HasValue) 
+            return await Post<RoomViewModel>(_roomClient, new RoomPostViewModelFake(available, number, beds, storey).Generate());
+        
+        return await Put<RoomViewModel>(_roomClient, new RoomPutViewModelFake(id.Value, available, number, beds, storey).Generate());
+    }
 
     public async Task<PeopleViewModel> GetPeople() =>
         await Post<PeopleViewModel>(_peopleClient, new PeoplePostViewModelFake().Generate());
@@ -166,23 +172,19 @@ public class GlobalClientRequest
         return await Post<EscortViewModel>(_escortClient, escortFake);
     }
 
-    public async Task<HostingViewModel> GetHosting(int numberEscorts = 1, bool patientHasCheckOut = true, bool escortHasCheckOut = true)
+    public async Task<HostingViewModel> GetHosting(int numberEscorts = 1, bool patientHasCheckOut = true)
     {
         var patient = await GetPatient();
-        var escortInfos = new List<HostingEscortInfo>();
+        var escortIds = new List<int>();
         for (int i = 0; i < numberEscorts; i++)
         {
             var escort = await GetEscort();
-            var escortInfoFake = new HostingEscortInfoFake().Generate();
-            escortInfoFake.Id = escort.Id;
-            escortInfoFake.CheckOut = escortHasCheckOut ? escortInfoFake.CheckOut : null; 
-
-            escortInfos.Add(escortInfoFake);
+            escortIds.Add(escort.Id);
         }
 
         var hostingFake = new HostingPostViewModelFake().Generate();
         hostingFake.PatientId = patient.Id;
-        hostingFake.EscortInfos = escortInfos;
+        hostingFake.EscortIds = escortIds;
         hostingFake.CheckOut = patientHasCheckOut ? hostingFake.CheckOut : null;
 
         return await Post<HostingViewModel>(_hostingClient, hostingFake);
