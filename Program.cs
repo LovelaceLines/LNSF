@@ -146,6 +146,8 @@ builder.Services.AddTransient<IPatientTreatmentRepository, PatientTreatmentRepos
 
 builder.Services.AddTransient<IHostingEscortRepository, HostingEscortRepository>();
 
+builder.Services.AddTransient<IReportService, ReportService>();
+
 #endregion
 
 #region CORS
@@ -276,6 +278,10 @@ if (app.Environment.IsDevelopment() ||
 }
 
 app.UseHttpsRedirection(); 
+
+app.UseStaticFiles();
+
+// app.UseFastReport();
 
 app.UseCors(cors["PolicyName"] ?? throw new AppException("Cors: PolicyName is null!"));
 
