@@ -20,6 +20,7 @@ using LNSF.Domain.Exceptions;
 using LNSF.Infra.Data.Migrations;
 using System.Reflection;
 using LNSF.Infra.Data;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,6 +46,9 @@ var autoMapperConfig = new MapperConfiguration(configure =>
     configure.CreateMap<Account, AccountPostViewModel>().ReverseMap();
     configure.CreateMap<Account, AccountPutViewModel>().ReverseMap();
     configure.CreateMap<AccountViewModel, AccountFilter>().ReverseMap();
+
+    configure.CreateMap<IdentityUser, UserViewModel>().ReverseMap();
+    configure.CreateMap<IdentityUser, UserPostViewModel>().ReverseMap();
 
     configure.CreateMap<Room, RoomPostViewModel>().ReverseMap();
     configure.CreateMap<Room, RoomViewModel>().ReverseMap();
@@ -204,7 +208,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 });
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
+
 builder.Services.AddEndpointsApiExplorer();
 
 #region Swagger
@@ -281,11 +288,9 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
-// app.UseFastReport();
-
 app.UseCors(cors["PolicyName"] ?? throw new AppException("Cors: PolicyName is null!"));
 
-// app.UseAuthentication();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
