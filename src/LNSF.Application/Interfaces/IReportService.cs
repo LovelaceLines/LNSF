@@ -1,9 +1,6 @@
-﻿using LNSF.Domain.Filters;
-using Microsoft.AspNetCore.Mvc;
-
-namespace LNSF.Application.Interfaces;
+﻿namespace LNSF.Application.Interfaces;
 
 public interface IReportService
 {
-    Task<FileContentResult> ExportPeopleReport(PeopleFilter filter);
+    byte[] ExportReport<T>(List<T> list, string fileNameFRX, string referenceName);
 }

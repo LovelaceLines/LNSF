@@ -1,46 +1,31 @@
 ﻿using FastReport.Export.PdfSimple;
 using LNSF.Application.Interfaces;
-using LNSF.Domain.Filters;
-using Microsoft.AspNetCore.Mvc;
 
 namespace LNSF.Application;
 
 public class ReportService : IReportService
 {
-    private readonly IPeopleService _peopleService;
-
-    public ReportService(IPeopleService peopleService) => 
-        _peopleService = peopleService;
-
-    public async Task<FileContentResult> ExportPeopleReport(PeopleFilter filter)
+    public byte[] ExportReport<T>(List<T> list, string fileNameFRX, string referenceName)
     {
-        var peoples = await _peopleService.Query(filter);
-
-        var outputPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "reports", "people.frx");
+        var outputPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "reports", fileNameFRX);
         
         var report = new FastReport.Report().Report;
         
-        if (File.Exists(outputPath))
-            report.Load(outputPath);
-
-        report.Dictionary.RegisterBusinessObject(peoples, "People", 10, true);
+        report.Load(outputPath);
+        
+        report.Dictionary.RegisterBusinessObject(list, referenceName, 10, true);
+        
+        // uncomment to save FRX file
         // report.Report.Save(outputPath);
         report.Prepare();
-
-        var pdf = new PDFSimpleExport();
+        
         using var ms = new MemoryStream();
+        
+        var pdf = new PDFSimpleExport();
         pdf.Export(report, ms);
+        
         ms.Flush();
         
-        var contentType = "application/pdf";
-        var fileName = "people.pdf";
-        var fileContents = ms.ToArray();
-
-        var response = new FileContentResult(fileContents, contentType)
-        {
-            FileDownloadName = fileName
-        };
-
-        return response;
+        return ms.ToArray();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using LNSF.Application.Interfaces;
+using LNSF.Domain.Entities;
 using LNSF.Domain.Filters;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,14 +10,28 @@ namespace LNSF.Api.Controller;
 public class ReportController : ControllerBase
 {
     private readonly IReportService _reportService;
+    private readonly IPeopleService _peopleService;
 
-    public ReportController(IReportService reportService) => 
-        _reportService = reportService;
+    private const string contentType = "application/pdf";
 
-    [HttpGet("export-people-report")]
-    public async Task<ActionResult> Export([FromQuery] PeopleFilter filter)
+    public ReportController(IReportService reportService, 
+        IPeopleService peopleService)
     {
-        var report = await _reportService.ExportPeopleReport(filter);
-        return Ok(report);
+        _reportService = reportService;
+        _peopleService = peopleService;
+    }
+
+    [HttpGet("export-people")]
+    public async Task<IActionResult> Get([FromQuery] PeopleFilter filter)
+    {
+        var peoples = await _peopleService.Query(filter);
+        var fileNameFRX = "people.frx";
+        var referenceName = "People";
+        
+        var fileContents = _reportService.ExportReport<People>(peoples, fileNameFRX, referenceName);
+        
+        var fileNamePDF = "people_" + DateTime.Now + ".pdf";
+
+        return File(fileContents, contentType, fileNamePDF);
     }
 }
