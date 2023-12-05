@@ -2,13 +2,14 @@
 using LNSF.Domain.Enums;
 using LNSF.Domain.Exceptions;
 using LNSF.Domain.Filters;
+using LNSF.Domain.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 namespace LNSF.Infra.Data.Repositories;
 
-public class UserRepository
+public class UserRepository : IUserRepository
 {
     private readonly UserManager<IdentityUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
@@ -45,11 +46,61 @@ public class UserRepository
         return users;
     }
 
+    public async Task<int> GetCount() => 
+        await _userManager.Users.AsNoTracking().CountAsync();
+
+    public async Task<bool> ExistsById(string id) => 
+        await _userManager.Users.AsNoTracking().AnyAsync(u => u.Id == id);
+    
+    public async Task<bool> ExistsByUserName(string userName) =>
+        await _userManager.Users.AsNoTracking().AnyAsync(u => u.UserName == userName);
+    
+    public Task<bool> ExistsByEmail(string email) => 
+        _userManager.Users.AsNoTracking().AnyAsync(u => u.Email == email);
+
+    public Task<bool> ExistsByPhoneNumber(string phoneNumber) => 
+        _userManager.Users.AsNoTracking().AnyAsync(u => u.PhoneNumber == phoneNumber);
+    
+    public async Task<IdentityUser> GetById(string id) => 
+        await _userManager.FindByIdAsync(id) ?? throw new AppException("Usuário não encontrado!", HttpStatusCode.NotFound);
+
+    public async Task<bool> CheckPassword(string id, string password) => 
+        await _userManager.CheckPasswordAsync(await GetById(id), password);
+
     public async Task<IdentityUser> Add(IdentityUser user, string password)
     {
         var result = await _userManager.CreateAsync(user, password);
-        if (!result.Succeeded) throw new AppException(result.Errors.ToString()!, HttpStatusCode.BadRequest);
+        if (!result.Succeeded) throw new AppException(result.Errors.First().Description, HttpStatusCode.BadRequest);
 
+        return user;
+    }
+
+    public async Task<IdentityUser> Update(IdentityUser user)
+    {
+        var result = await _userManager.UpdateAsync(user);
+        
+        if (!result.Succeeded) throw new AppException(result.Errors.First().Description, HttpStatusCode.BadRequest);
+
+        return user;
+    }
+
+    public async Task<IdentityUser> UpdatePassword(string id, string oldPassword, string newPassword)
+    {
+        var user = await GetById(id);
+        var result = await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
+
+        if (!result.Succeeded) throw new AppException(result.Errors.First().Description, HttpStatusCode.BadRequest);
+
+        return user;
+    }
+
+    public async Task<IdentityUser> Remove(dynamic id)
+    {
+        var user = await GetById(id);
+        var result = await _userManager.DeleteAsync(user) as IdentityResult;
+
+        if (!result!.Succeeded) throw new AppException(result.Errors.First().Description, HttpStatusCode.BadRequest);
+        
         return user;
     }
 }

@@ -6,8 +6,11 @@ namespace LNSF.Application.Interfaces;
 public interface IUserService
 {
     Task<List<IdentityUser>> Query(UserFilter filter);
-    Task<IdentityUser> Create(IdentityUser user);
+    Task<int> GetCount();
+    Task<IdentityUser> Create(IdentityUser user, string password);
+    Task<IdentityUser> AddToRole(string userId, string role);
     Task<IdentityUser> Update(IdentityUser user);
     Task<IdentityUser> UpdatePassword(string id, string oldPassword, string newPassword);
     Task<IdentityUser> Delete(string id);
+    Task<IdentityUser> RemoveFromRole(string userId, string role);
 }

@@ -41,5 +41,8 @@ public class AppDbContext : IdentityDbContext<IdentityUser>
         builder.ApplyConfiguration(new HostingsConfiguration());
         builder.ApplyConfiguration(new PatientsTreatmentsConfiguration());
         builder.ApplyConfiguration(new HostingsEscortsConfiguration());
+        builder.ApplyConfiguration(new RoleConfiguration());
+        builder.ApplyConfiguration(new UserConfiguration());
+        builder.ApplyConfiguration(new UserRoleConfiguration());
     }
 }

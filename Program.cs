@@ -49,6 +49,8 @@ var autoMapperConfig = new MapperConfiguration(configure =>
 
     configure.CreateMap<IdentityUser, UserViewModel>().ReverseMap();
     configure.CreateMap<IdentityUser, UserPostViewModel>().ReverseMap();
+    configure.CreateMap<IdentityRole, RoleViewModel>().ReverseMap();
+    configure.CreateMap<IdentityRole, RolePostViewModel>().ReverseMap();
 
     configure.CreateMap<Room, RoomPostViewModel>().ReverseMap();
     configure.CreateMap<Room, RoomViewModel>().ReverseMap();
@@ -93,6 +95,18 @@ builder.Services.AddSingleton(autoMapperConfig.CreateMapper());
 
 IConfiguration configuration = builder.Configuration.GetSection("Jwt");
 builder.Services.AddSingleton(configuration);
+
+builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<UserValidator>();
+builder.Services.AddTransient<IdentityUserRole<string>>();
+
+builder.Services.AddTransient<IRoleService, RoleService>();
+builder.Services.AddTransient<IRoleRepository, RoleRepository>();
+builder.Services.AddTransient<RoleValidator>();
+
+builder.Services.AddTransient<IUserRoleRepository, UserRoleRepository>();
+builder.Services.AddTransient<IUserRoleService, UserRoleService>();
 
 builder.Services.AddTransient<IAuthenticationTokenService, AuthenticationTokenService>();
 builder.Services.AddTransient<AuthenticationTokenValidator>();

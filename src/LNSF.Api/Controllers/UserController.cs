@@ -21,14 +21,25 @@ public class UserController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<List<IdentityUser>> Get([FromServices] UserFilter filter) =>
+    public async Task<List<IdentityUser>> Get([FromQuery] UserFilter filter) =>
         await _userService.Query(filter);
+
+    [HttpGet("count")]
+    public async Task<int> GetCount() =>
+        await _userService.GetCount();
     
     [HttpPost]
     public async Task<UserViewModel> Post(UserPostViewModel userPostViewModel)
     {
         var user = _mapper.Map<IdentityUser>(userPostViewModel);
-        user = await _userService.Create(user);
+        user = await _userService.Create(user, userPostViewModel.Password);
+        return _mapper.Map<UserViewModel>(user);
+    }
+
+    [HttpPost("add-user-to-role")]
+    public async Task<UserViewModel> Post(UserRoleViewModel userRoleViewModel)
+    {
+        var user = await _userService.AddToRole(userRoleViewModel.UserId, userRoleViewModel.RoleId);
         return _mapper.Map<UserViewModel>(user);
     }
 
@@ -41,7 +52,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPut("password")]
-    public async Task<UserViewModel> PutPassword(UserPutPasswordViewModel userPutPasswordViewModel)
+    public async Task<UserViewModel> Put(UserPutPasswordViewModel userPutPasswordViewModel)
     {
         var user = await _userService.UpdatePassword(userPutPasswordViewModel.Id, userPutPasswordViewModel.OldPassword, userPutPasswordViewModel.NewPassword);
         return _mapper.Map<UserViewModel>(user);
@@ -51,6 +62,13 @@ public class UserController : ControllerBase
     public async Task<UserViewModel> Delete(string id)
     {
         var user = await _userService.Delete(id);
+        return _mapper.Map<UserViewModel>(user);
+    }
+
+    [HttpDelete("remove-user-from-role")]
+    public async Task<UserViewModel> Delete(UserRoleViewModel userRoleViewModel)
+    {
+        var user = await _userService.RemoveFromRole(userRoleViewModel.UserId, userRoleViewModel.RoleId);
         return _mapper.Map<UserViewModel>(user);
     }
 }

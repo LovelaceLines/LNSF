@@ -19,6 +19,11 @@ public class GlobalClientRequest
     public const string BaseUrl = "http://localhost:5206/api/";
     public readonly HttpClient _authClient = new() { BaseAddress = new Uri($"{BaseUrl}Auth/") };
     public readonly HttpClient _accountClient = new() { BaseAddress = new Uri($"{BaseUrl}Account/") };
+    public readonly HttpClient _userClient = new() { BaseAddress = new Uri($"{BaseUrl}User/") };
+    public readonly HttpClient _userRoleClient = new() { BaseAddress = new Uri($"{BaseUrl}UserRole/") };
+    public readonly HttpClient _addUserToRoleClient = new() { BaseAddress = new Uri($"{BaseUrl}User/add-user-to-role/") };
+    public readonly HttpClient _removeUserFromRoleClient = new() { BaseAddress = new Uri($"{BaseUrl}User/remove-user-from-role/") };
+    public readonly HttpClient _roleClient = new() { BaseAddress = new Uri($"{BaseUrl}Role/") };
     public readonly HttpClient _peopleClient = new() { BaseAddress = new Uri($"{BaseUrl}People/") };
     public readonly HttpClient _addPeopleToRoomClient = new() { BaseAddress = new Uri($"{BaseUrl}People/add-people-to-room/") };
     public readonly HttpClient _removePeopleFromRoom = new() { BaseAddress = new Uri($"{BaseUrl}People/remove-people-from-room/") };
@@ -124,6 +129,12 @@ public class GlobalClientRequest
     }
 
     #region GetEntityFake
+
+    public async Task<UserViewModel> GetUser(string? userName = null, string? email = null, string? phoneNumber = null, string? password = null)
+    {
+        var userFake = new UserPostViewModelFake(userName, email, phoneNumber, password).Generate();
+        return await Post<UserViewModel>(_userClient, userFake);
+    }
 
     /// <returns>A new room if the id is null, otherwise the updated room.</returns>
     public async Task<RoomViewModel> GetRoom(int? id = null, bool? available = null, string? number = null, int? beds = null, int? storey = null)
