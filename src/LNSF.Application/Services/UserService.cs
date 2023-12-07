@@ -49,15 +49,15 @@ public class UserService : IUserService
         return await _userRepository.Add(user, password);
     }
 
-    public async Task<IdentityUser> AddToRole(string userId, string role)
+    public async Task<IdentityUser> AddToRole(string userId, string roleName)
     {
         if (!await _userRepository.ExistsById(userId)) throw new AppException("Usuário não encontrado!", HttpStatusCode.NotFound);
-        if (!await _roleRepository.ExistsByName(role)) throw new AppException("Perfil não encontrado!", HttpStatusCode.NotFound);
+        if (!await _roleRepository.ExistsByName(roleName)) throw new AppException("Perfil não encontrado!", HttpStatusCode.NotFound);
 
         var user = await _userRepository.GetById(userId);
-        if (await _userRoleRepository.ExistsByUserAndRoleName(user, role)) throw new AppException("Usuário já possui este perfil!", HttpStatusCode.BadRequest);
+        if (await _userRoleRepository.ExistsByUserAndRoleName(user, roleName)) throw new AppException("Usuário já possui este perfil!", HttpStatusCode.BadRequest);
 
-        await _userRoleRepository.Add(user, role);
+        await _userRoleRepository.Add(user, roleName);
         
         return user;
     }
@@ -99,15 +99,15 @@ public class UserService : IUserService
         return await _userRepository.Remove(id);
     }
 
-    public async Task<IdentityUser> RemoveFromRole(string userId, string role)
+    public async Task<IdentityUser> RemoveFromRole(string userId, string roleName)
     {
         if (!await _userRepository.ExistsById(userId)) throw new AppException("Usuário não encontrado!", HttpStatusCode.NotFound);
-        if (!await _roleRepository.ExistsByName(role)) throw new AppException("Perfil não encontrado!", HttpStatusCode.NotFound);
+        if (!await _roleRepository.ExistsByName(roleName)) throw new AppException("Perfil não encontrado!", HttpStatusCode.NotFound);
 
         var user = await _userRepository.GetById(userId);
-        if (!await _userRoleRepository.ExistsByUserAndRoleName(user, role)) throw new AppException("Usuário não possui este perfil!", HttpStatusCode.BadRequest);
+        if (!await _userRoleRepository.ExistsByUserAndRoleName(user, roleName)) throw new AppException("Usuário não possui este perfil!", HttpStatusCode.BadRequest);
 
-        await _userRoleRepository.Remove(user, role);
+        await _userRoleRepository.Remove(user, roleName);
 
         return user;
     }

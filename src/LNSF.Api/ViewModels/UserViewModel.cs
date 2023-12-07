@@ -1,6 +1,4 @@
-﻿using LNSF.Domain.Enums;
-
-namespace LNSF.Api.ViewModels;
+﻿namespace LNSF.Api.ViewModels;
 
 public class UserPostViewModel
 {
@@ -23,4 +21,10 @@ public class UserPutPasswordViewModel
     public string Id { get; set; } = "";
     public string OldPassword { get; set; } = "";
     public string NewPassword { get; set; } = "";
+}
+
+public class UserLoginViewModel
+{
+    public string UserName { get; set; } = "";
+    public string Password { get; set; } = "";
 }

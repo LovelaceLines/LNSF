@@ -24,10 +24,9 @@ public class AuthController : ControllerBase
     /// Authenticates a user and returns an authentication token.
     /// </summary>
     [HttpPost("login")]
-    public async Task<ActionResult<AuthenticationTokenViewModel>> Login(AccountLoginViewModel account)
+    public async Task<ActionResult<AuthenticationTokenViewModel>> Login(UserLoginViewModel user)
     {
-        var accountMapped = _mapper.Map<Account>(account);
-        var token = await _service.Login(accountMapped);
+        var token = await _service.Login(user.UserName, user.Password);
 
         return Ok(token);
     }

@@ -78,8 +78,8 @@ public class UserTestApi : GlobalClientRequest
     }
 
     [Theory]
-    [InlineData("inv")]
-    [InlineData("invalidinvalidinvalidinvalidinvalidinvalid")]
+    [InlineData("in")]
+    [InlineData("invalidinvalidinvalidinvalidinvalidinvalidinvalidinvalidinvalidinvalidinvalidinvalid")]
     public async Task Post_InvalidUserWithInvalidUserName_BadRequest(string userName)
     {
         // Arrange - User
@@ -210,7 +210,7 @@ public class UserTestApi : GlobalClientRequest
         var countBefore = await GetCount(_userRoleClient);
 
         // Act - User
-        var userRole = new UserRoleViewModel { UserId = user.Id, RoleId = "Desenvolvedor" };
+        var userRole = new UserRoleViewModel { UserId = user.Id, RoleName = "Desenvolvedor" };
         var userRolePosted = await Post<UserViewModel>(_addUserToRoleClient, userRole);
 
         // Arrange - Count
@@ -230,7 +230,7 @@ public class UserTestApi : GlobalClientRequest
         var countBefore = await GetCount(_userRoleClient);
 
         // Act - User
-        var userRole = new UserRoleViewModel { UserId = user.Id, RoleId = "invalid" };
+        var userRole = new UserRoleViewModel { UserId = user.Id, RoleName = "invalid" };
         var exception = await Post<AppException>(_addUserToRoleClient, userRole);
 
         // Arrange - Count

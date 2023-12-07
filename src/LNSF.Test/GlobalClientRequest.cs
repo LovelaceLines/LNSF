@@ -18,7 +18,6 @@ public class GlobalClientRequest
 {
     public const string BaseUrl = "http://localhost:5206/api/";
     public readonly HttpClient _authClient = new() { BaseAddress = new Uri($"{BaseUrl}Auth/") };
-    public readonly HttpClient _accountClient = new() { BaseAddress = new Uri($"{BaseUrl}Account/") };
     public readonly HttpClient _userClient = new() { BaseAddress = new Uri($"{BaseUrl}User/") };
     public readonly HttpClient _userRoleClient = new() { BaseAddress = new Uri($"{BaseUrl}UserRole/") };
     public readonly HttpClient _addUserToRoleClient = new() { BaseAddress = new Uri($"{BaseUrl}User/add-user-to-role/") };
@@ -42,8 +41,6 @@ public class GlobalClientRequest
     {
         var mapperConfig = new MapperConfiguration(cfg =>
         {
-            cfg.CreateMap<AccountPostViewModel, AccountLoginViewModel>().ReverseMap();
-            cfg.CreateMap<AccountPostViewModel, AccountPutViewModel>().ReverseMap();
             cfg.CreateMap<AuthenticationTokenViewModel, AuthenticationToken>().ReverseMap();
             
             cfg.CreateMap<RoomViewModel, RoomPostViewModel>().ReverseMap();
@@ -130,10 +127,14 @@ public class GlobalClientRequest
 
     #region GetEntityFake
 
-    public async Task<UserViewModel> GetUser(string? userName = null, string? email = null, string? phoneNumber = null, string? password = null)
+    public async Task<UserViewModel> GetUser(string? userName = null, string? email = null, string? phoneNumber = null, string? password = null, string? role = null)
     {
         var userFake = new UserPostViewModelFake(userName, email, phoneNumber, password).Generate();
-        return await Post<UserViewModel>(_userClient, userFake);
+        var user = await Post<UserViewModel>(_userClient, userFake);
+
+        if (role.IsNullOrEmpty()) return user;
+
+        return await Post<UserViewModel>(_addUserToRoleClient, new UserRoleViewModel() { UserId = user.Id, RoleName = role!  } );
     }
 
     /// <returns>A new room if the id is null, otherwise the updated room.</returns>

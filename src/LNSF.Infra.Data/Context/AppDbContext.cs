@@ -10,7 +10,6 @@ public class AppDbContext : IdentityDbContext<IdentityUser>
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) {}
 
-    public DbSet<Account> Accounts { get; set; }
     public DbSet<People> Peoples { get; set; }
     public DbSet<Room> Rooms { get; set; }
     public DbSet<PeopleRoom> PeoplesRooms { get; set; }
@@ -28,7 +27,6 @@ public class AppDbContext : IdentityDbContext<IdentityUser>
     {
         base.OnModelCreating(builder);
 
-        builder.ApplyConfiguration(new AccountsConfiguration());
         builder.ApplyConfiguration(new PeoplesConfiguration());
         builder.ApplyConfiguration(new RoomsConfiguration());
         builder.ApplyConfiguration(new PeoplesRoomsConfiguration());

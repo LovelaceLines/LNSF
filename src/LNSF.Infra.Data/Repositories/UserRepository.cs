@@ -46,6 +46,16 @@ public class UserRepository : IUserRepository
         return users;
     }
 
+    public async Task<IdentityUser> Auth(string userName, string password)
+    {
+        if (!await ExistsByUserName(userName)) throw new AppException("Erro ao autenticar!", HttpStatusCode.Unauthorized);
+        var user = await GetByUserName(userName);
+
+        if (!await CheckPassword(user, password)) throw new AppException("Erro ao autenticar!", HttpStatusCode.Unauthorized); 
+
+        return user;
+    }
+
     public async Task<int> GetCount() => 
         await _userManager.Users.AsNoTracking().CountAsync();
 
@@ -63,9 +73,18 @@ public class UserRepository : IUserRepository
     
     public async Task<IdentityUser> GetById(string id) => 
         await _userManager.FindByIdAsync(id) ?? throw new AppException("Usuário não encontrado!", HttpStatusCode.NotFound);
+    
+    public async Task<IdentityUser> GetByUserName(string userName) =>
+        await _userManager.FindByNameAsync(userName) ?? throw new AppException("Usuário não encontrado!", HttpStatusCode.NotFound);
+    
+    public async Task<string> GetRoles(IdentityUser user) =>
+        (await _userManager.GetRolesAsync(user)).FirstOrDefault() ?? throw new AppException("Perfil não encontrado!", HttpStatusCode.NotFound);
 
     public async Task<bool> CheckPassword(string id, string password) => 
         await _userManager.CheckPasswordAsync(await GetById(id), password);
+    
+    public async Task<bool> CheckPassword(IdentityUser user, string password) =>
+        await _userManager.CheckPasswordAsync(user, password);
 
     public async Task<IdentityUser> Add(IdentityUser user, string password)
     {

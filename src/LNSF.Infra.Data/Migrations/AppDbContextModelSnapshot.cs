@@ -17,34 +17,6 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.11");
 
-            modelBuilder.Entity("LNSF.Domain.Entities.Account", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Role")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserName")
-                        .IsUnique();
-
-                    b.ToTable("Accounts");
-                });
-
             modelBuilder.Entity("LNSF.Domain.Entities.EmergencyContact", b =>
                 {
                     b.Property<int>("Id")
@@ -382,35 +354,35 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                         new
                         {
                             Id = "1",
-                            ConcurrencyStamp = "8631a0fe-7d73-43b5-9a12-7f6b631f43f0",
+                            ConcurrencyStamp = "a769bb6f-aca7-4cf3-8e8c-c49edd7d2215",
                             Name = "Desenvolvedor",
                             NormalizedName = "DESENVOLVEDOR"
                         },
                         new
                         {
                             Id = "2",
-                            ConcurrencyStamp = "8307defa-47ac-4a66-bd15-9051bbb32057",
+                            ConcurrencyStamp = "dc59c7d6-4668-40b4-a718-d72f864e67ee",
                             Name = "Administrador",
                             NormalizedName = "ADMINISTRADOR"
                         },
                         new
                         {
                             Id = "3",
-                            ConcurrencyStamp = "a17a8b7e-5911-422b-8926-19c0f440ed64",
+                            ConcurrencyStamp = "aed2e98f-b798-4c1b-bc98-9fc6c2e70ae7",
                             Name = "Assistente Social",
                             NormalizedName = "ASSISTENTESOCIAL"
                         },
                         new
                         {
                             Id = "4",
-                            ConcurrencyStamp = "c1159f24-437a-4a8a-a969-e1f600c4803b",
+                            ConcurrencyStamp = "4ab6943d-1483-4c5a-83cd-00239d49c21f",
                             Name = "Secretário",
                             NormalizedName = "SECRETARIO"
                         },
                         new
                         {
                             Id = "5",
-                            ConcurrencyStamp = "a640b650-a182-4061-af2a-8c0365a57f75",
+                            ConcurrencyStamp = "85f1657e-b7ce-4b1a-ba98-14fe92018fbe",
                             Name = "Voluntário",
                             NormalizedName = "VOLUNTARIO"
                         });

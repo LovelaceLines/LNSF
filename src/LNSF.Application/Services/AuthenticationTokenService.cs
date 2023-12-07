@@ -1,13 +1,13 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
 using LNSF.Application.Interfaces;
 using LNSF.Application.Validators;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
 using LNSF.Domain.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
@@ -17,25 +17,25 @@ namespace LNSF.Application.Services;
 public class AuthenticationTokenService : IAuthenticationTokenService
 {
     private readonly IConfiguration _configuration;
-    private readonly IAccountRepository _accountRepository;
     private readonly AuthenticationTokenValidator _validator;
+    private readonly IUserRepository _userRepository;
 
     public AuthenticationTokenService(IConfiguration configuration,
-        IAccountRepository accountRepository,
-        AuthenticationTokenValidator validator)
+        AuthenticationTokenValidator validator,
+        IUserRepository userRepository)
     {
         _configuration = configuration;
-        _accountRepository = accountRepository;
         _validator = validator;
+        _userRepository = userRepository;
     }
 
-    public async Task<AuthenticationToken> Login(Account account)
+    public async Task<AuthenticationToken> Login(string userName, string password)
     {   
-        account = await _accountRepository.Auth(account.UserName, account.Password);
+        var user = await _userRepository.Auth(userName, password);
         var token = new AuthenticationToken
         {
-            AccessToken = GenerateAccessToken(account),
-            RefreshToken = GenerateRefreshToken(account),
+            AccessToken = await GenerateAccessToken(user),
+            RefreshToken = GenerateRefreshToken(user),
             Expires = DateTime.Now.AddHours(ExpireHoursAccessToken),
         };
         return token;
@@ -56,24 +56,23 @@ public class AuthenticationTokenService : IAuthenticationTokenService
         });
         if (!result.IsValid) throw new AppException("Token de atualização expirado!", HttpStatusCode.Unauthorized);
         
-        var expires = DateTimeOffset.FromUnixTimeSeconds(Convert.ToInt64(result.Claims["exp"])).DateTime;
-        var accountId = result.Claims["nameid"].ToString(); // accountId = NameIdentifier
-        var account = await _accountRepository.GetById(accountId ?? throw new AppException("Token de atualização inválido!", HttpStatusCode.InternalServerError));
+        var userId = result.Claims["nameid"].ToString() ?? throw new AppException("Claims NameId not found!", HttpStatusCode.NotFound);
+        var user = await _userRepository.GetById(userId);
 
         var newToken = new AuthenticationToken
         {
-            AccessToken = GenerateAccessToken(account),
-            RefreshToken = GenerateRefreshToken(account),
+            AccessToken = await GenerateAccessToken(user),
+            RefreshToken = GenerateRefreshToken(user),
             Expires = DateTime.Now.AddHours(ExpireHoursAccessToken),
         };
         return newToken;
     }
 
-    private string GenerateAccessToken(Account account)
+    private async Task<string> GenerateAccessToken(IdentityUser user)
     {
-        var claims = GetClaims(account);
-        var key = GetSecretKey();
+        var claims = await GetClaims(user);
         var expireHours = ExpireHoursAccessToken;
+        var key = GetSecretKey();
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
@@ -91,18 +90,17 @@ public class AuthenticationTokenService : IAuthenticationTokenService
         return tokenHandler.WriteToken(token);
     }
 
-    private string GenerateRefreshToken(Account account)
+    private string GenerateRefreshToken(IdentityUser user)
     {
-        var claims = GetClaims(account.Id.ToString());
+        var claims = GetClaims(user.Id.ToString());
         var key = GetSecretKey();
-        var expireHours = ExpireHoursRefreshToken;
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Issuer = Issuer,
             Audience = Audience,
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.AddHours(expireHours),
+            Expires = DateTime.UtcNow.AddHours(ExpireHoursRefreshToken),
             SigningCredentials = GetSigningCredentials(key),
             TokenType = "rt+jwt"
         };
@@ -136,14 +134,17 @@ public class AuthenticationTokenService : IAuthenticationTokenService
         return key;
     }
 
-    private static Claim[] GetClaims(string accountId) => 
-        new[] { new Claim(ClaimTypes.NameIdentifier, accountId) };
+    private Claim[] GetClaims(string userId) => 
+        new[] { new Claim(ClaimTypes.NameIdentifier, userId) };
 
-    private static Claim[] GetClaims(Account account) => 
-        new[]
+    private async Task<Claim[]> GetClaims(IdentityUser user)
+    {
+        var role = await _userRepository.GetRoles(user);
+        return new[]
         {
-            new Claim(ClaimTypes.NameIdentifier, account.Id.ToString()),
-            new Claim(ClaimTypes.Role, account.Role.ToString()),
-            new Claim(ClaimTypes.Name, account.UserName)
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Role, role),
+            new Claim(ClaimTypes.Name, user.UserName!)
         };
+    }
 }

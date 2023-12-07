@@ -1,4 +1,5 @@
 ﻿using LNSF.Api.ViewModels;
+using LNSF.Domain.Exceptions;
 using LNSF.Test.Fakers;
 using Xunit;
 
@@ -12,12 +13,12 @@ public class AuthTestApi : GlobalClientRequest
     [Fact]
     public async Task Post_ValidLogin_Ok()
     {
-        // Arrange - Account
-        var accountFake = new AccountPostViewModelFake().Generate();
-        var accountPosted = await Post<AccountViewModel>(_accountClient, accountFake);
+        // Arrange - User
+        var password = new Bogus.Person().FirstName + "#" + new Bogus.Randomizer().Replace("###");
+        var user = await GetUser(password: password, role: "Desenvolvedor");
 
         // Act
-        var login = new AccountLoginViewModel { UserName = accountFake.UserName, Password = accountFake.Password };
+        var login = new UserLoginViewModel { UserName = user.UserName, Password = password };
         var token = await Post<AuthenticationTokenViewModel>(_loginClient, login);
 
         // Assert
@@ -32,21 +33,21 @@ public class AuthTestApi : GlobalClientRequest
     public async Task Post_InvalidLogin_BadRequest(string userName, string password)
     {
         // Arrange
-        var login = new AccountLoginViewModel { UserName = userName, Password = password };
+        var login = new UserLoginViewModel { UserName = userName, Password = password };
 
         // Act - Assert
-        await Assert.ThrowsAsync<Exception>(() => Post<AuthenticationTokenViewModel>(_loginClient, login));
+        await Post<AppException>(_loginClient, login);
     }
 
     [Fact]
     public async Task Post_ValidRefreshToken_Ok()
     {
         // Arrange - Account
-        var accountFake = new AccountPostViewModelFake().Generate();
-        var accountPosted = await Post<AccountViewModel>(_accountClient, accountFake);
+        var password = new Bogus.Person().FirstName + "#" + new Bogus.Randomizer().Replace("###");
+        var user = await GetUser(password: password, role: "Desenvolvedor");
 
         // Arrange - Login
-        var login = new AccountLoginViewModel { UserName = accountFake.UserName, Password = accountFake.Password };
+        var login = new UserLoginViewModel { UserName = user.UserName, Password = password };
         var token = await Post<AuthenticationTokenViewModel>(_loginClient, login);
 
         // Act
@@ -68,6 +69,6 @@ public class AuthTestApi : GlobalClientRequest
         var refreshTokenViewModel = new AuthenticationTokenViewModel { AccessToken = accessToken, RefreshToken = refreshToken };
 
         // Act - Assert
-        await Assert.ThrowsAsync<Exception>(() => Post<AuthenticationTokenViewModel>(_refreshTokenClient, refreshTokenViewModel));
+        await Post<AppException>(_refreshTokenClient, refreshTokenViewModel);
     }
 }

@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using LNSF.Domain.Filters;
 using Serilog;
 using Serilog.Formatting.Json;
 using LNSF.Application.Interfaces;
@@ -40,12 +39,6 @@ builder.Logging.AddSerilog();
 var autoMapperConfig = new MapperConfiguration(configure =>
 {
     configure.CreateMap<AuthenticationToken, AuthenticationTokenViewModel>().ReverseMap();
-
-    configure.CreateMap<Account, AccountLoginViewModel>().ReverseMap();
-    configure.CreateMap<Account, AccountViewModel>().ReverseMap();
-    configure.CreateMap<Account, AccountPostViewModel>().ReverseMap();
-    configure.CreateMap<Account, AccountPutViewModel>().ReverseMap();
-    configure.CreateMap<AccountViewModel, AccountFilter>().ReverseMap();
 
     configure.CreateMap<IdentityUser, UserViewModel>().ReverseMap();
     configure.CreateMap<IdentityUser, UserPostViewModel>().ReverseMap();
@@ -100,6 +93,7 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<UserValidator>();
 builder.Services.AddTransient<IdentityUserRole<string>>();
+builder.Services.AddTransient<SignInManager<IdentityUser>>();
 
 builder.Services.AddTransient<IRoleService, RoleService>();
 builder.Services.AddTransient<IRoleRepository, RoleRepository>();
@@ -111,11 +105,7 @@ builder.Services.AddTransient<IUserRoleService, UserRoleService>();
 builder.Services.AddTransient<IAuthenticationTokenService, AuthenticationTokenService>();
 builder.Services.AddTransient<AuthenticationTokenValidator>();
 
-builder.Services.AddTransient<IAccountService, AccountService>();
-builder.Services.AddTransient<AccountCreateValidator>();
-builder.Services.AddTransient<AccountUpdateValidator>();
 builder.Services.AddTransient<PasswordValidator>();
-builder.Services.AddTransient<IAccountRepository, AccountRepository>();
 
 builder.Services.AddTransient<IGlobalRepository, GlobalRepository>();
 
@@ -223,8 +213,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 });
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-    .AddEntityFrameworkStores<AppDbContext>()
-    .AddDefaultTokenProviders();
+    .AddEntityFrameworkStores<AppDbContext>();
 
 builder.Services.AddEndpointsApiExplorer();
 

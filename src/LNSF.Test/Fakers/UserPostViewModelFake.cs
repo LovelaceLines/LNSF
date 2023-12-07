@@ -24,3 +24,12 @@ public class UserViewModelFake : Faker<UserViewModel>
         RuleFor(x => x.PhoneNumber, f => phoneNumber ?? f.Random.Replace("(##) # ####-####"));
     }
 }
+
+public class UserLoginViewModelFake : Faker<UserLoginViewModel>
+{
+    public UserLoginViewModelFake(string? userName = null, string? password = null)
+    {
+        RuleFor(x => x.UserName, f => userName ?? f.Person.UserName);
+        RuleFor(x => x.Password, f => password ?? f.Person.FirstName + "#" + f.Random.Replace("###"));
+    }
+}

@@ -8,9 +8,9 @@ public interface IUserService
     Task<List<IdentityUser>> Query(UserFilter filter);
     Task<int> GetCount();
     Task<IdentityUser> Create(IdentityUser user, string password);
-    Task<IdentityUser> AddToRole(string userId, string role);
+    Task<IdentityUser> AddToRole(string userId, string roleName);
     Task<IdentityUser> Update(IdentityUser user);
     Task<IdentityUser> UpdatePassword(string id, string oldPassword, string newPassword);
     Task<IdentityUser> Delete(string id);
-    Task<IdentityUser> RemoveFromRole(string userId, string role);
+    Task<IdentityUser> RemoveFromRole(string userId, string roleName);
 }

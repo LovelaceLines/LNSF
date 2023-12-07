@@ -39,18 +39,18 @@ public class UserRoleRepository : IUserRoleRepository
     public async Task<int> GetCount() => 
         await _context.UserRoles.AsNoTracking().CountAsync();
 
-    public async Task<bool> ExistsByUserAndRoleName(IdentityUser user, string role) => 
-        await _userManager.IsInRoleAsync(user, role);
+    public async Task<bool> ExistsByUserAndRoleName(IdentityUser user, string roleName) => 
+        await _userManager.IsInRoleAsync(user, roleName);
 
-    public async Task<bool> Add(IdentityUser user, string role)
+    public async Task<bool> Add(IdentityUser user, string roleName)
     {
-        var result = await _userManager.AddToRoleAsync(user, role);
+        var result = await _userManager.AddToRoleAsync(user, roleName);
         return result.Succeeded ? true : throw new AppException("Erro ao adicionar usuário ao perfil!", HttpStatusCode.BadRequest);
     }
 
-    public async Task<bool> Remove(IdentityUser user, string role)
+    public async Task<bool> Remove(IdentityUser user, string roleName)
     {
-        var result = await _userManager.RemoveFromRoleAsync(user, role);
+        var result = await _userManager.RemoveFromRoleAsync(user, roleName);
         return result.Succeeded ? true : throw new AppException("Erro ao remover usuário do perfil!", HttpStatusCode.BadRequest);
     }
 }

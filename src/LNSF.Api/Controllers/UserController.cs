@@ -39,7 +39,7 @@ public class UserController : ControllerBase
     [HttpPost("add-user-to-role")]
     public async Task<UserViewModel> Post(UserRoleViewModel userRoleViewModel)
     {
-        var user = await _userService.AddToRole(userRoleViewModel.UserId, userRoleViewModel.RoleId);
+        var user = await _userService.AddToRole(userRoleViewModel.UserId, userRoleViewModel.RoleName);
         return _mapper.Map<UserViewModel>(user);
     }
 
@@ -68,7 +68,7 @@ public class UserController : ControllerBase
     [HttpDelete("remove-user-from-role")]
     public async Task<UserViewModel> Delete(UserRoleViewModel userRoleViewModel)
     {
-        var user = await _userService.RemoveFromRole(userRoleViewModel.UserId, userRoleViewModel.RoleId);
+        var user = await _userService.RemoveFromRole(userRoleViewModel.UserId, userRoleViewModel.RoleName);
         return _mapper.Map<UserViewModel>(user);
     }
 }

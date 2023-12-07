@@ -11,42 +11,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LNSF.src.LNSF.Infra.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231130161500_DBLNSF.V0.8")]
-    partial class DBLNSFV08
+    [Migration("20231207014725_DBLNSF.V0.0")]
+    partial class DBLNSFV00
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.11");
-
-            modelBuilder.Entity("LNSF.Domain.Entities.Account", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Role")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserName")
-                        .IsUnique();
-
-                    b.ToTable("Accounts");
-                });
 
             modelBuilder.Entity("LNSF.Domain.Entities.EmergencyContact", b =>
                 {
@@ -380,6 +352,43 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1",
+                            ConcurrencyStamp = "a769bb6f-aca7-4cf3-8e8c-c49edd7d2215",
+                            Name = "Desenvolvedor",
+                            NormalizedName = "DESENVOLVEDOR"
+                        },
+                        new
+                        {
+                            Id = "2",
+                            ConcurrencyStamp = "dc59c7d6-4668-40b4-a718-d72f864e67ee",
+                            Name = "Administrador",
+                            NormalizedName = "ADMINISTRADOR"
+                        },
+                        new
+                        {
+                            Id = "3",
+                            ConcurrencyStamp = "aed2e98f-b798-4c1b-bc98-9fc6c2e70ae7",
+                            Name = "Assistente Social",
+                            NormalizedName = "ASSISTENTESOCIAL"
+                        },
+                        new
+                        {
+                            Id = "4",
+                            ConcurrencyStamp = "4ab6943d-1483-4c5a-83cd-00239d49c21f",
+                            Name = "Secretário",
+                            NormalizedName = "SECRETARIO"
+                        },
+                        new
+                        {
+                            Id = "5",
+                            ConcurrencyStamp = "85f1657e-b7ce-4b1a-ba98-14fe92018fbe",
+                            Name = "Voluntário",
+                            NormalizedName = "VOLUNTARIO"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
