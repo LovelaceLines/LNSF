@@ -40,9 +40,7 @@ public class GlobalClientRequest
     public GlobalClientRequest()
     {
         var mapperConfig = new MapperConfiguration(cfg =>
-        {
-            cfg.CreateMap<AuthenticationTokenViewModel, AuthenticationToken>().ReverseMap();
-            
+        {         
             cfg.CreateMap<RoomViewModel, RoomPostViewModel>().ReverseMap();
 
             cfg.CreateMap<PeoplePostViewModel, PeoplePutViewModel>().ReverseMap();
@@ -57,13 +55,6 @@ public class GlobalClientRequest
         });
 
         _mapper = mapperConfig.CreateMapper();
-    }
-
-    public virtual async Task<AuthenticationTokenViewModel> Auth(HttpClient client, dynamic obj)
-    {
-        var objJson = JsonContent.Create(obj);
-        var response = await client.PostAsync("", objJson);
-        return await DeserializeResponse<AuthenticationTokenViewModel>(response);
     }
 
     public virtual async Task<T> Get<T>(HttpClient client, dynamic obj) where T : class

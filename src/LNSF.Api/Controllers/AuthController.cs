@@ -1,8 +1,7 @@
-﻿using AutoMapper;
-using LNSF.Application.Interfaces;
-using LNSF.Domain.Entities;
+﻿using LNSF.Application.Interfaces;
 using LNSF.Api.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using LNSF.Domain.Entities;
 
 namespace LNSF.Api.Controllers;
 
@@ -11,35 +10,21 @@ namespace LNSF.Api.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IAuthenticationTokenService _service;
-    private readonly IMapper _mapper;
 
-    public AuthController(IAuthenticationTokenService service,
-        IMapper mapper)
-    {
+    public AuthController(IAuthenticationTokenService service) => 
         _service = service;
-        _mapper = mapper;
-    }
 
     /// <summary>
     /// Authenticates a user and returns an authentication token.
     /// </summary>
     [HttpPost("login")]
-    public async Task<ActionResult<AuthenticationTokenViewModel>> Login(UserLoginViewModel user)
-    {
-        var token = await _service.Login(user.UserName, user.Password);
-
-        return Ok(token);
-    }
+    public async Task<ActionResult<AuthenticationToken>> Login(UserLoginViewModel user) => 
+        Ok(await _service.Login(user.UserName, user.Password));
 
     /// <summary>
     /// Refreshes an authentication token.
     /// </summary>
     [HttpPost("refresh-token")]
-    public async Task<ActionResult<AuthenticationTokenViewModel>> RefreshToken(AuthenticationTokenViewModel tokenViewModel)
-    {
-        var tokenMapped = _mapper.Map<AuthenticationToken>(tokenViewModel);
-        var token = await _service.RefreshToken(tokenMapped);
-
-        return Ok(token);
-    }
+    public async Task<ActionResult<AuthenticationToken>> RefreshToken(RefreshTokenTokenViewModel token) => 
+        Ok(await _service.RefreshToken(token.RefreshToken));
 }

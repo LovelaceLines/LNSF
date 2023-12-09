@@ -5,5 +5,5 @@ namespace LNSF.Application.Interfaces;
 public interface IAuthenticationTokenService
 {
     Task<AuthenticationToken> Login(string userName, string password);
-    Task<AuthenticationToken> RefreshToken(AuthenticationToken token);
+    Task<AuthenticationToken> RefreshToken(string token);
 }

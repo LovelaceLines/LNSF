@@ -20,6 +20,7 @@ using LNSF.Infra.Data.Migrations;
 using System.Reflection;
 using LNSF.Infra.Data;
 using Microsoft.AspNetCore.Identity;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,8 +39,6 @@ builder.Logging.AddSerilog();
 
 var autoMapperConfig = new MapperConfiguration(configure =>
 {
-    configure.CreateMap<AuthenticationToken, AuthenticationTokenViewModel>().ReverseMap();
-
     configure.CreateMap<IdentityUser, UserViewModel>().ReverseMap();
     configure.CreateMap<IdentityUser, UserPostViewModel>().ReverseMap();
     configure.CreateMap<IdentityRole, RoleViewModel>().ReverseMap();
@@ -103,7 +102,6 @@ builder.Services.AddTransient<IUserRoleRepository, UserRoleRepository>();
 builder.Services.AddTransient<IUserRoleService, UserRoleService>();
 
 builder.Services.AddTransient<IAuthenticationTokenService, AuthenticationTokenService>();
-builder.Services.AddTransient<AuthenticationTokenValidator>();
 
 builder.Services.AddTransient<PasswordValidator>();
 
@@ -176,33 +174,7 @@ builder.Services.AddCors(options =>
 
 #endregion
 
-builder.Services.AddControllers();
-
-#region Authentication
-
-var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:SecretKey"] ?? 
-    throw new InvalidOperationException("JwtConfig: Secret is null"));
-
-builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    }
-).AddJwtBearer(options =>
-    {
-        options.RequireHttpsMetadata = false;
-        options.SaveToken = true;
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(key),
-            ValidateAudience = false,
-            ValidateIssuer = false,
-        };
-    }
-);
-
-#endregion
+#region Context
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
@@ -213,9 +185,35 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 });
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-    .AddEntityFrameworkStores<AppDbContext>();
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
 
-builder.Services.AddEndpointsApiExplorer();
+#endregion
+
+#region Authentication
+
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    }
+).AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"] ?? throw new AppException("JwtConfig: Issuer is null", HttpStatusCode.InternalServerError),
+            ValidAudience = builder.Configuration["Jwt:Audience"] ?? throw new AppException("JwtConfig: Audience is null", HttpStatusCode.InternalServerError),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"] ?? throw new AppException("JwtConfig: Secret is null", HttpStatusCode.InternalServerError))),
+        };
+    }
+);
+
+#endregion
 
 #region Swagger
 
@@ -270,13 +268,16 @@ builder.Services.AddSwaggerGen(setup =>
 
 #endregion
 
+builder.Services.AddControllers();
+
+builder.Services.AddEndpointsApiExplorer();
+
 var app = builder.Build();
 
 var helperMigration = new HelperMigration(app.Services);
 
 app.UseExceptionHandler("/api/Error");
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment() || 
     app.Environment.IsProduction() || 
     app.Environment.IsStaging())
@@ -287,7 +288,7 @@ if (app.Environment.IsDevelopment() ||
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection(); 
+app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 

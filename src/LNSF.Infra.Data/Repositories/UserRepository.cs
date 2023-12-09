@@ -77,8 +77,8 @@ public class UserRepository : IUserRepository
     public async Task<IdentityUser> GetByUserName(string userName) =>
         await _userManager.FindByNameAsync(userName) ?? throw new AppException("Usuário não encontrado!", HttpStatusCode.NotFound);
     
-    public async Task<string> GetRoles(IdentityUser user) =>
-        (await _userManager.GetRolesAsync(user)).FirstOrDefault() ?? throw new AppException("Perfil não encontrado!", HttpStatusCode.NotFound);
+    public async Task<List<string>> GetRoles(IdentityUser user) =>
+        (List<string>)await _userManager.GetRolesAsync(user);
 
     public async Task<bool> CheckPassword(string id, string password) => 
         await _userManager.CheckPasswordAsync(await GetById(id), password);

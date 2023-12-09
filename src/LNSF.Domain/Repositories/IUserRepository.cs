@@ -14,7 +14,7 @@ public interface IUserRepository
     Task<bool> ExistsByPhoneNumber(string phoneNumber);
     Task<IdentityUser> GetById(string id);
     Task<IdentityUser> GetByUserName(string userName);
-    Task<string> GetRoles(IdentityUser user);
+    Task<List<string>> GetRoles(IdentityUser user);
     Task<bool> CheckPassword(string id, string password);
     Task<bool> CheckPassword(IdentityUser user, string password);
     Task<IdentityUser> Add(IdentityUser user, string password);
