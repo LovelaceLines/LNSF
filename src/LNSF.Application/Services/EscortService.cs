@@ -27,7 +27,7 @@ public class EscortService : IEscortService
         
     public async Task<Escort> Create(Escort escort)
     {
-        if (!await _peoplesRepository.Exists(escort.PeopleId)) throw new AppException("Pessoa não encontrada", HttpStatusCode.NotFound);
+        if (!await _peoplesRepository.ExistsById(escort.PeopleId)) throw new AppException("Pessoa não encontrada", HttpStatusCode.NotFound);
         if (await _escortRepository.ExistsByPeopleId(escort.PeopleId)) throw new AppException("Acompanhante já cadastrado", HttpStatusCode.Conflict);
 
         return await _escortRepository.Add(escort);
@@ -42,8 +42,8 @@ public class EscortService : IEscortService
 
     public async Task<Escort> Delete(int id)
     {
-        if (!await _escortRepository.Exists(id)) throw new AppException("Acompanhante não encontrado", HttpStatusCode.NotFound);
+        if (!await _escortRepository.ExistsById(id)) throw new AppException("Acompanhante não encontrado", HttpStatusCode.NotFound);
 
-        return await _escortRepository.Remove(id);
+        return await _escortRepository.RemoveById(id);
     }
 }

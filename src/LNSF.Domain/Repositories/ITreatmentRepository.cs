@@ -6,8 +6,8 @@ namespace LNSF.Domain.Repositories;
 
 public interface ITreatmentRepository : IBaseRepository<Treatment>
 {
-    public Task<List<Treatment>> Query(TreatmentFilter filter);
-    public Task<bool> ExistsByName(string name);
-    public Task<bool> ExistsByNameAndType(string name, TypeTreatment type);
+    Task<List<Treatment>> Query(TreatmentFilter filter);
+    Task<bool> ExistsByName(string name);
+    Task<bool> ExistsByNameAndType(string name, TypeTreatment type);
 }
 

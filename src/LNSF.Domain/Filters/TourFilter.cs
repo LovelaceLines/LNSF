@@ -9,8 +9,8 @@ public class TourFilter
     public DateTime? Input { get; set; }
     public string? Note { get; set; }
     public bool? InOpen { get; set; }
-
     public int? PeopleId { get; set; }
-    public Pagination Page { get; set; } = new Pagination();
+
+    public Pagination Page { get; set; } = new();
     public OrderBy Order { get; set; } = OrderBy.Ascending;
 }

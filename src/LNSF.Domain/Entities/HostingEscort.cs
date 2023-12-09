@@ -6,6 +6,4 @@ public class HostingEscort
     public Hosting? Hosting { get; set; }
     public int EscortId { get; set; }
     public Escort? Escort { get; set; }
-    public DateTime CheckIn { get; set; }
-	public DateTime? CheckOut { get; set; }
 }

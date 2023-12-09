@@ -34,7 +34,7 @@ public class TourService : ITourService
         var validationResult = _validator.Validate(tour);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
-        if (!await _peopleRepository.Exists(tour.PeopleId)) throw new AppException("Pessoa não encontrada!", HttpStatusCode.NotFound);
+        if (!await _peopleRepository.ExistsById(tour.PeopleId)) throw new AppException("Pessoa não encontrada!", HttpStatusCode.NotFound);
         if (await _tourRepository.PeopleHasOpenTour(tour.PeopleId)) throw new AppException("Pessoa possui passeio em aberto!", HttpStatusCode.Conflict);
 
         tour.Output = DateTime.Now;

@@ -34,7 +34,7 @@ public class EmergencyContactService : IEmergencyContactService
         var validationResult = _validator.Validate(contact);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
-        if (!await _peoplesRepository.Exists(contact.PeopleId)) throw new AppException("Pessoa não encontrada!", HttpStatusCode.NotFound);
+        if (!await _peoplesRepository.ExistsById(contact.PeopleId)) throw new AppException("Pessoa não encontrada!", HttpStatusCode.NotFound);
 
         return await _emergencyContactRepository.Add(contact);
     }
@@ -51,8 +51,8 @@ public class EmergencyContactService : IEmergencyContactService
 
     public async Task<EmergencyContact> Delete(int id)
     {
-        if (!await _emergencyContactRepository.Exists(id)) throw new AppException("Contato de emergência não encontrado!", HttpStatusCode.NotFound);
+        if (!await _emergencyContactRepository.ExistsById(id)) throw new AppException("Contato de emergência não encontrado!", HttpStatusCode.NotFound);
 
-        return await _emergencyContactRepository.Remove(id);
+        return await _emergencyContactRepository.RemoveById(id);
     }
 }

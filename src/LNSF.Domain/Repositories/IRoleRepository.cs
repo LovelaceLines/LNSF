@@ -1,7 +1,7 @@
-﻿namespace LNSF.Domain.Repositories;
-
-using LNSF.Domain.Filters;
+﻿using LNSF.Domain.Filters;
 using Microsoft.AspNetCore.Identity;
+
+namespace LNSF.Domain.Repositories;
 
 public interface IRoleRepository
 {

@@ -38,7 +38,7 @@ public class PeopleService : IPeopleService
         var validationResult = _validator.Validate(people);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
         
-        if (!await _repository.Exists(people.Id)) throw new AppException("Pessoa não encontrada!", HttpStatusCode.NotFound);
+        if (!await _repository.ExistsById(people.Id)) throw new AppException("Pessoa não encontrada!", HttpStatusCode.NotFound);
 
         return await _repository.Update(people);	
     }

@@ -7,7 +7,7 @@ public class RolePostViewModelFake : Faker<RolePostViewModel>
 {
     public RolePostViewModelFake(string? name = null)
     {
-        RuleFor(x => x.Name, f => name ?? f.Lorem.Word());
+        RuleFor(x => x.Name, f => name ?? f.Lorem.Sentence().Substring(0, f.Random.Int(4, 16)));
     }
 }
 

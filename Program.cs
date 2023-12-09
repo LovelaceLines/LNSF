@@ -105,8 +105,6 @@ builder.Services.AddTransient<IAuthenticationTokenService, AuthenticationTokenSe
 
 builder.Services.AddTransient<PasswordValidator>();
 
-builder.Services.AddTransient<IGlobalRepository, GlobalRepository>();
-
 builder.Services.AddTransient<ITourRepository, ToursRepository>();
 builder.Services.AddTransient<TourValidator>();
 builder.Services.AddTransient<GlobalValidator>();

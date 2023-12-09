@@ -13,6 +13,6 @@ public class PeopleFilter
     public bool? Escort { get; set; }
     public bool? Active { get; set; }
     
-    public Pagination Page { get; set; } = new Pagination();
+    public Pagination Page { get; set; } = new();
     public OrderBy OrderBy { get; set; } = OrderBy.Ascending;
 }

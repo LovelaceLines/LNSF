@@ -12,6 +12,6 @@ public class PeopleRoomFilter
     public int? RoomId { get; set; }
     public int? HostingId { get; set; }
 
-    public Pagination Page { get; set; } = new Pagination();
+    public Pagination Page { get; set; } = new();
     public OrderBy OrderBy { get; set; } = OrderBy.Ascending;
 }

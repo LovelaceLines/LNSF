@@ -31,8 +31,8 @@ public class UserRepository : IUserRepository
         if (!filter.Id.IsNullOrEmpty()) query = query.Where(u => u.Id == filter.Id);
         if (!filter.UserName.IsNullOrEmpty()) query = query.Where(u => u.UserName != null && u.UserName.ToLower().Contains(filter.UserName!.ToLower()));
         if (!filter.Email.IsNullOrEmpty()) query = query.Where(u => u.Email != null && u.Email.ToLower().Contains(filter.Email!.ToLower()));
-        if (filter.Role.HasValue) query = query.Where(u =>
-            _roleManager.Roles.Any(r => r.Name == filter.Role.ToString() && 
+        if (!filter.Role.IsNullOrEmpty()) query = query.Where(u =>
+            _roleManager.Roles.Any(r => r.Name!.ToLower().Contains(filter.Role!.ToLower()) &&
                 _userRoleManager.RoleId == r.Id && _userRoleManager.UserId == u.Id));
         
         if (filter.OrderBy == OrderBy.Ascending) query = query.OrderBy(u => u.UserName);

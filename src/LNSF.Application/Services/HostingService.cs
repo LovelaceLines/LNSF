@@ -37,9 +37,9 @@ public class HostingService : IHostingService
         var validationResult = await _validator.ValidateAsync(hosting);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
-        if (!await _patientRepository.Exists(hosting.PatientId)) throw new AppException("Paciente não encontrado", HttpStatusCode.NotFound);
+        if (!await _patientRepository.ExistsById(hosting.PatientId)) throw new AppException("Paciente não encontrado", HttpStatusCode.NotFound);
         foreach (var escortId in hosting.EscortIds)
-            if (!await _escortRepository.Exists(escortId)) throw new AppException("Acompanhante não encontrado", HttpStatusCode.NotFound);
+            if (!await _escortRepository.ExistsById(escortId)) throw new AppException("Acompanhante não encontrado", HttpStatusCode.NotFound);
 
         return await _hostingRepository.Add(hosting);
     }
@@ -52,7 +52,7 @@ public class HostingService : IHostingService
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
         foreach (var escortId in hosting.EscortIds)
-            if (!await _escortRepository.Exists(escortId)) throw new AppException("Acompanhante não encontrado", HttpStatusCode.NotFound);
+            if (!await _escortRepository.ExistsById(escortId)) throw new AppException("Acompanhante não encontrado", HttpStatusCode.NotFound);
 
         return await _hostingRepository.Update(hosting);
     }
