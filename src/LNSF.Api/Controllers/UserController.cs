@@ -20,14 +20,26 @@ public class UserController : ControllerBase
         _userService = userService;
     }
 
+    /// <summary>
+    /// Retrieves a list of users based on provided filter.
+    /// </summary>
     [HttpGet]
-    public async Task<List<IdentityUser>> Get([FromQuery] UserFilter filter) =>
-        await _userService.Query(filter);
+    public async Task<List<UserViewModel>> Get([FromQuery] UserFilter filter)
+    {
+        var users = await _userService.Query(filter);
+        return _mapper.Map<List<UserViewModel>>(users);
+    }
 
+    /// <summary>
+    /// Gets the count of User.
+    /// </summary>
     [HttpGet("count")]
     public async Task<int> GetCount() =>
         await _userService.GetCount();
     
+    /// <summary>
+    /// Creates a new user.
+    /// </summary>
     [HttpPost]
     public async Task<UserViewModel> Post(UserPostViewModel userPostViewModel)
     {
@@ -36,6 +48,9 @@ public class UserController : ControllerBase
         return _mapper.Map<UserViewModel>(user);
     }
 
+    /// <summary>
+    /// Adds a user to a role.
+    /// </summary>
     [HttpPost("add-user-to-role")]
     public async Task<UserViewModel> Post(UserRoleViewModel userRoleViewModel)
     {
@@ -43,6 +58,9 @@ public class UserController : ControllerBase
         return _mapper.Map<UserViewModel>(user);
     }
 
+    /// <summary>
+    /// Updates a user. Note: do not update the user's password.
+    /// </summary>
     [HttpPut]   
     public async Task<UserViewModel> Put(UserViewModel userViewModel)
     {
@@ -51,6 +69,9 @@ public class UserController : ControllerBase
         return _mapper.Map<UserViewModel>(user);
     }
 
+    /// <summary>
+    /// Updates the password of a user.
+    /// </summary>
     [HttpPut("password")]
     public async Task<UserViewModel> Put(UserPutPasswordViewModel userPutPasswordViewModel)
     {
@@ -58,6 +79,9 @@ public class UserController : ControllerBase
         return _mapper.Map<UserViewModel>(user);
     }
 
+    /// <summary>
+    /// Deletes a user by their ID.
+    /// </summary>
     [HttpDelete("{id}")]
     public async Task<UserViewModel> Delete(string id)
     {
@@ -65,10 +89,13 @@ public class UserController : ControllerBase
         return _mapper.Map<UserViewModel>(user);
     }
 
+    /// <summary>
+    /// Removes a user from a role.
+    /// </summary>
     [HttpDelete("remove-user-from-role")]
-    public async Task<UserViewModel> Delete(UserRoleViewModel userRoleViewModel)
+    public async Task<ActionResult<UserViewModel>> Delete(UserRoleViewModel userRoleViewModel)
     {
         var user = await _userService.RemoveFromRole(userRoleViewModel.UserId, userRoleViewModel.RoleName);
-        return _mapper.Map<UserViewModel>(user);
+        return Ok(_mapper.Map<UserViewModel>(user));
     }
 }

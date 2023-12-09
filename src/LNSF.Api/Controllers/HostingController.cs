@@ -29,9 +29,7 @@ public class HostingController : ControllerBase
     public async Task<ActionResult<List<HostingViewModel>>> Get([FromQuery] HostingFilter filter)
     {
         var hostings = await _hostingService.Query(filter);
-        var hostingsViewModel = _mapper.Map<List<HostingViewModel>>(hostings);
-
-        return Ok(hostingsViewModel);
+        return _mapper.Map<List<HostingViewModel>>(hostings);
     }
 
     /// <summary>
@@ -39,32 +37,27 @@ public class HostingController : ControllerBase
     /// </summary>
     [HttpGet("count")]
     public async Task<ActionResult<int>> GetCount() => 
-        Ok(await _hostingService.GetCount());
+        await _hostingService.GetCount();
 
     /// <summary>
     /// Creates a new hosting.
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<HostingViewModel>> Post(HostingPostViewModel hosting)
+    public async Task<ActionResult<HostingViewModel>> Post(HostingPostViewModel hostingPostViewModel)
     {
-        var hostingMapped = _mapper.Map<Hosting>(hosting);
-        var hostingCreated = await _hostingService.Create(hostingMapped);
-        var hostingViewModel = _mapper.Map<HostingViewModel>(hostingCreated);
-
-        return Ok(hostingViewModel);
+        var hosting = _mapper.Map<Hosting>(hostingPostViewModel);
+        hosting = await _hostingService.Create(hosting);
+        return _mapper.Map<HostingViewModel>(hosting);
     }
 
     /// <summary>
     /// Updates a hosting. Note: the patient cannot be changed.
     /// </summary>
     [HttpPut]
-    public async Task<ActionResult<HostingViewModel>> Put(HostingViewModel hosting)
+    public async Task<ActionResult<HostingViewModel>> Put(HostingViewModel hostingViewModel)
     {
-        var hostingMapped = _mapper.Map<Hosting>(hosting);
-        var hostingUpdated = await _hostingService.Update(hostingMapped);
-        var hostingViewModel = _mapper.Map<HostingViewModel>(hostingUpdated);
-        
-        return Ok(hostingViewModel);
+        var hosting = _mapper.Map<Hosting>(hostingViewModel);
+        hosting = await _hostingService.Update(hosting);
+        return _mapper.Map<HostingViewModel>(hosting);
     }
-
 }

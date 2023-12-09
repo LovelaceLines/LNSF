@@ -42,8 +42,8 @@ public class AuthTestApi : GlobalClientRequest
         var exception = await Post<AppException>(_loginClient, login);
 
         // Assert
-        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.InternalServerError, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
     }
 
     [Fact]
@@ -74,10 +74,10 @@ public class AuthTestApi : GlobalClientRequest
         var refreshTokenViewModel = new AuthenticationToken { Token = token };
 
         // Act - Assert
-        await Post<AppException>(_refreshTokenClient, refreshTokenViewModel);
+        var exception = await Post<AppException>(_refreshTokenClient, refreshTokenViewModel);
 
         // Assert
-        Assert.NotEqual((int)HttpStatusCode.OK, (int)HttpStatusCode.InternalServerError);
-        Assert.NotEqual((int)HttpStatusCode.InternalServerError, (int)HttpStatusCode.OK);
+        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
     }
 }

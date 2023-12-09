@@ -50,8 +50,8 @@ public class UserTestApi : GlobalClientRequest
 
         // Assert
         Assert.Equal(countBefore, countAfter);
-        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.InternalServerError, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
     }
 
     [Theory]
@@ -73,8 +73,8 @@ public class UserTestApi : GlobalClientRequest
 
         // Assert
         Assert.Equal(countBefore, countAfter);
-        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.InternalServerError, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
     }
 
     [Theory]
@@ -96,8 +96,8 @@ public class UserTestApi : GlobalClientRequest
 
         // Assert
         Assert.Equal(countBefore, countAfter);
-        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.InternalServerError, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
     }
 
     [Fact]
@@ -120,12 +120,12 @@ public class UserTestApi : GlobalClientRequest
 
         // Assert
         Assert.Equal(countBefore, countAfter);
-        Assert.NotEqual((int)HttpStatusCode.OK, exceptionUserName.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.InternalServerError, exceptionUserName.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.OK, exceptionEmail.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.InternalServerError, exceptionEmail.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.OK, exceptionPhoneNumber.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.InternalServerError, exceptionPhoneNumber.StatusCode);
+        Assert.NotEqual(HttpStatusCode.OK, exceptionUserName.StatusCode);
+        Assert.NotEqual(HttpStatusCode.InternalServerError, exceptionUserName.StatusCode);
+        Assert.NotEqual(HttpStatusCode.OK, exceptionEmail.StatusCode);
+        Assert.NotEqual(HttpStatusCode.InternalServerError, exceptionEmail.StatusCode);
+        Assert.NotEqual(HttpStatusCode.OK, exceptionPhoneNumber.StatusCode);
+        Assert.NotEqual(HttpStatusCode.InternalServerError, exceptionPhoneNumber.StatusCode);
     }
 
     [Fact]
@@ -172,12 +172,12 @@ public class UserTestApi : GlobalClientRequest
 
         // Assert
         Assert.Equal(countBefore, countAfter);
-        Assert.NotEqual((int)HttpStatusCode.OK, exceptionUserName.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.InternalServerError, exceptionUserName.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.OK, exceptionEmail.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.InternalServerError, exceptionEmail.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.OK, exceptionPhoneNumber.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.InternalServerError, exceptionPhoneNumber.StatusCode);
+        Assert.NotEqual(HttpStatusCode.OK, exceptionUserName.StatusCode);
+        Assert.NotEqual(HttpStatusCode.InternalServerError, exceptionUserName.StatusCode);
+        Assert.NotEqual(HttpStatusCode.OK, exceptionEmail.StatusCode);
+        Assert.NotEqual(HttpStatusCode.InternalServerError, exceptionEmail.StatusCode);
+        Assert.NotEqual(HttpStatusCode.OK, exceptionPhoneNumber.StatusCode);
+        Assert.NotEqual(HttpStatusCode.InternalServerError, exceptionPhoneNumber.StatusCode);
     }
 
     [Fact]
@@ -238,7 +238,7 @@ public class UserTestApi : GlobalClientRequest
 
         // Assert
         Assert.Equal(countBefore, countAfter);
-        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.InternalServerError, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
     }
 }

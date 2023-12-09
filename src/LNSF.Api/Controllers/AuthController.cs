@@ -1,7 +1,7 @@
-﻿using LNSF.Application.Interfaces;
-using LNSF.Api.ViewModels;
-using Microsoft.AspNetCore.Mvc;
+﻿using LNSF.Api.ViewModels;
+using LNSF.Application.Interfaces;
 using LNSF.Domain.Entities;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LNSF.Api.Controllers;
 
@@ -19,12 +19,12 @@ public class AuthController : ControllerBase
     /// </summary>
     [HttpPost("login")]
     public async Task<ActionResult<AuthenticationToken>> Login(UserLoginViewModel user) => 
-        Ok(await _service.Login(user.UserName, user.Password));
+        await _service.Login(user.UserName, user.Password);
 
     /// <summary>
     /// Refreshes an authentication token.
     /// </summary>
     [HttpPost("refresh-token")]
     public async Task<ActionResult<AuthenticationToken>> RefreshToken(RefreshTokenTokenViewModel token) => 
-        Ok(await _service.RefreshToken(token.RefreshToken));
+        await _service.RefreshToken(token.RefreshToken);
 }

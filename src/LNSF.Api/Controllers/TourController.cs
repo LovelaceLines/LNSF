@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using LNSF.Domain.Filters;
-using LNSF.Domain.Entities;
 using LNSF.Api.ViewModels;
-using Microsoft.AspNetCore.Mvc;
 using LNSF.Application.Interfaces;
+using LNSF.Domain.Entities;
+using LNSF.Domain.Filters;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LNSF.Api.Controllers;
 
@@ -28,9 +28,7 @@ public class TourController : ControllerBase
     public async Task<ActionResult<List<TourViewModel>>> Get([FromQuery]TourFilter filter)
     {
         var tours = await _service.Query(filter);
-        var tourViewModels = _mapper.Map<List<TourViewModel>>(tours);
-
-        return Ok(tourViewModels);
+        return _mapper.Map<List<TourViewModel>>(tours);
     }
 
     /// <summary>
@@ -38,44 +36,38 @@ public class TourController : ControllerBase
     /// </summary>
     [HttpGet("count")]
     public async Task<ActionResult<int>> GetCount() => 
-        Ok(await _service.GetCount());
+        await _service.GetCount();
 
     /// <summary>
     /// Creates the output of a tour.
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<TourViewModel>> Post([FromBody]TourPostViewModel tour)
+    public async Task<ActionResult<TourViewModel>> Post([FromBody]TourPostViewModel tourPostViewModel)
     {
-        var tourMapped = _mapper.Map<Tour>(tour);
-        var tourCreated = await _service.Create(tourMapped);
-        var tourViewModel = _mapper.Map<TourViewModel>(tourCreated);
-
-        return Ok(tourViewModel);
+        var tour = _mapper.Map<Tour>(tourPostViewModel);
+        tour = await _service.Create(tour);
+        return _mapper.Map<TourViewModel>(tour);
     }
 
     /// <summary>
     /// Updates the input and note of a tour.
     /// </summary>
     [HttpPut]
-    public async Task<ActionResult<TourViewModel>> Put([FromBody]TourPutViewModel tour)
+    public async Task<ActionResult<TourViewModel>> Put([FromBody]TourPutViewModel tourPutViewModel)
     {
-        var tourMapped = _mapper.Map<Tour>(tour);
-        var tourUpdated = await _service.Update(tourMapped);
-        var tourViewModel = _mapper.Map<TourViewModel>(tourUpdated);
-
-        return Ok(tourViewModel);
+        var tour = _mapper.Map<Tour>(tourPutViewModel);
+        tour = await _service.Update(tour);
+        return _mapper.Map<TourViewModel>(tour);
     }
 
     /// <summary>
     /// Updates all properties of a tour.
     /// </summary>
     [HttpPut("put-all")]
-    public async Task<ActionResult<TourViewModel>> Put([FromBody]TourViewModel tour)
+    public async Task<ActionResult<TourViewModel>> Put([FromBody]TourViewModel tourViewModel)
     {
-        var tourMapped = _mapper.Map<Tour>(tour);
-        var tourUpdated = await _service.UpdateAll(tourMapped);
-        var tourViewModel = _mapper.Map<TourViewModel>(tourUpdated);
-
-        return Ok(tourViewModel);
+        var tour = _mapper.Map<Tour>(tourViewModel);
+        tour = await _service.UpdateAll(tour);
+        return _mapper.Map<TourViewModel>(tour);
     }
 }

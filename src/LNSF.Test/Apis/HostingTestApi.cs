@@ -109,7 +109,7 @@ public class HostingTestApi : GlobalClientRequest
         // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.NotEmpty(exception.Message);
-        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
     }
 
     [Theory]
@@ -156,7 +156,7 @@ public class HostingTestApi : GlobalClientRequest
         // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.NotEmpty(exception.Message);
-        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
     }
 
     [Theory]
@@ -179,6 +179,6 @@ public class HostingTestApi : GlobalClientRequest
         // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.NotEmpty(exception.Message);
-        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
     }
 }

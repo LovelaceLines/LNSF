@@ -161,9 +161,9 @@ builder.Services.AddTransient<IReportService, ReportService>();
 var cors = builder.Configuration.GetSection("Cors");
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: cors["PolicyName"] ?? throw new AppException("Cors: PolicyName is null!"), builder =>
+    options.AddPolicy(name: cors["PolicyName"] ?? throw new AppException("Cors: PolicyName is null!", HttpStatusCode.InternalServerError), builder =>
     {
-        builder.WithOrigins(cors["AllowedOrigins"] ?? throw new AppException("Cors: WithOrigins is null!"))
+        builder.WithOrigins(cors["AllowedOrigins"] ?? throw new AppException("Cors: WithOrigins is null!", HttpStatusCode.InternalServerError))
             //.WithMethods(cors["AllowedMethods"] ?? throw new AppException("Cors: WithMethods is null!"))
             .AllowAnyMethod()
             //.WithHeaders(cors["AllowedHeaders"] ?? throw new AppException("Cors: WithHeaders is null!"))
@@ -292,7 +292,7 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 
-app.UseCors(cors["PolicyName"] ?? throw new AppException("Cors: PolicyName is null!"));
+app.UseCors(cors["PolicyName"] ?? throw new AppException("Cors: PolicyName is null!", HttpStatusCode.InternalServerError));
 
 app.UseAuthentication();
 app.UseAuthorization();

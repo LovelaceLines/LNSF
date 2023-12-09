@@ -46,15 +46,15 @@ public class RoleTestApi : GlobalClientRequest
 
         // Assert
         Assert.Equal(countBefore, countAfter);
-        Assert.NotEqual((int)HttpStatusCode.OK, exceptionDev.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.InternalServerError, exceptionDev.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.OK, exceptionAdmin.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.InternalServerError, exceptionAdmin.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.OK, exceptionAssistente.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.InternalServerError, exceptionAssistente.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.OK, exceptionSecr.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.InternalServerError, exceptionSecr.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.OK, exceptionVol.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.InternalServerError, exceptionVol.StatusCode);
+        Assert.NotEqual(HttpStatusCode.OK, exceptionDev.StatusCode);
+        Assert.NotEqual(HttpStatusCode.InternalServerError, exceptionDev.StatusCode);
+        Assert.NotEqual(HttpStatusCode.OK, exceptionAdmin.StatusCode);
+        Assert.NotEqual(HttpStatusCode.InternalServerError, exceptionAdmin.StatusCode);
+        Assert.NotEqual(HttpStatusCode.OK, exceptionAssistente.StatusCode);
+        Assert.NotEqual(HttpStatusCode.InternalServerError, exceptionAssistente.StatusCode);
+        Assert.NotEqual(HttpStatusCode.OK, exceptionSecr.StatusCode);
+        Assert.NotEqual(HttpStatusCode.InternalServerError, exceptionSecr.StatusCode);
+        Assert.NotEqual(HttpStatusCode.OK, exceptionVol.StatusCode);
+        Assert.NotEqual(HttpStatusCode.InternalServerError, exceptionVol.StatusCode);
     }
 }

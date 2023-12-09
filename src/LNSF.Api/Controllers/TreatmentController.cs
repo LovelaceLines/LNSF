@@ -28,9 +28,7 @@ public class TreatmentController : ControllerBase
     public async Task<ActionResult<List<TreatmentViewModel>>> Query([FromQuery] TreatmentFilter filter)
     {
         var treatments = await _treatmentService.Query(filter);
-        var treatmentViewModels = _mapper.Map<List<TreatmentViewModel>>(treatments);
-
-        return Ok(treatmentViewModels);
+        return _mapper.Map<List<TreatmentViewModel>>(treatments);
     }
 
     /// <summary>
@@ -38,32 +36,28 @@ public class TreatmentController : ControllerBase
     /// </summary>
     [HttpGet("Count")]
     public async Task<ActionResult<int>> GetCount() => 
-        Ok(await _treatmentService.GetCount());
+        await _treatmentService.GetCount();
 
     /// <summary>
     /// Creates a new Treatment. Note: the new Treatment's must have a unique name or different type from the existing ones.
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<TreatmentViewModel>> Post(TreatmentPostViewModel treatment)
+    public async Task<ActionResult<TreatmentViewModel>> Post(TreatmentPostViewModel treatmentPostViewModel)
     {
-        var treatmentMapped = _mapper.Map<Treatment>(treatment);
-        var treatmentCreated = await _treatmentService.Create(treatmentMapped);
-        var treatmentViewModel = _mapper.Map<TreatmentViewModel>(treatmentCreated);
-
-        return Ok(treatmentViewModel);
+        var treatment = _mapper.Map<Treatment>(treatmentPostViewModel);
+        treatment = await _treatmentService.Create(treatment);
+        return _mapper.Map<TreatmentViewModel>(treatment);
     }
 
     /// <summary>
     /// Updates a Treatment.
     /// </summary>
     [HttpPut]
-    public async Task<ActionResult<TreatmentViewModel>> Put(TreatmentViewModel treatment)
+    public async Task<ActionResult<TreatmentViewModel>> Put(TreatmentViewModel treatmentViewModel)
     {
-        var treatmentMapped = _mapper.Map<Treatment>(treatment);
-        var treatmentUpdated = await _treatmentService.Update(treatmentMapped);
-        var treatmentViewModel = _mapper.Map<TreatmentViewModel>(treatmentUpdated);
-        
-        return Ok(treatmentViewModel);
+        var treatment = _mapper.Map<Treatment>(treatmentViewModel);
+        treatment = await _treatmentService.Update(treatment);
+        return _mapper.Map<TreatmentViewModel>(treatment);
     }
 
     /// <summary>
@@ -73,8 +67,6 @@ public class TreatmentController : ControllerBase
     public async Task<ActionResult<TreatmentViewModel>> Delete(int id)
     {
         var treatmentDeleted = await _treatmentService.Delete(id);
-        var treatmentViewModel = _mapper.Map<TreatmentViewModel>(treatmentDeleted);
-
-        return Ok(treatmentViewModel);
+        return _mapper.Map<TreatmentViewModel>(treatmentDeleted);
     }
 }

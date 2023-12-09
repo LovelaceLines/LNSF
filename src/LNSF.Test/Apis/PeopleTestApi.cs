@@ -39,7 +39,7 @@ public class PeopleTestApi : GlobalClientRequest
         var countBefore = await GetCount(_peopleClient);
 
         // Act
-        await Assert.ThrowsAsync<Exception>(() => Post<PeopleViewModel>(_peopleClient, peopleFake));
+        var exception = await Post<AppException>(_peopleClient, peopleFake);
         var countAfter = await GetCount(_peopleClient);
 
         // Assert
@@ -57,7 +57,7 @@ public class PeopleTestApi : GlobalClientRequest
         var countBefore = await GetCount(_peopleClient);
 
         // Act
-        await Assert.ThrowsAsync<Exception>(() => Post<PeopleViewModel>(_peopleClient, peopleFake));
+        var exception = await Post<AppException>(_peopleClient, peopleFake);
         var countAfter = await GetCount(_peopleClient);
 
         // Assert
@@ -75,7 +75,7 @@ public class PeopleTestApi : GlobalClientRequest
         var countBefore = await GetCount(_peopleClient);
 
         // Act
-        await Assert.ThrowsAsync<Exception>(() => Post<PeopleViewModel>(_peopleClient, peopleFake));
+        var exception = await Post<AppException>(_peopleClient, peopleFake);
         var countAfter = await GetCount(_peopleClient);
 
         // Assert
@@ -93,7 +93,7 @@ public class PeopleTestApi : GlobalClientRequest
         var countBefore = await GetCount(_peopleClient);
 
         // Act
-        await Assert.ThrowsAsync<Exception>(() => Post<PeopleViewModel>(_peopleClient, peopleFake));
+        var exception = await Post<AppException>(_peopleClient, peopleFake);
         var countAfter = await GetCount(_peopleClient);
 
         // Assert
@@ -111,7 +111,7 @@ public class PeopleTestApi : GlobalClientRequest
         var countBefore = await GetCount(_peopleClient);
 
         // Act
-        await Assert.ThrowsAsync<Exception>(() => Post<PeopleViewModel>(_peopleClient, peopleFake));
+        var exception = await Post<AppException>(_peopleClient, peopleFake);
         var countAfter = await GetCount(_peopleClient);
 
         // Assert
@@ -129,7 +129,7 @@ public class PeopleTestApi : GlobalClientRequest
         var countBefore = await GetCount(_peopleClient);
 
         // Act
-        await Assert.ThrowsAsync<Exception>(() => Post<PeopleViewModel>(_peopleClient, peopleFake));
+        var exception = await Post<AppException>(_peopleClient, peopleFake);
         var countAfter = await GetCount(_peopleClient);
 
         // Assert
@@ -173,7 +173,7 @@ public class PeopleTestApi : GlobalClientRequest
         var peopleMapped = _mapper.Map<PeoplePutViewModel>(newFakePeople);
         peopleMapped.Name = "";
         peopleMapped.Id = peoplePosted.Id;
-        await Assert.ThrowsAsync<Exception>(() => Put<PeopleViewModel>(_peopleClient, peopleMapped));
+        var exception = await Put<AppException>(_peopleClient, peopleMapped);
         var countAfter = await GetCount(_peopleClient);
 
         // Assert
@@ -195,7 +195,7 @@ public class PeopleTestApi : GlobalClientRequest
         var peopleMapped = _mapper.Map<PeoplePutViewModel>(newFakePeople);
         peopleMapped.BirthDate = DateTime.Now.AddYears(-14);
         peopleMapped.Id = peoplePosted.Id;
-        await Assert.ThrowsAsync<Exception>(() => Put<PeopleViewModel>(_peopleClient, peopleMapped));
+        var exception = await Put<AppException>(_peopleClient, peopleMapped);
         var countAfter = await GetCount(_peopleClient);
 
         // Assert
@@ -217,7 +217,7 @@ public class PeopleTestApi : GlobalClientRequest
         var peopleMapped = _mapper.Map<PeoplePutViewModel>(newFakePeople);
         peopleMapped.BirthDate = DateTime.Now.AddYears(-129);
         peopleMapped.Id = peoplePosted.Id;
-        await Assert.ThrowsAsync<Exception>(() => Put<PeopleViewModel>(_peopleClient, peopleMapped));
+        var exception = await Put<AppException>(_peopleClient, peopleMapped);
         var countAfter = await GetCount(_peopleClient);
 
         // Assert
@@ -239,7 +239,7 @@ public class PeopleTestApi : GlobalClientRequest
         var peopleMapped = _mapper.Map<PeoplePutViewModel>(newFakePeople);
         peopleMapped.RG = "123456789";
         peopleMapped.Id = peoplePosted.Id;
-        await Assert.ThrowsAsync<Exception>(() => Put<PeopleViewModel>(_peopleClient, peopleMapped));
+        var exception = await Put<AppException>(_peopleClient, peopleMapped);
         var countAfter = await GetCount(_peopleClient);
 
         // Assert
@@ -261,7 +261,7 @@ public class PeopleTestApi : GlobalClientRequest
         var peopleMapped = _mapper.Map<PeoplePutViewModel>(newFakePeople);
         peopleMapped.CPF = "123456789";
         peopleMapped.Id = peoplePosted.Id;
-        await Assert.ThrowsAsync<Exception>(() => Put<PeopleViewModel>(_peopleClient, peopleMapped));
+        var exception = await Put<AppException>(_peopleClient, peopleMapped);
         var countAfter = await GetCount(_peopleClient);
 
         // Assert
@@ -283,7 +283,7 @@ public class PeopleTestApi : GlobalClientRequest
         var peopleMapped = _mapper.Map<PeoplePutViewModel>(newFakePeople);
         peopleMapped.Phone = "123456789";
         peopleMapped.Id = peoplePosted.Id;
-        await Assert.ThrowsAsync<Exception>(() => Put<PeopleViewModel>(_peopleClient, peopleMapped));
+        var exception = await Put<AppException>(_peopleClient, peopleMapped);
         var countAfter = await GetCount(_peopleClient);
 
         // Assert
@@ -409,8 +409,8 @@ public class PeopleTestApi : GlobalClientRequest
         Assert.Equal(countPatientsBefore, countPatientsAfter);
         Assert.Equal(countPeopleRoomsBefore, countPeopleRoomsAfter);
         Assert.Equal(countHostingsBefore, countHostingsAfter);
-        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.InternalServerError, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
     }
 
     [Fact]
@@ -446,8 +446,8 @@ public class PeopleTestApi : GlobalClientRequest
         Assert.Equal(countEscortsBefore, countEscortsAfter);
         Assert.Equal(countPeopleRoomsBefore, countPeopleRoomsAfter);
         Assert.Equal(countHostingsBefore, countHostingsAfter);
-        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.InternalServerError, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
     }
 
     [Fact]
@@ -480,8 +480,8 @@ public class PeopleTestApi : GlobalClientRequest
         Assert.Equal(countPeoplesBefore, countPeoplesAfter);
         Assert.Equal(countHostingsBefore, countHostingsAfter);
         Assert.Equal(countPeopleRoomsBefore, countPeopleRoomsAfter);
-        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.InternalServerError, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
     }
     
     [Fact]
@@ -517,8 +517,8 @@ public class PeopleTestApi : GlobalClientRequest
         Assert.Equal(countPatientsBefore, countPatientsAfter);
         Assert.Equal(countHostingsBefore, countHostingsAfter);
         Assert.Equal(countPeopleRoomsBefore, countPeopleRoomsAfter);
-        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.InternalServerError, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
     }
     
     [Fact]
@@ -557,8 +557,8 @@ public class PeopleTestApi : GlobalClientRequest
         Assert.Equal(countPatientsBefore, countPatientsAfter);
         Assert.Equal(countHostingsBefore, countHostingsAfter);
         Assert.Equal(countPeopleRoomsBefore, countPeopleRoomsAfter);
-        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.InternalServerError, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
     }
     
     [Fact]
@@ -603,8 +603,8 @@ public class PeopleTestApi : GlobalClientRequest
         Assert.Equal(countHostingsBefore, countHostingsAfter);
         Assert.Equal(countPeopleRoomsBefore, countPeopleRoomsAfter);
         Assert.Equivalent(peopleRoomFake1, peopleRoomPosted1);
-        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.InternalServerError, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
     }
 
     [Fact]
@@ -670,12 +670,12 @@ public class PeopleTestApi : GlobalClientRequest
         Assert.Equal(countPatientsBefore, countPatientsAfter);
         Assert.Equal(countHostingsBefore, countHostingsAfter);
         Assert.Equal(countPeopleRoomsBefore, countPeopleRoomsAfter);
-        Assert.NotEqual((int)HttpStatusCode.OK, exceptionRoom.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.OK, exceptionPeople.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.OK, exceptionHosting.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.InternalServerError, exceptionRoom.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.InternalServerError, exceptionPeople.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.InternalServerError, exceptionHosting.StatusCode);
+        Assert.NotEqual(HttpStatusCode.OK, exceptionRoom.StatusCode);
+        Assert.NotEqual(HttpStatusCode.OK, exceptionPeople.StatusCode);
+        Assert.NotEqual(HttpStatusCode.OK, exceptionHosting.StatusCode);
+        Assert.NotEqual(HttpStatusCode.InternalServerError, exceptionRoom.StatusCode);
+        Assert.NotEqual(HttpStatusCode.InternalServerError, exceptionPeople.StatusCode);
+        Assert.NotEqual(HttpStatusCode.InternalServerError, exceptionHosting.StatusCode);
     }
 }
     

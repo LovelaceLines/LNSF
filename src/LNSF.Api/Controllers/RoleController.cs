@@ -25,13 +25,12 @@ public class RoleController : ControllerBase
     public async Task<ActionResult<List<RoleViewModel>>> Get([FromQuery]RoleFilter filter)
     {
         var roles = await _roleService.Query(filter);
-        var rolesViewModel = _mapper.Map<List<RoleViewModel>>(roles);
-        return Ok(rolesViewModel);
+        return _mapper.Map<List<RoleViewModel>>(roles);
     }
 
     [HttpGet("count")]
     public async Task<ActionResult<int>> GetCount() => 
-        Ok(await _roleService.GetCount());
+        await _roleService.GetCount();
 
     [HttpPost]
     public async Task<ActionResult<RoleViewModel>> Post([FromBody]RolePostViewModel rolePostViewModel)

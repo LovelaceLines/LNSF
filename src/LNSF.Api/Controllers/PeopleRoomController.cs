@@ -27,9 +27,7 @@ public class PeopleRoomController : ControllerBase
     public async Task<ActionResult<List<PeopleRoomViewModel>>> Get([FromQuery]PeopleRoomFilter filter)
     {
         var peopleRooms = await _service.Query(filter);
-        var peopleRoomsViewModel = _mapper.Map<List<PeopleRoomViewModel>>(peopleRooms);
-        
-        return Ok(peopleRoomsViewModel);
+        return _mapper.Map<List<PeopleRoomViewModel>>(peopleRooms);
     }
 
     /// <summary>
@@ -37,5 +35,5 @@ public class PeopleRoomController : ControllerBase
     /// </summary>
     [HttpGet("count")]
     public async Task<ActionResult<int>> GetCount() => 
-        Ok(await _service.GetCount());
+        await _service.GetCount();
 }
