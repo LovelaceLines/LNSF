@@ -1,10 +1,10 @@
-﻿using System.Net;
-using LNSF.Application.Interfaces;
+﻿using LNSF.Application.Interfaces;
 using LNSF.Application.Validators;
 using LNSF.Domain.Exceptions;
 using LNSF.Domain.Filters;
 using LNSF.Domain.Repositories;
 using Microsoft.AspNetCore.Identity;
+using System.Net;
 
 namespace LNSF.Application.Services;
 
@@ -31,19 +31,25 @@ public class RoleService : IRoleService
         var validationResult = _roleValidator.Validate(role);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
-        if (await _roleRepository.ExistsByName(role.Name!)) throw new AppException("Perfil já existe!", HttpStatusCode.BadRequest);
+        if (await _roleRepository.ExistsByName(role.Name!)) throw new AppException("Perfil já existe!", HttpStatusCode.Conflict);
 
         return await _roleRepository.Add(role);
     }
 
     public async Task<IdentityRole> Update(IdentityRole newRole)
     {
+        if (newRole.Name == "Desenvolvedor") throw new AppException("Perfil Desenvolvedor não pode ser removido!", HttpStatusCode.BadRequest);
+        if (newRole.Name == "Administrador") throw new AppException("Perfil Administrador não pode ser removido!", HttpStatusCode.BadRequest);
+        if (newRole.Name == "Assistente Social") throw new AppException("Perfil Assistente Social não pode ser removido!", HttpStatusCode.BadRequest);
+        if (newRole.Name == "Secretário") throw new AppException("Perfil Secretário não pode ser removido!", HttpStatusCode.BadRequest);
+        if (newRole.Name == "Voluntário") throw new AppException("Perfil Voluntário não pode ser removido!", HttpStatusCode.BadRequest);
+
         var validationResult = _roleValidator.Validate(newRole);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
-        if (await _roleRepository.ExistsById(newRole.Name!)) throw new AppException("Perfil não encontrado!", HttpStatusCode.NotFound);
+        if (!await _roleRepository.ExistsByName(newRole.Name!)) throw new AppException("Perfil não encontrado!", HttpStatusCode.NotFound);
 
-        var oldRole = await _roleRepository.GetById(newRole.Id);
+        var oldRole = await _roleRepository.GetByName(newRole.Id);
         oldRole.Name = newRole.Name;
 
         return await _roleRepository.Update(oldRole);

@@ -1,9 +1,9 @@
-using System.Net;
 using LNSF.Application.Interfaces;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
 using LNSF.Domain.Filters;
 using LNSF.Domain.Repositories;
+using System.Net;
 
 namespace LNSF.Application.Services;
 
@@ -28,7 +28,7 @@ public class EscortService : IEscortService
     public async Task<Escort> Create(Escort escort)
     {
         if (!await _peoplesRepository.Exists(escort.PeopleId)) throw new AppException("Pessoa não encontrada", HttpStatusCode.NotFound);
-        if (await _escortRepository.ExistsByPeopleId(escort.PeopleId)) throw new AppException("Acompanhante já cadastrado", HttpStatusCode.UnprocessableEntity);
+        if (await _escortRepository.ExistsByPeopleId(escort.PeopleId)) throw new AppException("Acompanhante já cadastrado", HttpStatusCode.Conflict);
 
         return await _escortRepository.Add(escort);
     }

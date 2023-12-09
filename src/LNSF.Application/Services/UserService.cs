@@ -1,10 +1,10 @@
-﻿using System.Net;
-using LNSF.Application.Interfaces;
+﻿using LNSF.Application.Interfaces;
 using LNSF.Application.Validators;
 using LNSF.Domain.Exceptions;
 using LNSF.Domain.Filters;
 using LNSF.Domain.Repositories;
 using Microsoft.AspNetCore.Identity;
+using System.Net;
 
 namespace LNSF.Application.Services;
 
@@ -42,9 +42,9 @@ public class UserService : IUserService
         validationResult = await _passwordValidator.ValidateAsync(password);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
-        if (await _userRepository.ExistsByUserName(user.UserName!)) throw new AppException("Nome de usuário já existe!", HttpStatusCode.BadRequest);
-        if (await _userRepository.ExistsByEmail(user.Email!)) throw new AppException("Email já existe!", HttpStatusCode.BadRequest);
-        if (await _userRepository.ExistsByPhoneNumber(user.PhoneNumber!)) throw new AppException("Telefone já existe!", HttpStatusCode.BadRequest);
+        if (await _userRepository.ExistsByUserName(user.UserName!)) throw new AppException("Nome de usuário já existe!", HttpStatusCode.Conflict);
+        if (await _userRepository.ExistsByEmail(user.Email!)) throw new AppException("Email já existe!", HttpStatusCode.Conflict);
+        if (await _userRepository.ExistsByPhoneNumber(user.PhoneNumber!)) throw new AppException("Telefone já existe!", HttpStatusCode.Conflict);
 
         return await _userRepository.Add(user, password);
     }
@@ -55,7 +55,7 @@ public class UserService : IUserService
         if (!await _roleRepository.ExistsByName(roleName)) throw new AppException("Perfil não encontrado!", HttpStatusCode.NotFound);
 
         var user = await _userRepository.GetById(userId);
-        if (await _userRoleRepository.ExistsByUserAndRoleName(user, roleName)) throw new AppException("Usuário já possui este perfil!", HttpStatusCode.BadRequest);
+        if (await _userRoleRepository.ExistsByUserAndRoleName(user, roleName)) throw new AppException("Usuário já possui este perfil!", HttpStatusCode.Conflict);
 
         await _userRoleRepository.Add(user, roleName);
         
@@ -68,11 +68,12 @@ public class UserService : IUserService
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
         if (!await _userRepository.ExistsById(newUser.Id)) throw new AppException("Usuário não encontrado!", HttpStatusCode.NotFound);
+        
         var oldUser = await _userRepository.GetById(newUser.Id);
 
-        if (oldUser.UserName != newUser.UserName && await _userRepository.ExistsByUserName(newUser.UserName!)) throw new AppException("Nome de usuário já existe!", HttpStatusCode.BadRequest);
-        if (oldUser.Email != newUser.Email && await _userRepository.ExistsByEmail(newUser.Email!)) throw new AppException("Email já existe!", HttpStatusCode.BadRequest);
-        if (oldUser.PhoneNumber != newUser.PhoneNumber && await _userRepository.ExistsByPhoneNumber(newUser.PhoneNumber!)) throw new AppException("Telefone já existe!", HttpStatusCode.BadRequest);
+        if (oldUser.UserName != newUser.UserName && await _userRepository.ExistsByUserName(newUser.UserName!)) throw new AppException("Nome de usuário já existe!", HttpStatusCode.Conflict);
+        if (oldUser.Email != newUser.Email && await _userRepository.ExistsByEmail(newUser.Email!)) throw new AppException("Email já existe!", HttpStatusCode.Conflict);
+        if (oldUser.PhoneNumber != newUser.PhoneNumber && await _userRepository.ExistsByPhoneNumber(newUser.PhoneNumber!)) throw new AppException("Telefone já existe!", HttpStatusCode.Conflict);
         
         oldUser.UserName = newUser.UserName;
         oldUser.Email = newUser.Email;
@@ -86,8 +87,7 @@ public class UserService : IUserService
         var validationResult = await _passwordValidator.ValidateAsync(newPassword);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
-        if (!await _userRepository.CheckPassword(id, oldPassword))
-            throw new AppException("Senha incorreta!", HttpStatusCode.BadRequest);
+        if (!await _userRepository.CheckPassword(id, oldPassword)) throw new AppException("Senha incorreta!", HttpStatusCode.BadRequest);
             
         return await _userRepository.UpdatePassword(id, oldPassword, newPassword);
     }
@@ -105,7 +105,7 @@ public class UserService : IUserService
         if (!await _roleRepository.ExistsByName(roleName)) throw new AppException("Perfil não encontrado!", HttpStatusCode.NotFound);
 
         var user = await _userRepository.GetById(userId);
-        if (!await _userRoleRepository.ExistsByUserAndRoleName(user, roleName)) throw new AppException("Usuário não possui este perfil!", HttpStatusCode.BadRequest);
+        if (!await _userRoleRepository.ExistsByUserAndRoleName(user, roleName)) throw new AppException("Usuário com este perfil não encontrado!", HttpStatusCode.NotFound);
 
         await _userRoleRepository.Remove(user, roleName);
 

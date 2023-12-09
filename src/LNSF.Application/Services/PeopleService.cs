@@ -1,9 +1,9 @@
-﻿using LNSF.Domain.Repositories;
-using LNSF.Domain.Filters;
+﻿using LNSF.Application.Interfaces;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
+using LNSF.Domain.Filters;
+using LNSF.Domain.Repositories;
 using System.Net;
-using LNSF.Application.Interfaces;
 
 namespace LNSF.Application;
 
@@ -21,9 +21,6 @@ public class PeopleService : IPeopleService
 
     public async Task<List<People>> Query(PeopleFilter filter) => 
         await _repository.Query(filter);
-
-    public async Task<People> Get(int id) => 
-        await _repository.Get(id);
     
     public async Task<int> GetCount() =>
         await _repository.GetCount();
@@ -36,15 +33,13 @@ public class PeopleService : IPeopleService
         return await _repository.Add(people);
     }
 
-    public async Task<People> Update(People newPeople)
+    public async Task<People> Update(People people)
     {
-        var validationResult = _validator.Validate(newPeople);
+        var validationResult = _validator.Validate(people);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
         
-        if (!await _repository.Exists(newPeople.Id)) throw new AppException("Pessoa não encontrada!", HttpStatusCode.UnprocessableEntity);
+        if (!await _repository.Exists(people.Id)) throw new AppException("Pessoa não encontrada!", HttpStatusCode.NotFound);
 
-        var oldPeople = await _repository.Get(newPeople.Id);
-
-        return await _repository.Update(newPeople);	
+        return await _repository.Update(people);	
     }
 }

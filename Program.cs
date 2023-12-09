@@ -107,8 +107,6 @@ builder.Services.AddTransient<PasswordValidator>();
 
 builder.Services.AddTransient<IGlobalRepository, GlobalRepository>();
 
-builder.Services.AddTransient<PaginationValidator>();
-
 builder.Services.AddTransient<ITourRepository, ToursRepository>();
 builder.Services.AddTransient<TourValidator>();
 builder.Services.AddTransient<GlobalValidator>();
@@ -119,7 +117,6 @@ builder.Services.AddTransient<RoomValidator>();
 builder.Services.AddTransient<IRoomService, RoomService>();
 
 builder.Services.AddTransient<IPeopleRepository, PeopleRepository>();
-builder.Services.AddTransient<PeopleFilterValidator>();
 builder.Services.AddTransient<PeopleValidator>();
 builder.Services.AddTransient<IPeopleService, PeopleService>();
 

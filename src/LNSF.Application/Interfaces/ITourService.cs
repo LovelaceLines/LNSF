@@ -5,9 +5,9 @@ namespace LNSF.Application.Interfaces;
 
 public interface ITourService
 {
-    public Task<List<Tour>> Query(TourFilter filter); 
-    public Task<int> GetCount();
-    public Task<Tour> Create(Tour tour);
-    public Task<Tour> Update(Tour tour);
-    public Task<Tour> UpdateAll(Tour tour);
+    Task<List<Tour>> Query(TourFilter filter); 
+    Task<int> GetCount();
+    Task<Tour> Create(Tour tour);
+    Task<Tour> Update(Tour tour);
+    Task<Tour> UpdateAll(Tour tour);
 }

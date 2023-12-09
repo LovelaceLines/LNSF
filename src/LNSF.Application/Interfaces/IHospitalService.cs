@@ -5,9 +5,9 @@ namespace LNSF.Application.Interfaces;
 
 public interface IHospitalService
 {
-    public Task<List<Hospital>> Query(HospitalFilter filter);
-    public Task<int> GetCount();
-    public Task<Hospital> Create(Hospital hospital);
-    public Task<Hospital> Update(Hospital hospital);
-    public Task<Hospital> Delete(int id);
+    Task<List<Hospital>> Query(HospitalFilter filter);
+    Task<int> GetCount();
+    Task<Hospital> Create(Hospital hospital);
+    Task<Hospital> Update(Hospital hospital);
+    Task<Hospital> Delete(int id);
 }
