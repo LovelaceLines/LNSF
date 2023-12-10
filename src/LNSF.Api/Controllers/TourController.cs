@@ -46,7 +46,8 @@ public class TourController : ControllerBase
     {
         var tour = _mapper.Map<Tour>(tourPostViewModel);
         tour = await _service.Create(tour);
-        return _mapper.Map<TourViewModel>(tour);
+        var temp = _mapper.Map<TourViewModel>(tour);
+        return temp;
     }
 
     /// <summary>

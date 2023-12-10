@@ -1,11 +1,11 @@
-﻿using System.Net;
-using LNSF.Domain.Enums;
+﻿using LNSF.Domain.Enums;
 using LNSF.Domain.Exceptions;
 using LNSF.Domain.Filters;
 using LNSF.Domain.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Net;
 
 namespace LNSF.Infra.Data.Repositories;
 
@@ -31,12 +31,13 @@ public class UserRepository : IUserRepository
         if (!filter.Id.IsNullOrEmpty()) query = query.Where(u => u.Id == filter.Id);
         if (!filter.UserName.IsNullOrEmpty()) query = query.Where(u => u.UserName != null && u.UserName.ToLower().Contains(filter.UserName!.ToLower()));
         if (!filter.Email.IsNullOrEmpty()) query = query.Where(u => u.Email != null && u.Email.ToLower().Contains(filter.Email!.ToLower()));
+        if (!filter.PhoneNumber.IsNullOrEmpty()) query = query.Where(u => u.PhoneNumber != null && u.PhoneNumber.ToLower().Contains(filter.PhoneNumber!.ToLower()));
         if (!filter.Role.IsNullOrEmpty()) query = query.Where(u =>
             _roleManager.Roles.Any(r => r.Name!.ToLower().Contains(filter.Role!.ToLower()) &&
                 _userRoleManager.RoleId == r.Id && _userRoleManager.UserId == u.Id));
         
         if (filter.OrderBy == OrderBy.Ascending) query = query.OrderBy(u => u.UserName);
-        else query = query.OrderByDescending(u => u.UserName);
+        else if (filter.OrderBy == OrderBy.Descending) query = query.OrderByDescending(u => u.UserName);
 
         var users = await query
             .Skip((filter.Page?.Page -1 ) * filter.Page?.PageSize ?? 0)

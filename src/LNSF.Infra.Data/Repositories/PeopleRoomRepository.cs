@@ -22,24 +22,32 @@ public class PeopleRoomRepository : BaseRepository<PeopleRoom>, IPeopleRoomRepos
 
     public async Task<List<PeopleRoom>> Query(PeopleRoomFilter filter)
     {
-        var query = _context.PeoplesRooms.AsNoTracking();
+        var query = _peoplesRooms;
 
+        if (filter.CheckIn.HasValue) query = query.Where(pr => filter.CheckIn <= pr.Hosting!.CheckIn);
+        if (filter.CheckOut.HasValue) query = query.Where(pr => pr.Hosting!.CheckOut <= filter.CheckOut);
+        if (filter.Available.HasValue) query = query.Where(pr => pr.Room!.Available == filter.Available);
+        
+        if (filter.HaveVacancy.HasValue && filter.CheckIn.HasValue && filter.CheckOut.HasValue) 
+            query = query.Where(pr => pr.Room!.Beds > 
+                _peoplesRooms.Count(pr2 => pr2.RoomId == pr.RoomId && 
+                    filter.CheckIn <= pr2.Hosting!.CheckIn && pr2.Hosting.CheckOut <= filter.CheckOut));
+        else if (!filter.HaveVacancy.HasValue && filter.CheckIn.HasValue && filter.CheckOut.HasValue) 
+            query = query.Where(pr => pr.Room!.Beds <= 
+                _peoplesRooms.Count(pr2 => pr2.RoomId == pr.RoomId && 
+                    filter.CheckIn <= pr2.Hosting!.CheckIn && pr2.Hosting.CheckOut <= filter.CheckOut));
+        
+        if (filter.Vacancy.HasValue && filter.CheckIn.HasValue && filter.CheckOut.HasValue)
+            query = query.Where(pr => pr.Room!.Beds - 
+                _peoplesRooms.Count(pr2 => pr2.RoomId == pr.RoomId && 
+                    filter.CheckIn <= pr2.Hosting!.CheckIn && pr2.Hosting.CheckOut <= filter.CheckOut) == filter.Vacancy);
+        
         if (filter.PeopleId.HasValue) query = query.Where(pr => pr.PeopleId == filter.PeopleId);
         if (filter.RoomId.HasValue) query = query.Where(pr => pr.RoomId == filter.RoomId);
         if (filter.HostingId.HasValue) query = query.Where(pr => pr.HostingId == filter.HostingId);
-        if (filter.CheckIn.HasValue) query = query.Where(pr => pr.Hosting!.CheckIn == filter.CheckIn);
-        if (filter.CheckOut.HasValue) query = query.Where(pr => pr.Hosting!.CheckOut == filter.CheckOut);
+
         if (filter.OrderBy == OrderBy.Ascending) query = query.OrderBy(pr => pr.RoomId);
-        else query = query.OrderByDescending(pr => pr.RoomId);
-        
-        if (filter.Occupation.HasValue && filter.Id.HasValue && filter.CheckIn.HasValue && filter.CheckOut.HasValue)
-        {
-            var occupation = await _peoplesRooms.CountAsync(pr => pr.RoomId == filter.Id &&
-                pr.Hosting!.CheckIn <= filter.CheckIn && filter.CheckIn <= pr.Hosting.CheckOut &&
-                pr.Hosting.CheckIn <= filter.CheckOut && filter.CheckOut <= pr.Hosting.CheckOut);
-            
-            query = query.Where(pr => occupation == filter.Occupation);
-        }
+        else if (filter.OrderBy == OrderBy.Descending) query = query.OrderByDescending(pr => pr.RoomId);
 
         var peoplesRooms = await query
             .Skip((filter.Page.Page - 1) * filter.Page.PageSize)

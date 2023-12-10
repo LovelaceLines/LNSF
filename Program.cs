@@ -18,7 +18,6 @@ using LNSF.Application.Interfaces;
 using LNSF.Domain.Exceptions;
 using LNSF.Infra.Data.Migrations;
 using System.Reflection;
-using LNSF.Infra.Data;
 using Microsoft.AspNetCore.Identity;
 using System.Net;
 
@@ -69,6 +68,8 @@ var autoMapperConfig = new MapperConfiguration(configure =>
     configure.CreateMap<Patient, PatientPostViewModel>().ReverseMap();
     configure.CreateMap<Patient, PatientViewModel>().ReverseMap();
 
+    configure.CreateMap<PatientTreatment, PatientTreatmentViewModel>().ReverseMap();
+
     configure.CreateMap<Escort, EscortPostViewModel>().ReverseMap();
     configure.CreateMap<Escort, EscortViewModel>().ReverseMap();
 
@@ -77,6 +78,8 @@ var autoMapperConfig = new MapperConfiguration(configure =>
 
     configure.CreateMap<Hosting, HostingViewModel>().ReverseMap();
     configure.CreateMap<Hosting, HostingPostViewModel>().ReverseMap();
+
+    configure.CreateMap<HostingEscort, HostingEscortViewModel>().ReverseMap();
 });
 
 builder.Services.AddSingleton(autoMapperConfig.CreateMapper());
@@ -143,9 +146,11 @@ builder.Services.AddTransient<IHostingService, HostingService>();
 builder.Services.AddTransient<IHostingRepository, HostingRepository>();
 builder.Services.AddTransient<HostingValidator>();
 
-builder.Services.AddTransient<IPatientTreatmentRepository, PatientTreatmentRepository>();
-
 builder.Services.AddTransient<IHostingEscortRepository, HostingEscortRepository>();
+builder.Services.AddTransient<IHostingEscortService, HostingEscortService>();
+
+builder.Services.AddTransient<IPatientTreatmentRepository, PatientTreatmentRepository>();
+builder.Services.AddTransient<IPatientTreatmentService, PatientTreatmentService>();
 
 builder.Services.AddTransient<IReportService, ReportService>();
 

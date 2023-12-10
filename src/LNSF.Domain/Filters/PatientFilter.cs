@@ -14,5 +14,5 @@ public class PatientFilter
     public bool? IsVeteran { get; set; }
     
     public Pagination Page { get; set; } = new();
-    public OrderBy Order { get; set; } = OrderBy.Ascending;
+    public OrderBy? Order { get; set; }
 }

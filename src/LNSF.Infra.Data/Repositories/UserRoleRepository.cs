@@ -1,4 +1,4 @@
-﻿using System.Net;
+﻿using LNSF.Domain.Enums;
 using LNSF.Domain.Exceptions;
 using LNSF.Domain.Filters;
 using LNSF.Domain.Repositories;
@@ -6,6 +6,7 @@ using LNSF.Infra.Data.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Net;
 
 namespace LNSF.Infra.Data.Repositories;
 
@@ -27,6 +28,9 @@ public class UserRoleRepository : IUserRoleRepository
 
         if (!filter.UserId.IsNullOrEmpty()) query = query.Where(ur => ur.UserId == filter.UserId);
         if (!filter.RoleId.IsNullOrEmpty()) query = query.Where(ur => ur.RoleId == filter.RoleId);
+
+        if (filter.OrderBy == OrderBy.Ascending) query = query.OrderBy(ur => ur.RoleId);
+        else if (filter.OrderBy == OrderBy.Descending) query = query.OrderByDescending(ur => ur.RoleId);
 
         var usersroles = await query
             .Skip((filter.Page?.Page -1 ) * filter.Page?.PageSize ?? 0)

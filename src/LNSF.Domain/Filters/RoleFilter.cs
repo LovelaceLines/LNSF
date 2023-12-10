@@ -8,5 +8,5 @@ public class RoleFilter
     public string? Name { get; set; }
 
     public Pagination Page { get; set; } = new();
-    public OrderBy OrderBy { get; set; } = OrderBy.Ascending;
+    public OrderBy? OrderBy { get; set; }
 }

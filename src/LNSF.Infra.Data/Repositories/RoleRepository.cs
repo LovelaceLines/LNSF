@@ -1,30 +1,34 @@
-﻿using System.Net;
-using LNSF.Domain.Enums;
+﻿using LNSF.Domain.Enums;
 using LNSF.Domain.Exceptions;
 using LNSF.Domain.Filters;
 using LNSF.Domain.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Net;
 
 namespace LNSF.Infra.Data.Repositories;
 
 public class RoleRepository : IRoleRepository
 {
     private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly IQueryable<IdentityRole> _roles;
 
-    public RoleRepository(RoleManager<IdentityRole> roleManager) => 
+    public RoleRepository(RoleManager<IdentityRole> roleManager)
+    {
         _roleManager = roleManager;
-    
+        _roles = _roleManager.Roles.AsNoTracking();
+    }
+
     public async Task<List<IdentityRole>> Query(RoleFilter filter)
     {
-        var query = _roleManager.Roles.AsNoTracking();
+        var query = _roles;
 
-        if (!filter.Id.IsNullOrEmpty()) query = query.Where(x => x.Id == filter.Id);
-        if (!filter.Name.IsNullOrEmpty()) query = query.Where(x => x.Name!.Contains(filter.Name!));
+        if (!filter.Id.IsNullOrEmpty()) query = query.Where(r => r.Id == filter.Id);
+        if (!filter.Name.IsNullOrEmpty()) query = query.Where(r => r.Name!.Contains(filter.Name!));
 
-        if (filter.OrderBy == OrderBy.Ascending) query = query.OrderBy(x => x.Name);
-        else query = query.OrderByDescending(x => x.Name);
+        if (filter.OrderBy == OrderBy.Ascending) query = query.OrderBy(r => r.Name);
+        else if (filter.OrderBy == OrderBy.Descending) query = query.OrderByDescending(r => r.Name);
 
         var roles = await query
             .Skip((filter.Page.Page - 1) * filter.Page.PageSize)
@@ -35,10 +39,10 @@ public class RoleRepository : IRoleRepository
     }
 
     public async Task<int> GetCount() =>
-        await _roleManager.Roles.AsNoTracking().CountAsync();
+        await _roles.CountAsync();
 
     public async Task<bool> ExistsById(string id) =>
-        await _roleManager.FindByIdAsync(id) != null;
+        await _roles.AnyAsync(r => r.Id == id);
 
     public Task<bool> ExistsByName(string name) => 
         _roleManager.RoleExistsAsync(name);

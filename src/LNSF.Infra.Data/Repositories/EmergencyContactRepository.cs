@@ -1,30 +1,35 @@
-﻿using LNSF.Domain.Repositories;
+﻿using LNSF.Domain.Entities;
+using LNSF.Domain.Enums;
 using LNSF.Domain.Filters;
-using LNSF.Domain.Entities;
+using LNSF.Domain.Repositories;
 using LNSF.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
-using LNSF.Domain.Enums;
+using Microsoft.IdentityModel.Tokens;
 
 namespace LNSF.Infra.Data.Repositories;
 
 public class EmergencyContactRepository : BaseRepository<EmergencyContact>, IEmergencyContactRepository
 {
     private readonly AppDbContext _context;
+    private readonly IQueryable<EmergencyContact> _emergencyContacts;
 
-    public EmergencyContactRepository(AppDbContext context) : base(context) => 
+    public EmergencyContactRepository(AppDbContext context) : base(context)
+    {
         _context = context;
+        _emergencyContacts = _context.EmergencyContacts.AsNoTracking();
+    }
 
     public async Task<List<EmergencyContact>> Query(EmergencyContactFilter filter)
     {
-        var query = _context.EmergencyContacts.AsNoTracking();
+        var query = _emergencyContacts;
         
-        if (filter.Id != null) query = query.Where(x => x.Id == filter.Id);
-        if (filter.Name != null) query = query.Where(x => x.Name.ToLower().Contains(filter.Name.ToLower()));
-        if (filter.Phone != null) query = query.Where(x => x.Phone.Contains(filter.Phone));
-        if (filter.PeopleId != null) query = query.Where(x => x.PeopleId == filter.PeopleId);
-        query = query.OrderBy(x => x.Name);
+        if (filter.Id.HasValue) query = query.Where(x => x.Id == filter.Id);
+        if (!filter.Name.IsNullOrEmpty()) query = query.Where(x => x.Name.ToLower().Contains(filter.Name!.ToLower()));
+        if (!filter.Phone.IsNullOrEmpty()) query = query.Where(x => x.Phone.Contains(filter.Phone!));
+        if (filter.PeopleId.HasValue) query = query.Where(x => x.PeopleId == filter.PeopleId);
+
         if (filter.OrderBy == OrderBy.Ascending) query = query.OrderBy(x => x.Name);
-        else query = query.OrderByDescending(x => x.Name);
+        else if (filter.OrderBy == OrderBy.Descending) query = query.OrderByDescending(x => x.Name);
         
         var contacts = await query
             .Skip((filter.Page.Page - 1) * filter.Page.PageSize)
@@ -35,5 +40,5 @@ public class EmergencyContactRepository : BaseRepository<EmergencyContact>, IEme
     }
 
     public async Task<bool> ExistsByIdAndPeopleId(int id, int peopleId) => 
-        await _context.EmergencyContacts.AnyAsync(x => x.Id == id && x.PeopleId == peopleId);
+        await _emergencyContacts.AnyAsync(x => x.Id == id && x.PeopleId == peopleId);
 }

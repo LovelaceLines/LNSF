@@ -3,7 +3,7 @@ using LNSF.Domain.Entities;
 using LNSF.Domain.Filters;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LNSF.Api.Controller;
+namespace LNSF.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

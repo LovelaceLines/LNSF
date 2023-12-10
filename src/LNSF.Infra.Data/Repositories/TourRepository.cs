@@ -1,33 +1,39 @@
-﻿using LNSF.Domain.Filters;
-using LNSF.Domain.Entities;
+﻿using LNSF.Domain.Entities;
+using LNSF.Domain.Enums;
+using LNSF.Domain.Filters;
 using LNSF.Domain.Repositories;
 using LNSF.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
-using LNSF.Domain.Enums;
+using Microsoft.IdentityModel.Tokens;
 
 namespace LNSF.Infra.Data.Repositories;
 
 public class ToursRepository : BaseRepository<Tour>, ITourRepository
 {
     private readonly AppDbContext _context;
+    private readonly IQueryable<Tour> _tours;
 
-    public ToursRepository(AppDbContext context) : base(context) =>
+    public ToursRepository(AppDbContext context) : base(context)
+    {
         _context = context;
+        _tours = _context.Tours.AsNoTracking();
+    }
 
     public async Task<List<Tour>> Query(TourFilter filter)
     {
-        var query = _context.Tours.AsNoTracking();
-        var count = await query.CountAsync();
+        var query = _tours;
 
-        if (filter.Id != null) query = query.Where(x => x.Id == filter.Id);
-        if (filter.Output != null) query = query.Where(x => x.Output >= filter.Output);
-        if (filter.Input != null) query = query.Where(x => x.Input <= filter.Input);
-        if (filter.InOpen == true) query = query.Where(x => x.Input == null);
-        else if (filter.InOpen == false) query = query.Where(x => x.Input != null);
-        if (filter.Note != null) query = query.Where(x => x.Note.ToLower().Contains(filter.Note.ToLower()));
-        if (filter.PeopleId != null) query = query.Where(x => x.PeopleId == filter.PeopleId);
-        if (filter.Order == OrderBy.Ascending) query = query.OrderBy(x => x.Output);
-        else query = query.OrderByDescending(x => x.Output);
+        if (filter.Id.HasValue) query = query.Where(t => t.Id == filter.Id);
+        if (filter.Output.HasValue) query = query.Where(t => t.Output >= filter.Output);
+        if (filter.Input.HasValue) query = query.Where(t => t.Input <= filter.Input);
+        if (filter.PeopleId.HasValue) query = query.Where(t => t.PeopleId == filter.PeopleId);
+        if (!filter.Note.IsNullOrEmpty()) query = query.Where(t => t.Note.ToLower().Contains(filter.Note!.ToLower()));
+        
+        if (filter.InOpen == true) query = query.Where(t => t.Input == null);
+        else if (filter.InOpen == false) query = query.Where(t => t.Input != null);
+        
+        if (filter.Order == OrderBy.Ascending) query = query.OrderBy(t => t.Output);
+        else if (filter.Order == OrderBy.Descending) query = query.OrderByDescending(t => t.Output);
 
         var tours = await query
             .Skip((filter.Page.Page - 1) * filter.Page.PageSize)
@@ -38,14 +44,10 @@ public class ToursRepository : BaseRepository<Tour>, ITourRepository
     }
 
     public async Task<bool> IsClosed(int id) => 
-        await _context.Tours.AsNoTracking()
-            .Where(x => x.Id == id && x.Input != null)
-            .AnyAsync();
+        await _tours.AnyAsync(t => t.Id == id && t.Input != null);
 
     public async Task<bool> IsOpen(int id) => 
-        await _context.Tours.AsNoTracking()
-            .Where(x => x.Id == id && x.Input == null)
-            .AnyAsync();
+        await _tours.AnyAsync(t => t.Id == id && t.Input == null);
     
     public async Task<bool> PeopleHasOpenTour(int peopleId) => 
         await _context.Tours.AsNoTracking()
@@ -53,6 +55,5 @@ public class ToursRepository : BaseRepository<Tour>, ITourRepository
             .AnyAsync();
     
     public async Task<bool> ExistsByIdAndPeopleId(int id, int peopleId) => 
-        await _context.Tours.AsNoTracking()
-            .AnyAsync(x => x.Id == id && x.PeopleId == peopleId);
+        await _tours.AnyAsync(t => t.Id == id && t.PeopleId == peopleId);
 }

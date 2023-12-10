@@ -14,5 +14,5 @@ public class PeopleFilter
     public bool? Active { get; set; }
     
     public Pagination Page { get; set; } = new();
-    public OrderBy OrderBy { get; set; } = OrderBy.Ascending;
+    public OrderBy? OrderBy { get; set; }
 }

@@ -5,7 +5,7 @@ using LNSF.Domain.Filters;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LNSF.Api.Controller;
+namespace LNSF.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

@@ -1,5 +1,3 @@
-using System.Net;
-using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Enums;
 using LNSF.Domain.Exceptions;
@@ -7,6 +5,7 @@ using LNSF.Domain.Filters;
 using LNSF.Domain.Repositories;
 using LNSF.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace LNSF.Infra.Data.Repositories;
 
@@ -14,7 +13,6 @@ public class HostingRepository : BaseRepository<Hosting>, IHostingRepository
 {
     private readonly AppDbContext _context;
     private readonly IHostingEscortRepository _hostingEscortRepository;
-    private readonly IQueryable<Patient> _patients;
     private readonly IQueryable<Hosting> _hostings;
     private readonly IQueryable<Escort> _escorts;
     private readonly IQueryable<HostingEscort> _hostingsEscorts;
@@ -23,31 +21,31 @@ public class HostingRepository : BaseRepository<Hosting>, IHostingRepository
         IHostingEscortRepository hostingEscortRepository) : base(context)
     {
         _context = context;
-        _patients = _context.Patients.AsNoTracking();
+        _hostingEscortRepository = hostingEscortRepository;
         _hostings = _context.Hostings.AsNoTracking();
         _escorts = _context.Escorts.AsNoTracking();
         _hostingsEscorts = _context.HostingsEscorts.AsNoTracking();
-        _hostingEscortRepository = hostingEscortRepository;
     }
 
     public async Task<List<Hosting>> Query(HostingFilter filter)
     {
-        var query = _context.Hostings.AsNoTracking();
-        var hostingsEscorts = _context.HostingsEscorts.AsNoTracking();
+        var query = _hostings;
+        var hostingsEscorts = _hostingsEscorts;
 
-        if (filter.Id != null) query = query.Where(x => x.Id == filter.Id);
-        if (filter.PatientId != null) query = query.Where(x => x.PatientId == filter.PatientId);
-        if (filter.EscortId != null) query = query.Where(x => 
-            hostingsEscorts.Any(y => y.HostingId == x.Id && y.EscortId == filter.EscortId));
-        if (filter.CheckIn != null) query = query.Where(x => x.CheckIn >= filter.CheckIn);
-        if (filter.CheckOut != null) query = query.Where(x => x.CheckOut <= filter.CheckOut);
+        if (filter.Id.HasValue) query = query.Where(h => h.Id == filter.Id);
+        if (filter.PatientId.HasValue) query = query.Where(h => h.PatientId == filter.PatientId);
+        if (filter.EscortId.HasValue) query = query.Where(h => 
+            hostingsEscorts.Any(he => he.HostingId == h.Id && he.EscortId == filter.EscortId));
+        if (filter.CheckIn.HasValue) query = query.Where(h => h.CheckIn >= filter.CheckIn);
+        if (filter.CheckOut.HasValue) query = query.Where(h => h.CheckOut <= filter.CheckOut);
 
-        if (filter.Active == true) query = query.Where(x =>
-            x.CheckIn <= DateTime.Now && DateTime.Now <= x.CheckOut);
-        else if (filter.Active == false) query = query.Where(x =>
-            !(x.CheckIn <= DateTime.Now && DateTime.Now <= x.CheckOut));
+        if (filter.Active == true) query = query.Where(h =>
+            h.CheckIn <= DateTime.Now && DateTime.Now <= h.CheckOut);
+        else if (filter.Active == false) query = query.Where(h =>
+            !(h.CheckIn <= DateTime.Now && DateTime.Now <= h.CheckOut));
 
-        if (filter.OrderBy == OrderBy.Descending) query = query.OrderByDescending(x => x.Id);
+        if (filter.OrderBy == OrderBy.Ascending) query = query.OrderBy(h => h.CheckIn);
+        else if (filter.OrderBy == OrderBy.Descending) query = query.OrderByDescending(h => h.CheckIn);
 
         var hostings = await query
             .Skip((filter.Page.Page - 1) * filter.Page.PageSize)
@@ -56,8 +54,8 @@ public class HostingRepository : BaseRepository<Hosting>, IHostingRepository
 
         foreach (var hosting in hostings)
         {
-            var escortIds = hostingsEscorts.Where(x => x.HostingId == hosting.Id)
-                .Select(x => x.EscortId)
+            var escortIds = hostingsEscorts.Where(h => h.HostingId == hosting.Id)
+                .Select(h => h.EscortId)
                 .ToList();
 
             hosting.EscortIds = escortIds;
@@ -123,41 +121,11 @@ public class HostingRepository : BaseRepository<Hosting>, IHostingRepository
         }
     }
 
-    public Task<bool> ExistsByIdAndPatientId(int id, int patientId) =>
-        _context.Hostings.AsNoTracking()
-            .AnyAsync(x => x.Id == id && x.PatientId == patientId);
+    public async Task<bool> ExistsByIdAndPatientId(int id, int patientId) =>
+        await _hostings.AnyAsync(h => h.Id == id && h.PatientId == patientId);
     
-    public Task<bool> ExistsByIdAndPeopleId(int id, int peopleId) =>
-        _context.Hostings.AsNoTracking()
-            .AnyAsync(x => x.Id == id && (x.Patient!.PeopleId == peopleId ||
-                _hostingsEscorts.Any(he => he.HostingId == id && 
-                    _escorts.Any(e => e.PeopleId == peopleId && e.Id == he.EscortId))));
-                    
-    public Task<bool> ExistsByPeopleIdAndDate(int peopleId, DateTime date) =>
-        _hostings.AnyAsync(h => h.CheckIn <= date && date <= h.CheckOut
-            && (
-                _patients.Any(p => p.PeopleId == peopleId && p.Id == h.PatientId)
-                ||
-                _hostingsEscorts.Any(he => 
-                    _escorts.Any(e => e.PeopleId == peopleId && e.Id == he.EscortId) 
-                    && h.Id == he.HostingId)
-                )
-            );
-            
-    public Task<List<CheckInAndCheckOut>> GetCheckInAndCheckOutByPeopleId(int peopleId)
-    {
-        var checks = new List<CheckInAndCheckOut>();
-        
-        checks = _hostings.Where(h => 
-            _patients.Any(p => p.PeopleId == peopleId && p.Id == h.PatientId)
-            ||
-            _hostingsEscorts.Any(he => 
-                _escorts.Any(e => e.PeopleId == peopleId && e.Id == he.EscortId) 
-                && h.Id == he.HostingId)
-            )
-            .Select(h => new CheckInAndCheckOut { CheckIn = h.CheckIn, CheckOut = h.CheckOut })
-            .ToList();
-                
-        return Task.FromResult(checks);
-    }
+    public async Task<bool> ExistsByIdAndPeopleId(int id, int peopleId) =>
+        await _hostings.AnyAsync(h => h.Id == id && (h.Patient!.PeopleId == peopleId ||
+            _hostingsEscorts.Any(he => he.HostingId == id && 
+                _escorts.Any(e => e.Id == he.EscortId && e.PeopleId == peopleId))));
 }

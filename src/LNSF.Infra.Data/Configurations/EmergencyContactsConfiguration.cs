@@ -18,15 +18,15 @@ public class EmergencyContactsConfiguration : IEntityTypeConfiguration<Emergency
             .HasForeignKey(x => x.PeopleId);
         
         builder.Property(x => x.PeopleId)
-            .IsRequired(true);
+            .IsRequired();
         
         builder.HasIndex(x => new { x.PeopleId, x.Phone })
-            .IsUnique(true);
+            .IsUnique();
         
         builder.Property(x => x.Name)
-            .IsRequired(true);
+            .IsRequired();
         
         builder.Property(x => x.Phone)
-            .IsRequired(true);
+            .IsRequired();
     }
 }
