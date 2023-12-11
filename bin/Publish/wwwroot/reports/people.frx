@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" ReportInfo.Created="11/29/2023 20:46:33" ReportInfo.Modified="11/30/2023 08:52:49" ReportInfo.CreatorVersion="2023.3.13.0">
+  <Dictionary>
+    <BusinessObjectDataSource Name="People" ReferenceName="People" DataType="System.Collections.Generic.List`1[[LNSF.Domain.Entities.People, LNSF, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]" Enabled="true">
+      <Column Name="Id" DataType="System.Int32"/>
+      <Column Name="Name" DataType="System.String"/>
+      <Column Name="Gender" DataType="LNSF.Domain.Enums.Gender, LNSF, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"/>
+      <Column Name="BirthDate" DataType="System.DateTime"/>
+      <Column Name="RG" DataType="System.String"/>
+      <Column Name="CPF" DataType="System.String"/>
+      <Column Name="Street" DataType="System.String"/>
+      <Column Name="HouseNumber" DataType="System.String"/>
+      <Column Name="Neighborhood" DataType="System.String"/>
+      <Column Name="City" DataType="System.String"/>
+      <Column Name="State" DataType="System.String"/>
+      <Column Name="Phone" DataType="System.String"/>
+      <Column Name="Note" DataType="System.String"/>
+    </BusinessObjectDataSource>
+  </Dictionary>
+  <ReportPage Name="Page1" Watermark.Font="Arial, 60pt">
+    <ReportTitleBand Name="ReportTitle1" Width="718.2" Height="47.25"/>
+    <PageHeaderBand Name="PageHeader1" Top="49.92" Width="718.2" Height="18.9">
+      <TextObject Name="Text2" Width="94.5" Height="18.9" Text="Id" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text4" Left="94.5" Width="94.5" Height="18.9" Text="Name" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text6" Left="189" Width="94.5" Height="18.9" Text="Gender" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text8" Left="283.5" Width="94.5" Height="18.9" Text="BirthDate" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text10" Left="378" Width="94.5" Height="18.9" Text="RG" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text12" Left="472.5" Width="94.5" Height="18.9" Text="CPF" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text14" Left="567" Width="94.5" Height="18.9" Text="Street" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+    </PageHeaderBand>
+    <DataBand Name="Data1" Top="71.48" Width="718.2" Height="28.35" DataSource="People">
+      <TextObject Name="Text1" Width="94.5" Height="18.9" Text="[People.Id]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text3" Left="94.5" Width="94.5" Height="18.9" Text="[People.Name]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text5" Left="189" Width="94.5" Height="18.9" Text="[People.Gender]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text7" Left="283.5" Width="94.5" Height="18.9" Text="[People.BirthDate]" Format="Date" Format.Format="d" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text9" Left="378" Width="94.5" Height="18.9" Text="[People.RG]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text11" Left="472.5" Width="94.5" Height="18.9" Text="[People.CPF]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text13" Left="567" Width="94.5" Height="18.9" Text="[People.Street]" HorzAlign="Center" VertAlign="Center" Font="Arial, 10pt"/>
+    </DataBand>
+    <PageFooterBand Name="PageFooter1" Top="102.5" Width="718.2" Height="18.9"/>
+  </ReportPage>
+</Report>

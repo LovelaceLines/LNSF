@@ -4,47 +4,12 @@
         <name>LNSF</name>
     </assembly>
     <members>
-        <member name="M:LNSF.Api.Controllers.AccountController.Get(LNSF.Domain.Filters.AccountFilter)">
-            <summary>
-            Retrieves a list of accounts based on the provided filter.
-            </summary>
-        </member>
-        <member name="M:LNSF.Api.Controllers.AccountController.GetCount">
-            <summary>
-            Gets the count of accounts.
-            </summary>
-        </member>
-        <member name="M:LNSF.Api.Controllers.AccountController.Get(System.String)">
-            <summary>
-            Gets an account by UserName.
-            </summary>
-        </member>
-        <member name="M:LNSF.Api.Controllers.AccountController.Post(LNSF.Api.ViewModels.AccountPostViewModel)">
-            <summary>
-            Creates a new account.
-            </summary>
-        </member>
-        <member name="M:LNSF.Api.Controllers.AccountController.Put(LNSF.Api.ViewModels.AccountPutViewModel)">
-            <summary>
-            Updates an account (UserName or Role). Note: do not update your password. 
-            </summary>
-        </member>
-        <member name="M:LNSF.Api.Controllers.AccountController.Put(LNSF.Api.ViewModels.AccountPutPasswordViewModel)">
-            <summary>
-            Updates the password of an account.
-            </summary>
-        </member>
-        <member name="M:LNSF.Api.Controllers.AccountController.Delete(System.String)">
-            <summary>
-            Deletes an account by ID.
-            </summary>
-        </member>
-        <member name="M:LNSF.Api.Controllers.AuthController.Login(LNSF.Api.ViewModels.AccountLoginViewModel)">
+        <member name="M:LNSF.Api.Controllers.AuthController.Login(LNSF.Api.ViewModels.UserLoginViewModel)">
             <summary>
             Authenticates a user and returns an authentication token.
             </summary>
         </member>
-        <member name="M:LNSF.Api.Controllers.AuthController.RefreshToken(LNSF.Api.ViewModels.AuthenticationTokenViewModel)">
+        <member name="M:LNSF.Api.Controllers.AuthController.RefreshToken(LNSF.Api.ViewModels.RefreshTokenTokenViewModel)">
             <summary>
             Refreshes an authentication token.
             </summary>
@@ -139,9 +104,54 @@
             Creates a new hosting.
             </summary>
         </member>
+        <member name="M:LNSF.Api.Controllers.HostingController.AddEscortToHosting(LNSF.Api.ViewModels.HostingEscortViewModel)">
+            <summary>
+            Adds an escort to a hosting.
+            </summary>
+        </member>
         <member name="M:LNSF.Api.Controllers.HostingController.Put(LNSF.Api.ViewModels.HostingViewModel)">
             <summary>
             Updates a hosting. Note: the patient cannot be changed.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.HostingController.RemoveEscortFromHosting(LNSF.Api.ViewModels.HostingEscortViewModel)">
+            <summary>
+            Removes an escort from a hosting.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.PatientController.Get(LNSF.Domain.Filters.PatientFilter)">
+            <summary>
+            Retrieves a list of patients based on the provided filter.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.PatientController.GetCount">
+            <summary>
+            Gets the count of patients.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.PatientController.Post(LNSF.Api.ViewModels.PatientPostViewModel)">
+            <summary>
+            Creates a new patient.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.PatientController.AddTreatmentToPatient(LNSF.Api.ViewModels.PatientTreatmentViewModel)">
+            <summary>
+            Adds a treatment to a patient.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.PatientController.Put(LNSF.Api.ViewModels.PatientViewModel)">
+            <summary>
+            Updates a patient.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.PatientController.Delete(System.Int32)">
+            <summary>
+            Deletes a patient by id. Note: this action results in a cascade delete (Hosting).
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.PatientController.RemoveTreatmentFromPatient(LNSF.Api.ViewModels.PatientTreatmentViewModel)">
+            <summary>
+            Removes a treatment from a patient.
             </summary>
         </member>
         <member name="M:LNSF.Api.Controllers.PeopleController.Get(LNSF.Domain.Filters.PeopleFilter)">
@@ -156,12 +166,12 @@
         </member>
         <member name="M:LNSF.Api.Controllers.PeopleController.Post(LNSF.Api.ViewModels.PeoplePostViewModel)">
             <summary>
-            Creates a new person. Note: do not create a person with a room.
+            Creates a new people. Note: do not create a people with a room.
             </summary>
         </member>
         <member name="M:LNSF.Api.Controllers.PeopleController.Put(LNSF.Api.ViewModels.PeoplePutViewModel)">
             <summary>
-            Updates a person's information. Note: do not update the person's room.
+            Updates a people's information. Note: do not update the people's room.
             </summary>
         </member>
         <member name="M:LNSF.Api.Controllers.PeopleController.Post(LNSF.Api.ViewModels.PeopleRoomViewModel)">
@@ -171,7 +181,7 @@
         </member>
         <member name="M:LNSF.Api.Controllers.PeopleController.Delete(LNSF.Api.ViewModels.PeopleRoomViewModel)">
             <summary>
-            Removes a person from a room.
+            Removes a people from a room.
             </summary>
         </member>
         <member name="M:LNSF.Api.Controllers.PeopleRoomController.Get(LNSF.Domain.Filters.PeopleRoomFilter)">
@@ -254,29 +264,54 @@
             Deletes a treatment by its ID.
             </summary>
         </member>
-        <member name="M:LNSF.Api.Controller.PatientController.Get(LNSF.Domain.Filters.PatientFilter)">
+        <member name="M:LNSF.Api.Controllers.UserController.Get(LNSF.Domain.Filters.UserFilter)">
             <summary>
-            Retrieves a list of patients based on the provided filter.
+            Retrieves a list of users based on provided filter.
             </summary>
         </member>
-        <member name="M:LNSF.Api.Controller.PatientController.GetCount">
+        <member name="M:LNSF.Api.Controllers.UserController.GetCount">
             <summary>
-            Gets the count of patients.
+            Gets the count of User.
             </summary>
         </member>
-        <member name="M:LNSF.Api.Controller.PatientController.Post(LNSF.Api.ViewModels.PatientPostViewModel)">
+        <member name="M:LNSF.Api.Controllers.UserController.Post(LNSF.Api.ViewModels.UserPostViewModel)">
             <summary>
-            Creates a new patient.
+            Creates a new user.
             </summary>
         </member>
-        <member name="M:LNSF.Api.Controller.PatientController.Put(LNSF.Api.ViewModels.PatientViewModel)">
+        <member name="M:LNSF.Api.Controllers.UserController.Post(LNSF.Api.ViewModels.UserRoleViewModel)">
             <summary>
-            Updates a patient.
+            Adds a user to a role.
             </summary>
         </member>
-        <member name="M:LNSF.Api.Controller.PatientController.Delete(System.Int32)">
+        <member name="M:LNSF.Api.Controllers.UserController.Put(LNSF.Api.ViewModels.UserViewModel)">
             <summary>
-            Deletes a patient by id. Note: this action results in a cascade delete (Hosting).
+            Updates a user. Note: do not update the user's password.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.UserController.Put(LNSF.Api.ViewModels.UserPutPasswordViewModel)">
+            <summary>
+            Updates the password of a user.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.UserController.Delete(System.String)">
+            <summary>
+            Deletes a user by their ID.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.UserController.Delete(LNSF.Api.ViewModels.UserRoleViewModel)">
+            <summary>
+            Removes a user from a role.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.UserRoleController.Query(LNSF.Domain.Filters.UserRoleFilter)">
+            <summary>
+            Retrieves a list of UserRole based on provided filter.
+            </summary>
+        </member>
+        <member name="M:LNSF.Api.Controllers.UserRoleController.GetCount">
+            <summary>
+            Gets the count of UserRole.
             </summary>
         </member>
         <member name="M:LNSF.Domain.Repositories.IPeopleRoomRepository.HaveVacancy(LNSF.Domain.Entities.PeopleRoom)">
@@ -285,6 +320,18 @@
             <param name="peopleRoom">Require that Entities Hosting, People and Room exists</param>
             </summary>
             <returns>True if there is vacancy, false otherwise.</returns>
+        </member>
+        <member name="T:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV00">
+            <inheritdoc />
+        </member>
+        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV00.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV00.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV00.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
         </member>
         <member name="T:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV01">
             <inheritdoc />
@@ -310,65 +357,11 @@
         <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV02.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
-        <member name="T:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV03">
-            <inheritdoc />
-        </member>
-        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV03.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV03.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV03.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV04">
-            <inheritdoc />
-        </member>
-        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV04.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV04.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV04.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV05">
-            <inheritdoc />
-        </member>
-        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV05.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV05.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV05.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV06">
-            <inheritdoc />
-        </member>
-        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV06.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV06.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV06.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV07">
-            <inheritdoc />
-        </member>
-        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV07.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV07.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:LNSF.src.LNSF.Infra.Data.Migrations.DBLNSFV07.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
+        <member name="M:LNSF.Test.GlobalClientRequest.Query``1(System.Net.Http.HttpClient,System.Object)">
+            <summary>
+            Executes a query using the provided HttpClient and filter, and returns the result as an instance of type T.
+            Note: Pagination and OrderBy are unstable.
+            </summary>
         </member>
         <member name="M:LNSF.Test.GlobalClientRequest.GetRoom(System.Nullable{System.Int32},System.Nullable{System.Boolean},System.String,System.Nullable{System.Int32},System.Nullable{System.Int32})">
             <returns>A new room if the id is null, otherwise the updated room.</returns>
