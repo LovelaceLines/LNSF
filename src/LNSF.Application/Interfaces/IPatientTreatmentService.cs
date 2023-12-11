@@ -7,4 +7,6 @@ public interface IPatientTreatmentService
 {
     Task<List<PatientTreatment>> Query(PatientTreatmentFilter filter);
     Task<int> GetCount();
+    Task<PatientTreatment> Create(PatientTreatment patientTreatment);
+    Task<PatientTreatment> Delete(int patientId, int treatmentId);
 }

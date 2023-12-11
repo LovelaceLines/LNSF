@@ -19,21 +19,11 @@ public class PatientTestApi : GlobalClientRequest
         // Arrange - Hospital
         var hospitalFake = new HospitalPostViewModelFake().Generate();
         var hospitalPosted = await Post<HospitalViewModel>(_hospitalClient, hospitalFake);
-
-        // Arrange - Treatment
-        var treatments = new List<int>();
-        foreach (var _ in Enumerable.Range(0, numberOfTreatments))
-        {
-            var treatmentFake = new TreatmentPostViewModelFake().Generate();
-            var treatmentPosted = await Post<TreatmentViewModel>(_treatmentClient, treatmentFake);
-            treatments.Add(treatmentPosted.Id);
-        }
         
         // Arrange - Patient
         var patientFake = new PatientPostViewModelFake().Generate();
         patientFake.PeopleId = peoplePosted.Id;
         patientFake.HospitalId = hospitalPosted.Id;
-        patientFake.TreatmentIds = treatments;
 
         // Arrange - Count
         var countBefore = await GetCount(_patientClient);
@@ -62,20 +52,14 @@ public class PatientTestApi : GlobalClientRequest
         var hospitalFake = new HospitalPostViewModelFake().Generate();
         var hospitalPosted = await Post<HospitalViewModel>(_hospitalClient, hospitalFake);
 
-        // Arrange - Treatment
-        var treatmentFake = new TreatmentPostViewModelFake().Generate();
-        var treatmentPosted = await Post<TreatmentViewModel>(_treatmentClient, treatmentFake);
-
         // Arrange - Patient
         var patientFake1 = new PatientPostViewModelFake().Generate();
         patientFake1.PeopleId = peoplePosted1.Id;
         patientFake1.HospitalId = hospitalPosted.Id;
-        patientFake1.TreatmentIds = new List<int> { treatmentPosted.Id };
 
         var patientFake2 = new PatientPostViewModelFake().Generate();
         patientFake2.PeopleId = peoplePosted2.Id;
         patientFake2.HospitalId = hospitalPosted.Id;
-        patientFake2.TreatmentIds = new List<int> { treatmentPosted.Id };
 
         // Arrange - Count
         var countBefore = await GetCount(_patientClient);
@@ -110,7 +94,6 @@ public class PatientTestApi : GlobalClientRequest
         var patientFake = new PatientPostViewModelFake().Generate();
         patientFake.PeopleId = peopleId;
         patientFake.HospitalId = hospitalPosted.Id;
-        patientFake.TreatmentIds = new List<int> { treatmentPosted.Id };
 
         // Arrange - Count
         var countBefore = await GetCount(_patientClient);
@@ -142,7 +125,6 @@ public class PatientTestApi : GlobalClientRequest
         var patientFake = new PatientPostViewModelFake().Generate();
         patientFake.PeopleId = peoplePosted.Id;
         patientFake.HospitalId = hospitalId;
-        patientFake.TreatmentIds = new List<int> { treatmentPosted.Id };
 
         // Arrange - Count
         var countBefore = await GetCount(_patientClient);
@@ -178,13 +160,11 @@ public class PatientTestApi : GlobalClientRequest
         var patientFake1 = new PatientPostViewModelFake().Generate();
         patientFake1.PeopleId = peoplePosted1.Id;
         patientFake1.HospitalId = hospitalPosted.Id;
-        patientFake1.TreatmentIds = new List<int> { treatmentPosted.Id };
         var patientPosted1 = await Post<PatientViewModel>(_patientClient, patientFake1);
 
         var patientFake2 = new PatientPostViewModelFake().Generate();
         patientFake2.PeopleId = peoplePosted2.Id;
         patientFake2.HospitalId = hospitalPosted.Id;
-        patientFake2.TreatmentIds = new List<int> { treatmentPosted.Id };
 
         // Arrange - Count
         var countBefore = await GetCount(_patientClient);
@@ -219,7 +199,6 @@ public class PatientTestApi : GlobalClientRequest
         var patientFake1 = new PatientPostViewModelFake().Generate();
         patientFake1.PeopleId = peoplePosted.Id;
         patientFake1.HospitalId = hospitalPosted.Id;
-        patientFake1.TreatmentIds = new List<int> { treatmentPosted.Id };
         var patientPosted1 = await Post<PatientViewModel>(_patientClient, patientFake1);
 
         var patientFake2 = new PatientPostViewModelFake().Generate();
@@ -230,7 +209,6 @@ public class PatientTestApi : GlobalClientRequest
             HospitalId = patientPosted1.HospitalId,
             Term = patientFake2.Term,
             SocioeconomicRecord = patientFake2.SocioeconomicRecord,
-            TreatmentIds = new List<int> { treatmentPosted.Id }
         };
 
         // Arrange - Count
@@ -268,13 +246,11 @@ public class PatientTestApi : GlobalClientRequest
         var patientFake1 = new PatientPostViewModelFake().Generate();
         patientFake1.PeopleId = peoplePosted1.Id;
         patientFake1.HospitalId = hospitalPosted.Id;
-        patientFake1.TreatmentIds = new List<int> { treatmentPosted.Id };
         var patientPosted1 = await Post<PatientViewModel>(_patientClient, patientFake1);
 
         var patientFake2 = new PatientPostViewModelFake().Generate();
         patientFake2.PeopleId = peoplePosted1.Id;
         patientFake2.HospitalId = hospitalPosted.Id;
-        patientFake2.TreatmentIds = new List<int> { treatmentPosted.Id };
 
         // Arrange - Count
         var countBefore = await GetCount(_patientClient);

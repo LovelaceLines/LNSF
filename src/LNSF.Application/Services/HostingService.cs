@@ -12,18 +12,15 @@ public class HostingService : IHostingService
 {
     private readonly IHostingRepository _hostingRepository;
     private readonly IPatientRepository _patientRepository;
-    private readonly IEscortRepository _escortRepository;
     private readonly HostingValidator _validator;
 
     public HostingService(IHostingRepository hostingRepository,
         HostingValidator validator,
-        IPatientRepository patientRepository,
-        IEscortRepository escortRepository)
+        IPatientRepository patientRepository)
     {
         _hostingRepository = hostingRepository;
         _validator = validator;
         _patientRepository = patientRepository;
-        _escortRepository = escortRepository;
     }
 
     public async Task<List<Hosting>> Query(HostingFilter filter) => 
@@ -38,9 +35,7 @@ public class HostingService : IHostingService
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
         if (!await _patientRepository.ExistsById(hosting.PatientId)) throw new AppException("Paciente não encontrado", HttpStatusCode.NotFound);
-        foreach (var escortId in hosting.EscortIds)
-            if (!await _escortRepository.ExistsById(escortId)) throw new AppException("Acompanhante não encontrado", HttpStatusCode.NotFound);
-
+        
         return await _hostingRepository.Add(hosting);
     }
 
@@ -50,9 +45,6 @@ public class HostingService : IHostingService
 
         var validationResult = await _validator.ValidateAsync(hosting);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
-
-        foreach (var escortId in hosting.EscortIds)
-            if (!await _escortRepository.ExistsById(escortId)) throw new AppException("Acompanhante não encontrado", HttpStatusCode.NotFound);
 
         return await _hostingRepository.Update(hosting);
     }

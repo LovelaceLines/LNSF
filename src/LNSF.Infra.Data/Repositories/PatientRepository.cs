@@ -12,15 +12,12 @@ namespace LNSF.Infra.Data.Repositories;
 public class PatientRepository : BaseRepository<Patient>, IPatientRepository
 {
     private readonly AppDbContext _context;
-    private readonly IPatientTreatmentRepository _patientTreatmentRepository;
     private readonly IQueryable<Patient> _patients;
     private readonly IQueryable<PatientTreatment> _patientsTreatments;
 
-    public PatientRepository(AppDbContext context,
-        IPatientTreatmentRepository patientTreatmentRepository) : base(context)
+    public PatientRepository(AppDbContext context) : base(context)
     {
         _context = context;
-        _patientTreatmentRepository = patientTreatmentRepository;
         _patients = _context.Patients.AsNoTracking();
         _patientsTreatments = _context.PatientsTreatments.AsNoTracking();
     }
@@ -59,15 +56,6 @@ public class PatientRepository : BaseRepository<Patient>, IPatientRepository
             .Take(filter.Page.PageSize)
             .ToListAsync();
 
-        foreach (var patient in patients)
-        {
-            var treatmentIds = patientTreatment.Where(pt => pt.PatientId == patient.Id)
-                .Select(x => x.TreatmentId)
-                .ToList();
-            
-            patient.TreatmentIds = treatmentIds;
-        }
-
         return patients;
     }
 
@@ -76,62 +64,4 @@ public class PatientRepository : BaseRepository<Patient>, IPatientRepository
 
     public async Task<bool> ExistsByIdAndPeopleId(int id, int peopleId) =>
         await _patients.AnyAsync(x => x.Id == id && x.PeopleId == peopleId);
-
-    public new async Task<Patient> Add(Patient patient)
-    {
-        await BeguinTransaction();
-
-        try
-        {
-            await _context.Patients.AddAsync(patient);
-            await _context.SaveChangesAsync();
-
-            foreach (var treatmentId in patient.TreatmentIds)
-            {
-                await _patientTreatmentRepository.Add(new PatientTreatment
-                {
-                    PatientId = patient.Id,
-                    TreatmentId = treatmentId
-                });
-            }
-
-            await CommitTransaction();
-            return patient;
-        }
-        catch (Exception)
-        {
-            await RollbackTransaction();
-            throw new AppException("Erro ao adicionar paciente!", HttpStatusCode.BadRequest);
-        }
-    }
-
-    public new async Task<Patient> Update(Patient patient)
-    {
-        await BeguinTransaction();
-
-        try
-        {
-            await _patientTreatmentRepository.RemoveByPatientId(patient.Id);
-
-            _context.Patients.Update(patient);
-            await _context.SaveChangesAsync();
-
-            foreach (var treatmentId in patient.TreatmentIds)
-            {
-                await _patientTreatmentRepository.Add(new PatientTreatment
-                {
-                    PatientId = patient.Id,
-                    TreatmentId = treatmentId
-                });
-            }
-
-            await CommitTransaction();
-            return patient;
-        }
-        catch (Exception)
-        {
-            await RollbackTransaction();
-            throw new AppException("Erro ao atualizar paciente!", HttpStatusCode.BadRequest);
-        }
-    }
 }

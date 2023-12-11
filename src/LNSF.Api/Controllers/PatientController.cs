@@ -12,12 +12,15 @@ namespace LNSF.Api.Controllers;
 public class PatientController : ControllerBase
 {
     private readonly IPatientService _patientService;
+    private readonly IPatientTreatmentService _patientTreatmentService;
     private readonly IMapper _mapper;
 
-    public PatientController(IPatientService patientService, 
+    public PatientController(IPatientService patientService,
+        IPatientTreatmentService patientTreatmentService,
         IMapper mapper)
     {
         _patientService = patientService;
+        _patientTreatmentService = patientTreatmentService;
         _mapper = mapper;
     }
 
@@ -50,6 +53,17 @@ public class PatientController : ControllerBase
     }
 
     /// <summary>
+    /// Adds a treatment to a patient.
+    /// </summary>
+    [HttpPost("add-treatment-to-patient")]
+    public async Task<ActionResult<PatientViewModel>> AddTreatmentToPatient(PatientTreatmentViewModel patientTreatmentViewModel)
+    {
+        var patientTreatment = _mapper.Map<PatientTreatment>(patientTreatmentViewModel);
+        patientTreatment = await _patientTreatmentService.Create(patientTreatment);
+        return _mapper.Map<PatientViewModel>(patientTreatment);
+    }
+
+    /// <summary>
     /// Updates a patient.
     /// </summary>
     [HttpPut]
@@ -68,5 +82,15 @@ public class PatientController : ControllerBase
     {
         var patient = await _patientService.Delete(id);
         return _mapper.Map<PatientViewModel>(patient);
+    }
+
+    /// <summary>
+    /// Removes a treatment from a patient.
+    /// </summary>
+    [HttpDelete("remove-treatment-from-patient")]
+    public async Task<ActionResult<PatientViewModel>> RemoveTreatmentFromPatient(PatientTreatmentViewModel patientTreatmentViewModel)
+    {
+        var patientTreatment = await _patientTreatmentService.Delete(patientTreatmentViewModel.PatientId, patientTreatmentViewModel.TreatmentId);
+        return _mapper.Map<PatientViewModel>(patientTreatment);
     }
 }

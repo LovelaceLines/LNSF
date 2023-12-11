@@ -23,7 +23,5 @@ public class PatientsConfiguration : IEntityTypeConfiguration<Patient>
         
         builder.Property(p => p.PeopleId)
             .IsUnicode();
-        
-        builder.Ignore(p => p.TreatmentIds);
     }
 }

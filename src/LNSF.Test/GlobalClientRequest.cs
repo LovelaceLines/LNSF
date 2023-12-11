@@ -2,8 +2,7 @@
 using System.Net.Http.Json;
 using AutoMapper;
 using LNSF.Api.ViewModels;
-using LNSF.Domain.DTOs;
-using LNSF.Domain.Entities;
+using LNSF.Domain.Enums;
 using LNSF.Domain.Exceptions;
 using LNSF.Test.Fakers;
 using Microsoft.IdentityModel.Tokens;
@@ -35,6 +34,7 @@ public class GlobalClientRequest
     public readonly HttpClient _treatmentClient = new() { BaseAddress = new Uri($"{BaseUrl}Treatment/") };
     public readonly HttpClient _patientClient = new() { BaseAddress = new Uri($"{BaseUrl}Patient/") };
     public readonly HttpClient _hostingClient = new() { BaseAddress = new Uri($"{BaseUrl}Hosting/") };
+    public readonly HttpClient _addEscortToHostingClient = new() { BaseAddress = new Uri($"{BaseUrl}Hosting/add-escort-to-hosting/") };
     public readonly IMapper _mapper;
 
     public GlobalClientRequest()
@@ -57,10 +57,35 @@ public class GlobalClientRequest
         _mapper = mapperConfig.CreateMapper();
     }
 
-    public virtual async Task<T> Get<T>(HttpClient client, dynamic obj) where T : class
+    /// <summary>
+    /// Executes a query using the provided HttpClient and filter, and returns the result as an instance of type T.
+    /// Note: Pagination and OrderBy are unstable.
+    /// </summary>
+    public async Task<T> Query<T>(HttpClient client, dynamic filter) where T : class
     {
-        var response = await client.GetAsync($"{obj}");
+        var query = BuildQuery(filter);
+
+        var response = await client.GetAsync($"?{query}");
         return await DeserializeResponse<T>(response);
+    }
+
+    private string BuildQuery(object filter)
+    {
+        var properties = filter.GetType().GetProperties();
+        var queryParameters = new List<string>();
+
+        foreach (var property in properties)
+        {
+            var value = property.GetValue(filter);
+
+            if (value is null) continue;
+
+            var propertyName = property.Name;
+            var encodedValue = Uri.EscapeDataString(value.ToString()!);
+            queryParameters.Add($"{propertyName}={encodedValue}");
+        }
+
+        return string.Join("&", queryParameters);
     }
 
     public virtual async Task<T> GetById<T>(HttpClient client, dynamic obj) where T : class
@@ -113,7 +138,7 @@ public class GlobalClientRequest
             return JsonConvert.DeserializeObject<T>(content) ?? 
                 throw new Exception("Deserialized object is null");
 
-        throw new Exception($"Unexpected response status code: {content}, {response.StatusCode}, {response}");
+        throw new Exception($"Unexpected response status code: {content},\n{response.StatusCode},\n{response},\n{response!.RequestMessage!.RequestUri!.AbsoluteUri}}}");
     }
 
     #region GetEntityFake
@@ -137,8 +162,8 @@ public class GlobalClientRequest
         return await Put<RoomViewModel>(_roomClient, new RoomPutViewModelFake(id.Value, available, number, beds, storey).Generate());
     }
 
-    public async Task<PeopleViewModel> GetPeople() =>
-        await Post<PeopleViewModel>(_peopleClient, new PeoplePostViewModelFake().Generate());
+    public async Task<PeopleViewModel> GetPeople(string? name = null, Gender? gender = null, DateTime? birthDate = null, string? rg = null, string? cpf = null, string? street = null, string? houseNumber = null, string? neighborhood = null, string? city = null, string? state = null, string? phone = null, string? note = null) =>
+        await Post<PeopleViewModel>(_peopleClient, new PeoplePostViewModelFake(name: name, gender: gender, birthDate: birthDate, rg: rg, cpf: cpf, street: street, houseNumber: houseNumber, neighborhood: neighborhood, city: city, state: state, phone: phone, note: note).Generate());
 
     public async Task<PeopleRoomViewModel> GetPeopleRoom(int? patientId = null, int? roomId = null, int? hostingId = null)
     {
@@ -201,7 +226,6 @@ public class GlobalClientRequest
         var patientFake = new PatientPostViewModelFake().Generate();
         patientFake.PeopleId = people.Id;
         patientFake.HospitalId = hospital.Id;
-        patientFake.TreatmentIds = treatmentIds;
 
         return await Post<PatientViewModel>(_patientClient, patientFake);
     } 
@@ -231,7 +255,6 @@ public class GlobalClientRequest
 
         var hostingFake = new HostingPostViewModelFake().Generate();
         hostingFake.PatientId = patientId.HasValue ? patientId.Value : patient.Id;
-        hostingFake.EscortIds = escortIds;
         hostingFake.CheckOut = patientHasCheckOut ? hostingFake.CheckOut : null;
 
         return await Post<HostingViewModel>(_hostingClient, hostingFake);

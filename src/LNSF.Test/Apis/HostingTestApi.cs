@@ -45,19 +45,9 @@ public class HostingTestApi : GlobalClientRequest
         // Arrange - Patient
         var patient = await GetPatient();
 
-        // Arrange - Escorts
-        var escortInfos = new List<int>();
-        for (int i = 0; i < numberEscorts; i++)
-        {
-            var escort = await GetEscort();
-
-            escortInfos.Add(escort.Id);
-        }
-
         // Arrange - Hosting
         var hostingFake = new HostingPostViewModelFake().Generate();
         hostingFake.PatientId = patient.Id;
-        hostingFake.EscortIds = escortInfos;
         hostingFake.CheckOut = patientHasCheckOut ? hostingFake.CheckOut : null;
 
         // Arrange - Count
@@ -72,8 +62,6 @@ public class HostingTestApi : GlobalClientRequest
         // Assert
         Assert.Equal(countBefore + 1, countAfter);
         Assert.Equivalent(hostingFake, hostingPosted);
-        var hostingGeted = (await GetById<List<HostingViewModel>>(_hostingClient, hostingPosted.Id)).First();
-        Assert.Equivalent(hostingPosted, hostingGeted);
     }
 
     [Theory]
@@ -94,7 +82,6 @@ public class HostingTestApi : GlobalClientRequest
         // Arrange - Hosting
         var hostingFake = new HostingPostViewModelFake().Generate();
         hostingFake.PatientId = patient.Id;
-        hostingFake.EscortIds = escortInfos;
         hostingFake.CheckIn = hostingFake.CheckOut!.Value.AddDays(1); // CheckIn > CheckOut
 
         // Arrange - Count

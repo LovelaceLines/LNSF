@@ -36,10 +36,7 @@ public class PatientService : IPatientService
         if (!await _peopleRepository.ExistsById(patient.PeopleId)) throw new AppException("Pessoa não encontrada", HttpStatusCode.NotFound);
         if (await _patientRepository.ExistsByPeopleId(patient.PeopleId)) throw new AppException("Pessoa já cadastrada como paciente", HttpStatusCode.BadRequest);
         if (!await _hospitalRepository.ExistsById(patient.HospitalId)) throw new AppException("Hospital não encontrado", HttpStatusCode.NotFound);
-        if (patient.TreatmentIds.Count == 0) throw new AppException("Pelo menos um tratamento deve ser informado", HttpStatusCode.BadRequest);
-        foreach (var t in patient.TreatmentIds)
-            if (!await _treatmentRepository.ExistsById(t)) throw new AppException("Tratamento não encontrado", HttpStatusCode.NotFound);
-
+        
         return await _patientRepository.Add(patient);
     }
     
@@ -47,10 +44,7 @@ public class PatientService : IPatientService
     {
         if (!await _patientRepository.ExistsByIdAndPeopleId(patient.Id, patient.PeopleId)) throw new AppException("Paciente não encontrado", HttpStatusCode.NotFound);
         if (!await _hospitalRepository.ExistsById(patient.HospitalId)) throw new AppException("Hospital não encontrado", HttpStatusCode.NotFound);
-        if (patient.TreatmentIds.Count == 0) throw new AppException("Pelo menos um tratamento deve ser informado", HttpStatusCode.BadRequest);
-        foreach (var t in patient.TreatmentIds)
-            if (!await _treatmentRepository.ExistsById(t)) throw new AppException("Tratamento não encontrado", HttpStatusCode.NotFound);
-
+        
         return await _patientRepository.Update(patient);
     }
 

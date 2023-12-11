@@ -8,5 +8,4 @@ public class Hosting
 	
 	public int PatientId { get; set; }
 	public Patient? Patient { get; set; }
-	public List<int> EscortIds { get; set; } = new();
 }

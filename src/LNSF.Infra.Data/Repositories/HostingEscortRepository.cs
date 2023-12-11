@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using LNSF.Domain.Entities;
+using LNSF.Domain.Enums;
 using LNSF.Domain.Exceptions;
 using LNSF.Domain.Filters;
 using LNSF.Domain.Repositories;
@@ -25,6 +26,9 @@ public class HostingEscortRepository : BaseRepository<HostingEscort>, IHostingEs
 
         if (filter.HostingId.HasValue) query = query.Where(he => he.HostingId == filter.HostingId);
         if (filter.EscortId.HasValue) query = query.Where(he => he.EscortId == filter.EscortId);
+
+        if (filter.OrderBy == OrderBy.Ascending) query = query.OrderBy(he => he.EscortId);
+        else if (filter.OrderBy == OrderBy.Descending) query = query.OrderByDescending(he => he.EscortId);
 
         var hostingEscorts = await query
             .Skip((filter.Page.Page - 1) * filter.Page.PageSize)

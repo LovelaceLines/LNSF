@@ -12,16 +12,13 @@ namespace LNSF.Infra.Data.Repositories;
 public class HostingRepository : BaseRepository<Hosting>, IHostingRepository
 {
     private readonly AppDbContext _context;
-    private readonly IHostingEscortRepository _hostingEscortRepository;
     private readonly IQueryable<Hosting> _hostings;
     private readonly IQueryable<Escort> _escorts;
     private readonly IQueryable<HostingEscort> _hostingsEscorts;
 
-    public HostingRepository(AppDbContext context, 
-        IHostingEscortRepository hostingEscortRepository) : base(context)
+    public HostingRepository(AppDbContext context) : base(context)
     {
         _context = context;
-        _hostingEscortRepository = hostingEscortRepository;
         _hostings = _context.Hostings.AsNoTracking();
         _escorts = _context.Escorts.AsNoTracking();
         _hostingsEscorts = _context.HostingsEscorts.AsNoTracking();
@@ -52,73 +49,7 @@ public class HostingRepository : BaseRepository<Hosting>, IHostingRepository
             .Take(filter.Page.PageSize)
             .ToListAsync();
 
-        foreach (var hosting in hostings)
-        {
-            var escortIds = hostingsEscorts.Where(h => h.HostingId == hosting.Id)
-                .Select(h => h.EscortId)
-                .ToList();
-
-            hosting.EscortIds = escortIds;
-        }
-
         return hostings;
-    }
-
-    public new async Task<Hosting> Add(Hosting hosting)
-    {
-        await BeguinTransaction();
-
-        try
-        {
-            await _context.Hostings.AddAsync(hosting);
-            await _context.SaveChangesAsync();
-
-            foreach (var escortId in hosting.EscortIds)
-                await _hostingEscortRepository.Add(new HostingEscort
-                {
-                    EscortId = escortId,
-                    HostingId = hosting.Id,
-                });
-  
-            await CommitTransaction();
-
-            return hosting;
-        }
-        catch (Exception)
-        {
-            await RollbackTransaction();
-            throw new AppException("Erro ao adicionar hospedagem", HttpStatusCode.BadRequest);
-        }
-    }
-
-    public new async Task<Hosting> Update(Hosting hosting)
-    {
-        await BeguinTransaction();
-
-        try
-        {
-            await _hostingEscortRepository.RemoveByHostingId(hosting.Id);
-
-            _context.Hostings.Update(hosting);
-            await _context.SaveChangesAsync();
-
-            foreach (var escortId in hosting.EscortIds)
-                await _hostingEscortRepository.Add(new HostingEscort
-                {
-                    EscortId = escortId,
-                    HostingId = hosting.Id,
-                });
-
-            await _context.SaveChangesAsync();
-            await CommitTransaction();
-
-            return hosting;
-        }
-        catch (Exception)
-        {
-            await RollbackTransaction();
-            throw new AppException("Erro ao atualizar hospedagem", HttpStatusCode.BadRequest);
-        }
     }
 
     public async Task<bool> ExistsByIdAndPatientId(int id, int patientId) =>
