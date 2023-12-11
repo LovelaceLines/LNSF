@@ -12,12 +12,3 @@ public class HostingPostViewModelFake : Faker<HostingPostViewModel>
         RuleFor(x => x.CheckOut, f => f.Date.Future());
     }
 }
-
-public class HostingEscortInfoFake : Faker<HostingEscortInfo>
-{
-    public HostingEscortInfoFake()
-    {
-        RuleFor(x => x.CheckIn, f => f.Date.Past());
-        RuleFor(x => x.CheckOut, f => f.Date.Future());
-    }
-}

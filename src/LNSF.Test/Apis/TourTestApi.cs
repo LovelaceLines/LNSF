@@ -14,15 +14,13 @@ public class TourTestApi : GlobalClientRequest
     public async Task Post_ValidTour_Ok()
     {
         // Arrange - People
-        var peopleFake = new PeoplePostViewModelFake().Generate();
-        var peoplePosted = await Post<PeopleViewModel>(_peopleClient, peopleFake);
+        var people = await GetPeople();
 
         // Arrange - Count
         var countBefore = await GetCount(_tourClient);
 
         // Arrange - Tour
-        var tourFake = new TourPostViewModelFake().Generate();
-        tourFake.PeopleId = peoplePosted.Id;
+        var tourFake = new TourPostViewModelFake(people.Id).Generate();
 
         // Act - Tour
         var tourPosted = await Post<TourViewModel>(_tourClient, tourFake);
@@ -34,22 +32,24 @@ public class TourTestApi : GlobalClientRequest
         Assert.Equal(countBefore + 1, countAfter);
         Assert.Equivalent(tourFake.PeopleId, tourPosted.PeopleId);
         Assert.Equal(tourPosted.Output.Date, DateTime.Now.Date);
-        Assert.Null(tourPosted.Input);
+        Assert.Equal(tourPosted.Output.Hour, DateTime.Now.Hour);
+        Assert.Equal(tourPosted.Output.Minute, DateTime.Now.Minute);
+
+        var tourGeted = (await GetById<List<TourViewModel>>(_tourClient, tourPosted.Id)).First();
+        Assert.Equivalent(tourPosted, tourGeted);
     }
 
     [Fact]
     public async Task Post_ValidTourWithoutNote_Ok()
     {
         // Arrange - People
-        var peopleFake = new PeoplePostViewModelFake().Generate();
-        var peoplePosted = await Post<PeopleViewModel>(_peopleClient, peopleFake);
+        var people = await GetPeople();
 
         // Arrange - Count
         var countBefore = await GetCount(_tourClient);
 
         // Arrange - Tour
-        var tourFake = new TourPostViewModelFake().Generate();
-        tourFake.PeopleId = peoplePosted.Id;
+        var tourFake = new TourPostViewModelFake(people.Id).Generate();
         tourFake.Note = "";
 
         // Act - Tour
@@ -62,30 +62,27 @@ public class TourTestApi : GlobalClientRequest
         Assert.Equal(countBefore + 1, countAfter);
         Assert.Equivalent(tourFake.PeopleId, tourPosted.PeopleId);
         Assert.Equal(tourPosted.Output.Date, DateTime.Now.Date);
-        Assert.Null(tourPosted.Input);
+        Assert.Equal(tourPosted.Output.Hour, DateTime.Now.Hour);
+        Assert.Equal(tourPosted.Output.Minute, DateTime.Now.Minute);
+        
+        var tourGeted = (await GetById<List<TourViewModel>>(_tourClient, tourPosted.Id)).First();
+        Assert.Equivalent(tourPosted, tourGeted);
     }
 
     [Fact]
     public async Task Post_InvalidTourWithPeopleOwningAnOpenTour_BadRequest()
     {
-        // Arrange - People
-        var peopleFake = new PeoplePostViewModelFake().Generate();
-        var peoplePosted = await Post<PeopleViewModel>(_peopleClient, peopleFake);
-
         // Arrange - Tour
-        var openTourFake1 = new TourPostViewModelFake().Generate();
-        openTourFake1.PeopleId = peoplePosted.Id;
-        var openTourPosted1 = await Post<TourViewModel>(_tourClient, openTourFake1);
+        var openTour1 = await GetTour();
 
         // Arrange - Count
         var countBefore = await GetCount(_tourClient);
 
         // Arrange - Tour
-        var openTourFake2 = new TourPostViewModelFake().Generate();
-        openTourFake2.PeopleId = peoplePosted.Id;
+        var openTour2 = new TourPostViewModelFake(openTour1.PeopleId).Generate();
 
         // Act - Tour
-        var exception = await Post<AppException>(_tourClient, openTourFake2);
+        var exception = await Post<AppException>(_tourClient, openTour2);
         
         // Act - Count
         var countAfter = await GetCount(_tourClient);
@@ -93,39 +90,31 @@ public class TourTestApi : GlobalClientRequest
         // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.NotEmpty(exception.Message);
-        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.InternalServerError, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
     }
 
     [Fact]
     public async Task Put_ValidTourWithCloseTour_Ok()
     {
-        // Arrange - People
-        var peopleFake = new PeoplePostViewModelFake().Generate();
-        var peoplePosted = await Post<PeopleViewModel>(_peopleClient, peopleFake);
-
         // Arrange - Tour
-        var openTourFake = new TourPostViewModelFake().Generate();
-        openTourFake.PeopleId = peoplePosted.Id;
-        var openTourPosted = await Post<TourViewModel>(_tourClient, openTourFake);
+        var openTour = await GetTour();
 
         // Arrange - Count
         var countBefore = await GetCount(_tourClient);
 
         // Arrange - Tour
-        var closeTourFake = new TourPutViewModelFake().Generate();
-        closeTourFake.Id = openTourPosted.Id;
-        closeTourFake.PeopleId = peoplePosted.Id;
+        var closeTour = new TourPutViewModelFake(openTour.Id, openTour.PeopleId).Generate();
 
         // Act - Tour
-        var tourPuted = await Put<TourViewModel>(_putAllClient, closeTourFake);
+        var tourPuted = await Put<TourViewModel>(_putAllClient, closeTour);
 
         // Act - Count
         var countAfter = await GetCount(_tourClient);
 
         // Assert
         Assert.Equal(countBefore, countAfter);
-        Assert.Equivalent(closeTourFake, tourPuted);
+        Assert.Equivalent(closeTour, tourPuted);
     }
 
     [Theory]
@@ -134,13 +123,13 @@ public class TourTestApi : GlobalClientRequest
     public async Task Put_InvalidTourWithNonExistentPeopleId_BadRequest(int peopleId)
     {
         // Arrange - Tour
-        var tourFake = new TourPostViewModelFake().Generate();
-        tourFake.PeopleId = peopleId;
+        var tour = await GetTour();
 
         // Arrange - Count
         var countBefore = await GetCount(_tourClient);
 
         // Act - Tour
+        var tourFake = new TourPutViewModelFake(tour.Id, peopleId).Generate();
         var exception = await Put<AppException>(_putAllClient, tourFake);
         
         // Act - Count
@@ -149,97 +138,68 @@ public class TourTestApi : GlobalClientRequest
         // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.NotEmpty(exception.Message);
-        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.InternalServerError, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
     }
 
     [Fact]
     public async Task PutAll_ValidTourWithOpenTour_Ok()
     {
-        // Arrange - People
-        var peopleFake = new PeoplePostViewModelFake().Generate();
-        var peoplePosted = await Post<PeopleViewModel>(_peopleClient, peopleFake);
-
         // Arrange - Tour
-        var openTourFake = new TourPostViewModelFake().Generate();
-        openTourFake.PeopleId = peoplePosted.Id;
-        var openTourPosted = await Post<TourViewModel>(_tourClient, openTourFake);
-
-        var closeTourFake = new TourPutViewModelFake().Generate();
-        closeTourFake.Id = openTourPosted.Id;
-        closeTourFake.PeopleId = peoplePosted.Id;
-        var closeTourPosted = await Put<TourViewModel>(_putAllClient, closeTourFake);
+        var openTour = await GetTour();
 
         // Arrange - Count
         var countBefore = await GetCount(_tourClient);
  
         // Act - Tour
-        var putTourFake = new TourViewModelFake().Generate();
-        putTourFake.Id = closeTourPosted.Id;
-        putTourFake.PeopleId = peoplePosted.Id;
-        var tourPuted = await Put<TourViewModel>(_putAllClient, putTourFake); 
+        var closeTour = new TourPutViewModelFake(openTour.Id, openTour.PeopleId).Generate();
+        var closeTourPuted = await Put<TourViewModel>(_putAllClient, closeTour);
 
         // Act - Count
         var countAfter = await GetCount(_tourClient);
 
         // Assert
         Assert.Equal(countBefore, countAfter);
-        Assert.Equivalent(putTourFake, tourPuted);
+        Assert.Equivalent(closeTour, closeTourPuted);
     }
 
     [Fact]
     public async Task PutAll_ValidTourWithoutCloseTour_Ok()
     {
-        // Arrange - People
-        var peopleFake = new PeoplePostViewModelFake().Generate();
-        var peoplePosted = await Post<PeopleViewModel>(_peopleClient, peopleFake);
-
         // Arrange - Tour
-        var openTourFake = new TourPostViewModelFake().Generate();
-        openTourFake.PeopleId = peoplePosted.Id;
-        var openTourPosted = await Post<TourViewModel>(_tourClient, openTourFake);
+        var openTour = await GetTour();
+        var closeTour = await GetTour(openTour.Id, openTour.PeopleId);
 
         // Arrange - Count
         var countBefore = await GetCount(_tourClient);
  
         // Act - Tour
-        var putTourFake = new TourViewModelFake().Generate();
-        putTourFake.Id = openTourPosted.Id;
-        putTourFake.PeopleId = peoplePosted.Id;
-        var tourPuted = await Put<TourViewModel>(_putAllClient, putTourFake); 
+        var closeTourFake = new TourViewModelFake(closeTour.Id, closeTour.PeopleId).Generate();
+        var closeTourPuted = await Put<TourViewModel>(_putAllClient, closeTourFake);
 
         // Act - Count
         var countAfter = await GetCount(_tourClient);
 
         // Assert
         Assert.Equal(countBefore, countAfter);
-        Assert.Equivalent(putTourFake, tourPuted);
+        Assert.Equivalent(closeTourFake, closeTourPuted);
+
+        var closeTourGeted = (await GetById<List<TourViewModel>>(_tourClient, closeTourPuted.Id)).First();
+        Assert.Equivalent(closeTourPuted, closeTourGeted);
     }
 
     [Fact]
-    public async Task PutAll_InvalidTourWithInvalidDates_Ok()
+    public async Task PutAll_InvalidTourWithInvalidDates_BadRequest()
     {
-        // Arrange - People
-        var peopleFake = new PeoplePostViewModelFake().Generate();
-        var peoplePosted = await Post<PeopleViewModel>(_peopleClient, peopleFake);
-
         // Arrange - Tour
-        var openTourFake = new TourPostViewModelFake().Generate();
-        openTourFake.PeopleId = peoplePosted.Id;
-        var openTourPosted = await Post<TourViewModel>(_tourClient, openTourFake);
-
-        var closeTourFake = new TourPutViewModelFake().Generate();
-        closeTourFake.Id = openTourPosted.Id;
-        closeTourFake.PeopleId = peoplePosted.Id;
-        var closeTourPosted = await Put<TourViewModel>(_putAllClient, closeTourFake);
+        var openTour = await GetTour();
+        var closeTour = await GetTour(openTour.Id, openTour.PeopleId);
 
         // Arrange - Count
         var countBefore = await GetCount(_tourClient);
  
         // Act - Tour
-        var putTourFake = new TourViewModelFake().Generate();
-        putTourFake.Id = openTourPosted.Id;
-        putTourFake.PeopleId = peoplePosted.Id;
+        var putTourFake = new TourViewModelFake(closeTour.Id, closeTour.PeopleId).Generate();
         putTourFake.Output = new Bogus.DataSets.Date().Future();
         putTourFake.Input = new Bogus.DataSets.Date().Past();
         var exception = await Put<AppException>(_putAllClient, putTourFake); 
@@ -250,7 +210,7 @@ public class TourTestApi : GlobalClientRequest
         // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.NotEmpty(exception.Message);
-        Assert.NotEqual((int)HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual((int)HttpStatusCode.InternalServerError, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
     }
 }

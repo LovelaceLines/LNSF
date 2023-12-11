@@ -29,9 +29,7 @@ public class EscortController : ControllerBase
     {
         
         var escorts = await _escortService.Query(filter);
-        var escortsViewModel = _mapper.Map<List<EscortViewModel>>(escorts);
-
-        return Ok(escortsViewModel);
+        return _mapper.Map<List<EscortViewModel>>(escorts);
     }
 
     /// <summary>
@@ -39,32 +37,28 @@ public class EscortController : ControllerBase
     /// </summary>
     [HttpGet("count")]
     public async Task<ActionResult<int>> GetCount() => 
-        Ok(await _escortService.GetCount());
+        await _escortService.GetCount();
 
     /// <summary>
     /// Creates a new escort.
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<EscortViewModel>> Post(EscortPostViewModel escort)
+    public async Task<ActionResult<EscortViewModel>> Post(EscortPostViewModel escortPostViewModel)
     {
-        var escortMapped = _mapper.Map<Escort>(escort);
-        var escortCreated = await _escortService.Create(escortMapped);
-        var escortViewModel = _mapper.Map<EscortViewModel>(escortCreated);
-
-        return Ok(escortViewModel);
+        var escort = _mapper.Map<Escort>(escortPostViewModel);
+        escort = await _escortService.Create(escort);
+        return _mapper.Map<EscortViewModel>(escort);
     }
 
     /// <summary>
     /// Updates an escort.
     /// </summary>
     [HttpPut]
-    public async Task<ActionResult<EscortViewModel>> Put(EscortViewModel escort)
+    public async Task<ActionResult<EscortViewModel>> Put(EscortViewModel escortViewModel)
     {
-        var escortMapped = _mapper.Map<Escort>(escort);
-        var escortUpdated = await _escortService.Update(escortMapped);
-        var escortViewModel = _mapper.Map<EscortViewModel>(escortUpdated);
-        
-        return Ok(escortViewModel);
+        var escort = _mapper.Map<Escort>(escortViewModel);
+        escort = await _escortService.Update(escort);
+        return _mapper.Map<EscortViewModel>(escort);
     }
 
     /// <summary>
@@ -73,9 +67,7 @@ public class EscortController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<ActionResult<EscortViewModel>> Delete(int id)
     {
-        var escortDeleted = await _escortService.Delete(id);
-        var escortViewModel = _mapper.Map<EscortViewModel>(escortDeleted);
-
-        return Ok(escortViewModel);
+        var escort = await _escortService.Delete(id);
+        return _mapper.Map<EscortViewModel>(escort);
     }
 }

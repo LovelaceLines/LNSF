@@ -1,4 +1,7 @@
-﻿using LNSF.Api.ViewModels;
+﻿using System.Net;
+using LNSF.Api.ViewModels;
+using LNSF.Domain.Entities;
+using LNSF.Domain.Exceptions;
 using LNSF.Test.Fakers;
 using Xunit;
 
@@ -12,16 +15,17 @@ public class AuthTestApi : GlobalClientRequest
     [Fact]
     public async Task Post_ValidLogin_Ok()
     {
-        // Arrange - Account
-        var accountFake = new AccountPostViewModelFake().Generate();
-        var accountPosted = await Post<AccountViewModel>(_accountClient, accountFake);
+        // Arrange - User
+        var password = new Bogus.Person().FirstName + "#" + new Bogus.Randomizer().Replace("###");
+        var user = await GetUser(password: password, role: "Desenvolvedor");
 
         // Act
-        var login = new AccountLoginViewModel { UserName = accountFake.UserName, Password = accountFake.Password };
-        var token = await Post<AuthenticationTokenViewModel>(_loginClient, login);
+        var login = new UserLoginViewModel { UserName = user.UserName, Password = password };
+        var token = await Post<AuthenticationToken>(_loginClient, login);
 
         // Assert
         Assert.NotNull(token);
+        Assert.NotNull(token.Token);
     }
 
     [Theory]
@@ -32,42 +36,48 @@ public class AuthTestApi : GlobalClientRequest
     public async Task Post_InvalidLogin_BadRequest(string userName, string password)
     {
         // Arrange
-        var login = new AccountLoginViewModel { UserName = userName, Password = password };
+        var login = new UserLoginViewModel { UserName = userName, Password = password };
 
         // Act - Assert
-        await Assert.ThrowsAsync<Exception>(() => Post<AuthenticationTokenViewModel>(_loginClient, login));
+        var exception = await Post<AppException>(_loginClient, login);
+
+        // Assert
+        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
     }
 
     [Fact]
     public async Task Post_ValidRefreshToken_Ok()
     {
         // Arrange - Account
-        var accountFake = new AccountPostViewModelFake().Generate();
-        var accountPosted = await Post<AccountViewModel>(_accountClient, accountFake);
+        var password = new Bogus.Person().FirstName + "#" + new Bogus.Randomizer().Replace("###");
+        var user = await GetUser(password: password, role: "Desenvolvedor");
 
         // Arrange - Login
-        var login = new AccountLoginViewModel { UserName = accountFake.UserName, Password = accountFake.Password };
-        var token = await Post<AuthenticationTokenViewModel>(_loginClient, login);
+        var login = new UserLoginViewModel { UserName = user.UserName, Password = password };
+        var token = await Post<AuthenticationToken>(_loginClient, login);
 
         // Act
-        var refreshToken = new AuthenticationTokenViewModel { AccessToken = token.AccessToken , RefreshToken = token.RefreshToken };
-        var newToken = await Post<AuthenticationTokenViewModel>(_refreshTokenClient, refreshToken);
+        var refreshToken = new RefreshTokenTokenViewModel { RefreshToken = token.Token };
+        var newToken = await Post<AuthenticationToken>(_refreshTokenClient, refreshToken);
 
         // Assert
         Assert.NotNull(newToken);
     }
 
     [Theory]
-    [InlineData("", "")]
-    [InlineData("invalid", "")]
-    [InlineData("", "invalid")]
-    [InlineData("invalid", "invalid")]
-    public async Task Post_InvalidRefreshToken_BadRequest(string accessToken, string refreshToken)
+    [InlineData("")]
+    [InlineData("invalid")]
+    public async Task Post_InvalidRefreshToken_BadRequest(string token)
     {
         // Arrange
-        var refreshTokenViewModel = new AuthenticationTokenViewModel { AccessToken = accessToken, RefreshToken = refreshToken };
+        var refreshTokenViewModel = new AuthenticationToken { Token = token };
 
         // Act - Assert
-        await Assert.ThrowsAsync<Exception>(() => Post<AuthenticationTokenViewModel>(_refreshTokenClient, refreshTokenViewModel));
+        var exception = await Post<AppException>(_refreshTokenClient, refreshTokenViewModel);
+
+        // Assert
+        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
     }
 }

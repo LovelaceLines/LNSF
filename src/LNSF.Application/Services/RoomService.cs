@@ -1,9 +1,9 @@
-﻿using LNSF.Domain.Repositories;
-using LNSF.Domain.Filters;
+﻿using LNSF.Application.Interfaces;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
+using LNSF.Domain.Filters;
+using LNSF.Domain.Repositories;
 using System.Net;
-using LNSF.Application.Interfaces;
 
 namespace LNSF.Application.Services;
 
@@ -22,9 +22,6 @@ public class RoomService : IRoomService
     public async Task<List<Room>> Query(RoomFilter filter) => 
         await _roomRepository.Query(filter);
 
-    public async Task<Room> Get(int id) => 
-        await _roomRepository.Get(id);
-
     public async Task<int> GetCount() =>
         await _roomRepository.GetCount();
 
@@ -33,7 +30,7 @@ public class RoomService : IRoomService
         var validationResult = _validator.Validate(room);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
         
-        if (await _roomRepository.ExistsByNumber(room.Number)) throw new AppException("Número do quarto já existe!", HttpStatusCode.BadRequest);
+        if (await _roomRepository.ExistsByNumber(room.Number)) throw new AppException("Número do quarto já existe!", HttpStatusCode.Conflict);
         
         return await _roomRepository.Add(room);
     }
@@ -43,7 +40,7 @@ public class RoomService : IRoomService
         var validationResult = _validator.Validate(room);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
-        if (await _roomRepository.ExistsByNumber(room.Number)) throw new AppException("Número do quarto já existe!", HttpStatusCode.BadRequest);
+        if (await _roomRepository.ExistsByNumber(room.Number)) throw new AppException("Número do quarto já existe!", HttpStatusCode.Conflict);
 
         return await _roomRepository.Update(room);
     }

@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using LNSF.Application.Validators;
-using LNSF.Domain.Filters;
 using LNSF.Domain.Entities;
 
 namespace LNSF.Application;
@@ -16,9 +15,6 @@ public class PeopleValidator : AbstractValidator<People>
         RuleFor(people => people.BirthDate.Year)
             .LessThanOrEqualTo(DateTime.Now.Year - 15).WithMessage(GlobalValidator.InvalidAge())
             .GreaterThanOrEqualTo(DateTime.Now.Year - 128).WithMessage(GlobalValidator.InvalidAge());
-        
-        RuleFor(people => people.BirthDate)
-            .SetValidator(new DateValidator());
         
         RuleFor(people => people.RG)
             .Matches(@"^\d{2}\.\d{3}\.\d{3}-\d{1}$").WithMessage(GlobalValidator.InvalidRGFormat());
@@ -46,14 +42,5 @@ public class PeopleValidator : AbstractValidator<People>
         
         RuleFor(people => people.Note)
             .MaximumLength(256).WithMessage(GlobalValidator.MaxLength("Observação", 256));
-    }
-}
-
-public class PeopleFilterValidator : AbstractValidator<PeopleFilter>
-{
-    public PeopleFilterValidator()
-    {
-        RuleFor(filter => filter.Page)
-            .SetValidator(new PaginationValidator());
     }
 }

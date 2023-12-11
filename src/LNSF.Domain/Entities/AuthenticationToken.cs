@@ -2,7 +2,14 @@
 
 public class AuthenticationToken
 {
-    public string AccessToken { get; set; } = "";
-    public string RefreshToken { get; set; } = "";
-    public DateTime Expires { get; set; } = DateTime.Now;
+    public string Token { get; set; } = "";
+    public DateTime Expires { get; set; }
+
+    public AuthenticationToken() { }
+
+    public AuthenticationToken(string token, DateTime expires)
+    {
+        Token = token;
+        Expires = expires;
+    }
 }

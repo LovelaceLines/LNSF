@@ -1,6 +1,7 @@
 ﻿using LNSF.Domain.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace LNSF.Api.Controllers;
 
@@ -9,14 +10,14 @@ namespace LNSF.Api.Controllers;
 [Route("api/[controller]")]
 public class ErrorController : ControllerBase
 {
-    public AppException Error()
+    public ActionResult<AppException> Error()
     {
         var context = HttpContext.Features.Get<IExceptionHandlerFeature>();
         var serverErrorMessage = "Um erro inesperado acaba de acontecer! Por favor, contate a equipe de desenvolvimento para a análise e correção do erro.";
         var message = (context?.Error as AppException)?.Message ?? serverErrorMessage;
-        var statusCode = (context?.Error as AppException)?.StatusCode ?? 500;
+        var statusCode = (context?.Error as AppException)?.StatusCode ?? HttpStatusCode.InternalServerError;
         var id = HttpContext.TraceIdentifier;
-        
-        return new AppException(message, statusCode) { Id = id };
+
+        return StatusCode((int)statusCode, new AppException(id, message, statusCode));
     }
 }

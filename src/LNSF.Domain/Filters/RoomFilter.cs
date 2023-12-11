@@ -12,6 +12,6 @@ public class RoomFilter
     public int? Storey { get; set; }
     public bool? Available { get; set; }
 
-    public Pagination Page { get; set; } = new Pagination();
-    public OrderBy Order { get; set; } = OrderBy.Ascending;
+    public Pagination Page { get; set; } = new();
+    public OrderBy? Order { get; set; }
 }

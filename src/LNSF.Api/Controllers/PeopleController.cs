@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using LNSF.Domain.Filters;
-using LNSF.Domain.Entities;
 using LNSF.Api.ViewModels;
-using Microsoft.AspNetCore.Mvc;
 using LNSF.Application.Interfaces;
+using LNSF.Domain.Entities;
+using LNSF.Domain.Filters;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LNSF.Api.Controllers;
 
@@ -12,13 +12,16 @@ namespace LNSF.Api.Controllers;
 public class PeopleController : ControllerBase
 {
     private readonly IMapper _mapper;
-    private readonly IPeopleService _service;
+    private readonly IPeopleService _peopleService;
+    private readonly IPeopleRoomService _peopleRoomService;
 
-    public PeopleController(IPeopleService service,
-        IMapper mapper)
+    public PeopleController(IPeopleService peopleService,
+        IMapper mapper,
+        IPeopleRoomService peopleRoomService)
     {
         _mapper = mapper;
-        _service = service;
+        _peopleService = peopleService;
+        _peopleRoomService = peopleRoomService;
     }
 
     /// <summary>
@@ -27,10 +30,8 @@ public class PeopleController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<PeopleViewModel>>> Get([FromQuery]PeopleFilter filter)
     {
-        var peoples = await _service.Query(filter);
-        var peoplesViewModel = _mapper.Map<List<PeopleViewModel>>(peoples);
-        
-        return Ok(peoplesViewModel);
+        var peoples = await _peopleService.Query(filter);
+        return _mapper.Map<List<PeopleViewModel>>(peoples);
     }
 
     /// <summary>
@@ -38,55 +39,49 @@ public class PeopleController : ControllerBase
     /// </summary>
     [HttpGet("count")]
     public async Task<ActionResult<int>> GetCount() => 
-        Ok(await _service.GetCount());
+        await _peopleService.GetCount();
 
     /// <summary>
-    /// Creates a new person. Note: do not create a person with a room.
+    /// Creates a new people. Note: do not create a people with a room.
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<PeopleViewModel>> Post([FromBody]PeoplePostViewModel people)
+    public async Task<ActionResult<PeopleViewModel>> Post([FromBody]PeoplePostViewModel peoplePostViewModel)
     {
-        var peopleMapped = _mapper.Map<People>(people);
-        var peopleCreated = await _service.Create(peopleMapped);
-        var peopleViewModel = _mapper.Map<PeopleViewModel>(peopleCreated);
-        
-        return Ok(peopleViewModel);
+        var people = _mapper.Map<People>(peoplePostViewModel);
+        people = await _peopleService.Create(people);
+        return _mapper.Map<PeopleViewModel>(people);
     }
 
     /// <summary>
-    /// Updates a person's information. Note: do not update the person's room.
+    /// Updates a people's information. Note: do not update the people's room.
     /// </summary>
     [HttpPut]
-    public async Task<ActionResult<PeopleViewModel>> Put([FromBody]PeoplePutViewModel people)
+    public async Task<ActionResult<PeopleViewModel>> Put([FromBody]PeoplePutViewModel peoplePutViewModel)
     {
-        var peopleMapper = _mapper.Map<People>(people);
-        var peopleUpdated = await _service.Update(peopleMapper);
-        var peopleViewModel = _mapper.Map<PeopleViewModel>(peopleUpdated);
-
-        return Ok(peopleViewModel);
+        var people = _mapper.Map<People>(peoplePutViewModel);
+        people = await _peopleService.Update(people);
+        return _mapper.Map<PeopleViewModel>(people);
     }
 
     /// <summary>
     /// Adds people to a room.
     /// </summary>
-    [HttpPut("add-people-to-room")]
-    public async Task<ActionResult<PeopleViewModel>> Put([FromBody]PeopleAddPeopleToRoomViewModel Ids)
+    [HttpPost("add-people-to-room")]
+    public async Task<ActionResult<PeopleRoomViewModel>> Post([FromBody]PeopleRoomViewModel peopleRoomViewModel)
     {
-        var peopleUpdated = await _service.AddPeopleToRoom(Ids.PeopleId, Ids.RoomId);
-        var peopleViewModel = _mapper.Map<PeopleViewModel>(peopleUpdated);
-
-        return Ok(peopleViewModel);
+        var peopleRoom = _mapper.Map<PeopleRoom>(peopleRoomViewModel);
+        peopleRoom = await _peopleRoomService.Create(peopleRoom);
+        return _mapper.Map<PeopleRoomViewModel>(peopleRoom);
     }
 
     /// <summary>
-    /// Removes a person from a room.
+    /// Removes a people from a room.
     /// </summary>
-    [HttpPut("remove-people-from-room")]
-    public async Task<ActionResult<PeopleViewModel>> Put([FromBody]PeopleRemovePeopleFromRoom peopleId)
+    [HttpDelete("remove-people-from-room")]
+    public async Task<ActionResult<PeopleRoomViewModel>> Delete(PeopleRoomViewModel peopleRoomViewModel)
     {
-        var peopleUpdated = await _service.RemovePeopleFromRoom(peopleId.PeopleId);
-        var peopleViewModel = _mapper.Map<PeopleViewModel>(peopleUpdated);
-
-        return Ok(peopleViewModel);
+        var peopleRoom = _mapper.Map<PeopleRoom>(peopleRoomViewModel);
+        peopleRoom = await _peopleRoomService.Delete(peopleRoom);
+        return _mapper.Map<PeopleRoomViewModel>(peopleRoom);
     }
 }

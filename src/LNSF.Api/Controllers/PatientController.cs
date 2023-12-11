@@ -5,19 +5,22 @@ using LNSF.Domain.Entities;
 using LNSF.Domain.Filters;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LNSF.Api.Controller;
+namespace LNSF.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 public class PatientController : ControllerBase
 {
     private readonly IPatientService _patientService;
+    private readonly IPatientTreatmentService _patientTreatmentService;
     private readonly IMapper _mapper;
 
-    public PatientController(IPatientService patientService, 
+    public PatientController(IPatientService patientService,
+        IPatientTreatmentService patientTreatmentService,
         IMapper mapper)
     {
         _patientService = patientService;
+        _patientTreatmentService = patientTreatmentService;
         _mapper = mapper;
     }
 
@@ -28,42 +31,47 @@ public class PatientController : ControllerBase
     public async Task<ActionResult<List<PatientViewModel>>> Get([FromQuery] PatientFilter filter)
     {
         var patients = await _patientService.Query(filter);
-        var patientsViewModel = _mapper.Map<List<PatientViewModel>>(patients);
-
-        return Ok(patientsViewModel);
+        return _mapper.Map<List<PatientViewModel>>(patients);
     }
 
     /// <summary>
     /// Gets the count of patients.
     /// </summary>
     [HttpGet("count")]
-    public async Task<ActionResult> GetCount() => 
-        Ok(await _patientService.Count());
+    public async Task<ActionResult<int>> GetCount() => 
+        await _patientService.Count();
 
     /// <summary>
     /// Creates a new patient.
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<PatientViewModel>> Post(PatientPostViewModel patient)
+    public async Task<ActionResult<PatientViewModel>> Post(PatientPostViewModel patientPostViewModel)
     {
-        var patientMapped = _mapper.Map<Patient>(patient);
-        var patientCreated = await _patientService.Create(patientMapped);
-        var patientViewModel = _mapper.Map<PatientViewModel>(patientCreated);
+        var patient = _mapper.Map<Patient>(patientPostViewModel);
+        patient = await _patientService.Create(patient);
+        return _mapper.Map<PatientViewModel>(patient);
+    }
 
-        return Ok(patientViewModel);
+    /// <summary>
+    /// Adds a treatment to a patient.
+    /// </summary>
+    [HttpPost("add-treatment-to-patient")]
+    public async Task<ActionResult<PatientViewModel>> AddTreatmentToPatient(PatientTreatmentViewModel patientTreatmentViewModel)
+    {
+        var patientTreatment = _mapper.Map<PatientTreatment>(patientTreatmentViewModel);
+        patientTreatment = await _patientTreatmentService.Create(patientTreatment);
+        return _mapper.Map<PatientViewModel>(patientTreatment);
     }
 
     /// <summary>
     /// Updates a patient.
     /// </summary>
     [HttpPut]
-    public async Task<ActionResult<PatientViewModel>> Put(PatientViewModel patient)
+    public async Task<ActionResult<PatientViewModel>> Put(PatientViewModel patientViewModel)
     {
-        var patientMapped = _mapper.Map<Patient>(patient);
-        var patientUpdated = await _patientService.Update(patientMapped);
-        var patientViewModel = _mapper.Map<PatientViewModel>(patientUpdated);
-
-        return Ok(patientViewModel);
+        var patient = _mapper.Map<Patient>(patientViewModel);
+        patient = await _patientService.Update(patient);
+        return _mapper.Map<PatientViewModel>(patient);
     }
 
     /// <summary>
@@ -72,9 +80,17 @@ public class PatientController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<ActionResult<PatientViewModel>> Delete(int id)
     {
-        var patientDeleted = await _patientService.Delete(id);
-        var patientViewModel = _mapper.Map<PatientViewModel>(patientDeleted);
+        var patient = await _patientService.Delete(id);
+        return _mapper.Map<PatientViewModel>(patient);
+    }
 
-        return Ok(patientViewModel);
+    /// <summary>
+    /// Removes a treatment from a patient.
+    /// </summary>
+    [HttpDelete("remove-treatment-from-patient")]
+    public async Task<ActionResult<PatientViewModel>> RemoveTreatmentFromPatient(PatientTreatmentViewModel patientTreatmentViewModel)
+    {
+        var patientTreatment = await _patientTreatmentService.Delete(patientTreatmentViewModel.PatientId, patientTreatmentViewModel.TreatmentId);
+        return _mapper.Map<PatientViewModel>(patientTreatment);
     }
 }

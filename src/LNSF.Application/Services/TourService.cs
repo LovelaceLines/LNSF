@@ -1,10 +1,10 @@
-﻿using LNSF.Domain.Repositories;
-using LNSF.Domain.Entities;
+﻿using LNSF.Application.Interfaces;
 using LNSF.Application.Validators;
-using LNSF.Domain.Filters;
+using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
+using LNSF.Domain.Filters;
+using LNSF.Domain.Repositories;
 using System.Net;
-using LNSF.Application.Interfaces;
 
 namespace LNSF.Application.Services;
 
@@ -26,9 +26,6 @@ public class TourService : ITourService
     public async Task<List<Tour>> Query(TourFilter filter) => 
         await _tourRepository.Query(filter);
 
-    public async Task<Tour> Get(int id) =>
-        await _tourRepository.Get(id);
-
     public async Task<int> GetCount() => 
         await _tourRepository.GetCount();
 
@@ -37,8 +34,8 @@ public class TourService : ITourService
         var validationResult = _validator.Validate(tour);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
-        if (!await _peopleRepository.Exists(tour.PeopleId)) throw new AppException("Pessoa não encontrada!", HttpStatusCode.UnprocessableEntity);
-        if (await _tourRepository.PeopleHasOpenTour(tour.PeopleId)) throw new AppException("Pessoa possui passeio em aberto!", HttpStatusCode.UnprocessableEntity);
+        if (!await _peopleRepository.ExistsById(tour.PeopleId)) throw new AppException("Pessoa não encontrada!", HttpStatusCode.NotFound);
+        if (await _tourRepository.PeopleHasOpenTour(tour.PeopleId)) throw new AppException("Pessoa possui passeio em aberto!", HttpStatusCode.Conflict);
 
         tour.Output = DateTime.Now;
 
@@ -50,8 +47,8 @@ public class TourService : ITourService
         var validationResult = _validator.Validate(tour);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
-        if (!await _tourRepository.ExistsByIdAndPeopleId(tour.Id, tour.PeopleId)) throw new AppException("Passeio não encontrado!", HttpStatusCode.UnprocessableEntity);
-        if (await _tourRepository.IsClosed(tour.Id)) throw new AppException("Pessoa já retornou!", HttpStatusCode.UnprocessableEntity);
+        if (!await _tourRepository.ExistsByIdAndPeopleId(tour.Id, tour.PeopleId)) throw new AppException("Passeio não encontrado!", HttpStatusCode.NotFound);
+        if (await _tourRepository.IsClosed(tour.Id)) throw new AppException("Pessoa já retornou!", HttpStatusCode.Conflict);
 
         tour.Input = DateTime.Now;
 
@@ -63,7 +60,7 @@ public class TourService : ITourService
         var validationResult = _validator.Validate(tour);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
         
-        if (!await _tourRepository.ExistsByIdAndPeopleId(tour.Id, tour.PeopleId)) throw new AppException("Passeio não encontrado!", HttpStatusCode.UnprocessableEntity);
+        if (!await _tourRepository.ExistsByIdAndPeopleId(tour.Id, tour.PeopleId)) throw new AppException("Passeio não encontrado!", HttpStatusCode.NotFound);
 
         return await _tourRepository.Update(tour);
     }

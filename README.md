@@ -9,11 +9,18 @@ O .NET é uma plataforma de desenvolvedor multiplataforma de código aberto grat
 
 Bibliotecas utilizadas no desenvolvimento:
 
-| [ASP.Net](https://www.nuget.org/packages/Microsoft.AspNetCore.OpenApi/8.0.0-rc.1.23421.29) | [Entity Framework](./docs/icons/net-framework.png) | [AutoMapper](https://www.nuget.org/packages/AutoMapper) | [Bogus](https://www.nuget.org/packages/Bogus) | [FluentValidation](https://www.nuget.org/packages/FluentValidation) | [Serilog](https://www.nuget.org/packages/Serilog/3.1.0-dev-02071) | [xunit](https://www.nuget.org/packages/xunit/2.5.2-pre.2)
-|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
-| ![ASP.Net](./docs/icons/net-framework.png)| ![ENtity FrameWork](./docs/icons/entity-framework.png) | ![AutoMapper](./docs/icons/automapper.png) | ![Bogus](./docs/icons/bogus.png) | ![FluentValidation](./docs/icons/fluentvalidation.png) | ![Serilog](./docs/icons/serilog.png) | ![xunit](./docs/icons/xunit.png)
+| [ASP.Net](https://www.nuget.org/packages/Microsoft.AspNetCore.OpenApi) | [Entity Framework](https://www.nuget.org/packages/Microsoft.EntityFrameworkCore) | [AutoMapper](https://www.nuget.org/packages/AutoMapper) | [Bogus](https://www.nuget.org/packages/Bogus) | [FluentValidation](https://www.nuget.org/packages/FluentValidation) | [Serilog](https://www.nuget.org/packages/Serilog) | [xunit](https://www.nuget.org/packages/xunit) | [FastReports](https://www.nuget.org/packages/FastReport.OpenSource)
+|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+| ![ASP.Net](./docs/icons/net-framework.png)| ![ENtity FrameWork](./docs/icons/entity-framework.png) | ![AutoMapper](./docs/icons/automapper.png) | ![Bogus](./docs/icons/bogus.png) | ![FluentValidation](./docs/icons/fluentvalidation.png) | ![Serilog](./docs/icons/serilog.png) | ![xunit](./docs/icons/xunit.png) | ![FastReports](./docs/icons/fastreports.png)
 
-### 
+### React
+O React é uma biblioteca JavaScript para criar interfaces de usuário (UI) reativas baseado no conceito de componentes, que são blocos de construção reutilizáveis que podem ser combinados para criar interfaces complexas. uma biblioteca popular para criar aplicativos web, incluindo sites, aplicativos móveis e aplicativos de desktop.
+
+Bibliotecas utilizadas no desenvolvimento:
+
+| [Axios](https://www.npmjs.com/package/axios) | [ReactRouter](https://www.npmjs.com/package/react-router-dom) | [MUI](https://www.npmjs.com/package/@mui/material) | [Unform](https://www.npmjs.com/package/@unform/core) | [ESLint](https://www.npmjs.com/package/eslint)
+|:--:|:--:|:--:|:--:|:--:|
+| ![Axios](./docs/icons/axios.png) | ![ReactRouter](./docs/icons/react-router.png) | ![MUI](./docs/icons/mui.png) | ![Unform](./docs/icons/unform.png) | ![ESLint](./docs/icons/eslint.png)
 
 ## Diagramas
 

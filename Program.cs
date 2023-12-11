@@ -12,13 +12,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using LNSF.Domain.Filters;
 using Serilog;
 using Serilog.Formatting.Json;
 using LNSF.Application.Interfaces;
 using LNSF.Domain.Exceptions;
 using LNSF.Infra.Data.Migrations;
 using System.Reflection;
+using Microsoft.AspNetCore.Identity;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,13 +38,10 @@ builder.Logging.AddSerilog();
 
 var autoMapperConfig = new MapperConfiguration(configure =>
 {
-    configure.CreateMap<AuthenticationToken, AuthenticationTokenViewModel>().ReverseMap();
-
-    configure.CreateMap<Account, AccountLoginViewModel>().ReverseMap();
-    configure.CreateMap<Account, AccountViewModel>().ReverseMap();
-    configure.CreateMap<Account, AccountPostViewModel>().ReverseMap();
-    configure.CreateMap<Account, AccountPutViewModel>().ReverseMap();
-    configure.CreateMap<AccountViewModel, AccountFilter>().ReverseMap();
+    configure.CreateMap<IdentityUser, UserViewModel>().ReverseMap();
+    configure.CreateMap<IdentityUser, UserPostViewModel>().ReverseMap();
+    configure.CreateMap<IdentityRole, RoleViewModel>().ReverseMap();
+    configure.CreateMap<IdentityRole, RolePostViewModel>().ReverseMap();
 
     configure.CreateMap<Room, RoomPostViewModel>().ReverseMap();
     configure.CreateMap<Room, RoomViewModel>().ReverseMap();
@@ -51,8 +49,9 @@ var autoMapperConfig = new MapperConfiguration(configure =>
     
     configure.CreateMap<People, PeoplePostViewModel>().ReverseMap();
     configure.CreateMap<People, PeoplePutViewModel>().ReverseMap();
-    configure.CreateMap<People, PeopleAddPeopleToRoomViewModel>().ReverseMap();
     configure.CreateMap<People, PeopleViewModel>().ReverseMap();
+
+    configure.CreateMap<PeopleRoom, PeopleRoomViewModel>().ReverseMap();
 
     configure.CreateMap<EmergencyContact, EmergencyContactPostViewModel>().ReverseMap();
     configure.CreateMap<EmergencyContact, EmergencyContactViewModel>().ReverseMap();
@@ -69,6 +68,8 @@ var autoMapperConfig = new MapperConfiguration(configure =>
     configure.CreateMap<Patient, PatientPostViewModel>().ReverseMap();
     configure.CreateMap<Patient, PatientViewModel>().ReverseMap();
 
+    configure.CreateMap<PatientTreatment, PatientTreatmentViewModel>().ReverseMap();
+
     configure.CreateMap<Escort, EscortPostViewModel>().ReverseMap();
     configure.CreateMap<Escort, EscortViewModel>().ReverseMap();
 
@@ -77,6 +78,8 @@ var autoMapperConfig = new MapperConfiguration(configure =>
 
     configure.CreateMap<Hosting, HostingViewModel>().ReverseMap();
     configure.CreateMap<Hosting, HostingPostViewModel>().ReverseMap();
+
+    configure.CreateMap<HostingEscort, HostingEscortViewModel>().ReverseMap();
 });
 
 builder.Services.AddSingleton(autoMapperConfig.CreateMapper());
@@ -88,16 +91,22 @@ builder.Services.AddSingleton(autoMapperConfig.CreateMapper());
 IConfiguration configuration = builder.Configuration.GetSection("Jwt");
 builder.Services.AddSingleton(configuration);
 
+builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<UserValidator>();
+builder.Services.AddTransient<IdentityUserRole<string>>();
+builder.Services.AddTransient<SignInManager<IdentityUser>>();
+
+builder.Services.AddTransient<IRoleService, RoleService>();
+builder.Services.AddTransient<IRoleRepository, RoleRepository>();
+builder.Services.AddTransient<RoleValidator>();
+
+builder.Services.AddTransient<IUserRoleRepository, UserRoleRepository>();
+builder.Services.AddTransient<IUserRoleService, UserRoleService>();
+
 builder.Services.AddTransient<IAuthenticationTokenService, AuthenticationTokenService>();
-builder.Services.AddTransient<AuthenticationTokenValidator>();
 
-builder.Services.AddTransient<IAccountService, AccountService>();
-builder.Services.AddTransient<AccountCreateValidator>();
-builder.Services.AddTransient<AccountUpdateValidator>();
 builder.Services.AddTransient<PasswordValidator>();
-builder.Services.AddTransient<IAccountRepository, AccountRepository>();
-
-builder.Services.AddTransient<PaginationValidator>();
 
 builder.Services.AddTransient<ITourRepository, ToursRepository>();
 builder.Services.AddTransient<TourValidator>();
@@ -109,9 +118,11 @@ builder.Services.AddTransient<RoomValidator>();
 builder.Services.AddTransient<IRoomService, RoomService>();
 
 builder.Services.AddTransient<IPeopleRepository, PeopleRepository>();
-builder.Services.AddTransient<PeopleFilterValidator>();
 builder.Services.AddTransient<PeopleValidator>();
 builder.Services.AddTransient<IPeopleService, PeopleService>();
+
+builder.Services.AddTransient<IPeopleRoomRepository, PeopleRoomRepository>();
+builder.Services.AddTransient<IPeopleRoomService, PeopleRoomService>();
 
 builder.Services.AddTransient<IEmergencyContactRepository, EmergencyContactRepository>();
 builder.Services.AddTransient<EmergencyContactValidator>();
@@ -135,9 +146,13 @@ builder.Services.AddTransient<IHostingService, HostingService>();
 builder.Services.AddTransient<IHostingRepository, HostingRepository>();
 builder.Services.AddTransient<HostingValidator>();
 
-builder.Services.AddTransient<IPatientTreatmentRepository, PatientTreatmentRepository>();
-
 builder.Services.AddTransient<IHostingEscortRepository, HostingEscortRepository>();
+builder.Services.AddTransient<IHostingEscortService, HostingEscortService>();
+
+builder.Services.AddTransient<IPatientTreatmentRepository, PatientTreatmentRepository>();
+builder.Services.AddTransient<IPatientTreatmentService, PatientTreatmentService>();
+
+builder.Services.AddTransient<IReportService, ReportService>();
 
 #endregion
 
@@ -146,9 +161,9 @@ builder.Services.AddTransient<IHostingEscortRepository, HostingEscortRepository>
 var cors = builder.Configuration.GetSection("Cors");
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: cors["PolicyName"] ?? throw new AppException("Cors: PolicyName is null!"), builder =>
+    options.AddPolicy(name: cors["PolicyName"] ?? throw new AppException("Cors: PolicyName is null!", HttpStatusCode.InternalServerError), builder =>
     {
-        builder.WithOrigins(cors["AllowedOrigins"] ?? throw new AppException("Cors: WithOrigins is null!"))
+        builder.WithOrigins(cors["AllowedOrigins"] ?? throw new AppException("Cors: WithOrigins is null!", HttpStatusCode.InternalServerError))
             //.WithMethods(cors["AllowedMethods"] ?? throw new AppException("Cors: WithMethods is null!"))
             .AllowAnyMethod()
             //.WithHeaders(cors["AllowedHeaders"] ?? throw new AppException("Cors: WithHeaders is null!"))
@@ -159,33 +174,7 @@ builder.Services.AddCors(options =>
 
 #endregion
 
-builder.Services.AddControllers();
-
-#region Authentication
-
-var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:SecretKey"] ?? 
-    throw new InvalidOperationException("JwtConfig: Secret is null"));
-
-builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    }
-).AddJwtBearer(options =>
-    {
-        options.RequireHttpsMetadata = false;
-        options.SaveToken = true;
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(key),
-            ValidateAudience = false,
-            ValidateIssuer = false,
-        };
-    }
-);
-
-#endregion
+#region Context
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
@@ -195,8 +184,36 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 });
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
+
+#endregion
+
+#region Authentication
+
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    }
+).AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"] ?? throw new AppException("JwtConfig: Issuer is null", HttpStatusCode.InternalServerError),
+            ValidAudience = builder.Configuration["Jwt:Audience"] ?? throw new AppException("JwtConfig: Audience is null", HttpStatusCode.InternalServerError),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"] ?? throw new AppException("JwtConfig: Secret is null", HttpStatusCode.InternalServerError))),
+        };
+    }
+);
+
+#endregion
 
 #region Swagger
 
@@ -251,13 +268,16 @@ builder.Services.AddSwaggerGen(setup =>
 
 #endregion
 
+builder.Services.AddControllers();
+
+builder.Services.AddEndpointsApiExplorer();
+
 var app = builder.Build();
 
 var helperMigration = new HelperMigration(app.Services);
 
 app.UseExceptionHandler("/api/Error");
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment() || 
     app.Environment.IsProduction() || 
     app.Environment.IsStaging())
@@ -268,11 +288,13 @@ if (app.Environment.IsDevelopment() ||
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection(); 
+app.UseHttpsRedirection();
 
-app.UseCors(cors["PolicyName"] ?? throw new AppException("Cors: PolicyName is null!"));
+app.UseStaticFiles();
 
-// app.UseAuthentication();
+app.UseCors(cors["PolicyName"] ?? throw new AppException("Cors: PolicyName is null!", HttpStatusCode.InternalServerError));
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

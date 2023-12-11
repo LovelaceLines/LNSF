@@ -8,6 +8,6 @@ public class HospitalFilter
     public string? Name { get; set; }
     public string? Acronym { get; set; }
 
-    public Pagination Page { get; set; } = new Pagination();
-    public OrderBy OrderBy { get; set; } = OrderBy.Ascending;
+    public Pagination Page { get; set; } = new();
+    public OrderBy? OrderBy { get; set; }
 }

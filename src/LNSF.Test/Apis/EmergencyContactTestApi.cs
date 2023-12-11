@@ -34,6 +34,36 @@ public class EmergencyContactTestApi : GlobalClientRequest
     }
 
     [Fact]
+    public async Task Post_ValidContactsWithSamePeopleId_OK()
+    {
+        // Arrange - People
+        var peopleFake = new PeoplePostViewModelFake().Generate();
+        var peoplePosted = await Post<PeopleViewModel>(_peopleClient, peopleFake);
+
+        // Arrange - Contact
+        var contactFake1 = new EmergencyContactViewModelFake().Generate();
+        contactFake1.PeopleId = peoplePosted.Id;
+
+        var contactFake2 = new EmergencyContactViewModelFake().Generate();
+        contactFake2.PeopleId = peoplePosted.Id;
+
+        // Arrange - Count
+        var countBefore = await GetCount(_emergencyContactClient);
+
+        // Act
+        var contactPosted1 = await Post<EmergencyContactViewModel>(_emergencyContactClient, contactFake1);
+        var contactPosted2 = await Post<EmergencyContactViewModel>(_emergencyContactClient, contactFake2);
+
+        // Act - Count
+        var countAfter = await GetCount(_emergencyContactClient);
+
+        // Assert
+        Assert.Equal(countBefore + 2, countAfter);
+        Assert.Equivalent(contactFake1, contactPosted1);
+        Assert.Equivalent(contactFake2, contactPosted2);
+    }
+
+    [Fact]
     public async Task Post_InvalidContactWithEmptyName_BadRequest()
     {
         // Arrange - People

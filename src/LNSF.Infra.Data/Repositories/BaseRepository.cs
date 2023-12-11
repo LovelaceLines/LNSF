@@ -13,15 +13,15 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     public BaseRepository(AppDbContext context) => 
         _context = context;
 
-    public virtual async Task<List<T>> Get() => 
+    public virtual async Task<List<T>> GetAll() => 
         await _context.Set<T>().AsNoTracking().ToListAsync();
 
-    public virtual async Task<T> Get(dynamic id) => 
+    public virtual async Task<T> GetById(dynamic id) => 
         await _context.Set<T>().FindAsync(id) ??
             throw new AppException("Entidade não encontrada!", HttpStatusCode.NotFound);
 
-    public virtual async Task<bool> Exists(dynamic id) => 
-        await _context.Set<T>().FindAsync(id) != null;
+    public virtual async Task<bool> ExistsById(params object?[]? keyValues) => 
+        await _context.Set<T>().FindAsync(keyValues) != null;
 
     public virtual async Task<int> GetCount() => 
         await _context.Set<T>().CountAsync();
@@ -58,9 +58,9 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         return entity;
     }
 
-    public virtual async Task<T> Remove(dynamic id)
+    public virtual async Task<T> RemoveById(dynamic id)
     {
-        T entity = await Get(id);
+        T entity = await GetById(id);
         _context.Remove(entity);
         await _context.SaveChangesAsync();
 

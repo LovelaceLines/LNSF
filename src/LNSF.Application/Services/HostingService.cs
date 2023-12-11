@@ -1,10 +1,10 @@
-using System.Net;
 using LNSF.Application.Interfaces;
 using LNSF.Application.Validators;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
 using LNSF.Domain.Filters;
 using LNSF.Domain.Repositories;
+using System.Net;
 
 namespace LNSF.Application.Services;
 
@@ -12,18 +12,15 @@ public class HostingService : IHostingService
 {
     private readonly IHostingRepository _hostingRepository;
     private readonly IPatientRepository _patientRepository;
-    private readonly IEscortRepository _escortRepository;
     private readonly HostingValidator _validator;
 
     public HostingService(IHostingRepository hostingRepository,
         HostingValidator validator,
-        IPatientRepository patientRepository,
-        IEscortRepository escortRepository)
+        IPatientRepository patientRepository)
     {
         _hostingRepository = hostingRepository;
         _validator = validator;
         _patientRepository = patientRepository;
-        _escortRepository = escortRepository;
     }
 
     public async Task<List<Hosting>> Query(HostingFilter filter) => 
@@ -37,10 +34,8 @@ public class HostingService : IHostingService
         var validationResult = await _validator.ValidateAsync(hosting);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
-        if (!await _patientRepository.Exists(hosting.PatientId)) throw new AppException("Paciente não encontrado", HttpStatusCode.NotFound);
-        foreach (var escortInfo in hosting.EscortInfos)
-            if (!await _escortRepository.Exists(escortInfo.Id)) throw new AppException("Acompanhante não encontrado", HttpStatusCode.NotFound);
-
+        if (!await _patientRepository.ExistsById(hosting.PatientId)) throw new AppException("Paciente não encontrado", HttpStatusCode.NotFound);
+        
         return await _hostingRepository.Add(hosting);
     }
 
@@ -50,9 +45,6 @@ public class HostingService : IHostingService
 
         var validationResult = await _validator.ValidateAsync(hosting);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
-
-        foreach (var escortInfo in hosting.EscortInfos)
-            if (!await _escortRepository.Exists(escortInfo.Id)) throw new AppException("Acompanhante não encontrado", HttpStatusCode.NotFound);
 
         return await _hostingRepository.Update(hosting);
     }
