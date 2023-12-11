@@ -12,5 +12,26 @@ public class TourFilter
     public int? PeopleId { get; set; }
 
     public Pagination Page { get; set; } = new();
-    public OrderBy Order { get; set; } = OrderBy.Ascending;
+    public OrderBy? OrderBy { get; set; }
+
+    public TourFilter() { }
+    
+    public TourFilter(int? id = null,   
+        DateTime? output = null, 
+        DateTime? input = null, 
+        string? note = null, 
+        bool? inOpen = null, 
+        int? peopleId = null,
+        Pagination? page = null,
+        OrderBy? orderBy = null)
+    {
+        Id = id;
+        Output = output;
+        Input = input;
+        Note = note;
+        InOpen = inOpen;
+        PeopleId = peopleId;
+        Page = page ?? new();
+        OrderBy = orderBy;
+    }
 }

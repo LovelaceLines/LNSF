@@ -32,8 +32,8 @@ public class ToursRepository : BaseRepository<Tour>, ITourRepository
         if (filter.InOpen == true) query = query.Where(t => t.Input == null);
         else if (filter.InOpen == false) query = query.Where(t => t.Input != null);
         
-        if (filter.Order == OrderBy.Ascending) query = query.OrderBy(t => t.Output);
-        else if (filter.Order == OrderBy.Descending) query = query.OrderByDescending(t => t.Output);
+        if (filter.OrderBy == OrderBy.Ascending) query = query.OrderBy(t => t.Output);
+        else if (filter.OrderBy == OrderBy.Descending) query = query.OrderByDescending(t => t.Output);
 
         var tours = await query
             .Skip((filter.Page.Page - 1) * filter.Page.PageSize)

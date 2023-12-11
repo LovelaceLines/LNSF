@@ -29,6 +29,7 @@ public class GlobalClientRequest
     public readonly HttpClient _roomClient = new() { BaseAddress = new Uri($"{BaseUrl}Room/") };
     public readonly HttpClient _emergencyContactClient = new() { BaseAddress = new Uri($"{BaseUrl}EmergencyContact/") };
     public readonly HttpClient _tourClient = new() { BaseAddress = new Uri($"{BaseUrl}Tour/") };
+    public readonly HttpClient _putAllClient = new() { BaseAddress = new Uri($"{BaseUrl}Tour/put-all") };
     public readonly HttpClient _escortClient = new() { BaseAddress = new Uri($"{BaseUrl}Escort/") };
     public readonly HttpClient _hospitalClient = new() { BaseAddress = new Uri($"{BaseUrl}Hospital/") };
     public readonly HttpClient _treatmentClient = new() { BaseAddress = new Uri($"{BaseUrl}Treatment/") };
@@ -157,9 +158,9 @@ public class GlobalClientRequest
     public async Task<RoomViewModel> GetRoom(int? id = null, bool? available = null, string? number = null, int? beds = null, int? storey = null)
     {
         if (!id.HasValue) 
-            return await Post<RoomViewModel>(_roomClient, new RoomPostViewModelFake(available, number, beds, storey).Generate());
+            return await Post<RoomViewModel>(_roomClient, new RoomPostViewModelFake(available: available, number: number, beds: beds, storey: storey).Generate());
         
-        return await Put<RoomViewModel>(_roomClient, new RoomPutViewModelFake(id.Value, available, number, beds, storey).Generate());
+        return await Put<RoomViewModel>(_roomClient, new RoomViewModelFake(id: id.Value, available: available, number: number, beds: beds, storey: storey).Generate());
     }
 
     public async Task<PeopleViewModel> GetPeople(string? name = null, Gender? gender = null, DateTime? birthDate = null, string? rg = null, string? cpf = null, string? street = null, string? houseNumber = null, string? neighborhood = null, string? city = null, string? state = null, string? phone = null, string? note = null) =>
@@ -192,6 +193,23 @@ public class GlobalClientRequest
         return await Post<PeopleRoomViewModel>(_addPeopleToRoomClient, peopleRoomFake);
     }
 
+    public async Task<EmergencyContactViewModel> GetEmergencyContact(int? id = null, int? peopleId = null, string? name = null, string? phone = null)
+    {
+        if (!peopleId.HasValue)
+        {
+            var people = await GetPeople();
+            peopleId = people.Id;
+        }
+
+        if (!id.HasValue)
+            return await Post<EmergencyContactViewModel>(_emergencyContactClient, new EmergencyContactPostViewModelFake(peopleId: peopleId.Value, name: name, phone: phone).Generate());
+        
+        if (id.HasValue && peopleId.HasValue)
+            return await Put<EmergencyContactViewModel>(_emergencyContactClient, new EmergencyContactViewModelFake(id: id.Value, peopleId: peopleId.Value, name: name, phone: phone).Generate());
+        
+        throw new AppException("Invalid parameters! You must provide id and peopleId or only peopleId.", HttpStatusCode.BadRequest);
+    }
+
     public async Task<TourViewModel> GetTour(int id = 0, int peopleId = 0)
     {
         if (peopleId == 0)
@@ -201,17 +219,27 @@ public class GlobalClientRequest
         }
 
         if (id == 0)
-            return await Post<TourViewModel>(_tourClient, new TourPostViewModelFake(peopleId).Generate());
+            return await Post<TourViewModel>(_tourClient, new TourPostViewModelFake(peopleId: peopleId).Generate());
         
-        return await Put<TourViewModel>(_tourClient, new TourPutViewModelFake(id, peopleId).Generate());
+        return await Put<TourViewModel>(_tourClient, new TourPutViewModelFake(id: id, peopleId: peopleId).Generate());
     }
 
-    public async Task<HospitalViewModel> GetHospital() =>
-        await Post<HospitalViewModel>(_hospitalClient, new HospitalPostViewModelFake().Generate());
+    public async Task<HospitalViewModel> GetHospital(int? id = null, string? name = null, string? acronym = null)
+    {
+        if (!id.HasValue)
+            return await Post<HospitalViewModel>(_hospitalClient, new HospitalPostViewModelFake(name: name, acronym: acronym).Generate());
+        
+        return await Put<HospitalViewModel>(_hospitalClient, new HospitalViewModelFake(id.Value, name: name, acronym: acronym).Generate());
+    }
 
-    public async Task<TreatmentViewModel> GetTreatment() =>
-        await Post<TreatmentViewModel>(_treatmentClient, new TreatmentPostViewModelFake().Generate());
-    
+    public async Task<TreatmentViewModel> GetTreatment(int? id = null, string? name = null, TypeTreatment? type = null)
+    {
+        if (!id.HasValue)
+            return await Post<TreatmentViewModel>(_treatmentClient, new TreatmentPostViewModelFake(name: name, type: type).Generate());
+
+        return await Put<TreatmentViewModel>(_treatmentClient, new TreatmentViewModelFake(id.Value, name: name, type: type).Generate());
+    }
+
     public async Task<PatientViewModel> GetPatient(int numberTreatment = 1)
     {
         var people = await GetPeople();

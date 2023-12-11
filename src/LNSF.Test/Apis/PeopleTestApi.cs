@@ -1,9 +1,9 @@
-﻿using LNSF.Test.Fakers;
-using LNSF.Api.ViewModels;
-using Xunit;
+﻿using LNSF.Api.ViewModels;
 using LNSF.Domain.Exceptions;
-using System.Net;
 using LNSF.Domain.Filters;
+using LNSF.Test.Fakers;
+using System.Net;
+using Xunit;
 
 namespace LNSF.Test.Apis;
 
@@ -35,127 +35,38 @@ public class PeopleTestApi : GlobalClientRequest
     }
     
     [Fact]
-    public async Task Post_InvalidPeopleWithEmptyName_BadRequest()
+    public async Task Post_InvalidPeople_BadRequest()
     {
         // Arrange - People
-        var peopleFake = new PeoplePostViewModelFake(name: "").Generate();
+        var peopleWithoutName = new PeoplePostViewModelFake(name: "").Generate();
+        var peopleAged14 = new PeoplePostViewModelFake(birthDate: DateTime.Now.AddYears(-14)).Generate();
+        var peopleAged129 = new PeoplePostViewModelFake(birthDate: DateTime.Now.AddYears(-129)).Generate();
+        var peopleWithInvalidRG = new PeoplePostViewModelFake(rg: "123456789").Generate();
+        var peopleWithInvalidCPF = new PeoplePostViewModelFake(cpf: "123456789").Generate();
+        var peopleWithInvalidPhone = new PeoplePostViewModelFake(phone: "123456789").Generate();
 
         // Arrange - Count
         var countBefore = await GetCount(_peopleClient);
 
         // Act - People
-        var exception = await Post<AppException>(_peopleClient, peopleFake);
+        var exceptionWithoutName = await Post<AppException>(_peopleClient, peopleWithoutName);
+        var exceptionAged14 = await Post<AppException>(_peopleClient, peopleAged14);
+        var exceptionAged129 = await Post<AppException>(_peopleClient, peopleAged129);
+        var exceptionWithInvalidRG = await Post<AppException>(_peopleClient, peopleWithInvalidRG);
+        var exceptionWithInvalidCPF = await Post<AppException>(_peopleClient, peopleWithInvalidCPF);
+        var exceptionWithInvalidPhone = await Post<AppException>(_peopleClient, peopleWithInvalidPhone);
 
         // Arrange - Count
         var countAfter = await GetCount(_peopleClient);
 
         // Assert
         Assert.Equal(countBefore, countAfter);
-        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
-    }
-
-    [Fact]
-    public async Task Post_InvalidPeopleWithLessThan15YearsOld_BadRequest()
-    {
-        // Arrange - People
-        var peopleFake = new PeoplePostViewModelFake(birthDate: DateTime.Now.AddYears(-14)).Generate();
-
-        // Arrange - Count
-        var countBefore = await GetCount(_peopleClient);
-
-        // Act - People
-        var exception = await Post<AppException>(_peopleClient, peopleFake);
-
-        // Arrange - Count
-        var countAfter = await GetCount(_peopleClient);
-
-        // Assert
-        Assert.Equal(countBefore, countAfter);
-        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
-    }
-
-    [Fact]
-    public async Task Post_InvalidPeopleWithMoreThan128YearsOld_BadRequest()
-    {
-        // Arrange - People
-        var peopleFake = new PeoplePostViewModelFake(birthDate: DateTime.Now.AddYears(-129)).Generate();
-
-        // Arrange - Count
-        var countBefore = await GetCount(_peopleClient);
-
-        // Act - People
-        var exception = await Post<AppException>(_peopleClient, peopleFake);
-
-        // Arrange - Count
-        var countAfter = await GetCount(_peopleClient);
-
-        // Assert
-        Assert.Equal(countBefore, countAfter);
-        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
-    }
-
-    [Fact]
-    public async Task Post_InvalidPeopleWithInvalidRG_BadRequest()
-    {
-        // Arrange - People
-        var peopleFake = new PeoplePostViewModelFake(rg: "123456789").Generate();
-
-        // Arrange - Count
-        var countBefore = await GetCount(_peopleClient);
-
-        // Act
-        var exception = await Post<AppException>(_peopleClient, peopleFake);
-        var countAfter = await GetCount(_peopleClient);
-
-        // Assert
-        Assert.Equal(countBefore, countAfter);
-        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
-    }
-
-    [Fact]
-    public async Task Post_InvalidPeopleWithInvalidCPF_BadRequest()
-    {
-        // Arrange - People
-        var peopleFake = new PeoplePostViewModelFake(cpf: "123456789").Generate();
-
-        // Arrange - Count
-        var countBefore = await GetCount(_peopleClient);
-
-        // Act - People
-        var exception = await Post<AppException>(_peopleClient, peopleFake);
-
-        // Arrange - Count
-        var countAfter = await GetCount(_peopleClient);
-
-        // Assert
-        Assert.Equal(countBefore, countAfter);
-        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
-    }
-
-    [Fact]
-    public async Task Post_InvalidPeopleWithInvalidPhone_BadRequest()
-    {
-        // Arrange - People
-        var peopleFake = new PeoplePostViewModelFake(phone: "123456789").Generate();
-
-        // Arrange - Count
-        var countBefore = await GetCount(_peopleClient);
-
-        // Act - People
-        var exception = await Post<AppException>(_peopleClient, peopleFake);
-
-        // Arrange - Count
-        var countAfter = await GetCount(_peopleClient);
-
-        // Assert
-        Assert.Equal(countBefore, countAfter);
-        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, exceptionWithoutName.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, exceptionAged14.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, exceptionAged129.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, exceptionWithInvalidRG.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, exceptionWithInvalidCPF.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, exceptionWithInvalidPhone.StatusCode);
     }
 
     [Fact]
@@ -164,11 +75,12 @@ public class PeopleTestApi : GlobalClientRequest
         // Arrange - People
         var people = await GetPeople();
 
+        var peopleToPut = new PeopleViewModelFake(people.Id).Generate();
+        
         // Arrange - Count
         var countBefore = await GetCount(_peopleClient);
 
         // Act - People
-        var peopleToPut = new PeopleViewModelFake(people.Id).Generate();
         var peoplePuted = await Put<PeopleViewModel>(_peopleClient, peopleToPut);
 
         // Act - Count
@@ -185,135 +97,40 @@ public class PeopleTestApi : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Put_InvalidPeopleWithEmptyName_BadRequest()
+    public async Task Put_InvalidPeople_BadRequest()
     {
         // Arrange - People
         var people = await GetPeople();
+
+        var peopleToPutWithoutName = new PeopleViewModelFake(people.Id, name: "").Generate();
+        var peopleToPutAged14 = new PeopleViewModelFake(people.Id, birthDate: DateTime.Now.AddYears(-14)).Generate();
+        var peopleToPutAged129 = new PeopleViewModelFake(people.Id, birthDate: DateTime.Now.AddYears(-129)).Generate();
+        var peopleToPutWithInvalidRG = new PeopleViewModelFake(people.Id, rg: "123456789").Generate();
+        var peopleToPutWithInvalidCPF = new PeopleViewModelFake(people.Id, cpf: "123456789").Generate();
+        var peopleToPutWithInvalidPhone = new PeopleViewModelFake(people.Id, phone: "123456789").Generate();
 
         // Arrange - Count
         var countBefore = await GetCount(_peopleClient);
 
         // Act - People
-        var peopleToPut = new PeopleViewModelFake(people.Id, name: "").Generate();
-        var exception = await Put<AppException>(_peopleClient, peopleToPut);
+        var exceptionWithoutName = await Put<AppException>(_peopleClient, peopleToPutWithoutName);
+        var exceptionAged14 = await Put<AppException>(_peopleClient, peopleToPutAged14);
+        var exceptionAged129 = await Put<AppException>(_peopleClient, peopleToPutAged129);
+        var exceptionWithInvalidRG = await Put<AppException>(_peopleClient, peopleToPutWithInvalidRG);
+        var exceptionWithInvalidCPF = await Put<AppException>(_peopleClient, peopleToPutWithInvalidCPF);
+        var exceptionWithInvalidPhone = await Put<AppException>(_peopleClient, peopleToPutWithInvalidPhone);
 
         // Act - Count
         var countAfter = await GetCount(_peopleClient);
 
         // Assert
         Assert.Equal(countBefore, countAfter);
-        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
-    }
-
-    [Fact]
-    public async Task Put_InvalidPeopleWithLessThan15YearsOld_BadRequest()
-    {
-        // Arrange - People
-        var people = await GetPeople();
-
-        // Arrange - Count
-        var countBefore = await GetCount(_peopleClient);
-
-        // Act - People
-        var peopleToPut = new PeopleViewModelFake(people.Id, birthDate: DateTime.Now.AddYears(-14)).Generate();
-        var exception = await Put<AppException>(_peopleClient, peopleToPut);
-
-        // Act - Count
-        var countAfter = await GetCount(_peopleClient);
-
-        // Assert
-        Assert.Equal(countBefore, countAfter);
-        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
-    }
-
-    [Fact]
-    public async Task Put_InvalidPeopleWithMoreThan128YearsOld_BadRequest()
-    {
-        // Arrange - People
-        var people = await GetPeople();
-
-        // Arrange - Count
-        var countBefore = await GetCount(_peopleClient);
-
-        // Act - People
-        var peopleToPut = new PeopleViewModelFake(people.Id, birthDate: DateTime.Now.AddYears(-129)).Generate();
-        var exception = await Put<AppException>(_peopleClient, peopleToPut);
-
-        // Act - Count
-        var countAfter = await GetCount(_peopleClient);
-
-        // Assert
-        Assert.Equal(countBefore, countAfter);
-        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
-    }
-
-    [Fact]
-    public async Task Put_InvalidPeopleWithInvalidRG_BadRequest()
-    {
-        // Arrange - People
-        var people = await GetPeople();
-
-        // Arrange - Count
-        var countBefore = await GetCount(_peopleClient);
-
-        // Act - People
-        var peopleToPut = new PeopleViewModelFake(people.Id, rg: "123456789").Generate();
-        var exception = await Put<AppException>(_peopleClient, peopleToPut);
-
-        // Act - Count
-        var countAfter = await GetCount(_peopleClient);
-
-        // Assert
-        Assert.Equal(countBefore, countAfter);
-        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
-    }
-
-    [Fact]
-    public async Task Put_InvalidPeopleWithInvalidCPF_BadRequest()
-    {
-        // Arrange - People
-        var people = await GetPeople();
-
-        // Arrange - Count
-        var countBefore = await GetCount(_peopleClient);
-
-        // Act - People
-        var peopleToPut = new PeopleViewModelFake(people.Id, cpf: "123456789").Generate();
-        var exception = await Put<AppException>(_peopleClient, peopleToPut);
-
-        // Act - Count
-        var countAfter = await GetCount(_peopleClient);
-
-        // Assert
-        Assert.Equal(countBefore, countAfter);
-        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
-    }
-
-    [Fact]
-    public async Task Put_InvalidPeopleWithInvalidPhone_BadRequest()
-    {
-        // Arrange - People
-        var people = await GetPeople();
-
-        // Arrange - Count
-        var countBefore = await GetCount(_peopleClient);
-
-        // Act - People
-        var peopleToPut = new PeopleViewModelFake(people.Id, phone: "123456789").Generate();
-        var exception = await Put<AppException>(_peopleClient, peopleToPut);
-
-        // Act - Count
-        var countAfter = await GetCount(_peopleClient);
-
-        // Assert
-        Assert.Equal(countBefore, countAfter);
-        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, exceptionWithoutName.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, exceptionAged14.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, exceptionAged129.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, exceptionWithInvalidRG.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, exceptionWithInvalidCPF.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, exceptionWithInvalidPhone.StatusCode);
     }
 
     [Theory]

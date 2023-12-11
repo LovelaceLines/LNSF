@@ -1,13 +1,25 @@
 ﻿using Bogus;
 using LNSF.Api.ViewModels;
 
-namespace LNSF.Test;
+namespace LNSF.Test.Fakers;
 
-public class EmergencyContactViewModelFake : Faker<EmergencyContactPostViewModel>
+public class EmergencyContactPostViewModelFake : Faker<EmergencyContactPostViewModel>
 {
-    public EmergencyContactViewModelFake()
+    public EmergencyContactPostViewModelFake(int peopleId, string? name = null, string? phone = null)
     {
-        RuleFor(x => x.Name, f => f.Person.FullName);
-        RuleFor(x => x.Phone, f => f.Random.ReplaceNumbers("(##) # ####-####"));
+        RuleFor(x => x.PeopleId, f => peopleId);
+        RuleFor(x => x.Name, f => name ?? f.Person.FullName);
+        RuleFor(x => x.Phone, f => phone ?? f.Random.ReplaceNumbers("(##) # ####-####"));
+    }
+}
+
+public class EmergencyContactViewModelFake : Faker<EmergencyContactViewModel>
+{
+    public EmergencyContactViewModelFake(int id, int peopleId, string? name = null, string? phone = null)
+    {
+        RuleFor(x => x.Id, f => id);
+        RuleFor(x => x.PeopleId, f => peopleId);
+        RuleFor(x => x.Name, f => name ?? f.Person.FullName);
+        RuleFor(x => x.Phone, f => phone ?? f.Random.ReplaceNumbers("(##) # ####-####"));
     }
 }

@@ -30,8 +30,8 @@ public class RoomsRepository : BaseRepository<Room>, IRoomRepository
         if (filter.Storey.HasValue) query = query.Where(r => r.Storey == filter.Storey);
         if (filter.Available.HasValue) query = query.Where(r => r.Available == filter.Available);
 
-        if (filter.Order == OrderBy.Ascending) query = query.OrderBy(r => r.Number);
-        else if (filter.Order == OrderBy.Descending) query = query.OrderByDescending(r => r.Number);
+        if (filter.OrderBy == OrderBy.Ascending) query = query.OrderBy(r => r.Number);
+        else if (filter.OrderBy == OrderBy.Descending) query = query.OrderByDescending(r => r.Number);
 
         var rooms = await query
             .Skip((filter.Page.Page - 1) * filter.Page.PageSize)

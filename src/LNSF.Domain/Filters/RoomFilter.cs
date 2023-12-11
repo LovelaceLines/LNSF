@@ -13,5 +13,28 @@ public class RoomFilter
     public bool? Available { get; set; }
 
     public Pagination Page { get; set; } = new();
-    public OrderBy? Order { get; set; }
+    public OrderBy? OrderBy { get; set; }
+
+    public RoomFilter() { }
+    
+    public RoomFilter(int? id = null, 
+        string? number = null, 
+        bool? bathroom = null, 
+        int? beds = null, 
+        bool? vacant = null, 
+        int? storey = null, 
+        bool? available = null, 
+        Pagination? page = null, 
+        OrderBy? orderBy = null)
+    {
+        Id = id;
+        Number = number;
+        Bathroom = bathroom;
+        Beds = beds;
+        Vacant = vacant;
+        Storey = storey;
+        Available = available;
+        Page = page ?? Page;
+        OrderBy = orderBy;
+    }
 }

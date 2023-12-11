@@ -1,5 +1,7 @@
 ﻿using LNSF.Api.ViewModels;
-using Microsoft.Identity.Client;
+using LNSF.Domain.Exceptions;
+using LNSF.Domain.Filters;
+using System.Net;
 using Xunit;
 
 namespace LNSF.Test.Apis;
@@ -21,108 +23,107 @@ public class HospitalTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_hospitalClient);
 
+        // Act - Query
+        var query = await Query<List<HospitalViewModel>>(_hospitalClient, new HospitalFilter(id: hospitalPosted.Id));
+        var hospitalQueried = query.FirstOrDefault();
+
         // Assert
         Assert.Equal(countBefore + 1, countAfter);
         Assert.Equivalent(hospitalFake, hospitalPosted);
-    }
-
-    [Theory]
-    [InlineData("Hosp")]
-    public async Task Post_HospitalInvalid_BadRequest(string name)
-    {
-        // Arrange - Hospital
-        var hospitalFake = new HospitalPostViewModelFake().Generate();
-        hospitalFake.Name = name;
-
-        // Arrange - Count
-        var countBefore = await GetCount(_hospitalClient);
-
-        // Act - Hospital
-        await Assert.ThrowsAsync<Exception>(() => Post<HospitalViewModel>(_hospitalClient, hospitalFake));
-
-        // Act - Count
-        var countAfter = await GetCount(_hospitalClient);
-
-        // Assert
-        Assert.Equal(countBefore, countAfter);
+        Assert.Equivalent(hospitalPosted, hospitalQueried);
     }
 
     [Fact]
-    public async Task Post_HospitalInvalidWithUniqueName_BadRequest()
+    public async Task Post_HospitalInvalid_BadRequest()
     {
         // Arrange - Hospital
-        var hospitalFake1 = new HospitalPostViewModelFake().Generate();
-        var hospitalPosted1 = await Post<HospitalViewModel>(_hospitalClient, hospitalFake1);
-        var hospitalFake2 = new HospitalPostViewModelFake().Generate();
-        hospitalFake2.Name = hospitalPosted1.Name;
+        var hospitalWithInvalidName = new HospitalPostViewModelFake(name: "hosp").Generate();
 
         // Arrange - Count
         var countBefore = await GetCount(_hospitalClient);
 
         // Act - Hospital
-        await Assert.ThrowsAsync<Exception>(() => Post<HospitalViewModel>(_hospitalClient, hospitalFake2));
+        var exceptionWithInvalidName = await Post<AppException>(_hospitalClient, hospitalWithInvalidName);
 
         // Act - Count
         var countAfter = await GetCount(_hospitalClient);
 
         // Assert
         Assert.Equal(countBefore, countAfter);
+        Assert.Equal(HttpStatusCode.BadRequest, exceptionWithInvalidName.StatusCode);
+    }
+
+    [Fact]
+    public async Task Post_HospitalInvalidWithUniqueName_Conflict()
+    {
+        // Arrange - Hospital
+        var hospital = await GetHospital();
+        var hospitalFake = new HospitalPostViewModelFake(name: hospital.Name).Generate();
+
+        // Arrange - Count
+        var countBefore = await GetCount(_hospitalClient);
+
+        // Act - Hospital
+        var exception = await Post<AppException>(_hospitalClient, hospitalFake);
+
+        // Act - Count
+        var countAfter = await GetCount(_hospitalClient);
+
+        // Assert
+        Assert.Equal(countBefore, countAfter);
+        Assert.Equal(HttpStatusCode.Conflict, exception.StatusCode);
     }
 
     [Fact]
     public async Task Put_HospitalValid_Ok()
     {
         // Arrange - Hospital
-        var hospitalFake1 = new HospitalPostViewModelFake().Generate();
-        var hospitalPosted1 = await Post<HospitalViewModel>(_hospitalClient, hospitalFake1);
-        var hospitalFake2 = new HospitalPostViewModelFake().Generate();
-        var hospitalPut = new HospitalViewModel
-        {
-            Id = hospitalPosted1.Id,
-            Name = hospitalFake2.Name,
-            Acronym = hospitalFake2.Acronym
-        };
+        var hospital = await GetHospital();
+        var hospitalToPut = new HospitalViewModelFake(id: hospital.Id).Generate();
 
         // Arrange - Count
         var countBefore = await GetCount(_hospitalClient);
 
         // Act - Hospital
-        var hospitalPuted = await Put<HospitalViewModel>(_hospitalClient, hospitalPut);
+        var hospitalPuted = await Put<HospitalViewModel>(_hospitalClient, hospitalToPut);
 
-        // Arrange - Count
+        // Act - Count
         var countAfter = await GetCount(_hospitalClient);
+
+        // Act - Query
+        var query = await Query<List<HospitalViewModel>>(_hospitalClient, new HospitalFilter(id: hospitalPuted.Id));
+        var hospitalQueried = query.FirstOrDefault();
 
         // Assert
         Assert.Equal(countBefore, countAfter);
-        Assert.Equivalent(hospitalPuted, hospitalPut);
+        Assert.Equivalent(hospitalPuted, hospitalToPut);
+        Assert.Equivalent(hospitalPuted, hospitalQueried);
     }
 
     [Fact]
     public async Task Put_HospitalInvalidWithUniqueName_Ok()
     {
         // Arrange - Hospital
-        var hospitalFake1 = new HospitalPostViewModelFake().Generate();
-        var hospitalPosted1 = await Post<HospitalViewModel>(_hospitalClient, hospitalFake1);
-        var hospitalFake2 = new HospitalPostViewModelFake().Generate();
-        var hospitalPosted2 = await Post<HospitalViewModel>(_hospitalClient, hospitalFake2);
-        var hospitalPut = new HospitalViewModel
-        {
-            Id = hospitalPosted1.Id,
-            Name = hospitalPosted2.Name,
-            Acronym = hospitalPosted2.Acronym
-        };
+        var hospital1 = await GetHospital();
+        var hospital2 = await GetHospital();
+        var hospitalToPut = new HospitalViewModelFake(id: hospital1.Id, name: hospital2.Name).Generate();
 
         // Act - Count
         var countBefore = await GetCount(_hospitalClient);
 
         // Act - Hospital
-        await Assert.ThrowsAsync<Exception>(() => Put<HospitalViewModel>(_hospitalClient, hospitalPut));
+        var exception = await Put<AppException>(_hospitalClient, hospitalToPut);
 
         // Act - Count
         var countAfter = await GetCount(_hospitalClient);
 
+        // Act - Query
+        var query = await Query<List<HospitalViewModel>>(_hospitalClient, new HospitalFilter(id: hospital1.Id));
+        var hospitalQueried = query.FirstOrDefault();
+
         // Assert
         Assert.Equal(countBefore, countAfter);
+        Assert.Equal(HttpStatusCode.Conflict, exception.StatusCode);
+        Assert.Equivalent(hospital1, hospitalQueried);
     }
-
 }

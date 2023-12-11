@@ -1,10 +1,9 @@
-﻿using System.Net;
-using System.Net.Http.Json;
-using AutoMapper;
+﻿using LNSF.Api.ViewModels;
+using LNSF.Domain.Exceptions;
+using LNSF.Domain.Filters;
 using LNSF.Test.Fakers;
-using LNSF.Api.ViewModels;
-using Newtonsoft.Json;
 using Xunit;
+using System.Net;
 
 namespace LNSF.Test.Apis;
 
@@ -14,38 +13,39 @@ public class EmergencyContactTestApi : GlobalClientRequest
     public async Task Post_ValidContact_OK()
     {
         // Arrange - People
-        var peopleFake = new PeoplePostViewModelFake().Generate();
-        var peoplePosted = await Post<PeopleViewModel>(_peopleClient, peopleFake);
+        var people = await GetPeople();
 
         // Arrange - Contact
-        var contactFake = new EmergencyContactViewModelFake().Generate();
-        contactFake.PeopleId = peoplePosted.Id;
+        var contactFake = new EmergencyContactPostViewModelFake(peopleId: people.Id).Generate();
 
         // Arrange - Count
         var countBefore = await GetCount(_emergencyContactClient);
 
-        // Act
+        // Act - Contact
         var contactPosted = await Post<EmergencyContactViewModel>(_emergencyContactClient, contactFake);
+
+        // Act - Count
         var countAfter = await GetCount(_emergencyContactClient);
+
+        // Act - Query
+        var query = await Query<List<EmergencyContactViewModel>>(_emergencyContactClient, new EmergencyContactFilter(id: contactPosted.Id));
+        var contactQueried = query.FirstOrDefault();
 
         // Assert
         Assert.Equal(countBefore + 1, countAfter);
         Assert.Equivalent(contactFake, contactPosted);
+        Assert.Equivalent(contactPosted, contactQueried);
     }
 
     [Fact]
     public async Task Post_ValidContactsWithSamePeopleId_OK()
     {
         // Arrange - People
-        var peopleFake = new PeoplePostViewModelFake().Generate();
-        var peoplePosted = await Post<PeopleViewModel>(_peopleClient, peopleFake);
+        var people = await GetPeople();
 
         // Arrange - Contact
-        var contactFake1 = new EmergencyContactViewModelFake().Generate();
-        contactFake1.PeopleId = peoplePosted.Id;
-
-        var contactFake2 = new EmergencyContactViewModelFake().Generate();
-        contactFake2.PeopleId = peoplePosted.Id;
+        var contactFake1 = new EmergencyContactPostViewModelFake(peopleId: people.Id).Generate();
+        var contactFake2 = new EmergencyContactPostViewModelFake(peopleId: people.Id).Generate();
 
         // Arrange - Count
         var countBefore = await GetCount(_emergencyContactClient);
@@ -57,251 +57,178 @@ public class EmergencyContactTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_emergencyContactClient);
 
+        // Act - Query
+        var query = await Query<List<EmergencyContactViewModel>>(_emergencyContactClient, new EmergencyContactFilter(peopleId: people.Id));
+        var contactQueried1 = query.FirstOrDefault(c => c.Id == contactPosted1.Id);
+        var contactQueried2 = query.FirstOrDefault(c => c.Id == contactPosted2.Id);
+
         // Assert
         Assert.Equal(countBefore + 2, countAfter);
         Assert.Equivalent(contactFake1, contactPosted1);
         Assert.Equivalent(contactFake2, contactPosted2);
+        Assert.Equivalent(contactPosted1, contactQueried1);
+        Assert.Equivalent(contactPosted2, contactQueried2);
     }
 
     [Fact]
-    public async Task Post_InvalidContactWithEmptyName_BadRequest()
+    public async Task Post_InvalidContact_BadRequest()
     {
         // Arrange - People
-        var peopleFake = new PeoplePostViewModelFake().Generate();
-        var peoplePosted = await Post<PeopleViewModel>(_peopleClient, peopleFake);
+        var people = await GetPeople();
 
         // Arrange - Contact
-        var contactFake = new EmergencyContactViewModelFake().Generate();
-        contactFake.Name = "";
-        contactFake.PeopleId = peoplePosted.Id;
+        var contactFakeWithInvalidPeopleId = new EmergencyContactPostViewModelFake(peopleId: -1).Generate();
+        var contactFakeWithoutName = new EmergencyContactPostViewModelFake(peopleId: people.Id, name: "").Generate();
+        var contactFakeWithoutPhone = new EmergencyContactPostViewModelFake(peopleId: people.Id, phone: "").Generate();
 
         // Arrange - Count
         var countBefore = await GetCount(_emergencyContactClient);
 
-        // Act
-        await Assert.ThrowsAsync<Exception>(async () => await Post<EmergencyContactViewModel>(_emergencyContactClient, contactFake));
+        // Act - Contact
+        var exceptionWithInvalidPeopleId = await Post<AppException>(_emergencyContactClient, contactFakeWithInvalidPeopleId);
+        var exceptionWithoutName = await Post<AppException>(_emergencyContactClient, contactFakeWithoutName);
+        var exceptionWithoutPhone = await Post<AppException>(_emergencyContactClient, contactFakeWithoutPhone);
+
+        // Act - Count
         var countAfter = await GetCount(_emergencyContactClient);
 
         // Assert
         Assert.Equal(countBefore, countAfter);
-    }
-
-    [Fact]
-    public async Task Post_InvalidContactWithEmptyPhone_BadRequest()
-    {
-        // Arrange - People
-        var peopleFake = new PeoplePostViewModelFake().Generate();
-        var peoplePosted = await Post<PeopleViewModel>(_peopleClient, peopleFake);
-
-        // Arrange - Contact
-        var contactFake = new EmergencyContactViewModelFake().Generate();
-        contactFake.Phone = "";
-        contactFake.PeopleId = peoplePosted.Id;
-
-        // Arrange - Count
-        var countBefore = await GetCount(_emergencyContactClient);
-
-        // Act
-        await Assert.ThrowsAsync<Exception>(async () => await Post<EmergencyContactViewModel>(_emergencyContactClient, contactFake));
-        var countAfter = await GetCount(_emergencyContactClient);
-
-        // Assert
-        Assert.Equal(countBefore, countAfter);
-    }
-
-    [Fact]
-    public async Task Post_InvalidContactWithInvalidPeopleId_BadRequest()
-    {
-        // Arrange - Contact
-        var contactFake = new EmergencyContactViewModelFake().Generate();
-        contactFake.PeopleId = -1;
-
-        // Arrange - Count
-        var countBefore = await GetCount(_emergencyContactClient);
-
-        // Act
-        await Assert.ThrowsAsync<Exception>(async () => await Post<EmergencyContactViewModel>(_emergencyContactClient, contactFake));
-        var countAfter = await GetCount(_emergencyContactClient);
-
-        // Assert
-        Assert.Equal(countBefore, countAfter);
+        Assert.Equal(HttpStatusCode.NotFound, exceptionWithInvalidPeopleId.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, exceptionWithoutName.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, exceptionWithoutPhone.StatusCode);
     }
     
     [Fact]
     public async Task Put_ValidContact_OK()
-    {
-        // Arrange - People
-        var peopleFake = new PeoplePostViewModelFake().Generate();
-        var peoplePosted = await Post<PeopleViewModel>(_peopleClient, peopleFake);
-
+    {   
         // Arrange - Contact
-        var contactFake = new EmergencyContactViewModelFake().Generate();
-        contactFake.PeopleId = peoplePosted.Id;
-        var contactPosted = await Post<EmergencyContactViewModel>(_emergencyContactClient, contactFake);
+        var contact = await GetEmergencyContact();
+        var contactToPut = new EmergencyContactViewModelFake(contact.Id, contact.PeopleId).Generate();
 
         // Arrange - Count
         var countBefore = await GetCount(_emergencyContactClient);
 
-        // Act
-        var otherContactFake = new EmergencyContactViewModelFake().Generate();
-        var contactMapped = _mapper.Map<EmergencyContactViewModel>(otherContactFake);
-        contactMapped.Id = contactPosted.Id;
-        contactMapped.PeopleId = peoplePosted.Id;
-        var contactPuted = await Put<EmergencyContactViewModel>(_emergencyContactClient, contactMapped);
+        // Act - Contact
+        var contactPuted = await Put<EmergencyContactViewModel>(_emergencyContactClient, contactToPut);
+
+        // Act - Count
         var countAfter = await GetCount(_emergencyContactClient);
+
+        // Act - Query
+        var query = await Query<List<EmergencyContactViewModel>>(_emergencyContactClient, new EmergencyContactFilter(id: contact.Id));
+        var contactQueried = query.FirstOrDefault();
 
         // Assert
         Assert.Equal(countBefore, countAfter);
-        Assert.Equivalent(contactMapped, contactPuted);
+        Assert.Equivalent(contactToPut, contactPuted);
+        Assert.Equivalent(contactPuted, contactQueried);
     }
 
     [Fact]
-    public async Task Put_InvalidContactWithEmptyName_BadRequest()
+    public async Task Put_InvalidContact_BadRequest()
     {
-        // Arrange - People
-        var peopleFake = new PeoplePostViewModelFake().Generate();
-        var peoplePosted = await Post<PeopleViewModel>(_peopleClient, peopleFake);
-
         // Arrange - Contact
-        var contactFake = new EmergencyContactViewModelFake().Generate();
-        contactFake.PeopleId = peoplePosted.Id;
-        var contactPosted = await Post<EmergencyContactViewModel>(_emergencyContactClient, contactFake);
+        var contact = await GetEmergencyContact();
+
+        var contactWithInvalidPeopleId = new EmergencyContactViewModelFake(id: contact.Id, peopleId: -1).Generate();
+        var contactWithoutName = new EmergencyContactViewModelFake(id: contact.Id, peopleId: contact.PeopleId, name: "").Generate();
+        var contactWithoutPhone = new EmergencyContactViewModelFake(id: contact.Id, peopleId: contact.PeopleId, phone: "").Generate();
 
         // Arrange - Count
         var countBefore = await GetCount(_emergencyContactClient);
 
-        // Act
-        var contactMapped = _mapper.Map<EmergencyContactViewModel>(contactFake);
-        contactMapped.Name = "";
-        contactMapped.Id = contactPosted.Id;
-        contactMapped.PeopleId = peoplePosted.Id;
-        await Assert.ThrowsAsync<Exception>(async () => await Put<EmergencyContactViewModel>(_emergencyContactClient, contactMapped));
+        // Act - Contact
+        var exceptionWithInvalidPeopleId = await Put<AppException>(_emergencyContactClient, contactWithInvalidPeopleId);
+        var exceptionWithoutName = await Put<AppException>(_emergencyContactClient, contactWithoutName);
+        var exceptionWithoutPhone = await Put<AppException>(_emergencyContactClient, contactWithoutPhone);
+
+        // Act - Count
         var countAfter = await GetCount(_emergencyContactClient);
+
+        // Act - Query
+        var query = await Query<List<EmergencyContactViewModel>>(_emergencyContactClient, new EmergencyContactFilter(id: contact.Id));
+        var contactQueried = query.FirstOrDefault();
 
         // Assert
         Assert.Equal(countBefore, countAfter);
+        Assert.Equal(HttpStatusCode.NotFound, exceptionWithInvalidPeopleId.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, exceptionWithoutName.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, exceptionWithoutPhone.StatusCode);
+        Assert.Equivalent(contact, contactQueried);
     }
 
     [Fact]
-    public async Task Put_InvalidContactWithEmptyPhone_BadRequest()
+    public async Task Put_InvalidContactWithOtherPeopleId_NotFound()
     {
-        // Arrange - People
-        var peopleFake = new PeoplePostViewModelFake().Generate();
-        var peoplePosted = await Post<PeopleViewModel>(_peopleClient, peopleFake);
-
         // Arrange - Contact
-        var contactFake = new EmergencyContactViewModelFake().Generate();
-        contactFake.PeopleId = peoplePosted.Id;
-        var contactPosted = await Post<EmergencyContactViewModel>(_emergencyContactClient, contactFake);
+        var contact1 = await GetEmergencyContact();
+        var contact2 = await GetEmergencyContact();
+
+        var contactToPut = new EmergencyContactViewModelFake(id: contact1.Id, peopleId: contact2.PeopleId).Generate();
 
         // Arrange - Count
         var countBefore = await GetCount(_emergencyContactClient);
 
-        // Act
-        var contactMapped = _mapper.Map<EmergencyContactViewModel>(contactFake);
-        contactMapped.Phone = "";
-        contactMapped.Id = contactPosted.Id;
-        contactMapped.PeopleId = peoplePosted.Id;
-        await Assert.ThrowsAsync<Exception>(async () => await Put<EmergencyContactViewModel>(_emergencyContactClient, contactMapped));
+        // Act - Contact
+        var exception = await Put<AppException>(_emergencyContactClient, contactToPut);
+
+        // Act - Count
         var countAfter = await GetCount(_emergencyContactClient);
+
+        // Act - Query
+        var query = await Query<List<EmergencyContactViewModel>>(_emergencyContactClient, new EmergencyContactFilter { Id = contact1.Id });
+        var contactQueried = query.FirstOrDefault();
 
         // Assert
         Assert.Equal(countBefore, countAfter);
-    }
-
-    [Fact]
-    public async Task Put_InvalidContactWithInvalidPeopleId_BadRequest()
-    {
-        // Arrange - People
-        var peopleFake = new PeoplePostViewModelFake().Generate();
-        var peoplePosted = await Post<PeopleViewModel>(_peopleClient, peopleFake);
-
-        // Arrange - Contact
-        var contactFake = new EmergencyContactViewModelFake().Generate();
-        contactFake.PeopleId = peoplePosted.Id;
-        var contactPosted = await Post<EmergencyContactViewModel>(_emergencyContactClient, contactFake);
-
-        // Arrange - Count
-        var countBefore = await GetCount(_emergencyContactClient);
-
-        // Act
-        var contactMapped = _mapper.Map<EmergencyContactViewModel>(contactFake);
-        contactMapped.Id = contactPosted.Id;
-        contactMapped.PeopleId = -1;
-        await Assert.ThrowsAsync<Exception>(async () => await Put<EmergencyContactViewModel>(_emergencyContactClient, contactMapped));
-        var countAfter = await GetCount(_emergencyContactClient);
-
-        // Assert
-        Assert.Equal(countBefore, countAfter);
-    }
-
-    [Fact]
-    public async Task Put_InvalidContactWithOtherPeopleId_BadRequest()
-    {
-        // Arrange - People
-        var peopleFake = new PeoplePostViewModelFake().Generate();
-        var peoplePosted = await Post<PeopleViewModel>(_peopleClient, peopleFake);
-        var otherPeopleFake = new PeoplePostViewModelFake().Generate();
-        var otherpeoplePosted = await Post<PeopleViewModel>(_peopleClient, otherPeopleFake);
-
-        // Arrange - Contact
-        var contactFake = new EmergencyContactViewModelFake().Generate();
-        contactFake.PeopleId = peoplePosted.Id;
-        var contactPosted = await Post<EmergencyContactViewModel>(_emergencyContactClient, contactFake);
-
-        // Arrange - Count
-        var countBefore = await GetCount(_emergencyContactClient);
-
-        // Act
-        var otherContactFake = new EmergencyContactViewModelFake().Generate();
-        var contactMapped = _mapper.Map<EmergencyContactViewModel>(otherContactFake);
-        contactMapped.Id = contactPosted.Id;
-        contactMapped.PeopleId = otherpeoplePosted.Id;
-        await Assert.ThrowsAsync<Exception>(async () => await Put<EmergencyContactViewModel>(_emergencyContactClient, contactMapped));
-        var countAfter = await GetCount(_emergencyContactClient);
-
-        // Assert
-        Assert.Equal(countBefore, countAfter);
+        Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
+        Assert.Equivalent(contact1, contactQueried);
     }
 
     [Fact]
     public async Task Delete_ValidContact_OK()
     {
         // Arrange - People
-        var peopleFake = new PeoplePostViewModelFake().Generate();
-        var peoplePosted = await Post<PeopleViewModel>(_peopleClient, peopleFake);
+        var people = await GetPeople();
 
         // Arrange - Contact
-        var contactFake = new EmergencyContactViewModelFake().Generate();
-        contactFake.PeopleId = peoplePosted.Id;
-        var contactPosted = await Post<EmergencyContactViewModel>(_emergencyContactClient, contactFake);
+        var contact = await GetEmergencyContact(peopleId: people.Id);
 
         // Arrange - Count
         var countBefore = await GetCount(_emergencyContactClient);
  
-        // Act
-        var contactDeleted = await Delete<EmergencyContactViewModel>(_emergencyContactClient, contactPosted.Id);
+        // Act - Contact
+        var contactDeleted = await Delete<EmergencyContactViewModel>(_emergencyContactClient, contact.Id);
+
+        // Act - Count
         var countAfter = await GetCount(_emergencyContactClient);
+
+        // Act - Query
+        var query = await Query<List<EmergencyContactViewModel>>(_emergencyContactClient, new EmergencyContactFilter(id: contact.Id));
+        var contactQueried = query.FirstOrDefault();
 
         // Assert
         Assert.Equal(countBefore - 1, countAfter);
-        Assert.Equivalent(contactFake, contactDeleted);
+        Assert.Equivalent(contact, contactDeleted);
+        Assert.Null(contactQueried);
     }
 
     [Fact]
-    public async Task Delete_InvalidContact_BadRequest()
+    public async Task Delete_InvalidContact_NotFound()
     {
         // Arrange - Count
         var countBefore = await GetCount(_emergencyContactClient);
  
-        // Act
-        // Contact with invalid Id
-        await Assert.ThrowsAsync<Exception>(async () => await Delete<EmergencyContactViewModel>(_emergencyContactClient, -1));
-        await Assert.ThrowsAsync<Exception>(async () => await Delete<EmergencyContactViewModel>(_emergencyContactClient, 0));
+        // Act - Contact
+        var exception = await Delete<AppException>(_emergencyContactClient, -1);
+
+        // Act - Count
         var countAfter = await GetCount(_emergencyContactClient);
 
         // Assert
         Assert.Equal(countBefore, countAfter);
+        Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
     }
 
 }

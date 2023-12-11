@@ -1,8 +1,8 @@
-﻿using System.Net;
-using LNSF.Api.ViewModels;
-using LNSF.Domain.Enums;
+﻿using LNSF.Api.ViewModels;
 using LNSF.Domain.Exceptions;
+using LNSF.Domain.Filters;
 using LNSF.Test.Fakers;
+using System.Net;
 using Xunit;
 
 namespace LNSF.Test.Apis;
@@ -10,7 +10,7 @@ namespace LNSF.Test.Apis;
 public class TreatmentTestApi : GlobalClientRequest
 {
     [Fact]
-    public async Task Post_TreatmentValid_Ok()
+    public async Task Post_ValidTreatment_Ok()
     {
         // Arrange - Treatment
         var treatmentFake = new TreatmentPostViewModelFake().Generate();
@@ -24,68 +24,71 @@ public class TreatmentTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_treatmentClient);
 
+        // Act - Query
+        var query = await Query<List<TreatmentViewModel>>(_treatmentClient, new TreatmentFilter(id: treatmentPosted.Id));
+        var treatmentQueried = query.FirstOrDefault();
+
         // Assert
         Assert.Equal(countBefore + 1, countAfter);
         Assert.Equivalent(treatmentFake, treatmentPosted);
+        Assert.Equivalent(treatmentPosted, treatmentQueried);
     }
 
     [Fact]
-    public async Task Post_TreatmentValidWithNonUniqueNamesAndDifferentTypes_Ok()
+    public async Task Post_ValidTreatmentWithNonUniqueNameAndDifferentType_Ok()
     {
         // Arrange - Treatment
-        var treatmentFake1 = new TreatmentPostViewModelFake().Generate();
-        var treatmentPosted1 = await Post<TreatmentViewModel>(_treatmentClient, treatmentFake1);
+        var treatment = await GetTreatment();
+        var treatmentToPost = new TreatmentPostViewModelFake(name: treatment.Name).Generate();
 
         // Arrange - Count
         var countBefore = await GetCount(_treatmentClient);
 
         // Act - Treatment
-        var treatmentFake2 = new TreatmentPostViewModelFake().Generate();
-        treatmentFake2.Name = treatmentFake1.Name;
-        if (treatmentFake2.Type == treatmentFake1.Type) treatmentFake2.Type = treatmentFake1.Type == TypeTreatment.OTHER ? TypeTreatment.CANCER : TypeTreatment.OTHER;
-        var treatmentPosted2 = await Post<TreatmentViewModel>(_treatmentClient, treatmentFake2);
+        var treatmentPosted = await Post<TreatmentViewModel>(_treatmentClient, treatmentToPost);
 
         // Act - Count
         var countAfter = await GetCount(_treatmentClient);
 
+        // ACt - Query
+        var query = await Query<List<TreatmentViewModel>>(_treatmentClient, new TreatmentFilter(id: treatmentPosted.Id));
+        var treatmentQueried = query.FirstOrDefault();
+
         // Assert
         Assert.Equal(countBefore + 1, countAfter);
-        Assert.Equivalent(treatmentFake1, treatmentPosted1);
-        Assert.Equivalent(treatmentFake2, treatmentPosted2);
+        Assert.Equivalent(treatmentToPost, treatmentPosted);
+        Assert.Equivalent(treatmentPosted, treatmentQueried);
     }
 
     [Fact]
-    public async Task Post_TreatmentInvalidWithNonUniqueNamesAndType_BadRequest()
+    public async Task Post_InvalidTreatmentWithNonUniqueNameAndType_Conflict()
     {
         // Arrange - Treatment
-        var treatmentFake1 = new TreatmentPostViewModelFake().Generate();
-        var treatmentPosted1 = await Post<TreatmentViewModel>(_treatmentClient, treatmentFake1);
+        var treatment = await GetTreatment();
+        var treatmentToPost = new TreatmentPostViewModelFake(name: treatment.Name, type: treatment.Type).Generate();
 
         // Arrange - Count
         var countBefore = await GetCount(_treatmentClient);
 
         // Act - Treatment
-        var exception = await Post<AppException>(_treatmentClient, treatmentFake1);
+        var exception = await Post<AppException>(_treatmentClient, treatmentToPost);
 
         // Act - Count
         var countAfter = await GetCount(_treatmentClient);
 
         // Assert
         Assert.Equal(countBefore, countAfter);
-        Assert.NotEmpty(exception.Message);
-        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
+        Assert.NotEqual(HttpStatusCode.Conflict, exception.StatusCode);
     }
 
     [Theory]
     [InlineData("a")]
     [InlineData("ab")]
     [InlineData("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz")]
-    public async Task Post_TreatmentInvalidWithShortName_BadRequest(string name)
+    public async Task Post_InvalidTreatmentWithShortName_BadRequest(string name)
     {
         // Arrange - Treatment
-        var treatmentFake = new TreatmentPostViewModelFake().Generate();
-        treatmentFake.Name = name;
+        var treatmentFake = new TreatmentPostViewModelFake(name: name).Generate();
 
         // Arrange - Count
         var countBefore = await GetCount(_treatmentClient);
@@ -98,82 +101,84 @@ public class TreatmentTestApi : GlobalClientRequest
 
         // Assert
         Assert.Equal(countBefore, countAfter);
-        Assert.NotEmpty(exception.Message);
-        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, exception.StatusCode);
     }
 
     [Fact]
-    public async Task Put_TreatmentValid_Ok()
+    public async Task Put_ValidTreatment_Ok()
     {
         // Arrange - Treatment
-        var treatmentFake1 = new TreatmentPostViewModelFake().Generate();
-        var treatmentPosted = await Post<TreatmentViewModel>(_treatmentClient, treatmentFake1);
+        var treatment = await GetTreatment();
+        var treatmentToPut = new TreatmentViewModelFake(treatment.Id).Generate();
 
         // Arrange - Count
         var countBefore = await GetCount(_treatmentClient);
 
         // Act - Treatment
-        var treatmentFake2 = new TreatmentPostViewModelFake().Generate();
-        var treatmentMapped = _mapper.Map<TreatmentViewModel>(treatmentFake2);
-        treatmentMapped.Id = treatmentPosted.Id;
-        var treatmentPuted = await Put<TreatmentViewModel>(_treatmentClient, treatmentMapped);
+        var treatmentPuted = await Put<TreatmentViewModel>(_treatmentClient, treatmentToPut);
 
         // Act - Count
         var countAfter = await GetCount(_treatmentClient);
 
+        // Act - Query
+        var query = await Query<List<TreatmentViewModel>>(_treatmentClient, new TreatmentFilter(id: treatmentPuted.Id));
+        var treatmentQueried = query.FirstOrDefault();
+
         // Assert
         Assert.Equal(countBefore, countAfter);
-        Assert.Equivalent(treatmentMapped, treatmentPuted);
+        Assert.Equivalent(treatmentToPut, treatmentPuted);
+        Assert.Equivalent(treatmentPuted, treatmentQueried);
     }
 
     [Fact]
-    public async Task Put_TreatmentValidWithNonUniqueNamesAndDifferentTypes_Ok()
+    public async Task Put_ValidTreatmentWithNonUniqueNameAndDifferentType_Ok()
     {
         // Arrange - Treatment
-        var treatmentFake = new TreatmentPostViewModelFake().Generate();
-        var treatmentPosted = await Post<TreatmentViewModel>(_treatmentClient, treatmentFake);
+        var treatment = await GetTreatment();
+        var treatmentToPut = new TreatmentViewModelFake(treatment.Id, name: treatment.Name).Generate();
 
         // Arrange - Count
         var countBefore = await GetCount(_treatmentClient);
 
         // Act - Treatment
-        var treatmentPut = treatmentPosted;
-        treatmentPut.Type = treatmentPosted.Type == TypeTreatment.OTHER ? TypeTreatment.CANCER : TypeTreatment.OTHER;
-        var treatmentPuted = await Put<TreatmentViewModel>(_treatmentClient, treatmentPut);
+        var treatmentPuted = await Put<TreatmentViewModel>(_treatmentClient, treatmentToPut);
 
         // Act - Count
         var countAfter = await GetCount(_treatmentClient);
 
+        // Act - Query
+        var query = await Query<List<TreatmentViewModel>>(_treatmentClient, new TreatmentFilter(id: treatmentPuted.Id));
+        var treatmentQueried = query.FirstOrDefault();
+
         // Assert
         Assert.Equal(countBefore, countAfter);
-        Assert.Equivalent(treatmentPut, treatmentPuted);
+        Assert.Equivalent(treatmentToPut, treatmentPuted);
+        Assert.Equivalent(treatmentPuted, treatmentQueried);
     }
 
     [Fact]
-    public async Task Put_TreatmentInvalidWithNonUniqueNamesAndType_BadRequest()
+    public async Task Put_TreatmentInvalidWithNonUniqueNamesAndType_Conflict()
     {
         // Arrange - Treatment
-        var treatmentFake1 = new TreatmentPostViewModelFake().Generate();
-        var treatmentPosted1 = await Post<TreatmentViewModel>(_treatmentClient, treatmentFake1);
-        var treatmentFake2 = new TreatmentPostViewModelFake().Generate();
-        var treatmentPosted2 = await Post<TreatmentViewModel>(_treatmentClient, treatmentFake2);
+        var treatment = await GetTreatment();
+        var treatmentToPut = new TreatmentViewModelFake(treatment.Id, name: treatment.Name, type: treatment.Type).Generate();
 
         // Arrange - Count
         var countBefore = await GetCount(_treatmentClient);
 
         // Act - Treatment
-        var treatmentPut = treatmentPosted1;
-        treatmentPut.Id = treatmentPosted2.Id;        
-        var exception = await Put<AppException>(_treatmentClient, treatmentPut);
+        var exception = await Put<AppException>(_treatmentClient, treatmentToPut);
 
         // Act - Count
         var countAfter = await GetCount(_treatmentClient);
 
+        // Act - Query
+        var query = await Query<List<TreatmentViewModel>>(_treatmentClient, new TreatmentFilter(id: treatmentToPut.Id));
+        var treatmentQueried = query.FirstOrDefault();
+
         // Assert
         Assert.Equal(countBefore, countAfter);
-        Assert.NotEmpty(exception.Message);
-        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
-    } 
+        Assert.NotEqual(HttpStatusCode.Conflict, exception.StatusCode);
+        Assert.Equal(treatment, treatmentQueried);
+    }
 }

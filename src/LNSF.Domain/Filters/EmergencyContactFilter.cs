@@ -11,4 +11,21 @@ public class EmergencyContactFilter
 
     public Pagination Page { get; set; } = new();
     public OrderBy? OrderBy { get; set; }
+
+    public EmergencyContactFilter() { }
+
+    public EmergencyContactFilter(int? id = null,
+        string? name = null,
+        string? phone = null,
+        int? peopleId = null,
+        Pagination? page = null,
+        OrderBy? orderBy = null)
+    {
+        Id = id;
+        Name = name;
+        Phone = phone;
+        PeopleId = peopleId;
+        Page = page ?? new Pagination();
+        OrderBy = orderBy;
+    }
 }
