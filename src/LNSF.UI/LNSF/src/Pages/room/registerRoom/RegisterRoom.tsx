@@ -92,7 +92,7 @@ export const RegisterRoom: React.FC = () => {
                         mostrarBotaoVoltar={false}
 
                         mostrarBotaoApagar={false}
-                        aoClicarEmNovo={() => { navigate('/inicio/usuarios/gerenciar/cadastrar') }}
+                        aoClicarEmNovo={() => { navigate('/inicio/apartamentos/gerenciar/cadastrar') }}
                     />
                 </Toolbar>
             </Box>

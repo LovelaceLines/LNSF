@@ -7,6 +7,7 @@ import { EscortProvider } from './Contexts/escortContext/index.tsx'
 import { HospitalProvider } from './Contexts/hospitalContext/index.tsx'
 import { TreatmentProvider } from './Contexts/treatmentContext/index.tsx'
 import { PatientProvider } from './Contexts/patientContext/index.tsx'
+import { HostingProvider } from './Contexts/hostingContext/index.tsx'
 
 
 
@@ -25,7 +26,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                         <HospitalProvider>
                           <TreatmentProvider>
                             <PatientProvider>
-                              <App />
+                              <HostingProvider>
+                                <App />
+                              </HostingProvider>
                             </PatientProvider>
                           </TreatmentProvider>
                         </HospitalProvider>
