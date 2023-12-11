@@ -7,6 +7,8 @@ import { ViewHospital } from '../Pages/hospital/viewHospital/ViewHospital';
 import { TelaDeGerenciamentoHospital } from '../Pages/hospital/registerHospital/TelaDeGerenciamentoHospital';
 import { TelaDeGerenciamentoTratamentos } from '../Pages/tratamentos/registerTratamentos/TelaDeGerenciamentoTratamento';
 import { ViewTratamentos } from '../Pages/tratamentos/viewTratamentos/ViewTratamentos';
+import { Hosting } from '../Pages/hosting/viewHosting/ViewHosting_';
+
 
 export const AppRoutes = () => {
 
@@ -21,7 +23,8 @@ export const AppRoutes = () => {
                     <Route path="/inicio" element={<Dashboard />} />
 
                     <Route path="/inicio/apartamentos/visualizar" element={<Dashboard children={<ViewRoom />} />} />
-                    <Route path="/inicio/hospedagens/visualizar" element={<Dashboard children={<ViewRoom />} />} />
+
+                    <Route path="/inicio/hospedagens/visualizar" element={<Dashboard children={<Hosting />} />} />
 
                     {user.role !== 0 && <Route path="/inicio/apartamentos/gerenciar" element={<Dashboard children={<RegisterRoom />} />} />}
                     {user.role !== 0 && <Route path="/inicio/apartamentos/gerenciar/:id" element={<Dashboard children={<TelaDeGerenciamentoRoom />} />} />}
