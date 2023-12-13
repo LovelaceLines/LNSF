@@ -78,7 +78,7 @@ public class TreatmentTestApi : GlobalClientRequest
 
         // Assert
         Assert.Equal(countBefore, countAfter);
-        Assert.NotEqual(HttpStatusCode.Conflict, exception.StatusCode);
+        Assert.Equal(HttpStatusCode.Conflict, exception.StatusCode);
     }
 
     [Theory]
@@ -178,7 +178,7 @@ public class TreatmentTestApi : GlobalClientRequest
 
         // Assert
         Assert.Equal(countBefore, countAfter);
-        Assert.NotEqual(HttpStatusCode.Conflict, exception.StatusCode);
-        Assert.Equal(treatment, treatmentQueried);
+        Assert.Equal(HttpStatusCode.Conflict, exception.StatusCode);
+        Assert.Equivalent(treatment, treatmentQueried);
     }
 }

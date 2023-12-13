@@ -48,8 +48,8 @@ public class PatientRepository : BaseRepository<Patient>, IPatientRepository
         else if (filter.IsVeteran == false) query = query.Where(p =>
             hostings.Count(h => h.PatientId == p.Id) == 1);
 
-        if (filter.Order == OrderBy.Ascending) query = query.OrderBy(p => p.Id);
-        else if (filter.Order == OrderBy.Descending) query = query.OrderByDescending(p => p.Id);
+        if (filter.OrderBy == OrderBy.Ascending) query = query.OrderBy(p => p.Id);
+        else if (filter.OrderBy == OrderBy.Descending) query = query.OrderByDescending(p => p.Id);
 
         var patients = await query
             .Skip((filter.Page.Page - 1) * filter.Page.PageSize)

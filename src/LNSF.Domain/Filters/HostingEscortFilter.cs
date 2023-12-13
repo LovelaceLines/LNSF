@@ -12,11 +12,14 @@ public class HostingEscortFilter
 
     public HostingEscortFilter() { }
 
-    public HostingEscortFilter(int? hostingId, int? escortId, OrderBy? orderBy, int page = 1)
+    public HostingEscortFilter(int? hostingId = null, 
+        int? escortId = null, 
+        Pagination? page = null,
+        OrderBy? orderBy = null)
     {
         HostingId = hostingId;
         EscortId = escortId;
-        Page = new(page);
+        Page = page ?? Page;
         OrderBy = orderBy;
     }
 }

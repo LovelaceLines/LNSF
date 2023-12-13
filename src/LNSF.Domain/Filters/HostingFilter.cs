@@ -13,4 +13,25 @@ public class HostingFilter
 
 	public Pagination Page { get; set; } = new();
 	public OrderBy? OrderBy { get; set; }
+
+	public HostingFilter() { }
+
+	public HostingFilter(int? id = null, 
+		int? patientId = null, 
+		int? escortId = null, 
+		DateTime? checkIn = null, 
+		DateTime? checkOut = null, 
+		bool? active = null, 
+		Pagination? page = null, 
+		OrderBy? orderBy = null)
+	{
+		Id = id;
+		CheckIn = checkIn;
+		CheckOut = checkOut;
+		PatientId = patientId;
+		EscortId = escortId;
+		Active = active;
+		Page = page ?? Page;
+		OrderBy = orderBy;
+	}
 }

@@ -1,11 +1,9 @@
 using LNSF.Domain.Entities;
 using LNSF.Domain.Enums;
-using LNSF.Domain.Exceptions;
 using LNSF.Domain.Filters;
 using LNSF.Domain.Repositories;
 using LNSF.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
 
 namespace LNSF.Infra.Data.Repositories;
 

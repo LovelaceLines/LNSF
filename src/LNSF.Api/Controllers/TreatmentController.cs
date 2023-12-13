@@ -34,7 +34,7 @@ public class TreatmentController : ControllerBase
     /// <summary>
     /// Gets the count of treatments.
     /// </summary>
-    [HttpGet("Count")]
+    [HttpGet("count")]
     public async Task<ActionResult<int>> GetCount() => 
         await _treatmentService.GetCount();
 

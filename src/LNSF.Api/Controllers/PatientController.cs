@@ -56,11 +56,11 @@ public class PatientController : ControllerBase
     /// Adds a treatment to a patient.
     /// </summary>
     [HttpPost("add-treatment-to-patient")]
-    public async Task<ActionResult<PatientViewModel>> AddTreatmentToPatient(PatientTreatmentViewModel patientTreatmentViewModel)
+    public async Task<ActionResult<PatientTreatmentViewModel>> AddTreatmentToPatient(PatientTreatmentViewModel patientTreatmentViewModel)
     {
         var patientTreatment = _mapper.Map<PatientTreatment>(patientTreatmentViewModel);
         patientTreatment = await _patientTreatmentService.Create(patientTreatment);
-        return _mapper.Map<PatientViewModel>(patientTreatment);
+        return _mapper.Map<PatientTreatmentViewModel>(patientTreatment);
     }
 
     /// <summary>
@@ -88,9 +88,9 @@ public class PatientController : ControllerBase
     /// Removes a treatment from a patient.
     /// </summary>
     [HttpDelete("remove-treatment-from-patient")]
-    public async Task<ActionResult<PatientViewModel>> RemoveTreatmentFromPatient(PatientTreatmentViewModel patientTreatmentViewModel)
+    public async Task<ActionResult<PatientTreatmentViewModel>> RemoveTreatmentFromPatient(PatientTreatmentViewModel patientTreatmentViewModel)
     {
         var patientTreatment = await _patientTreatmentService.Delete(patientTreatmentViewModel.PatientId, patientTreatmentViewModel.TreatmentId);
-        return _mapper.Map<PatientViewModel>(patientTreatment);
+        return _mapper.Map<PatientTreatmentViewModel>(patientTreatment);
     }
 }

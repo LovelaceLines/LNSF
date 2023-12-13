@@ -80,9 +80,9 @@ public class HostingController : ControllerBase
     /// Removes an escort from a hosting.
     /// </summary>
     [HttpDelete("remove-escort-from-hosting")]
-    public async Task<ActionResult<HostingViewModel>> RemoveEscortFromHosting(HostingEscortViewModel hostingEscortViewModel)
+    public async Task<ActionResult<HostingEscortViewModel>> RemoveEscortFromHosting(HostingEscortViewModel hostingEscortViewModel)
     {
         var hostingEscort = await _hostingEscortService.Delete(hostingEscortViewModel.HostingId, hostingEscortViewModel.EscortId);
-        return _mapper.Map<HostingViewModel>(hostingEscort.Hosting);
+        return _mapper.Map<HostingEscortViewModel>(hostingEscort);
     }
 }

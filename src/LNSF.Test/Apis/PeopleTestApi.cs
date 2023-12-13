@@ -133,13 +133,227 @@ public class PeopleTestApi : GlobalClientRequest
         Assert.Equal(HttpStatusCode.BadRequest, exceptionWithInvalidPhone.StatusCode);
     }
 
-    [Theory]
-    [InlineData(1)]
-    [InlineData(2)]
-    public async Task AddPeopleToRoom_ValidPeoplePatientAndHotingAndRoom_OK(int beds)
+    [Fact]
+    public async Task AddPeopleToRoom_ValidPeoplePatientHotingRoom_OK()
     {
         // Arrange - Room
-        var roomFake = await GetRoom(beds: beds, available: true);
+        var room = await GetRoom(beds: 1, available: true);
+
+        // Arrange - People
+        var patient = await GetPatient();
+
+        // Arrange - Hosting
+        var hosting = await GetHosting(patientId: patient.Id);
+
+        // Arrange - PeopleRoom
+        var peopleRoomFake = new PeopleRoomViewModelFake(roomId: room.Id, peopleId: patient.PeopleId, hostingId: hosting.Id).Generate();
+
+        // Arrange - Count
+        var countPeopleRoomsBefore = await GetCount(_peopleRoomClient);
+        var countRoomsBefore = await GetCount(_roomClient);
+        var countPeoplesBefore = await GetCount(_peopleClient);
+        var countPatientsBefore = await GetCount(_patientClient);
+        var countHostingsBefore = await GetCount(_hostingClient);
+
+        // Act - AddPeopleToRoom
+        var peopleRoomPosted = await Post<PeopleRoomViewModel>(_addPeopleToRoomClient, peopleRoomFake);
+
+        // Act - Count
+        var countPeopleRoomsAfter = await GetCount(_peopleRoomClient);
+        var countRoomsAfter = await GetCount(_roomClient);
+        var countPeoplesAfter = await GetCount(_peopleClient);
+        var countPatientsAfter = await GetCount(_patientClient);
+        var countHostingsAfter = await GetCount(_hostingClient);
+
+        // Assert
+        Assert.Equal(countPeopleRoomsBefore + 1, countPeopleRoomsAfter);
+        Assert.Equivalent(peopleRoomFake, peopleRoomPosted);
+        Assert.Equal(countRoomsBefore, countRoomsAfter);
+        Assert.Equal(countPeoplesBefore, countPeoplesAfter);
+        Assert.Equal(countPatientsBefore, countPatientsAfter);
+        Assert.Equal(countHostingsBefore, countHostingsAfter);
+    }
+
+    [Fact]
+    public async Task AddPeopleToRoom_ValidPeopleEscortHotingRoomWithEscort_OK()
+    {
+        // Arrange - Room
+        var room = await GetRoom(beds: 1, available: true);
+
+        // Arrange - People
+        var patient = await GetPatient();
+        var escort = await GetEscort();
+
+        // Arrange - Hosting
+        var hosting = await GetHosting(patientId: patient.Id);
+
+        // Arrange - HostingEscort
+        var hostingEscort = await GetAddEscortToHosting(escortId: escort.Id, hostingId: hosting.Id);
+
+        // Arrange - PeopleRoom
+        var peopleRoomFake = new PeopleRoomViewModelFake(roomId: room.Id, peopleId: escort.PeopleId, hostingId: hosting.Id).Generate();
+
+        // Arrange - Count
+        var countPeopleRoomsBefore = await GetCount(_peopleRoomClient);
+        var countRoomsBefore = await GetCount(_roomClient);
+        var countPeoplesBefore = await GetCount(_peopleClient);
+        var countPatientsBefore = await GetCount(_patientClient);
+        var countEscortsBefore = await GetCount(_escortClient);
+        var countHostingsBefore = await GetCount(_hostingClient);
+
+        // Act - AddPeopleToRoom
+        var peopleRoomPosted = await Post<PeopleRoomViewModel>(_addPeopleToRoomClient, peopleRoomFake);
+
+        // Act - Count
+        var countPeopleRoomsAfter = await GetCount(_peopleRoomClient);
+        var countRoomsAfter = await GetCount(_roomClient);
+        var countPeoplesAfter = await GetCount(_peopleClient);
+        var countPatientsAfter = await GetCount(_patientClient);
+        var countEscortsAfter = await GetCount(_escortClient);
+        var countHostingsAfter = await GetCount(_hostingClient);
+
+        // Assert
+        Assert.Equal(countPeopleRoomsBefore + 1, countPeopleRoomsAfter);
+        Assert.Equivalent(peopleRoomFake, peopleRoomPosted);
+        Assert.Equal(countRoomsBefore, countRoomsAfter);
+        Assert.Equal(countPeoplesBefore, countPeoplesAfter);
+        Assert.Equal(countPatientsBefore, countPatientsAfter);
+        Assert.Equal(countEscortsBefore, countEscortsAfter);
+        Assert.Equal(countHostingsBefore, countHostingsAfter);
+    }
+
+    [Fact]
+    public async Task AddPeopleToRoom_ValidPeopleEscortHotingRoomWithPatientAndEscort_Ok()
+    {
+        // Arrange - Room
+        var room = await GetRoom(beds: 2, available: true);
+
+        // Arrange - People
+        var patient = await GetPatient();
+        var escort = await GetEscort();
+
+        // Arrange - Hosting
+        var hosting = await GetHosting(patientId: patient.Id);
+
+        // Arrange - HostingEscort
+        var hostingEscort = await GetAddEscortToHosting(escortId: escort.Id, hostingId: hosting.Id);
+
+        // Arrange - PeopleRoom
+        var peopleRoomFakeWithPatient = new PeopleRoomViewModelFake(roomId: room.Id, peopleId: patient.PeopleId, hostingId: hosting.Id).Generate();
+        var peopleRoomFakeWithEscort = new PeopleRoomViewModelFake(roomId: room.Id, peopleId: escort.PeopleId, hostingId: hosting.Id).Generate();
+
+        // Arrange - Count
+        var countPeopleRoomsBefore = await GetCount(_peopleRoomClient);
+        var countRoomsBefore = await GetCount(_roomClient);
+        var countPeoplesBefore = await GetCount(_peopleClient);
+        var countPatientsBefore = await GetCount(_patientClient);
+        var countEscortsBefore = await GetCount(_escortClient);
+        var countHostingsBefore = await GetCount(_hostingClient);
+
+        // Act - AddPeopleToRoom
+        var peopleRoomPostedWithPatient = await Post<PeopleRoomViewModel>(_addPeopleToRoomClient, peopleRoomFakeWithPatient);
+        var peopleRoomPostedWithEscort = await Post<PeopleRoomViewModel>(_addPeopleToRoomClient, peopleRoomFakeWithEscort);
+
+        // Act - Count
+        var countPeopleRoomsAfter = await GetCount(_peopleRoomClient);
+        var countRoomsAfter = await GetCount(_roomClient);
+        var countPeoplesAfter = await GetCount(_peopleClient);
+        var countPatientsAfter = await GetCount(_patientClient);
+        var countEscortsAfter = await GetCount(_escortClient);
+        var countHostingsAfter = await GetCount(_hostingClient);
+
+        // Assert
+        Assert.Equal(countPeopleRoomsBefore + 2, countPeopleRoomsAfter);
+        Assert.Equivalent(peopleRoomFakeWithPatient, peopleRoomPostedWithPatient);
+        Assert.Equivalent(peopleRoomFakeWithEscort, peopleRoomPostedWithEscort);
+        Assert.Equal(countRoomsBefore, countRoomsAfter);
+        Assert.Equal(countPeoplesBefore, countPeoplesAfter);
+        Assert.Equal(countPatientsBefore, countPatientsAfter);
+        Assert.Equal(countEscortsBefore, countEscortsAfter);
+        Assert.Equal(countHostingsBefore, countHostingsAfter);
+    }
+
+    [Fact]
+    public async Task AddPeopleToRoom_InvalidPeoplePatientHotingRoomWithInvalidHosting_NotFound()
+    {
+        // Arrange - Room
+        var room = await GetRoom(available: true);
+
+        // Arrange - People
+        var patient = await GetPatient();
+
+        // Act - AddPeopleToRoom
+        var peopleRoomFake = new PeopleRoomViewModelFake(roomId: room.Id, peopleId: patient.PeopleId, hostingId: 0).Generate();
+
+        // Arrange - Count
+        var countRoomsBefore = await GetCount(_roomClient);
+        var countPeoplesBefore = await GetCount(_peopleClient);
+        var countPatientsBefore = await GetCount(_patientClient);
+        var countPeopleRoomsBefore = await GetCount(_peopleRoomClient);
+        var countHostingsBefore = await GetCount(_hostingClient);
+
+        // Act - AddPeopleToRoom
+        var exception = await Post<AppException>(_addPeopleToRoomClient, peopleRoomFake);
+
+        // Act - Count
+        var countRoomsAfter = await GetCount(_roomClient);
+        var countPeoplesAfter = await GetCount(_peopleClient);
+        var countPatientsAfter = await GetCount(_patientClient);
+        var countPeopleRoomsAfter = await GetCount(_peopleRoomClient);
+        var countHostingsAfter = await GetCount(_hostingClient);
+
+        // Assert
+        Assert.Equal(countRoomsBefore, countRoomsAfter);
+        Assert.Equal(countPeoplesBefore, countPeoplesAfter);
+        Assert.Equal(countPatientsBefore, countPatientsAfter);
+        Assert.Equal(countPeopleRoomsBefore, countPeopleRoomsAfter);
+        Assert.Equal(countHostingsBefore, countHostingsAfter);
+        Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
+    }
+
+    [Fact]
+    public async Task AddPeopleToRoom_InvalidPeoplePatientHotingRoomWithInvalidRoom_NotFound()
+    {
+        // Arrange - People
+        var patient = await GetPatient();
+
+        // Arrange - Hosting
+        var hosting = await GetHosting(patientId: patient.Id);
+
+        // Arrange - PeopleRoom
+        var peopleRoomFake = new PeopleRoomViewModelFake(roomId: 0, peopleId: patient.PeopleId, hostingId: hosting.Id).Generate();
+
+        // Arrange - Count
+        var countPeopleRoomsBefore = await GetCount(_peopleRoomClient);
+        var countRoomsBefore = await GetCount(_roomClient);
+        var countPeoplesBefore = await GetCount(_peopleClient);
+        var countPatientsBefore = await GetCount(_patientClient);
+        var countHostingsBefore = await GetCount(_hostingClient);
+
+        // Act - AddPeopleToRoom
+        var exception = await Post<AppException>(_addPeopleToRoomClient, peopleRoomFake);
+
+        // Act - Count
+        var countPeopleRoomsAfter = await GetCount(_peopleRoomClient);
+        var countRoomsAfter = await GetCount(_roomClient);
+        var countPeoplesAfter = await GetCount(_peopleClient);
+        var countPatientsAfter = await GetCount(_patientClient);
+        var countHostingsAfter = await GetCount(_hostingClient);
+
+        // Assert
+        Assert.Equal(countPeopleRoomsBefore, countPeopleRoomsAfter);
+        Assert.Equal(countRoomsBefore, countRoomsAfter);
+        Assert.Equal(countPeoplesBefore, countPeoplesAfter);
+        Assert.Equal(countPatientsBefore, countPatientsAfter);
+        Assert.Equal(countHostingsBefore, countHostingsAfter);
+        Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
+    }
+
+    [Fact]
+    public async Task AddPeopleToRoom_InvalidPeoplePatientHotingRoomWithInvalidPeople_BadRequest()
+    {
+        // Arrange - Room
+        var roomFake = await GetRoom(available: true);
 
         // Arrange - People
         var patientFake = await GetPatient();
@@ -148,227 +362,118 @@ public class PeopleTestApi : GlobalClientRequest
         var hostingFake = await GetHosting(patientId: patientFake.Id);
 
         // Arrange - PeopleRoom
-        var peopleRoomFake = new PeopleRoomViewModelFake(roomId: roomFake.Id, peopleId: patientFake.PeopleId, hostingId: hostingFake.Id).Generate();
-
-        // Arrange - Count
-        var countRoomsBefore = await GetCount(_roomClient);
-        var countPeoplesBefore = await GetCount(_peopleClient);
-        var countPatientsBefore = await GetCount(_patientClient);
-        var countHostingsBefore = await GetCount(_hostingClient);
-        var countPeopleRoomsBefore = await GetCount(_peopleRoomClient);
-
-        // Act - AddPeopleToRoom
-        var peopleRoomPosted = await Post<PeopleRoomViewModel>(_addPeopleToRoomClient, peopleRoomFake);
-
-        // Act - Count
-        var countRoomsAfter = await GetCount(_roomClient);
-        var countPeoplesAfter = await GetCount(_peopleClient);
-        var countPatientsAfter = await GetCount(_patientClient);
-        var countHostingsAfter = await GetCount(_hostingClient);
-        var countPeopleRoomsAfter = await GetCount(_peopleRoomClient);
-
-        // Assert
-        Assert.Equal(countRoomsBefore, countRoomsAfter);
-        Assert.Equal(countPeoplesBefore, countPeoplesAfter);
-        Assert.Equal(countPatientsBefore, countPatientsAfter);
-        Assert.Equal(countHostingsBefore, countHostingsAfter);
-        Assert.Equal(countPeopleRoomsBefore + 1, countPeopleRoomsAfter);
-        Assert.Equivalent(peopleRoomFake, peopleRoomPosted);
-    }
-
-    [Theory]
-    [InlineData(1)]
-    [InlineData(2)]
-    public async Task AddPeopleToRoom_ValidPeopleEscortAndHotingAndRoom_OK(int beds)
-    {
-        // Arrange - Room
-        var roomFake = await GetRoom(beds: beds, available: true);
-
-        // Arrange - People
-        var escortFake = await GetEscort();
-
-        // Arrange - Hosting
-        var hostingFake = await GetHosting();
-
-        // Arrange - Add Escort to Hosting
-        var hostingEscort = await Post<HostingEscortViewModel>(_addEscortToHostingClient, new HostingEscortViewModel() { HostingId = hostingFake.Id, EscortId = escortFake.Id });
-
-        // Arrange - PeopleRoom
-        var peopleRoomFake = new PeopleRoomViewModelFake(roomId: roomFake.Id, peopleId: escortFake.PeopleId, hostingId: hostingFake.Id).Generate();
-
-        // Arrange - Count
-        var countRoomsBefore = await GetCount(_roomClient);
-        var countPeoplesBefore = await GetCount(_peopleClient);
-        var countEscortsBefore = await GetCount(_escortClient);
-        var countHostingsBefore = await GetCount(_hostingClient);
-        var countPeopleRoomsBefore = await GetCount(_peopleRoomClient);
-
-        // Act - AddPeopleToRoom
-        var peopleRoomPosted = await Post<PeopleRoomViewModel>(_addPeopleToRoomClient, peopleRoomFake);
-
-        // Act - Count
-        var countRoomsAfter = await GetCount(_roomClient);
-        var countPeoplesAfter = await GetCount(_peopleClient);
-        var countEscortsAfter = await GetCount(_escortClient);
-        var countHostingsAfter = await GetCount(_hostingClient);
-        var countPeopleRoomsAfter = await GetCount(_peopleRoomClient);
-
-        // Assert
-        Assert.Equal(countRoomsBefore, countRoomsAfter);
-        Assert.Equal(countPeoplesBefore, countPeoplesAfter);
-        Assert.Equal(countEscortsBefore, countEscortsAfter);
-        Assert.Equal(countHostingsBefore, countHostingsAfter);
-        Assert.Equal(countPeopleRoomsBefore + 1, countPeopleRoomsAfter);
-        Assert.Equivalent(peopleRoomFake, peopleRoomPosted);
-    }
-
-    [Fact]
-    public async Task AddPeopleToRoom_InvalidHostingWithValidPeoplePatientAndRoom_BadRequest()
-    {
-        // Arrange - Room
-        var roomFake = await GetRoom(available: true);
-
-        // Arrange - People
-        var patientFake = await GetPatient();
-
-        // Arrange - Count
-        var countRoomsBefore = await GetCount(_roomClient);
-        var countPeoplesBefore = await GetCount(_peopleClient);
-        var countPatientsBefore = await GetCount(_patientClient);
-        var countPeopleRoomsBefore = await GetCount(_peopleRoomClient);
-        var countHostingsBefore = await GetCount(_hostingClient);
-
-        // Act - AddPeopleToRoom
-        var peopleRoomFake = new PeopleRoomViewModelFake(roomId: roomFake.Id, peopleId: patientFake.PeopleId, hostingId: 0).Generate();
-        var exception = await Post<AppException>(_addPeopleToRoomClient, peopleRoomFake);
-
-        // Act - Count
-        var countRoomsAfter = await GetCount(_roomClient);
-        var countPeoplesAfter = await GetCount(_peopleClient);
-        var countPatientsAfter = await GetCount(_patientClient);
-        var countPeopleRoomsAfter = await GetCount(_peopleRoomClient);
-        var countHostingsAfter = await GetCount(_hostingClient);
-
-        // Assert
-        Assert.Equal(countRoomsBefore, countRoomsAfter);
-        Assert.Equal(countPeoplesBefore, countPeoplesAfter);
-        Assert.Equal(countPatientsBefore, countPatientsAfter);
-        Assert.Equal(countPeopleRoomsBefore, countPeopleRoomsAfter);
-        Assert.Equal(countHostingsBefore, countHostingsAfter);
-        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
-    }
-
-    [Fact]
-    public async Task AddPeopleToRoom_InvalidHostingWithValidPeopleEscortAndRoom_BadRequest()
-    {
-        // Arrange - Room
-        var roomFake = await GetRoom(available: true);
-
-        // Arrange - People
-        var escortFake = await GetEscort();
-
-        // Arrange - Count
-        var countRoomsBefore = await GetCount(_roomClient);
-        var countPeoplesBefore = await GetCount(_peopleClient);
-        var countEscortsBefore = await GetCount(_escortClient);
-        var countPeopleRoomsBefore = await GetCount(_peopleRoomClient);
-        var countHostingsBefore = await GetCount(_hostingClient);
-
-        // Act - AddPeopleToRoom
-        var peopleRoomFake = new PeopleRoomViewModelFake(roomId: roomFake.Id, peopleId: escortFake.PeopleId, hostingId: 0).Generate();
-        var exception = await Post<AppException>(_addPeopleToRoomClient, peopleRoomFake);
-
-        // Act - Count
-        var countRoomsAfter = await GetCount(_roomClient);
-        var countPeoplesAfter = await GetCount(_peopleClient);
-        var countEscortsAfter = await GetCount(_escortClient);
-        var countPeopleRoomsAfter = await GetCount(_peopleRoomClient);
-        var countHostingsAfter = await GetCount(_hostingClient);
-
-        // Assert
-        Assert.Equal(countRoomsBefore, countRoomsAfter);
-        Assert.Equal(countPeoplesBefore, countPeoplesAfter);
-        Assert.Equal(countEscortsBefore, countEscortsAfter);
-        Assert.Equal(countPeopleRoomsBefore, countPeopleRoomsAfter);
-        Assert.Equal(countHostingsBefore, countHostingsAfter);
-        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
-    }
-
-    [Fact]
-    public async Task AddPeopleToRoom_InvalidPeopleWithValidHostingAndRoom_BadRequest()
-    {
-        // Arrange - Room
-        var roomFake = await GetRoom(available: true);
-
-        // Arrange - Hosting
-        var hostingFake = await GetHosting();
-
-        // Arrange - Count
-        var countRoomsBefore = await GetCount(_roomClient);
-        var countPeoplesBefore = await GetCount(_peopleClient);
-        var countHostingsBefore = await GetCount(_hostingClient);
-        var countPeopleRoomsBefore = await GetCount(_peopleRoomClient);
-
-        // Act - AddPeopleToRoom
         var peopleRoomFake = new PeopleRoomViewModelFake(roomId: roomFake.Id, peopleId: 0, hostingId: hostingFake.Id).Generate();
-        var exception = await Post<AppException>(_addPeopleToRoomClient, peopleRoomFake);
-
-        // Act - Count
-        var countRoomsAfter = await GetCount(_roomClient);
-        var countPeoplesAfter = await GetCount(_peopleClient);
-        var countHostingsAfter = await GetCount(_hostingClient);
-        var countPeopleRoomsAfter = await GetCount(_peopleRoomClient);
-
-        // Assert
-        Assert.Equal(countRoomsBefore, countRoomsAfter);
-        Assert.Equal(countPeoplesBefore, countPeoplesAfter);
-        Assert.Equal(countHostingsBefore, countHostingsAfter);
-        Assert.Equal(countPeopleRoomsBefore, countPeopleRoomsAfter);
-        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
-    }
-    
-    [Fact]
-    public async Task AddPeopleToRoom_InvalidRoomWithValidPeoplePatientAndHosting_BadRequest()
-    {
-        // Arrange - People
-        var patientFake = await GetPatient();
-
-        // Arrange - Hosting
-        var hostingFake = await GetHosting(patientId: patientFake.Id);
 
         // Arrange - Count
+        var countPeopleRoomsBefore = await GetCount(_peopleRoomClient);
         var countRoomsBefore = await GetCount(_roomClient);
         var countPeoplesBefore = await GetCount(_peopleClient);
         var countPatientsBefore = await GetCount(_patientClient);
         var countHostingsBefore = await GetCount(_hostingClient);
-        var countPeopleRoomsBefore = await GetCount(_peopleRoomClient);
 
         // Act - AddPeopleToRoom
-        var peopleRoomFake = new PeopleRoomViewModelFake(roomId: 0, peopleId: patientFake.PeopleId, hostingId: hostingFake.Id).Generate();
         var exception = await Post<AppException>(_addPeopleToRoomClient, peopleRoomFake);
 
         // Act - Count
+        var countPeopleRoomsAfter = await GetCount(_peopleRoomClient);
         var countRoomsAfter = await GetCount(_roomClient);
         var countPeoplesAfter = await GetCount(_peopleClient);
         var countPatientsAfter = await GetCount(_patientClient);
         var countHostingsAfter = await GetCount(_hostingClient);
-        var countPeopleRoomsAfter = await GetCount(_peopleRoomClient);
 
         // Assert
+        Assert.Equal(countPeopleRoomsBefore, countPeopleRoomsAfter);
         Assert.Equal(countRoomsBefore, countRoomsAfter);
         Assert.Equal(countPeoplesBefore, countPeoplesAfter);
         Assert.Equal(countPatientsBefore, countPatientsAfter);
         Assert.Equal(countHostingsBefore, countHostingsAfter);
-        Assert.Equal(countPeopleRoomsBefore, countPeopleRoomsAfter);
-        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
+        Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
     }
-    
+
     [Fact]
-    public async Task AddPeopleToRoom_InvalidRoomNotAvailableWithValidPeopleAndHosting_BadRequest()
+    public async Task AddPeopleToRoom_InvalidPeoplePatientHotingRoomWithValidHostingPatientButInvalidPeople_BadRequest()
+    {
+        // Arrange - Room
+        var room = await GetRoom(available: true);
+
+        // Arrange - Hosting
+        var hosting = await GetHosting();
+
+        // Arrange - PeopleRoom
+        var peopleRoomFake = new PeopleRoomViewModelFake(roomId: room.Id, peopleId: 0, hostingId: hosting.Id).Generate();
+
+        // Arrange - Count
+        var countPeopleRoomsBefore = await GetCount(_peopleRoomClient);
+        var countRoomsBefore = await GetCount(_roomClient);
+        var countPeoplesBefore = await GetCount(_peopleClient);
+        var countPatientsBefore = await GetCount(_patientClient);
+        var countHostingsBefore = await GetCount(_hostingClient);
+
+        // Act - AddPeopleToRoom
+        var exception = await Post<AppException>(_addPeopleToRoomClient, peopleRoomFake);
+
+        // Act - Count
+        var countPeopleRoomsAfter = await GetCount(_peopleRoomClient);
+        var countRoomsAfter = await GetCount(_roomClient);
+        var countPeoplesAfter = await GetCount(_peopleClient);
+        var countPatientsAfter = await GetCount(_patientClient);
+        var countHostingsAfter = await GetCount(_hostingClient);
+
+        // Assert
+        Assert.Equal(countPeopleRoomsBefore, countPeopleRoomsAfter);
+        Assert.Equal(countRoomsBefore, countRoomsAfter);
+        Assert.Equal(countPeoplesBefore, countPeoplesAfter);
+        Assert.Equal(countPatientsBefore, countPatientsAfter);
+        Assert.Equal(countHostingsBefore, countHostingsAfter);
+        Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
+    }
+
+    [Fact]
+    public async Task AddPeopleToRoom_InvalidPeoplePatientHotingRoomWithValidHostingPatientAndEscortButInvalidPeople_BadRequest()
+    {
+        // Arrange - Room
+        var room = await GetRoom(available: true);
+
+        // Arrange - Hosting
+        var hosting = await GetHosting();
+
+        // Arrange - HostingEscort
+        var hostingEscort = await GetAddEscortToHosting(hostingId: hosting.Id);
+
+        // Arrange - PeopleRoom
+        var peopleRoomFake = new PeopleRoomViewModelFake(roomId: room.Id, peopleId: 0, hostingId: hosting.Id).Generate();
+
+        // Arrange - Count
+        var countPeopleRoomsBefore = await GetCount(_peopleRoomClient);
+        var countRoomsBefore = await GetCount(_roomClient);
+        var countPeoplesBefore = await GetCount(_peopleClient);
+        var countPatientsBefore = await GetCount(_patientClient);
+        var countEscortsBefore = await GetCount(_escortClient);
+        var countHostingsBefore = await GetCount(_hostingClient);
+
+        // Act - AddPeopleToRoom
+        var exception = await Post<AppException>(_addPeopleToRoomClient, peopleRoomFake);
+
+        // Act - Count
+        var countPeopleRoomsAfter = await GetCount(_peopleRoomClient);
+        var countRoomsAfter = await GetCount(_roomClient);
+        var countPeoplesAfter = await GetCount(_peopleClient);
+        var countPatientsAfter = await GetCount(_patientClient);
+        var countEscortsAfter = await GetCount(_escortClient);
+        var countHostingsAfter = await GetCount(_hostingClient);
+
+        // Assert
+        Assert.Equal(countPeopleRoomsBefore, countPeopleRoomsAfter);
+        Assert.Equal(countRoomsBefore, countRoomsAfter);
+        Assert.Equal(countPeoplesBefore, countPeoplesAfter);
+        Assert.Equal(countPatientsBefore, countPatientsAfter);
+        Assert.Equal(countEscortsBefore, countEscortsAfter);
+        Assert.Equal(countHostingsBefore, countHostingsAfter);
+        Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
+    }
+
+    [Fact]
+    public async Task AddPeopleToRoom_InvalidPeoplePatientHotingRoomWithRoomNotAvailable_Conflict()
     {
         // Arrange - Room
         var roomFake = await GetRoom(available: false);
@@ -379,15 +484,17 @@ public class PeopleTestApi : GlobalClientRequest
         // Arrange - Hosting
         var hostingFake = await GetHosting(patientId: patientFake.Id);
 
+        // Arrange - PeopleRoom
+        var peopleRoomFake = new PeopleRoomViewModelFake(roomId: roomFake.Id, peopleId: patientFake.PeopleId, hostingId: hostingFake.Id).Generate();
+        
         // Arrange - Count
+        var countPeopleRoomsBefore = await GetCount(_peopleRoomClient);
         var countRoomsBefore = await GetCount(_roomClient);
         var countPeoplesBefore = await GetCount(_peopleClient);
         var countPatientsBefore = await GetCount(_patientClient);
         var countHostingsBefore = await GetCount(_hostingClient);
-        var countPeopleRoomsBefore = await GetCount(_peopleRoomClient);
 
         // Act - AddPeopleToRoom
-        var peopleRoomFake = new PeopleRoomViewModelFake(roomId: roomFake.Id, peopleId: patientFake.PeopleId, hostingId: hostingFake.Id).Generate();
         var exception = await Post<AppException>(_addPeopleToRoomClient, peopleRoomFake);
 
         // Act - Count
@@ -403,26 +510,30 @@ public class PeopleTestApi : GlobalClientRequest
         Assert.Equal(countPatientsBefore, countPatientsAfter);
         Assert.Equal(countHostingsBefore, countHostingsAfter);
         Assert.Equal(countPeopleRoomsBefore, countPeopleRoomsAfter);
-        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
+        Assert.Equal(HttpStatusCode.Conflict, exception.StatusCode);
     }
     
     [Fact]
-    public async Task AddPeopleToRoom_InvalidRoomWithoutVacancyAvaWithValidPeopleAndHosting_BadRequest()
+    public async Task AddPeopleToRoom_InvalidPeoplePatientHotingRoomWithoutVacancyToPatientAndEscort_Conflict()
     {
         // Arrange - Room
-        var roomFake = await GetRoom(available: true, beds: 1);
+        var room = await GetRoom(available: true, beds: 1);
 
         // Arrange - People
-        var patientFake = await GetPatient();
-        var escortFake = await GetEscort();
+        var patient = await GetPatient();
+        var escort = await GetEscort();
 
         // Arrange - Hosting
-        var hostingFake = await GetHosting(patientId: patientFake.Id, escortIds: new List<int> { escortFake.Id });
+        var hosting = await GetHosting(patientId: patient.Id);
+
+        // Arrange - HostingEscort
+        var hostingEscort = await GetAddEscortToHosting(escortId: escort.Id, hostingId: hosting.Id);
 
         // Arrange - PeopleRoom
-        var peopleRoomFake1 = new PeopleRoomViewModelFake(roomId: roomFake.Id, peopleId: patientFake.PeopleId, hostingId: hostingFake.Id).Generate();
-        var peopleRoomPosted1 = await Post<PeopleRoomViewModel>(_addPeopleToRoomClient, peopleRoomFake1);
+        var peopleRoomWithPatient = new PeopleRoomViewModelFake(roomId: room.Id, peopleId: patient.PeopleId, hostingId: hosting.Id).Generate();
+        var peopleRoomPostedWithPatient = await Post<PeopleRoomViewModel>(_addPeopleToRoomClient, peopleRoomWithPatient);
+
+        var peopleRoomWithEscort = new PeopleRoomViewModelFake(roomId: room.Id, peopleId: escort.PeopleId, hostingId: hosting.Id).Generate();
 
         // Arrange - Count
         var countRoomsBefore = await GetCount(_roomClient);
@@ -432,8 +543,7 @@ public class PeopleTestApi : GlobalClientRequest
         var countPeopleRoomsBefore = await GetCount(_peopleRoomClient);
 
         // Act - AddPeopleToRoom
-        var peopleRoomFake2 = new PeopleRoomViewModelFake(roomId: roomFake.Id, peopleId: escortFake.PeopleId, hostingId: hostingFake.Id).Generate();
-        var exception = await Post<AppException>(_addPeopleToRoomClient, peopleRoomFake2);
+        var exception = await Post<AppException>(_addPeopleToRoomClient, peopleRoomWithEscort);
 
         // Act - Count
         var countRoomsAfter = await GetCount(_roomClient);
@@ -448,13 +558,12 @@ public class PeopleTestApi : GlobalClientRequest
         Assert.Equal(countPatientsBefore, countPatientsAfter);
         Assert.Equal(countHostingsBefore, countHostingsAfter);
         Assert.Equal(countPeopleRoomsBefore, countPeopleRoomsAfter);
-        Assert.Equivalent(peopleRoomFake1, peopleRoomPosted1);
-        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
+        Assert.Equivalent(peopleRoomWithPatient, peopleRoomPostedWithPatient);
+        Assert.Equal(HttpStatusCode.Conflict, exception.StatusCode);
     }
 
     [Fact]
-    public async Task RemovePeopleFromRoom_ValidPeopleRoom_OK()
+    public async Task RemovePeopleFromRoom_ValidPeopleHostingRoomWithPatient_OK()
     {
         // Arrange - PeopleRoom
         var peopleRoomFake = await GetPeopleRoom();
@@ -486,10 +595,59 @@ public class PeopleTestApi : GlobalClientRequest
     }
 
     [Fact]
-    public async Task RemovePeopleFromRoom_InvalidPeopleRoom_BadRequest()
+    public async Task RemovePeopleFromRoom_ValidPeopleHostingRoomWithEscort_OK()
+    {
+        // Arrange - People
+        var escort = await GetEscort();
+        var patient = await GetPatient();
+
+        // Arrange - Hosting
+        var hosting = await GetHosting(patientId: patient.Id);
+
+        // Arrange - HostingEscort
+        var hostingEscort = await GetAddEscortToHosting(hostingId: hosting.Id, escortId: escort.Id);
+
+        // Arrange - Room
+        var room = await GetRoom(available: true, beds: 2);
+
+        // Arrange - PeopleRoom
+        var peopleRoomFakeWithPatient = new PeopleRoomViewModelFake(peopleId: patient.PeopleId, roomId: room.Id, hostingId: hosting.Id).Generate();
+        var peopleRoomPostedWithPatient = await Post<PeopleRoomViewModel>(_addPeopleToRoomClient, peopleRoomFakeWithPatient);
+
+        var peopleRoomFakeWithEscort = new PeopleRoomViewModelFake(peopleId: escort.PeopleId, roomId: room.Id, hostingId: hosting.Id).Generate();
+        var peopleRoomPostedWithEscort = await Post<PeopleRoomViewModel>(_addPeopleToRoomClient, peopleRoomFakeWithEscort);
+
+        // Arrange - Count
+        var countRoomsBefore = await GetCount(_roomClient);
+        var countPeoplesBefore = await GetCount(_peopleClient);
+        var countEscortsBefore = await GetCount(_escortClient);
+        var countHostingsBefore = await GetCount(_hostingClient);
+        var countPeopleRoomsBefore = await GetCount(_peopleRoomClient);
+
+        // Act - RemovePeopleFromRoom
+        var peopleRoomRemovedWithEscort = await DeleteByBody<PeopleRoomViewModel>(_removePeopleFromRoom, peopleRoomFakeWithEscort);
+
+        // Act - Count
+        var countRoomsAfter = await GetCount(_roomClient);
+        var countPeoplesAfter = await GetCount(_peopleClient);
+        var countEscortsAfter = await GetCount(_escortClient);
+        var countHostingsAfter = await GetCount(_hostingClient);
+        var countPeopleRoomsAfter = await GetCount(_peopleRoomClient);
+
+        // Assert
+        Assert.Equal(countRoomsBefore, countRoomsAfter);
+        Assert.Equal(countPeoplesBefore, countPeoplesAfter);
+        Assert.Equal(countEscortsBefore, countEscortsAfter);
+        Assert.Equal(countHostingsBefore, countHostingsAfter);
+        Assert.Equal(countPeopleRoomsBefore - 1, countPeopleRoomsAfter);
+        Assert.Equivalent(peopleRoomFakeWithEscort, peopleRoomRemovedWithEscort);
+    }
+
+    [Fact]
+    public async Task RemovePeopleFromRoom_InvalidPeopleHostingRoomWithNotExistEntity_BadRequest()
     {
         // Arrange - PeopleRoom
-        var peopleRoomFake = await GetPeopleRoom();
+        var peopleRoom = await GetPeopleRoom();
 
         // Arrange - Count
         var countRoomsBefore = await GetCount(_roomClient);
@@ -499,9 +657,9 @@ public class PeopleTestApi : GlobalClientRequest
         var countPeopleRoomsBefore = await GetCount(_peopleRoomClient);
 
         // Act - RemovePeopleFromRoom
-        var exceptionRoom = await DeleteByBody<AppException>(_removePeopleFromRoom, new PeopleRoomViewModel(){ RoomId = 0, PeopleId = peopleRoomFake.PeopleId, HostingId = peopleRoomFake.HostingId });
-        var exceptionPeople = await DeleteByBody<AppException>(_removePeopleFromRoom, new PeopleRoomViewModel(){ RoomId = peopleRoomFake.RoomId, PeopleId = 0, HostingId = peopleRoomFake.HostingId });
-        var exceptionHosting = await DeleteByBody<AppException>(_removePeopleFromRoom, new PeopleRoomViewModel(){ RoomId = peopleRoomFake.RoomId, PeopleId = peopleRoomFake.PeopleId, HostingId = 0 });
+        var exceptionRoom = await DeleteByBody<AppException>(_removePeopleFromRoom, new PeopleRoomViewModel(){ RoomId = 0, PeopleId = peopleRoom.PeopleId, HostingId = peopleRoom.HostingId });
+        var exceptionPeople = await DeleteByBody<AppException>(_removePeopleFromRoom, new PeopleRoomViewModel(){ RoomId = peopleRoom.RoomId, PeopleId = 0, HostingId = peopleRoom.HostingId });
+        var exceptionHosting = await DeleteByBody<AppException>(_removePeopleFromRoom, new PeopleRoomViewModel(){ RoomId = peopleRoom.RoomId, PeopleId = peopleRoom.PeopleId, HostingId = 0 });
 
         // Act - Count
         var countRoomsAfter = await GetCount(_roomClient);

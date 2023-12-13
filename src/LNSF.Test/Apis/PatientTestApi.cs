@@ -1,4 +1,7 @@
-﻿using LNSF.Api.ViewModels;
+﻿using System.Net;
+using LNSF.Api.ViewModels;
+using LNSF.Domain.Exceptions;
+using LNSF.Domain.Filters;
 using LNSF.Test.Fakers;
 using Xunit;
 
@@ -6,24 +9,17 @@ namespace LNSF.Test.Apis;
 
 public class PatientTestApi : GlobalClientRequest
 {
-    [Theory]
-    [InlineData(1)]
-    [InlineData(2)]
-    [InlineData(3)]
-    public async Task Post_PatientValid_Ok(int numberOfTreatments)
+    [Fact]
+    public async Task Post_ValidPatient_Ok()
     {
         // Arrange - People
-        var peopleFake = new PeoplePostViewModelFake().Generate();
-        var peoplePosted = await Post<PeopleViewModel>(_peopleClient, peopleFake);
+        var people = await GetPeople();
 
         // Arrange - Hospital
-        var hospitalFake = new HospitalPostViewModelFake().Generate();
-        var hospitalPosted = await Post<HospitalViewModel>(_hospitalClient, hospitalFake);
+        var hospital = await GetHospital();
         
         // Arrange - Patient
-        var patientFake = new PatientPostViewModelFake().Generate();
-        patientFake.PeopleId = peoplePosted.Id;
-        patientFake.HospitalId = hospitalPosted.Id;
+        var patientFake = new PatientPostViewModelFake(peopleId: people.Id, hospitalId: hospital.Id).Generate();
 
         // Arrange - Count
         var countBefore = await GetCount(_patientClient);
@@ -34,32 +30,29 @@ public class PatientTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_patientClient);
 
+        // Act - Query
+        var query = await Query<List<PatientViewModel>>(_patientClient, new PatientFilter(id: patientPosted.Id));
+        var patientQueried = query.FirstOrDefault();
+
         // Assert
         Assert.Equal(countBefore + 1, countAfter);
         Assert.Equivalent(patientFake, patientPosted);
+        Assert.Equivalent(patientFake, patientQueried);
     }
 
     [Fact]
-    public async Task Post_PatientValidWithRelationshipHospitalAndTreatmentValid_Ok()
+    public async Task Post_ValidPatientsWithSameHospital_Ok()
     {
         // Arrange - People
-        var peopleFake1 = new PeoplePostViewModelFake().Generate();
-        var peoplePosted1 = await Post<PeopleViewModel>(_peopleClient, peopleFake1);
-        var peopleFake2 = new PeoplePostViewModelFake().Generate();
-        var peoplePosted2 = await Post<PeopleViewModel>(_peopleClient, peopleFake2);
+        var people1 = await GetPeople();
+        var people2 = await GetPeople();
 
         // Arrange - Hospital
-        var hospitalFake = new HospitalPostViewModelFake().Generate();
-        var hospitalPosted = await Post<HospitalViewModel>(_hospitalClient, hospitalFake);
+        var hospital = await GetHospital();
 
         // Arrange - Patient
-        var patientFake1 = new PatientPostViewModelFake().Generate();
-        patientFake1.PeopleId = peoplePosted1.Id;
-        patientFake1.HospitalId = hospitalPosted.Id;
-
-        var patientFake2 = new PatientPostViewModelFake().Generate();
-        patientFake2.PeopleId = peoplePosted2.Id;
-        patientFake2.HospitalId = hospitalPosted.Id;
+        var patientFake1 = new PatientPostViewModelFake(peopleId: people1.Id, hospitalId: hospital.Id).Generate();
+        var patientFake2 = new PatientPostViewModelFake(peopleId: people2.Id, hospitalId: hospital.Id).Generate();
 
         // Arrange - Count
         var countBefore = await GetCount(_patientClient);
@@ -70,198 +63,314 @@ public class PatientTestApi : GlobalClientRequest
 
         // Act - Count
         var countAfter = await GetCount(_patientClient);
+
+        var query = await Query<List<PatientViewModel>>(_patientClient, new PatientFilter(hospitalId: hospital.Id));
+        var patientQueried1 = query.FirstOrDefault(x => x.Id == patientPosted1.Id);
+        var patientQueried2 = query.FirstOrDefault(x => x.Id == patientPosted2.Id);
 
         // Assert
         Assert.Equal(countBefore + 2, countAfter);
         Assert.Equivalent(patientFake1, patientPosted1);
+        Assert.Equivalent(patientPosted1, patientQueried1);
         Assert.Equivalent(patientFake2, patientPosted2);
+        Assert.Equivalent(patientPosted2, patientQueried2);
     }
 
-    [Theory]
-    [InlineData(0)]
-    [InlineData(-1)]
-    public async Task Post_PatientInvalidWithPeopleIdInvalid_BadRequest(int peopleId)
+    [Fact]
+    public async Task Post_InvalidPatientWithExistsPeopleId_Conflict()
     {
-        // Arrange - Hospital
-        var hospitalFake = new HospitalPostViewModelFake().Generate();
-        var hospitalPosted = await Post<HospitalViewModel>(_hospitalClient, hospitalFake);
+        // Arrange - Patient
+        var patient = await GetPatient();
 
-        // Arrange - Treatment
-        var treatmentFake = new TreatmentPostViewModelFake().Generate();
-        var treatmentPosted = await Post<TreatmentViewModel>(_treatmentClient, treatmentFake);
+        // Arrange - Hospital
+        var hospital = await GetHospital();
 
         // Arrange - Patient
-        var patientFake = new PatientPostViewModelFake().Generate();
-        patientFake.PeopleId = peopleId;
-        patientFake.HospitalId = hospitalPosted.Id;
+        var newPatientFake = new PatientPostViewModelFake(peopleId: patient.PeopleId, hospitalId: hospital.Id).Generate();
 
         // Arrange - Count
         var countBefore = await GetCount(_patientClient);
 
         // Act - Patient
-        await Assert.ThrowsAsync<Exception>(() => Post<PatientViewModel>(_patientClient, patientFake));
+        var exception = await Post<AppException>(_patientClient, newPatientFake);
 
         // Act - Count
         var countAfter = await GetCount(_patientClient);
 
         // Assert
         Assert.Equal(countBefore, countAfter);
+        Assert.Equal(HttpStatusCode.Conflict, exception.StatusCode);
     }
 
-    [Theory]
-    [InlineData(0)]
-    [InlineData(-1)]
-    public async Task Post_PatientInvalidWithHospitalIdInvalid_BadRequest(int hospitalId)
+    [Fact]
+    public async Task Post_InvalidPatientWithInvalidHospital_NotFound()
     {
         // Arrange - People
-        var peopleFake = new PeoplePostViewModelFake().Generate();
-        var peoplePosted = await Post<PeopleViewModel>(_peopleClient, peopleFake);
-
-        // Arrange - Treatment
-        var treatmentFake = new TreatmentPostViewModelFake().Generate();
-        var treatmentPosted = await Post<TreatmentViewModel>(_treatmentClient, treatmentFake);
+        var people = await GetPeople();
 
         // Arrange - Patient
-        var patientFake = new PatientPostViewModelFake().Generate();
-        patientFake.PeopleId = peoplePosted.Id;
-        patientFake.HospitalId = hospitalId;
+        var patientFake = new PatientPostViewModelFake(peopleId: people.Id, hospitalId: 0).Generate();
 
         // Arrange - Count
         var countBefore = await GetCount(_patientClient);
 
         // Act - Patient
-        await Assert.ThrowsAsync<Exception>(() => Post<PatientViewModel>(_patientClient, patientFake));
+        var exception = await Post<AppException>(_patientClient, patientFake);
 
         // Act - Count
         var countAfter = await GetCount(_patientClient);
 
         // Assert
         Assert.Equal(countBefore, countAfter);
+        Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
     }
     
     [Fact]
-    public async Task Post_PatientInvaliWithRelationshipInvalid_BadRequest()
+    public async Task Put_ValidPatient_Ok()
     {
-        // Arrange - People
-        var peopleFake1 = new PeoplePostViewModelFake().Generate();
-        var peoplePosted1 = await Post<PeopleViewModel>(_peopleClient, peopleFake1);
-        var peopleFake2 = new PeoplePostViewModelFake().Generate();
-        var peoplePosted2 = await Post<PeopleViewModel>(_peopleClient, peopleFake2);
-
-        // Arrange - Hospital
-        var hospitalFake = new HospitalPostViewModelFake().Generate();
-        var hospitalPosted = await Post<HospitalViewModel>(_hospitalClient, hospitalFake);
-
-        // Arrange - Treatment
-        var treatmentFake = new TreatmentPostViewModelFake().Generate();
-        var treatmentPosted = await Post<TreatmentViewModel>(_treatmentClient, treatmentFake);
-
         // Arrange - Patient
-        var patientFake1 = new PatientPostViewModelFake().Generate();
-        patientFake1.PeopleId = peoplePosted1.Id;
-        patientFake1.HospitalId = hospitalPosted.Id;
-        var patientPosted1 = await Post<PatientViewModel>(_patientClient, patientFake1);
-
-        var patientFake2 = new PatientPostViewModelFake().Generate();
-        patientFake2.PeopleId = peoplePosted2.Id;
-        patientFake2.HospitalId = hospitalPosted.Id;
+        var patient = await GetPatient();
+        var patientToPut = new PatientViewModelFake(patient.Id, patient.PeopleId, patient.HospitalId).Generate();
 
         // Arrange - Count
         var countBefore = await GetCount(_patientClient);
 
         // Act - Patient
-        var patientPosted2 = await Post<PatientViewModel>(_patientClient, patientFake2);
+        var patientPosted = await Put<PatientViewModel>(_patientClient, patientToPut);
 
         // Act - Count
         var countAfter = await GetCount(_patientClient);
 
-        // Assert
-        Assert.Equal(countBefore + 1, countAfter);
-        Assert.Equivalent(patientFake2, patientPosted2);
-    }
-
-    [Fact]
-    public async Task Put_PatientValid_Ok()
-    {
-        // Arrange - People
-        var peopleFake = new PeoplePostViewModelFake().Generate();
-        var peoplePosted = await Post<PeopleViewModel>(_peopleClient, peopleFake);
-
-        // Arrange - Hospital
-        var hospitalFake = new HospitalPostViewModelFake().Generate();
-        var hospitalPosted = await Post<HospitalViewModel>(_hospitalClient, hospitalFake);
-
-        // Arrange - Treatment
-        var treatmentFake = new TreatmentPostViewModelFake().Generate();
-        var treatmentPosted = await Post<TreatmentViewModel>(_treatmentClient, treatmentFake);
-
-        // Arrange - Patient
-        var patientFake1 = new PatientPostViewModelFake().Generate();
-        patientFake1.PeopleId = peoplePosted.Id;
-        patientFake1.HospitalId = hospitalPosted.Id;
-        var patientPosted1 = await Post<PatientViewModel>(_patientClient, patientFake1);
-
-        var patientFake2 = new PatientPostViewModelFake().Generate();
-        var patientPut = new PatientViewModel
-        {
-            Id = patientPosted1.Id,
-            PeopleId = patientPosted1.PeopleId,
-            HospitalId = patientPosted1.HospitalId,
-            Term = patientFake2.Term,
-            SocioeconomicRecord = patientFake2.SocioeconomicRecord,
-        };
-
-        // Arrange - Count
-        var countBefore = await GetCount(_patientClient);
-
-        // Act - Patient
-        var patientPosted2 = await Put<PatientViewModel>(_patientClient, patientPut);
-
-        // Act - Count
-        var countAfter = await GetCount(_patientClient);
+        // Act - Query
+        var query = await Query<List<PatientViewModel>>(_patientClient, new PatientFilter(id: patientPosted.Id));
+        var patientQueried = query.FirstOrDefault();
 
         // Assert
         Assert.Equal(countBefore, countAfter);
-        Assert.Equivalent(patientPut, patientPosted2);
+        Assert.Equivalent(patientToPut, patientPosted);
+        Assert.Equivalent(patientPosted, patientQueried);
     }
 
     [Fact]	
-    public async Task Put_PatientInvalidWithRelationshipPeopleInvalid_BadRequest()
+    public async Task Put_InvalidPatientWithExistsPeopleId_NotFound()
     {
-        // Arrange - People
-        var peopleFake1 = new PeoplePostViewModelFake().Generate();
-        var peoplePosted1 = await Post<PeopleViewModel>(_peopleClient, peopleFake1);
-        var peopleFake2 = new PeoplePostViewModelFake().Generate();
-        var peoplePosted2 = await Post<PeopleViewModel>(_peopleClient, peopleFake2);
-
-        // Arrange - Hospital
-        var hospitalFake = new HospitalPostViewModelFake().Generate();
-        var hospitalPosted = await Post<HospitalViewModel>(_hospitalClient, hospitalFake);
-
-        // Arrange - Treatment
-        var treatmentFake = new TreatmentPostViewModelFake().Generate();
-        var treatmentPosted = await Post<TreatmentViewModel>(_treatmentClient, treatmentFake);
-
         // Arrange - Patient
-        var patientFake1 = new PatientPostViewModelFake().Generate();
-        patientFake1.PeopleId = peoplePosted1.Id;
-        patientFake1.HospitalId = hospitalPosted.Id;
-        var patientPosted1 = await Post<PatientViewModel>(_patientClient, patientFake1);
+        var patient1 = await GetPatient();
+        var patient2 = await GetPatient();
 
-        var patientFake2 = new PatientPostViewModelFake().Generate();
-        patientFake2.PeopleId = peoplePosted1.Id;
-        patientFake2.HospitalId = hospitalPosted.Id;
-
+        var patientToPut = new PatientViewModelFake(patient1.Id, patient2.PeopleId, patient1.HospitalId).Generate();
+        
         // Arrange - Count
         var countBefore = await GetCount(_patientClient);
 
         // Act - Patient
-        await Assert.ThrowsAsync<Exception>(() => Put<PatientViewModel>(_patientClient, patientFake2));
+        var exception = await Put<AppException>(_patientClient, patientToPut);
 
         // Act - Count
         var countAfter = await GetCount(_patientClient);
 
         // Assert
         Assert.Equal(countBefore, countAfter);
+        Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
+    }
+
+    [Theory]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(3)]
+    public async Task AddTreatmentToPatient_ValidPatientTreatment_Ok(int count)
+    {
+        // Arrange - Patient
+        var patient = await GetPatient();
+
+        // Arrange - Treatment
+        var treatments = new List<TreatmentViewModel>();
+        for (int i = 0; i < count; i++)
+        {
+            var treatment = await GetTreatment();
+            treatments.Add(treatment);
+        }
+
+        // Arrange - PatientTreatment
+        var patientTreatmentsFake = new List<PatientTreatmentViewModel>();
+        foreach (var treatment in treatments)
+        {
+            var patientTreatmentFake = new PatientTreatmentViewModelFake(patient.Id, treatment.Id).Generate();
+            patientTreatmentsFake.Add(patientTreatmentFake);
+        }
+
+        // Arrange - Count
+        var countBefore = await GetCount(_patientTreatmentClient);
+
+        // Act - PatientTreatment
+        var patientTreatmentsPosted = new List<PatientTreatmentViewModel>();
+        foreach (var patientTreatmentFake in patientTreatmentsFake)
+        {
+            var patientTreatmentPosted = await Post<PatientTreatmentViewModel>(_addTreatmentToPatient, patientTreatmentFake);
+            patientTreatmentsPosted.Add(patientTreatmentPosted);
+        }
+
+        // Act - Count
+        var countAfter = await GetCount(_patientTreatmentClient);
+
+        // Act - Query
+        var patientTreatmentQueried = await Query<List<PatientTreatmentViewModel>>(_patientTreatmentClient, new PatientTreatmentFilter(patientId: patient.Id));
+
+        // Assert
+        Assert.Equal(countBefore + count, countAfter);
+        Assert.Equivalent(patientTreatmentsFake, patientTreatmentsPosted);
+        Assert.Equivalent(patientTreatmentsPosted, patientTreatmentQueried);
+    }
+
+    [Fact]
+    public async Task AddTreatmentToPatient_InvalidPatientTreatmentWithExistsPatientIdAndTreatmentId_Conflict()
+    {
+        // Arrange - PatientTreatment
+        var patientTreatment = await GetPatientTreatment();
+
+        // Arrange - Count
+        var countBefore = await GetCount(_patientTreatmentClient);
+
+        // Act - PatientTreatment
+        var exception = await Post<AppException>(_addTreatmentToPatient, patientTreatment);
+
+        // Act - Count
+        var countAfter = await GetCount(_patientTreatmentClient);
+
+        // Assert
+        Assert.Equal(countBefore, countAfter);
+        Assert.Equal(HttpStatusCode.Conflict, exception.StatusCode);
+    }
+
+    [Fact]
+    public async Task AddTreatmentToPatient_InvalidPatientTreatmentWithNotExistsPatientId_NotFound()
+    {
+        // Arrange - Treatment
+        var treatment = await GetTreatment();
+
+        // Arrange - PatientTreatment
+        var patientTreatmentFake = new PatientTreatmentViewModelFake(patientId: 0, treatmentId: treatment.Id).Generate();
+
+        // Arrange - Count
+        var countBefore = await GetCount(_patientTreatmentClient);
+
+        // Act - PatientTreatment
+        var exception = await Post<AppException>(_addTreatmentToPatient, patientTreatmentFake);
+
+        // Act - Count
+        var countAfter = await GetCount(_patientTreatmentClient);
+
+        // Assert
+        Assert.Equal(countBefore, countAfter);
+        Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
+    }
+
+    [Fact]
+    public async Task AddTreatmentToPatient_InvalidPatientTreatmentWithNotExistsTreatmentId_NotFound()
+    {
+        // Arrange - Patient
+        var patient = await GetPatient();
+
+        // Arrange - PatientTreatment
+        var patientTreatmentFake = new PatientTreatmentViewModelFake(patientId: patient.Id, treatmentId: 0).Generate();
+
+        // Arrange - Count
+        var countBefore = await GetCount(_patientTreatmentClient);
+
+        // Act - PatientTreatment
+        var exception = await Post<AppException>(_addTreatmentToPatient, patientTreatmentFake);
+
+        // Act - Count
+        var countAfter = await GetCount(_patientTreatmentClient);
+
+        // Assert
+        Assert.Equal(countBefore, countAfter);
+        Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
+    }
+
+    [Fact]
+    public async Task RemoveTreatmentFromPatient_ValidPatientTreatment_Ok()
+    {
+        // Arrange - PatientTreatment
+        var patientTreatment = await GetPatientTreatment();
+
+        // Arrange - Count
+        var countBefore = await GetCount(_patientTreatmentClient);
+
+        // Act - PatientTreatment
+        var patientTreatmentDeleted = await DeleteByBody<PatientTreatmentViewModel>(_removeTreatmentFromPatient, patientTreatment);
+
+        // Act - Count
+        var countAfter = await GetCount(_patientTreatmentClient);
+
+        // Assert
+        Assert.Equal(countBefore - 1, countAfter);
+        Assert.Equivalent(patientTreatment, patientTreatmentDeleted);
+    }
+
+    [Fact]
+    public async Task RemoveTreatmentFromPatient_InvalidPatientTreatmentWithNotExistsPatientId_NotFound()
+    {
+        // Arrange - Treatment
+        var treatment = await GetTreatment();
+
+        // Arrange - PatientTreatment
+        var patientTreatment = new PatientTreatmentViewModelFake(patientId: 0, treatmentId: treatment.Id).Generate();
+
+        // Arrange - Count
+        var countBefore = await GetCount(_patientTreatmentClient);
+
+        // Act - PatientTreatment
+        var exception = await DeleteByBody<AppException>(_removeTreatmentFromPatient, patientTreatment);
+
+        // Act - Count
+        var countAfter = await GetCount(_patientTreatmentClient);
+
+        // Assert
+        Assert.Equal(countBefore, countAfter);
+        Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
+    }
+
+    [Fact]
+    public async Task RemoveTreatmentFromPatient_InvalidPatientTreatmentWithNotExistsTreatmentId_NotFound()
+    {
+        // Arrange - Patient
+        var patient = await GetPatient();
+
+        // Arrange - PatientTreatment
+        var patientTreatment = new PatientTreatmentViewModelFake(patientId: patient.Id, treatmentId: 0).Generate();
+
+        // Arrange - Count
+        var countBefore = await GetCount(_patientTreatmentClient);
+
+        // Act - PatientTreatment
+        var exception = await DeleteByBody<AppException>(_removeTreatmentFromPatient, patientTreatment);
+
+        // Act - Count
+        var countAfter = await GetCount(_patientTreatmentClient);
+
+        // Assert
+        Assert.Equal(countBefore, countAfter);
+        Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
+    }
+
+    [Fact]
+    public async Task RemoveTreatmentFromPatient_InvalidPatientTreatmentWithNotExistsPatientTreatmentId_NotFound()
+    {
+        // Arrange - PatientTreatment
+        var patientTreatment = new PatientTreatmentViewModelFake(patientId: 0, treatmentId: 0).Generate();
+
+        // Arrange - Count
+        var countBefore = await GetCount(_patientTreatmentClient);
+
+        // Act - PatientTreatment
+        var exception = await DeleteByBody<AppException>(_removeTreatmentFromPatient, patientTreatment);
+
+        // Act - Count
+        var countAfter = await GetCount(_patientTreatmentClient);
+
+        // Assert
+        Assert.Equal(countBefore, countAfter);
+        Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
     }
 }

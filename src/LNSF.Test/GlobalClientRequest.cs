@@ -34,8 +34,13 @@ public class GlobalClientRequest
     public readonly HttpClient _hospitalClient = new() { BaseAddress = new Uri($"{BaseUrl}Hospital/") };
     public readonly HttpClient _treatmentClient = new() { BaseAddress = new Uri($"{BaseUrl}Treatment/") };
     public readonly HttpClient _patientClient = new() { BaseAddress = new Uri($"{BaseUrl}Patient/") };
+    public readonly HttpClient _addTreatmentToPatient = new() { BaseAddress = new Uri($"{BaseUrl}Patient/add-treatment-to-patient/") };
+    public readonly HttpClient _removeTreatmentFromPatient = new() { BaseAddress = new Uri($"{BaseUrl}Patient/remove-treatment-from-patient/") };
+    public readonly HttpClient _patientTreatmentClient = new() { BaseAddress = new Uri($"{BaseUrl}PatientTreatment/") };
     public readonly HttpClient _hostingClient = new() { BaseAddress = new Uri($"{BaseUrl}Hosting/") };
     public readonly HttpClient _addEscortToHostingClient = new() { BaseAddress = new Uri($"{BaseUrl}Hosting/add-escort-to-hosting/") };
+    public readonly HttpClient _removeEscortFromHostingClient = new() { BaseAddress = new Uri($"{BaseUrl}Hosting/remove-escort-from-hosting/") };
+    public readonly HttpClient _hostingEscortClient = new() { BaseAddress = new Uri($"{BaseUrl}HostingEscort/") };
     public readonly IMapper _mapper;
 
     public GlobalClientRequest()
@@ -166,30 +171,29 @@ public class GlobalClientRequest
     public async Task<PeopleViewModel> GetPeople(string? name = null, Gender? gender = null, DateTime? birthDate = null, string? rg = null, string? cpf = null, string? street = null, string? houseNumber = null, string? neighborhood = null, string? city = null, string? state = null, string? phone = null, string? note = null) =>
         await Post<PeopleViewModel>(_peopleClient, new PeoplePostViewModelFake(name: name, gender: gender, birthDate: birthDate, rg: rg, cpf: cpf, street: street, houseNumber: houseNumber, neighborhood: neighborhood, city: city, state: state, phone: phone, note: note).Generate());
 
-    public async Task<PeopleRoomViewModel> GetPeopleRoom(int? patientId = null, int? roomId = null, int? hostingId = null)
+    public async Task<PeopleRoomViewModel> GetPeopleRoom(int? peopleId = null, int? roomId = null, int? hostingId = null, int? beds = null)
     {
-        int peopleId = 0;
+        var patient = new PatientViewModel();
 
-        if (!patientId.HasValue)
+        if (!peopleId.HasValue)
         {
-            var patient = await GetPatient();
-            patientId = patient.Id;
+            patient = await GetPatient();
             peopleId = patient.PeopleId;
         }
-
+        
         if (!roomId.HasValue)
         {
-            var room = await GetRoom(available: true, beds: 1);
+            var room = await GetRoom(available: true, beds: beds ?? 2);
             roomId = room.Id;
         }
 
         if (!hostingId.HasValue)
         {
-            var hosting = await GetHosting(patientId: patientId.Value);
+            var hosting = await GetHosting(patientId: patient.Id);
             hostingId = hosting.Id;
         }
 
-        var peopleRoomFake = new PeopleRoomViewModelFake(roomId: roomId.Value, peopleId: peopleId, hostingId: hostingId.Value).Generate();
+        var peopleRoomFake = new PeopleRoomViewModelFake(peopleId: peopleId.Value, roomId: roomId.Value, hostingId: hostingId.Value).Generate();
         return await Post<PeopleRoomViewModel>(_addPeopleToRoomClient, peopleRoomFake);
     }
 
@@ -240,52 +244,88 @@ public class GlobalClientRequest
         return await Put<TreatmentViewModel>(_treatmentClient, new TreatmentViewModelFake(id.Value, name: name, type: type).Generate());
     }
 
-    public async Task<PatientViewModel> GetPatient(int numberTreatment = 1)
+    public async Task<PatientViewModel> GetPatient(int? id = null, int? peopleId = null, int? hospitalId = null, bool? socioeconomicRecord = null, bool? term = null)
     {
-        var people = await GetPeople();
-        var hospital = await GetHospital();
-        var treatmentIds = new List<int>();
-        for (int i = 0; i < numberTreatment; i++)
+        if (!peopleId.HasValue)
         {
-            var treatment = await GetTreatment();
-            treatmentIds.Add(treatment.Id);
+            var people = await GetPeople();
+            peopleId = people.Id;
         }
 
-        var patientFake = new PatientPostViewModelFake().Generate();
-        patientFake.PeopleId = people.Id;
-        patientFake.HospitalId = hospital.Id;
+        if (!hospitalId.HasValue)
+        {
+            var hospital = await GetHospital();
+            hospitalId = hospital.Id;
+        }
 
-        return await Post<PatientViewModel>(_patientClient, patientFake);
+        if (!id.HasValue)
+            return await Post<PatientViewModel>(_patientClient, new PatientPostViewModelFake(peopleId: peopleId.Value, hospitalId: hospitalId.Value, socioeconomicRecord: socioeconomicRecord, term: term).Generate());
+        
+        return await Put<PatientViewModel>(_patientClient, new PatientViewModelFake(id.Value, peopleId: peopleId.Value, hospitalId: hospitalId.Value, socioeconomicRecord: socioeconomicRecord, term: term).Generate());
     } 
 
-    public async Task<EscortViewModel> GetEscort()
+    public async Task<PatientTreatmentViewModel> GetPatientTreatment(int? patientId = null, int? treatmentId = null)
     {
-        var people = await GetPeople();
-        var escortFake = new EscortPostViewModelFake().Generate();
-        escortFake.PeopleId = people.Id;
-        
-        return await Post<EscortViewModel>(_escortClient, escortFake);
-    }
-
-    public async Task<HostingViewModel> GetHosting(int? patientId = null, List<int>? escortIds = null, int numberEscorts = 1, bool patientHasCheckOut = true)
-    {
-        var patient = await GetPatient();
-        
-        if (escortIds == null) 
+        if (!patientId.HasValue)
         {
-            escortIds = new List<int>();
-            for (int i = 0; i < numberEscorts; i++)
-            {
-                var escort = await GetEscort();
-                escortIds.Add(escort.Id);
-            }
+            var patient = await GetPatient();
+            patientId = patient.Id;
         }
 
-        var hostingFake = new HostingPostViewModelFake().Generate();
-        hostingFake.PatientId = patientId.HasValue ? patientId.Value : patient.Id;
-        hostingFake.CheckOut = patientHasCheckOut ? hostingFake.CheckOut : null;
+        if (!treatmentId.HasValue)
+        {
+            var treatment = await GetTreatment();
+            treatmentId = treatment.Id;
+        }
 
-        return await Post<HostingViewModel>(_hostingClient, hostingFake);
+        var patientTreatmentFake = new PatientTreatmentViewModelFake(patientId: patientId.Value, treatmentId: treatmentId.Value).Generate();
+        return await Post<PatientTreatmentViewModel>(_addTreatmentToPatient, patientTreatmentFake);
+    }
+
+    public async Task<EscortViewModel> GetEscort(int? id = null, int? peopleId = null)
+    {
+        if (!peopleId.HasValue)
+        {
+            var people = await GetPeople();
+            peopleId = people.Id;
+        }
+
+        if (!id.HasValue)
+            return await Post<EscortViewModel>(_escortClient, new EscortPostViewModelFake(peopleId: peopleId.Value).Generate());
+            
+        return await Put<EscortViewModel>(_escortClient, new EscortViewModelFake(id.Value, peopleId: peopleId.Value).Generate());
+    }
+
+    public async Task<HostingViewModel> GetHosting(int? id = null, int? patientId = null, DateTime? checkIn = null, DateTime? checkOut = null)
+    {
+        if (!patientId.HasValue)
+        {
+            var patient = await GetPatient();
+            patientId = patient.Id;
+        }
+
+        if (!id.HasValue)
+            return await Post<HostingViewModel>(_hostingClient, new HostingPostViewModelFake(patientId: patientId.Value, checkIn: checkIn, checkOut: checkOut).Generate());
+
+        return await Put<HostingViewModel>(_hostingClient, new HostingViewModelFake(id.Value, patientId: patientId.Value, checkIn: checkIn, checkOut: checkOut).Generate());
+    }
+
+    public async Task<HostingEscortViewModel> GetAddEscortToHosting(int? hostingId = null, int? escortId = null)
+    {
+        if (!hostingId.HasValue)
+        {
+            var hosting = await GetHosting();
+            hostingId = hosting.Id;
+        }
+
+        if (!escortId.HasValue)
+        {
+            var escort = await GetEscort();
+            escortId = escort.Id;
+        }
+
+        var hostingEscortFake = new HostingEscortViewModelFake(hostingId: hostingId.Value, escortId: escortId.Value).Generate();
+        return await Post<HostingEscortViewModel>(_addEscortToHostingClient, hostingEscortFake);
     }
 
     #endregion

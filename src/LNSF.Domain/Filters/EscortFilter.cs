@@ -9,4 +9,21 @@ public class EscortFilter
     
     public Pagination Page { get; set; } = new();
     public OrderBy? OrderBy { get; set; }
+
+    public EscortFilter() { }
+    
+    public EscortFilter(int? id = null, 
+        int? peopleId = null, 
+        bool? active = null, 
+        bool? isVeteran = null, 
+        Pagination? page = null, 
+        OrderBy? orderBy = null)
+    {
+        Id = id;
+        PeopleId = peopleId;
+        Active = active;
+        IsVeteran = isVeteran;
+        Page = page ?? Page;
+        OrderBy = orderBy;
+    }
 }

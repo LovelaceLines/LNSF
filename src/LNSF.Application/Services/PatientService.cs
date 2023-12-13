@@ -34,7 +34,7 @@ public class PatientService : IPatientService
     public async Task<Patient> Create(Patient patient)
     {
         if (!await _peopleRepository.ExistsById(patient.PeopleId)) throw new AppException("Pessoa não encontrada", HttpStatusCode.NotFound);
-        if (await _patientRepository.ExistsByPeopleId(patient.PeopleId)) throw new AppException("Pessoa já cadastrada como paciente", HttpStatusCode.BadRequest);
+        if (await _patientRepository.ExistsByPeopleId(patient.PeopleId)) throw new AppException("Pessoa já cadastrada como paciente", HttpStatusCode.Conflict);
         if (!await _hospitalRepository.ExistsById(patient.HospitalId)) throw new AppException("Hospital não encontrado", HttpStatusCode.NotFound);
         
         return await _patientRepository.Add(patient);

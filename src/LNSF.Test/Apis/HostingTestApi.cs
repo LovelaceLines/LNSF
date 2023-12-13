@@ -1,54 +1,25 @@
-﻿using System.Collections;
-using System.Net;
-using LNSF.Api.ViewModels;
+﻿using LNSF.Api.ViewModels;
 using LNSF.Domain.Exceptions;
+using LNSF.Domain.Filters;
 using LNSF.Test.Fakers;
+using System.Net;
 using Xunit;
 
 namespace LNSF.Test.Apis;
 
-public class HostingTestData : IEnumerable<object[]>
-{
-    private readonly List<object[]> _data = new()
-    {
-        new object[] { 0, true },
-        new object[] { 0, false },
-        new object[] { 1, true },
-        new object[] { 1, false },
-        new object[] { 2, true },
-        new object[] { 2, false },
-    };
-
-    public IEnumerator<object[]> GetEnumerator() => _data.GetEnumerator();
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-}
-
-public class NumberEscortsTestData : IEnumerable<object[]>
-{
-    private readonly List<object[]> _data = new()
-    {
-        new object[] { 0 },
-        new object[] { 1 },
-        new object[] { 2 },
-    };
-
-    public IEnumerator<object[]> GetEnumerator() => _data.GetEnumerator();
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-}
-
 public class HostingTestApi : GlobalClientRequest
 {
     [Theory]
-    [ClassData(typeof(HostingTestData))]
-    public async Task Post_HostingValidWithEscortsAndChecks_Ok(int numberEscorts, bool patientHasCheckOut)
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task Post_ValidHosting_Ok(bool hasCheckOut)
     {
         // Arrange - Patient
         var patient = await GetPatient();
 
         // Arrange - Hosting
-        var hostingFake = new HostingPostViewModelFake().Generate();
-        hostingFake.PatientId = patient.Id;
-        hostingFake.CheckOut = patientHasCheckOut ? hostingFake.CheckOut : null;
+        var hostingFake = new HostingPostViewModelFake(patientId: patient.Id).Generate();
+        if (hasCheckOut) hostingFake.CheckOut = new Bogus.DataSets.Date().Future();
 
         // Arrange - Count
         var countBefore = await GetCount(_hostingClient);
@@ -59,30 +30,24 @@ public class HostingTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_hostingClient);
 
+        // Act - Query
+        var query = await Query<List<HostingViewModel>>(_hostingClient, new HostingFilter(id: hostingPosted.Id));
+        var hostingQueried = query.First();
+
         // Assert
         Assert.Equal(countBefore + 1, countAfter);
         Assert.Equivalent(hostingFake, hostingPosted);
+        Assert.Equivalent(hostingPosted, hostingQueried);
     }
 
-    [Theory]
-    [ClassData(typeof(NumberEscortsTestData))]
-    public async Task Post_HostingInvalidWithCheckInGreaterThanCheckOut_BadRequest(int numberEscorts)
+    [Fact]
+    public async Task Post_InvalidHostingWithCheckInGreaterThanCheckOut_BadRequest()
     {
         // Arrange - Patient
         var patient = await GetPatient();
 
-        // Arrange - Escorts
-        var escortInfos = new List<int>();
-        for (int i = 0; i < numberEscorts; i++)
-        {
-            var escort = await GetEscort();
-            escortInfos.Add(escort.Id);
-        }
-
         // Arrange - Hosting
-        var hostingFake = new HostingPostViewModelFake().Generate();
-        hostingFake.PatientId = patient.Id;
-        hostingFake.CheckIn = hostingFake.CheckOut!.Value.AddDays(1); // CheckIn > CheckOut
+        var hostingFake = new HostingPostViewModelFake(patientId: patient.Id, checkIn: DateTime.Now, checkOut: DateTime.Now.AddDays(-1)).Generate();
 
         // Arrange - Count
         var countBefore = await GetCount(_hostingClient);
@@ -95,77 +60,236 @@ public class HostingTestApi : GlobalClientRequest
 
         // Assert
         Assert.Equal(countBefore, countAfter);
-        Assert.NotEmpty(exception.Message);
-        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, exception.StatusCode);
     }
 
-    [Theory]
-    [ClassData(typeof(HostingTestData))]
-    public async Task Put_HostingValidWithCheckOut_Ok(int numberEscorts, bool patientHasCheckOut)
+    [Fact]
+    public async Task Put_ValidHosting_Ok()
     {
         // Arrange - Hosting
-        var hosting = await GetHosting(numberEscorts: numberEscorts, patientHasCheckOut: patientHasCheckOut);
+        var hosting = await GetHosting();
+        var hostingToPut = new HostingViewModelFake(id: hosting.Id, patientId: hosting.PatientId).Generate();
 
         // Arrange - Count
         var countBefore = await GetCount(_hostingClient);
         
         // Act - Hosting
-        hosting.CheckOut = DateTime.Now;
-        var hostingPutted = await Put<HostingViewModel>(_hostingClient, hosting);
+        var hostingPutted = await Put<HostingViewModel>(_hostingClient, hostingToPut);
+
+        // Act - Count
+        var countAfter = await GetCount(_hostingClient);
+
+        // Act - Query
+        var query = await Query<List<HostingViewModel>>(_hostingClient, new HostingFilter(id: hostingPutted.Id));
+        var hostingQueried = query.First();
+
+        // Assert
+        Assert.Equal(countBefore, countAfter);
+        Assert.Equivalent(hostingToPut, hostingPutted);
+        Assert.Equivalent(hostingPutted, hostingQueried);
+    }
+
+    [Fact]
+    public async Task Put_InvalidHostingWithOtherPatient_NotFound()
+    {
+        // Arrange - Patient
+        var patient = await GetPatient();
+
+        // Arrange - Hosting
+        var hosting = await GetHosting();
+        var hostingToPut = new HostingViewModelFake(id: hosting.Id, patientId: patient.Id).Generate();
+
+        // Arrange - Count
+        var countBefore = await GetCount(_hostingClient);
+        
+        // Act - Hosting
+        var exception = await Put<AppException>(_hostingClient, hostingToPut);
 
         // Act - Count
         var countAfter = await GetCount(_hostingClient);
 
         // Assert
         Assert.Equal(countBefore, countAfter);
-        var hostingGeted = (await GetById<List<HostingViewModel>>(_hostingClient, hostingPutted.Id)).First();
-        Assert.Equivalent(hostingPutted, hostingGeted);
+        Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
     }
 
-    [Theory]
-    [ClassData(typeof(HostingTestData))]
-    public async Task Put_HostingInvalidWithNewPatient_BadRequest(int numberEscorts, bool patientHasCheckOut)
+    [Fact]
+    public async Task Put_InvalidHostingWithCheckInGreaterThanCheckOut_BadRequest()
     {
         // Arrange - Hosting
-        var hosting = await GetHosting(numberEscorts: numberEscorts, patientHasCheckOut: patientHasCheckOut);
+        var hosting = await GetHosting();
+        var hostingToPut = new HostingViewModelFake(id: hosting.Id, patientId: hosting.PatientId, checkIn: DateTime.Now, checkOut: DateTime.Now.AddDays(-1)).Generate();
 
         // Arrange - Count
         var countBefore = await GetCount(_hostingClient);
         
         // Act - Hosting
-        var hostingFake = new HostingPostViewModelFake().Generate();
-        hostingFake.PatientId = (await GetPatient()).Id; // New Patient
-        var exception = await Put<AppException>(_hostingClient, hostingFake);
+        var exception = await Put<AppException>(_hostingClient, hostingToPut);
 
         // Act - Count
         var countAfter = await GetCount(_hostingClient);
 
         // Assert
         Assert.Equal(countBefore, countAfter);
-        Assert.NotEmpty(exception.Message);
-        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, exception.StatusCode);
     }
 
     [Theory]
-    [ClassData(typeof(HostingTestData))]
-    public async Task Put_HostingInvalidWithCheckInGreaterThanCheckOut_BadRequest(int numberEscorts, bool patientHasCheckOut)
+    [InlineData(1)]
+    [InlineData(2)]
+    public async Task AddEscortToHosting_ValidHostingEscort_OK(int count)
     {
         // Arrange - Hosting
-        var hosting = await GetHosting(numberEscorts: numberEscorts, patientHasCheckOut: patientHasCheckOut);
+        var hosting = await GetHosting();
+
+        // Arrange - Escort
+        var escorts = new List<EscortViewModel>();
+        for (int i = 0; i < count; i++)
+        {
+            var escort = await GetEscort();
+            escorts.Add(escort);
+        }
+
+        // Arrange - HostingEscort
+        var hostingsEscortsFake = new List<HostingEscortViewModel>();
+        foreach (var escort in escorts)
+        {
+            var hostingEscortFake = new HostingEscortViewModelFake(hostingId: hosting.Id, escortId: escort.Id).Generate();
+            hostingsEscortsFake.Add(hostingEscortFake);
+        }
 
         // Arrange - Count
-        var countBefore = await GetCount(_hostingClient);
-        
-        // Act - Hosting
-        hosting.CheckIn = patientHasCheckOut ? hosting.CheckOut!.Value.AddDays(1) : hosting.CheckIn; // CheckIn > CheckOut
-        var exception = await Put<AppException>(_hostingClient, hosting);
+        var countBefore = await GetCount(_hostingEscortClient);
+
+        // Act - HostingEscort
+        var hostingsEscortsPosted = new List<HostingEscortViewModel>();
+        foreach (var hostingEscortFake in hostingsEscortsFake)
+        {
+            var hostingEscortPosted = await Post<HostingEscortViewModel>(_addEscortToHostingClient, hostingEscortFake);
+            hostingsEscortsPosted.Add(hostingEscortPosted);
+        }
 
         // Act - Count
-        var countAfter = await GetCount(_hostingClient);
+        var countAfter = await GetCount(_hostingEscortClient);
+
+        // Act - Query
+        var hostingsEscortsQueried = await Query<List<HostingEscortViewModel>>(_hostingEscortClient, new HostingEscortFilter(hostingId: hosting.Id));
+
+        // Assert
+        Assert.Equal(countBefore + count, countAfter);
+        Assert.Equivalent(hostingsEscortsFake, hostingsEscortsPosted);
+        Assert.Equivalent(hostingsEscortsPosted, hostingsEscortsQueried);
+    }
+
+    [Fact]
+    public async Task AddEscortToHosting_InvalidHostingEscortWithNotExistsHosting_NotFound()
+    {
+        // Arrange - Escort
+        var escort = await GetEscort();
+
+        // Arrange - HostingEscort
+        var hostingEscortFake = new HostingEscortViewModelFake(hostingId: 0, escortId: escort.Id).Generate();
+
+        // Arrange - Count
+        var countBefore = await GetCount(_hostingEscortClient);
+
+        // Act - HostingEscort
+        var exception = await Post<AppException>(_addEscortToHostingClient, hostingEscortFake);
+
+        // Act - Count
+        var countAfter = await GetCount(_hostingEscortClient);
 
         // Assert
         Assert.Equal(countBefore, countAfter);
-        Assert.NotEmpty(exception.Message);
-        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
+        Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
+    }
+
+    [Fact]
+    public async Task AddEscortToHosting_InvalidHostingEscortWithNotExistsEscort_NotFound()
+    {
+        // Arrange - Hosting
+        var hosting = await GetHosting();
+
+        // Arrange - HostingEscort
+        var hostingEscortFake = new HostingEscortViewModelFake(hostingId: hosting.Id, escortId: 0).Generate();
+
+        // Arrange - Count
+        var countBefore = await GetCount(_hostingEscortClient);
+
+        // Act - HostingEscort
+        var exception = await Post<AppException>(_addEscortToHostingClient, hostingEscortFake);
+
+        // Act - Count
+        var countAfter = await GetCount(_hostingEscortClient);
+
+        // Assert
+        Assert.Equal(countBefore, countAfter);
+        Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
+    }
+
+    [Fact]
+    public async Task RemoveEscortFromHosting_ValidHostingEscort_Ok()
+    {
+        // Arrange - HostingEscort
+        var hostingEscort = await GetAddEscortToHosting();
+
+        // Arrange - Count
+        var countBefore = await GetCount(_hostingEscortClient);
+
+        // Act - HostingEscort
+        var hostingEscortDeleted = await DeleteByBody<HostingEscortViewModel>(_removeEscortFromHostingClient, hostingEscort);
+
+        // Act - Count
+        var countAfter = await GetCount(_hostingEscortClient);
+
+        // Assert
+        Assert.Equal(countBefore - 1, countAfter);
+        Assert.Equivalent(hostingEscort, hostingEscortDeleted);
+    }
+
+    [Fact]
+    public async Task RemoveEscortFromHosting_InvalidHostingEscortWithNotExistsHosting_NotFound()
+    {
+        // Arrange - Escort
+        var escort = await GetEscort();
+
+        // Arrange - HostingEscort
+        var hostingEscortFake = new HostingEscortViewModelFake(hostingId: 0, escortId: escort.Id).Generate();
+
+        // Arrange - Count
+        var countBefore = await GetCount(_hostingEscortClient);
+
+        // Act - HostingEscort
+        var exception = await DeleteByBody<AppException>(_removeEscortFromHostingClient, hostingEscortFake);
+
+        // Act - Count
+        var countAfter = await GetCount(_hostingEscortClient);
+
+        // Assert
+        Assert.Equal(countBefore, countAfter);
+        Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
+    }
+
+    [Fact]
+    public async Task RemoveEscortFromHosting_InvalidHostingEscortWithNotExistsEscort_NotFound()
+    {
+        // Arrange - Hosting
+        var hosting = await GetHosting();
+
+        // Arrange - HostingEscort
+        var hostingEscortFake = new HostingEscortViewModelFake(hostingId: hosting.Id, escortId: 0).Generate();
+
+        // Arrange - Count
+        var countBefore = await GetCount(_hostingEscortClient);
+
+        // Act - HostingEscort
+        var exception = await DeleteByBody<AppException>(_removeEscortFromHostingClient, hostingEscortFake);
+
+        // Act - Count
+        var countAfter = await GetCount(_hostingEscortClient);
+
+        // Assert
+        Assert.Equal(countBefore, countAfter);
+        Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
     }
 }
