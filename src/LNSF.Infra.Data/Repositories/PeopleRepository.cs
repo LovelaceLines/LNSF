@@ -24,6 +24,13 @@ public class PeopleRepository : BaseRepository<People>, IPeopleRepository
         var escorts = _context.Escorts.AsNoTracking();
         var hostings = _context.Hostings.AsNoTracking();
 
+        if (!filter.GlobalFilter.IsNullOrEmpty()) query = query.Where(p =>
+            p.Name.ToLower().Contains(filter.GlobalFilter!.ToLower()) ||
+            p.RG.Contains(filter.GlobalFilter!) ||
+            p.CPF.Contains(filter.GlobalFilter!) ||
+            p.Phone.Contains(filter.GlobalFilter!) ||
+            p.City.ToLower().Contains(filter.GlobalFilter!.ToLower()));
+
         if (filter.Id.HasValue) query = query.Where(p => p.Id == filter.Id);
         if (!filter.Name.IsNullOrEmpty()) query = query.Where(p => p.Name.ToLower().Contains(filter.Name!.ToLower()));
         if (!filter.RG.IsNullOrEmpty()) query = query.Where(p => p.RG.Contains(filter.RG!));

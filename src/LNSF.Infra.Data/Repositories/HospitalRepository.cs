@@ -22,6 +22,10 @@ public class HospitalRepository : BaseRepository<Hospital>, IHospitalRepository
     public async Task<List<Hospital>> Query(HospitalFilter filter)
     {
         var query = _hospitals;
+
+        if (!filter.GlobalFilter.IsNullOrEmpty()) query = query.Where(x =>
+            x.Name.ToLower().Contains(filter.GlobalFilter!.ToLower()) ||
+            x.Acronym != null && x.Acronym.ToLower().Contains(filter.GlobalFilter!.ToLower()));
         
         if (filter.Id.HasValue) query = query.Where(x => x.Id == filter.Id);
         if (!filter.Name.IsNullOrEmpty()) query = query.Where(x => x.Name.ToLower().Contains(filter.Name!.ToLower()));

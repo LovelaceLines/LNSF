@@ -12,6 +12,7 @@ public class PeopleFilter
     public bool? Patient { get; set; }
     public bool? Escort { get; set; }
     public bool? Active { get; set; }
+    public string? GlobalFilter { get; set; }
     
     public Pagination Page { get; set; } = new();
     public OrderBy? OrderBy { get; set; }
