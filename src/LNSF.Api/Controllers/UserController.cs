@@ -24,10 +24,10 @@ public class UserController : ControllerBase
     /// Retrieves a list of users based on provided filter.
     /// </summary>
     [HttpGet]
-    public async Task<List<UserViewModel>> Get([FromQuery] UserFilter filter)
+    public async Task<List<UserGetViewModel>> Get([FromQuery] UserFilter filter)
     {
         var users = await _userService.Query(filter);
-        return _mapper.Map<List<UserViewModel>>(users);
+        return _mapper.Map<List<UserGetViewModel>>(users);
     }
 
     /// <summary>

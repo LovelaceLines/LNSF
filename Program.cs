@@ -20,6 +20,7 @@ using LNSF.Infra.Data.Migrations;
 using System.Reflection;
 using Microsoft.AspNetCore.Identity;
 using System.Net;
+using LNSF.Domain.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +39,7 @@ builder.Logging.AddSerilog();
 
 var autoMapperConfig = new MapperConfiguration(configure =>
 {
+    configure.CreateMap<UserDTO, UserGetViewModel>().ReverseMap();
     configure.CreateMap<IdentityUser, UserViewModel>().ReverseMap();
     configure.CreateMap<IdentityUser, UserPostViewModel>().ReverseMap();
     configure.CreateMap<IdentityRole, RoleViewModel>().ReverseMap();

@@ -1,4 +1,5 @@
-﻿using LNSF.Domain.Enums;
+﻿using LNSF.Domain.DTOs;
+using LNSF.Domain.Enums;
 using LNSF.Domain.Exceptions;
 using LNSF.Domain.Filters;
 using LNSF.Domain.Repositories;
@@ -24,7 +25,7 @@ public class UserRepository : IUserRepository
         _userRoleManager = userRoleManager;
     }
 
-    public async Task<List<IdentityUser>> Query(UserFilter filter)
+    public async Task<List<UserDTO>> Query(UserFilter filter)
     {
         var query = _userManager.Users.AsNoTracking();
 
@@ -39,10 +40,25 @@ public class UserRepository : IUserRepository
         if (filter.OrderBy == OrderBy.Ascending) query = query.OrderBy(u => u.UserName);
         else if (filter.OrderBy == OrderBy.Descending) query = query.OrderByDescending(u => u.UserName);
 
-        var users = await query
+        var identityUsers = await query
             .Skip((filter.Page?.Page -1 ) * filter.Page?.PageSize ?? 0)
             .Take(filter.Page?.PageSize ?? 0)
             .ToListAsync();
+
+        List<UserDTO> users = new();
+        
+        foreach (var user in identityUsers)
+        {
+            var roles = await GetRoles(user);
+            users.Add(new UserDTO
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                Roles = roles,
+            });
+        }
 
         return users;
     }

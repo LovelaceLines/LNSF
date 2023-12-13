@@ -1,11 +1,12 @@
-﻿using LNSF.Domain.Filters;
+﻿using LNSF.Domain.DTOs;
+using LNSF.Domain.Filters;
 using Microsoft.AspNetCore.Identity;
 
 namespace LNSF.Domain.Repositories;
 
 public interface IUserRepository
 {
-    Task<List<IdentityUser>> Query(UserFilter filter);
+    Task<List<UserDTO>> Query(UserFilter filter);
     Task<IdentityUser> Auth(string userName, string password);
     Task<int> GetCount();
     Task<bool> ExistsById(string id);
