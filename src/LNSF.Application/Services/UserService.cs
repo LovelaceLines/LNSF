@@ -1,5 +1,6 @@
 ﻿using LNSF.Application.Interfaces;
 using LNSF.Application.Validators;
+using LNSF.Domain.DTOs;
 using LNSF.Domain.Exceptions;
 using LNSF.Domain.Filters;
 using LNSF.Domain.Repositories;
@@ -29,7 +30,7 @@ public class UserService : IUserService
         _roleRepository = roleRepository;
     }
 
-    public Task<List<IdentityUser>> Query(UserFilter filter) => 
+    public Task<List<UserDTO>> Query(UserFilter filter) => 
         _userRepository.Query(filter);
 
     public async Task<int> GetCount() =>

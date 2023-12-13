@@ -1,11 +1,12 @@
-﻿using LNSF.Domain.Filters;
+﻿using LNSF.Domain.DTOs;
+using LNSF.Domain.Filters;
 using Microsoft.AspNetCore.Identity;
 
 namespace LNSF.Application.Interfaces;
 
 public interface IUserService
 {
-    Task<List<IdentityUser>> Query(UserFilter filter);
+    Task<List<UserDTO>> Query(UserFilter filter);
     Task<int> GetCount();
     Task<IdentityUser> Create(IdentityUser user, string password);
     Task<IdentityUser> AddToRole(string userId, string roleName);
