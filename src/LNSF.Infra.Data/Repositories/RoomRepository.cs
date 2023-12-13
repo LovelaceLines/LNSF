@@ -1,9 +1,9 @@
 ﻿using LNSF.Domain.Repositories;
 using LNSF.Domain.Filters;
 using LNSF.Domain.Entities;
+using LNSF.Domain.Enums;
 using LNSF.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
-using LNSF.Domain.Enums;
 using Microsoft.IdentityModel.Tokens;
 
 namespace LNSF.Infra.Data.Repositories;

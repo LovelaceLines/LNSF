@@ -101,11 +101,9 @@ public class UserService : IUserService
 
     public async Task<IdentityUser> RemoveFromRole(string userId, string roleName)
     {
-        if (!await _userRepository.ExistsById(userId)) throw new AppException("Usuário não encontrado!", HttpStatusCode.NotFound);
-        if (!await _roleRepository.ExistsByName(roleName)) throw new AppException("Perfil não encontrado!", HttpStatusCode.NotFound);
+        if (!await _userRoleRepository.ExistsByUserIdAndRoleName(userId, roleName)) throw new AppException("Usuário não possui este perfil!", HttpStatusCode.NotFound);
 
         var user = await _userRepository.GetById(userId);
-        if (!await _userRoleRepository.ExistsByUserAndRoleName(user, roleName)) throw new AppException("Usuário com este perfil não encontrado!", HttpStatusCode.NotFound);
 
         await _userRoleRepository.Remove(user, roleName);
 

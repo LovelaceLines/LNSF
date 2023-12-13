@@ -1,11 +1,9 @@
 using LNSF.Domain.Entities;
 using LNSF.Domain.Enums;
-using LNSF.Domain.Exceptions;
 using LNSF.Domain.Filters;
 using LNSF.Domain.Repositories;
 using LNSF.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
 
 namespace LNSF.Infra.Data.Repositories;
 
@@ -29,7 +27,7 @@ public class PatientRepository : BaseRepository<Patient>, IPatientRepository
         var patientTreatment = _patientsTreatments;
         
         if (filter.Id.HasValue) query = query.Where(p => p.Id == filter.Id);
-        if (filter.PatientId.HasValue) query = query.Where(p => p.PeopleId == filter.PatientId);
+        if (filter.PeopleId.HasValue) query = query.Where(p => p.PeopleId == filter.PeopleId);
         if (filter.HospitalId.HasValue) query = query.Where(p => p.HospitalId == filter.HospitalId);
         if (filter.SocioEconomicRecord.HasValue) query = query.Where(p => p.SocioeconomicRecord == filter.SocioEconomicRecord);
         if (filter.Term.HasValue) query = query.Where(p => p.Term == filter.Term);

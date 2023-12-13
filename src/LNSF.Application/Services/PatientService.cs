@@ -12,17 +12,14 @@ public class PatientService : IPatientService
     private readonly IPatientRepository _patientRepository;
     private readonly IHospitalRepository _hospitalRepository;
     private readonly IPeopleRepository _peopleRepository;
-    private readonly ITreatmentRepository _treatmentRepository;
 
     public PatientService(IPatientRepository patientRepository,
         IHospitalRepository hospitalRepository,
-        IPeopleRepository peopleRepository,
-        ITreatmentRepository treatmentRepository)
+        IPeopleRepository peopleRepository)
     {
         _patientRepository = patientRepository;
         _hospitalRepository = hospitalRepository;
         _peopleRepository = peopleRepository;
-        _treatmentRepository = treatmentRepository;
     }
 
     public async Task<List<Patient>> Query(PatientFilter filter) => 

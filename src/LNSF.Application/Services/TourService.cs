@@ -42,17 +42,19 @@ public class TourService : ITourService
         return await _tourRepository.Add(tour);
     }
 
-    public async Task<Tour> Update(Tour tour)
+    public async Task<Tour> Update(Tour newTour)
     {
-        var validationResult = _validator.Validate(tour);
+        var validationResult = _validator.Validate(newTour);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
-        if (!await _tourRepository.ExistsByIdAndPeopleId(tour.Id, tour.PeopleId)) throw new AppException("Passeio não encontrado!", HttpStatusCode.NotFound);
-        if (await _tourRepository.IsClosed(tour.Id)) throw new AppException("Pessoa já retornou!", HttpStatusCode.Conflict);
+        if (!await _tourRepository.ExistsByIdAndPeopleId(newTour.Id, newTour.PeopleId)) throw new AppException("Passeio não encontrado!", HttpStatusCode.NotFound);
+        if (await _tourRepository.IsClosed(newTour.Id)) throw new AppException("Pessoa já retornou!", HttpStatusCode.Conflict);
 
-        tour.Input = DateTime.Now;
+        var oldTour = await _tourRepository.GetById(newTour.Id);
+        oldTour.Input = DateTime.Now;
+        oldTour.Note = newTour.Note;
 
-        return await _tourRepository.Update(tour); 
+        return await _tourRepository.Update(oldTour); 
     }
 
     public async Task<Tour> UpdateAll(Tour tour)

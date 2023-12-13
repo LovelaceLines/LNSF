@@ -34,20 +34,8 @@ public class PatientTreatmentRepository : BaseRepository<PatientTreatment>, IPat
         return patientsTreatments;
     }
 
-    public Task<List<PatientTreatment>> RemoveByPatientId(int patientId)
-    {
-        var patientsTreatments = _patientsTreatments.Where(pt => pt.PatientId == patientId);
-        
-        _context.PatientsTreatments.RemoveRange(patientsTreatments);
-
-        return patientsTreatments.ToListAsync();
-    }
-
     public async Task<bool> ExistsByPatientIdAndTreatmentId(int patientId, int treatmentId) =>
         await _patientsTreatments.AnyAsync(pt => pt.PatientId == patientId && pt.TreatmentId == treatmentId);
-
-    public async Task<List<PatientTreatment>> GetByPatientId(int patientId) => 
-        await _patientsTreatments.Where(pt => pt.PatientId == patientId).ToListAsync(); 
 
     public async Task<PatientTreatment> GetByPatientIdAndTreatmentId(int patientId, int treatmentId) =>
         await _patientsTreatments.FirstOrDefaultAsync(pt => pt.PatientId == patientId && pt.TreatmentId == treatmentId) ??

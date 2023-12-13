@@ -57,5 +57,4 @@ public class EscortRepository : BaseRepository<Escort>, IEscortRepository
 
     public async Task<bool> ExistsByIdAndPeopleId(int id, int peopleId) =>
         await _escorts.AnyAsync(x => x.Id == id && x.PeopleId == peopleId);
-    
 }

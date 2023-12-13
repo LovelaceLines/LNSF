@@ -5,7 +5,7 @@ namespace LNSF.Domain.Filters;
 public class PatientFilter 
 {
     public int? Id { get; set; }
-    public int? PatientId { get; set; }
+    public int? PeopleId { get; set; }
     public int? HospitalId { get; set; }
     public bool? SocioEconomicRecord { get; set; }
     public bool? Term { get; set; }
@@ -19,7 +19,7 @@ public class PatientFilter
     public PatientFilter() { }
 
     public PatientFilter(int? id = null,
-        int? patientId = null,
+        int? peopleId = null,
         int? hospitalId = null,
         bool? socioEconomicRecord = null,
         bool? term = null,
@@ -30,7 +30,7 @@ public class PatientFilter
         OrderBy? orderBy = null)
     {
         Id = id;
-        PatientId = patientId;
+        PeopleId = peopleId;
         HospitalId = hospitalId;
         SocioEconomicRecord = socioEconomicRecord;
         Term = term;

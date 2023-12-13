@@ -45,6 +45,13 @@ public class UserRoleRepository : IUserRoleRepository
 
     public async Task<bool> ExistsByUserAndRoleName(IdentityUser user, string roleName) => 
         await _userManager.IsInRoleAsync(user, roleName);
+    
+    public async Task<bool> ExistsByUserIdAndRoleName(string userId, string roleName)
+    {
+        var user = await _userManager.FindByIdAsync(userId) ?? throw new AppException("Usuário não encontrado!", HttpStatusCode.NotFound);
+
+        return await _userManager.IsInRoleAsync(user, roleName);
+    }
 
     public async Task<bool> Add(IdentityUser user, string roleName)
     {

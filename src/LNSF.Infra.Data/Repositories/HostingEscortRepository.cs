@@ -41,31 +41,7 @@ public class HostingEscortRepository : BaseRepository<HostingEscort>, IHostingEs
     public async Task<bool> ExistsByHostingIdAndEscortId(int hostingId, int escortId) => 
         await _hostingsEscorts.AnyAsync(he => he.HostingId == hostingId && he.EscortId == escortId);
 
-    public async Task<List<HostingEscort>> GetByEscortId(int escortId) => 
-        await _hostingsEscorts.Where(he => he.EscortId == escortId).ToListAsync();
-
-    public async Task<List<HostingEscort>> GetByHostingId(int hostingId) => 
-        await _hostingsEscorts.Where(he => he.HostingId == hostingId).ToListAsync();
-
     public async Task<HostingEscort> GetByHostingIdAndEscortId(int hostingId, int escortId) => 
         await _hostingsEscorts.FirstOrDefaultAsync(he => he.HostingId == hostingId && he.EscortId == escortId) ?? 
             throw new AppException("Hospedagem não encontrada", HttpStatusCode.NotFound);
-
-    public Task<List<HostingEscort>> RemoveByEscortId(int escortId)
-    {
-        var hostingsEscorts = _hostingsEscorts.Where(he => he.EscortId == escortId);
-
-        _context.HostingsEscorts.RemoveRange(hostingsEscorts);
-
-        return hostingsEscorts.ToListAsync();
-    }
-
-    public Task<List<HostingEscort>> RemoveByHostingId(int hostingId)
-    {
-        var hostingsEscorts = _hostingsEscorts.Where(he => he.HostingId == hostingId);
-
-        _context.HostingsEscorts.RemoveRange(hostingsEscorts);
-
-        return hostingsEscorts.ToListAsync();
-    }
 }
