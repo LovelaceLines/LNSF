@@ -15,7 +15,7 @@ public class HostingPostViewModelFake : Faker<HostingPostViewModel>
 
 public class HostingViewModelFake : Faker<HostingViewModel>
 {
-    public HostingViewModelFake(int id, int? patientId = null, DateTime? checkIn = null, DateTime? checkOut = null)
+    public HostingViewModelFake(int id, int patientId, DateTime? checkIn = null, DateTime? checkOut = null)
     {
         RuleFor(x => x.Id, f => id);
         RuleFor(x => x.PatientId, f => patientId);

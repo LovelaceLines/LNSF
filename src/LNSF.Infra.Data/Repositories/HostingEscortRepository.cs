@@ -44,4 +44,13 @@ public class HostingEscortRepository : BaseRepository<HostingEscort>, IHostingEs
     public async Task<HostingEscort> GetByHostingIdAndEscortId(int hostingId, int escortId) => 
         await _hostingsEscorts.FirstOrDefaultAsync(he => he.HostingId == hostingId && he.EscortId == escortId) ?? 
             throw new AppException("Hospedagem não encontrada", HttpStatusCode.NotFound);
+
+    public async Task<bool> ExistsByEscortIdAndCheckInAndCheckOut(int hostingId, int escortId)
+    {
+        var hosting = await _context.Hostings.FirstAsync(h => h.Id == hostingId);
+
+        return await _hostingsEscorts.AnyAsync(he => he.EscortId == escortId && he.HostingId != hostingId &&
+            (hosting.CheckIn < he.Hosting!.CheckIn || hosting.CheckIn < he.Hosting!.CheckOut) &&
+            !(hosting.CheckIn == he.Hosting!.CheckIn && hosting.CheckOut == he.Hosting!.CheckOut));
+    }
 }

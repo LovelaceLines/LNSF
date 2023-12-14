@@ -52,9 +52,13 @@ public class HostingRepository : BaseRepository<Hosting>, IHostingRepository
 
     public async Task<bool> ExistsByIdAndPatientId(int id, int patientId) =>
         await _hostings.AnyAsync(h => h.Id == id && h.PatientId == patientId);
-    
+
     public async Task<bool> ExistsByIdAndPeopleId(int id, int peopleId) =>
         await _hostings.AnyAsync(h => h.Id == id && (h.Patient!.PeopleId == peopleId ||
             _hostingsEscorts.Any(he => he.HostingId == id && 
                 _escorts.Any(e => e.Id == he.EscortId && e.PeopleId == peopleId))));
+    
+    public async Task<bool> ExistsByPatientIdAndCheckInAndCheckOut(Hosting hosting) =>
+        await _hostings.AnyAsync(h => h.PatientId == hosting.PatientId && hosting.Id != h.Id &&
+            (hosting.CheckIn < h.CheckIn || hosting.CheckIn <= h.CheckOut || h.CheckOut == null));
 }

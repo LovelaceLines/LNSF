@@ -35,6 +35,7 @@ public class HostingService : IHostingService
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
         if (!await _patientRepository.ExistsById(hosting.PatientId)) throw new AppException("Paciente não encontrado", HttpStatusCode.NotFound);
+        if (await _hostingRepository.ExistsByPatientIdAndCheckInAndCheckOut(hosting)) throw new AppException("Já existe uma hospedagem para este paciente neste período", HttpStatusCode.Conflict);
         
         return await _hostingRepository.Add(hosting);
     }
@@ -45,6 +46,8 @@ public class HostingService : IHostingService
 
         var validationResult = await _validator.ValidateAsync(hosting);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
+
+        if (await _hostingRepository.ExistsByPatientIdAndCheckInAndCheckOut(hosting)) throw new AppException("Já existe uma hospedagem para este paciente neste período", HttpStatusCode.Conflict);
 
         return await _hostingRepository.Update(hosting);
     }
