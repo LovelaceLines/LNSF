@@ -33,7 +33,7 @@ public class AuthenticationTokenService : IAuthenticationTokenService
 
     public async Task<AuthenticationToken> RefreshToken(string token)
     {
-        var result = new JsonWebTokenHandler().ValidateToken(token, new TokenValidationParameters()
+        var result = await new JsonWebTokenHandler().ValidateTokenAsync(token, new TokenValidationParameters()
         {
             ValidIssuer = Issuer,
             ValidAudience = Audience,
