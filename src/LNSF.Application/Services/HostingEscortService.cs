@@ -33,7 +33,7 @@ public class HostingEscortService : IHostingEscortService
         if (!await _escortRepository.ExistsById(hostingEscort.EscortId)) throw new AppException("Acompanhante não encontrado", HttpStatusCode.NotFound);
         if (!await _hostingRepository.ExistsById(hostingEscort.HostingId)) throw new AppException("Hospedagem não encontrada", HttpStatusCode.NotFound);
         if (await _repository.ExistsByHostingIdAndEscortId(hostingEscort.HostingId, hostingEscort.EscortId)) throw new AppException("Acompanhante já está vinculado a esta hospedagem", HttpStatusCode.Conflict);
-        if (await _repository.ExistsByEscortIdAndCheckInAndCheckOut(hostingEscort.HostingId, hostingEscort.EscortId)) throw new AppException("Já existe uma hospedagem para este acompanhante neste período", HttpStatusCode.Conflict);
+        if (await _repository.ExistsWithDateConflict(hostingEscort.HostingId, hostingEscort.EscortId)) throw new AppException("Já existe uma hospedagem para este acompanhante neste período", HttpStatusCode.Conflict);
 
         return await _repository.Add(hostingEscort);
     }

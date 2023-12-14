@@ -1,6 +1,7 @@
 ﻿using LNSF.Api.ViewModels;
 using LNSF.Domain.Exceptions;
 using LNSF.Domain.Filters;
+using LNSF.Test.Fakers;
 using System.Net;
 using Xunit;
 

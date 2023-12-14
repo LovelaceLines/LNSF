@@ -45,7 +45,7 @@ public class HostingEscortRepository : BaseRepository<HostingEscort>, IHostingEs
         await _hostingsEscorts.FirstOrDefaultAsync(he => he.HostingId == hostingId && he.EscortId == escortId) ?? 
             throw new AppException("Hospedagem não encontrada", HttpStatusCode.NotFound);
 
-    public async Task<bool> ExistsByEscortIdAndCheckInAndCheckOut(int hostingId, int escortId)
+    public async Task<bool> ExistsWithDateConflict(int hostingId, int escortId)
     {
         var hosting = await _context.Hostings.FirstAsync(h => h.Id == hostingId);
 

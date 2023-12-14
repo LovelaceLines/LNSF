@@ -58,7 +58,7 @@ public class HostingRepository : BaseRepository<Hosting>, IHostingRepository
             _hostingsEscorts.Any(he => he.HostingId == id && 
                 _escorts.Any(e => e.Id == he.EscortId && e.PeopleId == peopleId))));
     
-    public async Task<bool> ExistsByPatientIdAndCheckInAndCheckOut(Hosting hosting) =>
+    public async Task<bool> ExistsWithDateConflict(Hosting hosting) =>
         await _hostings.AnyAsync(h => h.PatientId == hosting.PatientId && hosting.Id != h.Id &&
             (hosting.CheckIn < h.CheckIn || hosting.CheckIn <= h.CheckOut || h.CheckOut == null));
 }

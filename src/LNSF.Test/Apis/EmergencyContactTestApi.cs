@@ -2,8 +2,8 @@
 using LNSF.Domain.Exceptions;
 using LNSF.Domain.Filters;
 using LNSF.Test.Fakers;
-using Xunit;
 using System.Net;
+using Xunit;
 
 namespace LNSF.Test.Apis;
 

@@ -1,7 +1,7 @@
 ﻿using Bogus;
 using LNSF.Api.ViewModels;
 
-namespace LNSF.Test;
+namespace LNSF.Test.Fakers;
 
 public class HospitalPostViewModelFake : Faker<HospitalPostViewModel>
 {  

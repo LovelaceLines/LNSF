@@ -1,8 +1,7 @@
-﻿using System.Net;
-using LNSF.Api.ViewModels;
+﻿using LNSF.Api.ViewModels;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
-using LNSF.Test.Fakers;
+using System.Net;
 using Xunit;
 
 namespace LNSF.Test.Apis;
