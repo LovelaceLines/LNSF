@@ -24,6 +24,8 @@ export const errorInterceptor = (error: AxiosError) => {
     return;
   }
 
+  // TODO - Salvar Log de erro
+  
   if (error.response!.data instanceof Object && 'type' in error.response!.data && 'title' in error.response!.data && 'status' in error.response!.data && 'errors' in error.response!.data && 'traceId' in error.response!.data) {
     const dotNetException = error.response!.data as iDotNetException;
     toast.error(dotNetException.title);

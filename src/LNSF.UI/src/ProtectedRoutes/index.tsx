@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 
 export const ProtectedRoutes = () => {
 
-    const { getUsers, setUser } = useContext(AuthContext);
+    const { getUser, setUser } = useContext(AuthContext);
     const accessToken = localStorage.getItem("@lnsf:accessToken") || '';
     const userName = localStorage.getItem('@lnsf:userName') || '';
 
@@ -13,7 +13,7 @@ export const ProtectedRoutes = () => {
     
     useEffect(() => {
         if (accessToken) {
-            getUsers(userName)
+            getUser(userName)
                 .then((response) => {
                     if (response instanceof Error) {
                         localStorage.clear();

@@ -41,9 +41,9 @@ export interface iDelUser {
 export interface iAuthTypes {
     user: iObjectUser;
     loginUser(data: iDataLogin): void;
-    getUsers(useName?: string): Promise<iObjectUser | Error>;
+    getUser(useName?: string): Promise<iObjectUser | Error>;
     logoutUser(): void;
-    tokens: iTokens;
-    setTokens: React.Dispatch<React.SetStateAction<iTokens>>
+    tokens: iToken;
+    setTokens: React.Dispatch<React.SetStateAction<iToken>>
     setUser: React.Dispatch<React.SetStateAction<iObjectUser>>
 }

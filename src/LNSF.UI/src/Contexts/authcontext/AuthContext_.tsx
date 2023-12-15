@@ -16,6 +16,9 @@ export const AuthProvider = ({ children }: iAuthProvider) => {
     const res = await Api.post<iToken>('/Auth/login', data);
     const token: iToken = res.data;
 
+    // TODO: Remover console.log
+    console.log(token);
+
     setTokens(token);
 
     localStorage.setItem('@lnsf:accessToken', token.accessToken);
@@ -26,7 +29,7 @@ export const AuthProvider = ({ children }: iAuthProvider) => {
     navigate("/inicio");
   }, [navigate]);
 
-  const getUsers = useCallback(async (useName: string) => {
+  const getUser = useCallback(async (useName: string) => {
       try {
 
           const response = await Api.get(`/Account/exist/${useName}`);
@@ -47,13 +50,15 @@ export const AuthProvider = ({ children }: iAuthProvider) => {
   }, []);
 
   const logoutUser = useCallback(() => {
-      navigate("/")
-      toast.success("Até logo! :)")
-      localStorage.clear();
-  }, []);
+    localStorage.removeItem('@lnsf:accessToken');
+    localStorage.removeItem('@lnsf:expires');
+  
+    navigate("/")
+    toast.success("Até logo! :)")  
+  }, [navigate]);
 
   return (
-      <AuthContext.Provider value={{ user, loginUser, getUsers, logoutUser, tokens, setTokens, setUser }}>
+      <AuthContext.Provider value={{ user, loginUser, getUser, logoutUser, tokens, setTokens, setUser }}>
           {children}
       </AuthContext.Provider>
   )
