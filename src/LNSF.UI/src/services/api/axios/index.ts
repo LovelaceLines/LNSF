@@ -1,6 +1,6 @@
 import axios from 'axios';
  import { errorInterceptor, responseInterceptor } from './interceptors';
-import { Environment } from '../../../environment';
+import { apiUrl } from '../../../environment/environment.temp';
 
 
 // const accessToken = localStorage.getItem('APP_ACCESS_TOKEN');
@@ -13,7 +13,7 @@ import { Environment } from '../../../environment';
 
 
 export const Api = axios.create({
-    baseURL: Environment.URL_BASE,
+    baseURL: apiUrl,
     timeout: 10000,
     headers: {
         'Content-Type': 'application/json',

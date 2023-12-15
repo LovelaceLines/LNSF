@@ -17,9 +17,8 @@ export interface iDataLogin {
     password: string;
 }
 
-export interface iTokens {
+export interface iToken {
     accessToken: string;
-    refreshToken: string;
     expires: string;
 }
 

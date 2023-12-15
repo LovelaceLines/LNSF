@@ -11,7 +11,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import React from "react";
 
 const loginSchema = yup.object().shape({
-    userName: yup.string().email().required("Email é um campo obrigatório"),
+    // userName: yup.string().email().required("Email é um campo obrigatório"),
     password: yup.string().required("A senha deve ter pelo menos 6 caracteres").min(6),
 })
 
