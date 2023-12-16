@@ -12,6 +12,16 @@ public class UserRoleConfiguration : IEntityTypeConfiguration<IdentityUserRole<s
             {
                 UserId = "1",
                 RoleId = "1"
+            },
+            new IdentityUserRole<string>
+            {
+                UserId = "2",
+                RoleId = "2"
+            },
+            new IdentityUserRole<string>
+            {
+                UserId = "3",
+                RoleId = "5"
             }
         );
     }

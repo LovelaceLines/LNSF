@@ -1,4 +1,5 @@
 ﻿using LNSF.Application.Interfaces;
+using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
 using LNSF.Domain.Repositories;
@@ -99,5 +100,22 @@ public class AuthenticationTokenService : IAuthenticationTokenService
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
         return claims;
+    }
+
+    public async Task<UserDTO> GetUser(string token)
+    {
+        var result = await new JsonWebTokenHandler().ValidateTokenAsync(token, new TokenValidationParameters()
+        {
+            ValidIssuer = Issuer,
+            ValidAudience = Audience,
+            IssuerSigningKey = SecurityKey,
+        });
+        if (!result.IsValid) throw new AppException("Acess Token expired!", HttpStatusCode.Unauthorized);
+        
+        var userId = result.Claims["nameid"].ToString() ?? throw new AppException("Claims NameId not found!", HttpStatusCode.InternalServerError);
+        var user = await _userRepository.GetById(userId);
+        var roles = await _userRepository.GetRoles(user);
+        
+        return new UserDTO(user, roles);
     }
 }

@@ -2,9 +2,9 @@ import { Avatar, Box, Button, Divider, Paper, Popover, Typography, useMediaQuery
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import iconelogoProvisoria from '../../assets/icone_logo.svg';
-import { AuthContext, useDrawerContext } from "../../Contexts";
+import { AuthContext, iUser, useDrawerContext } from "../../Contexts";
 import LogoutIcon from '@mui/icons-material/Logout';
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Footer } from "./footer/Footer";
 
 
@@ -19,7 +19,14 @@ export const BasePageLayout: React.FC<IBasePageLayoutProps> = ({ children }) => 
     const mdDown = useMediaQuery(theme.breakpoints.down('md'));
     const { isDrawerOpen, toggleDrawerOpen, } = useDrawerContext();
     // const { toggleTheme } = useAppThemeContext();
-    const { user,  logoutUser } = useContext(AuthContext)
+    const { getUser,  logout } = useContext(AuthContext)
+    const [user, setUser] = useState<iUser>({} as iUser);
+
+    useEffect(() => {
+        getUser().then((userData) => {
+            setUser(userData);
+        });
+    }, [getUser]);
 
    
 
@@ -35,7 +42,7 @@ export const BasePageLayout: React.FC<IBasePageLayoutProps> = ({ children }) => 
 
 
     const handleLogout = () => {
-        logoutUser();
+        logout();
     }
 
     const openPopover = Boolean(popoverAnchorEl);
@@ -84,7 +91,7 @@ export const BasePageLayout: React.FC<IBasePageLayoutProps> = ({ children }) => 
                             <Typography
                             //variant={mdDown ? 'body2' : 'subtitle1'}
                             >
-                                {user.role === 0 ? 'Voluntário' : user.role === 1 ? 'Administrador' : user.role === 2 ? 'Assistente Social' : 'Secretária'}
+                                {user.role.toString()}
                                 <Typography fontSize={12}>
                                     {user.userName}
                                 </Typography>
@@ -118,7 +125,7 @@ export const BasePageLayout: React.FC<IBasePageLayoutProps> = ({ children }) => 
                                         variant={mdDown ? 'body2' : 'subtitle1'}
                                         textAlign='center'
                                     >
-                                        {user.role === 0 ? 'Voluntário' : user.role === 1 ? 'Administrador' : user.role === 2 ? 'Assistente Social' : 'Secretária'}
+                                        {user.role.toString()}
                                         <Typography fontSize={12}>
                                             lnsf@gmail.com
                                         </Typography>

@@ -12,6 +12,14 @@ export interface iObjectUser {
     
 }
 
+export interface iUser {
+    id: string;
+    userName: string;
+    role: [string];
+    email: string;
+    phone: string;
+}
+
 export interface iDataLogin {
     userName: string;
     password: string;
@@ -39,11 +47,9 @@ export interface iDelUser {
 }
 
 export interface iAuthTypes {
-    user: iObjectUser;
-    loginUser(data: iDataLogin): void;
-    getUser(useName?: string): Promise<iObjectUser | Error>;
-    logoutUser(): void;
-    tokens: iToken;
-    setTokens: React.Dispatch<React.SetStateAction<iToken>>
-    setUser: React.Dispatch<React.SetStateAction<iObjectUser>>
+    isAuthenticated: boolean;
+    login(data: iDataLogin): void;
+    refreshToken(): void;
+    logout(): void;
+    getUser(): Promise<iUser>;
 }

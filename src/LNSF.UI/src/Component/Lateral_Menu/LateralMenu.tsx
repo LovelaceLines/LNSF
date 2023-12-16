@@ -1,5 +1,5 @@
 import { Drawer, useMediaQuery, useTheme } from "@mui/material";
-import { AuthContext, useDrawerContext } from "../../Contexts";
+import { AuthContext, iUser, useDrawerContext } from "../../Contexts";
 import { Box } from '@mui/system';
 import { useContext, useEffect, useState } from "react";
 import { ListUlMenu } from "./Lists";
@@ -13,11 +13,18 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
     const { isDrawerOpen, toggleDrawerOpen, drawerOptions, setDrawerOptions } = useDrawerContext();
     const [openIndex, setOpenIndex] = useState<number>(-1);
+    const { getUser } = useContext(AuthContext);
+    const [user, setUser] = useState<iUser>({} as iUser);
+
+    useEffect(() => {
+        getUser().then((userData) => {
+            setUser(userData);
+        });
+    }, [getUser]);
 
     const handleClick = (index: number) => {
         setOpenIndex(index === openIndex ? -1 : index);
     };
-    const { user } = useContext(AuthContext);
 
     useEffect(() => {
         const menu = [
@@ -80,7 +87,7 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
             },
         ];
 
-        if (user.role === 1 || user.role === 2 || user.role === 3) {
+            if ("Desenvolvedor" in user.role || "Administrador" in user.role || "Secretário" in user.role) {
             menu[3].options.push(
                 {
                     pathOption: '/inicio/apartamentos/gerenciar',
@@ -130,7 +137,7 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
                 },
             )
         }
-        if (user.role === 1) {
+        if ("Desenvolvedor" in user.role || "Administrador" in user.role) {
             menu.push(
                 {
                     index: 7,
@@ -147,7 +154,7 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
             )
         }
         setDrawerOptions(menu)
-    }, [user.userName]);
+    }, [setDrawerOptions, user.role]);
 
 
 
