@@ -8,9 +8,6 @@ namespace LNSF.Test.Apis;
 
 public class AuthTestApi : GlobalClientRequest
 {
-    private readonly HttpClient _loginClient = new() { BaseAddress = new Uri($"{BaseUrl}Auth/login") };
-    private readonly HttpClient _refreshTokenClient = new() { BaseAddress = new Uri($"{BaseUrl}Auth/refresh-token") };
-
     [Fact]
     public async Task Post_ValidLogin_Ok()
     {
@@ -46,7 +43,7 @@ public class AuthTestApi : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Post_ValidRefreshToken_Ok()
+    public async Task Get_ValidRefreshToken_Ok()
     {
         // Arrange - Account
         var password = new Bogus.Person().FirstName + "#" + new Bogus.Randomizer().Replace("###");
@@ -55,28 +52,60 @@ public class AuthTestApi : GlobalClientRequest
         // Arrange - Login
         var login = new UserLoginViewModel { UserName = user.UserName, Password = password };
         var token = await Post<AuthenticationToken>(_loginClient, login);
+        _acessToken = token.Token;
 
         // Act
-        var refreshToken = new RefreshTokenTokenViewModel { RefreshToken = token.Token };
-        var newToken = await Post<AuthenticationToken>(_refreshTokenClient, refreshToken);
+        var refreshToken = await Get<AuthenticationToken>(_refreshTokenClient);
 
         // Assert
-        Assert.NotNull(newToken);
+        Assert.NotNull(refreshToken);
+        Assert.NotEmpty(refreshToken.Token);
     }
 
     [Theory]
-    [InlineData("")]
     [InlineData("invalid")]
-    public async Task Post_InvalidRefreshToken_BadRequest(string token)
+    public async Task Get_InvalidRefreshToken_BadRequest(string token)
     {
-        // Arrange
-        var refreshTokenViewModel = new AuthenticationToken { Token = token };
+        // Arrange - Token
+        _acessToken = token;
 
         // Act - Assert
-        var exception = await Post<AppException>(_refreshTokenClient, refreshTokenViewModel);
+        var exception = await Get<AppException>(_refreshTokenClient);
 
         // Assert
-        Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
-        Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
+        Assert.Equal(HttpStatusCode.Unauthorized, exception.StatusCode);
+    }
+
+    [Fact]
+    public async Task GetUser_ValidUser_Ok()
+    {
+        // Arrange - User
+        var password = new Bogus.Person().FirstName + "#" + new Bogus.Randomizer().Replace("###");
+        var user = await GetUser(password: password, role: "Desenvolvedor");
+
+        // Arrange - Login
+        var login = new UserLoginViewModel{ UserName = user.UserName, Password = password };
+        var token = await Post<AuthenticationToken>(_loginClient, login);
+        _acessToken = token.Token;
+
+        // Act
+        var userGet = await Get<UserGetViewModel>(_authUserClient);
+
+        // Assert
+        Assert.Equivalent(user, userGet);
+    }
+
+    [Theory]
+    [InlineData("invalid")]
+    public async Task GetUser_InvalidUserWithInvalidToken_Unauthorized(string token)
+    {
+        // Arrange - Token
+        _acessToken = token;
+
+        // Act - Assert
+        var exception = await Get<AppException>(_authUserClient);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Unauthorized, exception.StatusCode);
     }
 }

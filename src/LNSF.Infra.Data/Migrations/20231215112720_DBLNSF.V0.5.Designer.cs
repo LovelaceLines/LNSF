@@ -3,6 +3,7 @@ using System;
 using LNSF.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LNSF.src.LNSF.Infra.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231215112720_DBLNSF.V0.5")]
+    partial class DBLNSFV05
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
@@ -349,35 +352,35 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                         new
                         {
                             Id = "1",
-                            ConcurrencyStamp = "586b22b9-bf85-4d1f-b7ae-11eac16cc9a3",
+                            ConcurrencyStamp = "3ea1c0e0-4068-47ea-8cd4-bd7a6490775a",
                             Name = "Desenvolvedor",
                             NormalizedName = "DESENVOLVEDOR"
                         },
                         new
                         {
                             Id = "2",
-                            ConcurrencyStamp = "d185422f-b039-4701-b306-be491c9ca978",
+                            ConcurrencyStamp = "dd6f7da7-94ef-4697-8810-5843cd7c91fe",
                             Name = "Administrador",
                             NormalizedName = "ADMINISTRADOR"
                         },
                         new
                         {
                             Id = "3",
-                            ConcurrencyStamp = "0a5ab808-d8fc-4d56-b03e-8ede5177105d",
+                            ConcurrencyStamp = "819911d0-fc1d-4c49-8844-eae516d2a959",
                             Name = "Assistente Social",
                             NormalizedName = "ASSISTENTESOCIAL"
                         },
                         new
                         {
                             Id = "4",
-                            ConcurrencyStamp = "df691bc0-0525-4221-8c59-3a1497cccd13",
+                            ConcurrencyStamp = "be201744-6a22-4186-834e-9915e92ed7b0",
                             Name = "Secretário",
                             NormalizedName = "SECRETARIO"
                         },
                         new
                         {
                             Id = "5",
-                            ConcurrencyStamp = "e408633f-9a91-4c2e-a5e2-203695b376d7",
+                            ConcurrencyStamp = "64b98556-fe11-4881-9686-4126d67f4729",
                             Name = "Voluntário",
                             NormalizedName = "VOLUNTARIO"
                         });
@@ -474,52 +477,18 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "16c404ef-64db-41f9-b246-48bcf5552969",
+                            ConcurrencyStamp = "a9fb5d1f-8ae6-4b3f-a74b-d0f3f6203f95",
                             Email = "georgemaiaf@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "GEORGEMAIAF@GMAIL.COM",
                             NormalizedUserName = "GEORGEDEV",
-                            PasswordHash = "AQAAAAIAAYagAAAAEEthRfYKzlvxcXVURojClgyAb6KHFtNG5zqiDM4bhiMAtU6b8V3OViRWGaXSfsIYcw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOEJYeUclK2xs8hlgZFcd8O4Xjkylvfa+O/f4ot0qd4EzKa+vDBvoZmqy1K3DmpVDw==",
                             PhoneNumber = "(55) 88 9 9246-5315",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "93a6584d-07f1-400e-a959-0fe0e6cb2a00",
+                            SecurityStamp = "68a474ca-8583-4ef6-b563-60448c432349",
                             TwoFactorEnabled = false,
                             UserName = "georgedev"
-                        },
-                        new
-                        {
-                            Id = "2",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "25546e0a-bba0-4aa5-a3ee-3ce00c7c7f13",
-                            Email = "lnsf@gmail.com",
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            NormalizedEmail = "LNSF@GMAIL.COM",
-                            NormalizedUserName = "LNSF",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHlZ2mwH2IOnqY3pM5lpgVQnU7PHvM6EJaCmXYuvcATycC6s5fwjx+NZIxwn3yWn9A==",
-                            PhoneNumber = "(11) 11 1 1111-1111",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "478c7c0f-1342-4a65-ba47-44a0d4e253ac",
-                            TwoFactorEnabled = false,
-                            UserName = "lnsf"
-                        },
-                        new
-                        {
-                            Id = "3",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "95cc53b0-8ca0-4bf8-971e-512b23a7b7e0",
-                            Email = "lnsf2@gmail.com",
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            NormalizedEmail = "LNSF2@GMAIL.COM",
-                            NormalizedUserName = "LNSF2",
-                            PasswordHash = "AQAAAAIAAYagAAAAEIVZ9qq1KANd6Q/gx83GQ1l2VYKb/j4SjbeG9IAQUuZzVP56ZCGYnfKHYOhmB3eECg==",
-                            PhoneNumber = "(22) 22 2 2222-2222",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "e1ee8b88-4383-4dbd-a2c2-590023535004",
-                            TwoFactorEnabled = false,
-                            UserName = "lnsf2"
                         });
                 });
 
@@ -587,16 +556,6 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                         {
                             UserId = "1",
                             RoleId = "1"
-                        },
-                        new
-                        {
-                            UserId = "2",
-                            RoleId = "2"
-                        },
-                        new
-                        {
-                            UserId = "3",
-                            RoleId = "5"
                         });
                 });
 

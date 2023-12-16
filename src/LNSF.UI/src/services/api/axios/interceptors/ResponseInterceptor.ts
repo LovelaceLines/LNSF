@@ -1,5 +1,8 @@
 import {AxiosResponse} from "axios"
 
 export const responseInterceptor = (response: AxiosResponse) => {
-  return response;
+  const token = localStorage.getItem('@lnsf:accessToken');
+  response.headers['Authorization'] = `Bearer ${token}`;
+  
+  return response;  
 }

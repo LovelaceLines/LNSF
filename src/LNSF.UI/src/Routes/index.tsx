@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { AuthContext } from '../Contexts';
-import { useContext } from 'react';
+import { AuthContext, iUser } from '../Contexts';
+import { useContext, useState } from 'react';
 import { Account, Dashboard, LoginPage, PersonalData, PutAllPasseio, RegisterRoom, RegisterTour, TelaDeGerenciamentoAccount, TelaDeGerenciamentoPeople, TelaDeGerenciamentoRoom, TelaRegisterUpdateContactEmergence, ViewPeople, ViewRoom, ViewTour } from '../Pages/index';
 import { ProtectedRoutes } from '../ProtectedRoutes';
 import { ViewHospital } from '../Pages/hospital/viewHospital/ViewHospital';
@@ -12,7 +12,7 @@ import { Hosting } from '../Pages/hosting/viewHosting/ViewHosting_';
 
 export const AppRoutes = () => {
 
-    const { user } = useContext(AuthContext);
+    
 
     return (
         <>
@@ -26,22 +26,22 @@ export const AppRoutes = () => {
 
                     <Route path="/inicio/hospedagens/visualizar" element={<Dashboard children={<Hosting />} />} />
 
-                    {user.role !== 0 && <Route path="/inicio/apartamentos/gerenciar" element={<Dashboard children={<RegisterRoom />} />} />}
-                    {user.role !== 0 && <Route path="/inicio/apartamentos/gerenciar/:id" element={<Dashboard children={<TelaDeGerenciamentoRoom />} />} />}
+                    <Route path="/inicio/apartamentos/gerenciar" element={<Dashboard children={<RegisterRoom />} />} />
+                    <Route path="/inicio/apartamentos/gerenciar/:id" element={<Dashboard children={<TelaDeGerenciamentoRoom />} />} />
 
-                    {user.role !== 0 && <Route path="/inicio/pessoas/visualizar" element={<Dashboard children={<ViewPeople />} />} />}
-                    {user.role !== 0 && <Route path="/inicio/pessoas/dados/:id" element={<Dashboard children={<PersonalData />} />} />}
-                    {user.role !== 0 && <Route path="/inicio/pessoas/dados/contatoEmergencia/:id" element={<Dashboard children={<TelaRegisterUpdateContactEmergence />} />} />}
-                    {user.role !== 0 && <Route path="/inicio/pessoas/gerenciar/:id" element={<Dashboard children={<TelaDeGerenciamentoPeople />} />} />}
+                    <Route path="/inicio/pessoas/visualizar" element={<Dashboard children={<ViewPeople />} />} />
+                    <Route path="/inicio/pessoas/dados/:id" element={<Dashboard children={<PersonalData />} />} />
+                    <Route path="/inicio/pessoas/dados/contatoEmergencia/:id" element={<Dashboard children={<TelaRegisterUpdateContactEmergence />} />} />
+                    <Route path="/inicio/pessoas/gerenciar/:id" element={<Dashboard children={<TelaDeGerenciamentoPeople />} />} />
 
-                    {user.role === 1 && <Route path="/inicio/usuarios/gerenciar" element={<Dashboard children={<Account />} />} />}
-                    {user.role !== 0 && <Route path="/inicio/usuarios/gerenciar/:id" element={<Dashboard children={<TelaDeGerenciamentoAccount />} />} />}
+                    <Route path="/inicio/usuarios/gerenciar" element={<Dashboard children={<Account />} />} />
+                    <Route path="/inicio/usuarios/gerenciar/:id" element={<Dashboard children={<TelaDeGerenciamentoAccount />} />} />
 
-                    {user.role !== 0 && <Route path="/inicio/hospital/visualizar" element={<Dashboard children={<ViewHospital />} />} />}
-                    {user.role !== 0 && <Route path="/inicio/hospital/gerenciar/:id" element={<Dashboard children={<TelaDeGerenciamentoHospital />} />} />}
+                    <Route path="/inicio/hospital/visualizar" element={<Dashboard children={<ViewHospital />} />} />
+                    <Route path="/inicio/hospital/gerenciar/:id" element={<Dashboard children={<TelaDeGerenciamentoHospital />} />} />
 
-                    {user.role !== 0 && <Route path="/inicio/tratamentos/visualizar" element={<Dashboard children={<ViewTratamentos />} />} />}
-                    {user.role !== 0 && <Route path="/inicio/tratamentos/gerenciar/:id" element={<Dashboard children={<TelaDeGerenciamentoTratamentos />} />} />}
+                    <Route path="/inicio/tratamentos/visualizar" element={<Dashboard children={<ViewTratamentos />} />} />
+                    <Route path="/inicio/tratamentos/gerenciar/:id" element={<Dashboard children={<TelaDeGerenciamentoTratamentos />} />} />
 
 
                     <Route path="/inicio/registrodiario/visualizar" element={<Dashboard children={<ViewTour />} />} />

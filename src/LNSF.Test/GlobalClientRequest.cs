@@ -1,6 +1,6 @@
 ﻿using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using AutoMapper;
 using LNSF.Api.ViewModels;
 using LNSF.Domain.Enums;
 using LNSF.Domain.Exceptions;
@@ -16,7 +16,11 @@ namespace LNSF.Test;
 public class GlobalClientRequest
 {
     public const string BaseUrl = "http://localhost:5206/api/";
+    public string _acessToken = "";
     public readonly HttpClient _authClient = new() { BaseAddress = new Uri($"{BaseUrl}Auth/") };
+    public readonly HttpClient _loginClient = new() { BaseAddress = new Uri($"{BaseUrl}Auth/login") };
+    public readonly HttpClient _refreshTokenClient = new() { BaseAddress = new Uri($"{BaseUrl}Auth/refresh-token") };
+    public readonly HttpClient _authUserClient = new() { BaseAddress = new Uri($"{BaseUrl}Auth/user") };
     public readonly HttpClient _userClient = new() { BaseAddress = new Uri($"{BaseUrl}User/") };
     public readonly HttpClient _userRoleClient = new() { BaseAddress = new Uri($"{BaseUrl}UserRole/") };
     public readonly HttpClient _addUserToRoleClient = new() { BaseAddress = new Uri($"{BaseUrl}User/add-user-to-role/") };
@@ -41,27 +45,6 @@ public class GlobalClientRequest
     public readonly HttpClient _addEscortToHostingClient = new() { BaseAddress = new Uri($"{BaseUrl}Hosting/add-escort-to-hosting/") };
     public readonly HttpClient _removeEscortFromHostingClient = new() { BaseAddress = new Uri($"{BaseUrl}Hosting/remove-escort-from-hosting/") };
     public readonly HttpClient _hostingEscortClient = new() { BaseAddress = new Uri($"{BaseUrl}HostingEscort/") };
-    public readonly IMapper _mapper;
-
-    public GlobalClientRequest()
-    {
-        var mapperConfig = new MapperConfiguration(cfg =>
-        {         
-            cfg.CreateMap<RoomViewModel, RoomPostViewModel>().ReverseMap();
-
-            cfg.CreateMap<PeoplePostViewModel, PeoplePutViewModel>().ReverseMap();
-            cfg.CreateMap<PeopleViewModel, PeoplePostViewModel>().ReverseMap();
-
-            cfg.CreateMap<EmergencyContactViewModel, EmergencyContactPostViewModel>().ReverseMap();
-
-            cfg.CreateMap<TourViewModel, TourPostViewModel>().ReverseMap();
-            cfg.CreateMap<TourViewModel, TourPutViewModel>().ReverseMap();
-
-            cfg.CreateMap<TreatmentViewModel, TreatmentPostViewModel>().ReverseMap();
-        });
-
-        _mapper = mapperConfig.CreateMapper();
-    }
 
     /// <summary>
     /// Executes a query using the provided HttpClient and filter, and returns the result as an instance of type T.
@@ -107,6 +90,13 @@ public class GlobalClientRequest
         return await DeserializeResponse<int>(response);
     }
 
+    public virtual async Task<T> Get<T>(HttpClient client) where T : class
+    {
+        client = AddAuthorization(client);
+        var response = await client.GetAsync("");
+        return await DeserializeResponse<T>(response);
+    }
+
     public virtual async Task<T> Post<T>(HttpClient client, dynamic obj) where T : class
     {
         var objJson = JsonContent.Create(obj);
@@ -145,6 +135,12 @@ public class GlobalClientRequest
                 throw new Exception("Deserialized object is null");
 
         throw new Exception($"Unexpected response status code: {content},\n{response.StatusCode},\n{response},\n{response!.RequestMessage!.RequestUri!.AbsoluteUri}}}");
+    }
+
+    private HttpClient AddAuthorization(HttpClient client)
+    {
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _acessToken);
+        return client;
     }
 
     #region GetEntityFake

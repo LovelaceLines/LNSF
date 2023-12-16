@@ -16,7 +16,6 @@ export * from './tourContext/index'
 export * from './tourContext/type'
 
 export * from './accountContext/index'
-export * from './accountContext/type'
 
 export * from './emergencyContact/index'
 export * from './emergencyContact/type'
