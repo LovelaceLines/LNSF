@@ -8,8 +8,6 @@ export interface iPatientObject {
     hospitalId: number,
     socioeconomicRecord: boolean,
     term: boolean,
-    treatmentIds: number[];
-
 }
 
 export interface iPatient {
@@ -17,14 +15,12 @@ export interface iPatient {
     hospitalId: number,
     socioeconomicRecord: boolean,
     term: boolean,
-    treatmentIds: number[];
-    
 }
 
-export interface iform {
-    hospitalId: number,
-    type: number;
-    name: string;
+export interface iaddTreatmentToPatient {
+    patientId: number,
+    treatmentId: number;
+    
 }
 
 
@@ -35,4 +31,13 @@ export interface iPatientTypes {
     registerPatient(data: iPatient): Promise<iPatientObject | Error>;
     updatePatient(data: iPatientObject): Promise<iPatientObject | Error>;
     countPatient(): Promise<number>;
+
+    addTreatmentToPatient(id_: number): Promise<iaddTreatmentToPatient | Error>;
+    deletePatientTreatmentFromPatient(data: iaddTreatmentToPatient): Promise<iaddTreatmentToPatient | Error>;
+
+
+    //PatientTreatment
+    patientTreatment(): Promise<iaddTreatmentToPatient[] | Error>
+    patientTreatmentCount(): Promise<number>
+
 }

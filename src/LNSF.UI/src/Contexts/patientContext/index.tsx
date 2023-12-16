@@ -2,7 +2,7 @@ import { createContext, useCallback, useState } from "react";
 import { Api } from "../../services/api/axios";
 import { toast } from "react-toastify";
 import { Environment } from "../../environment";
-import { iPatient, iPatientObject, iPatientProvider, iPatientTypes } from "./type";
+import { iPatient, iPatientObject, iPatientProvider, iPatientTypes, iaddTreatmentToPatient } from "./type";
 
 export const PatientContext = createContext({} as iPatientTypes);
 
@@ -18,7 +18,7 @@ export const PatientProvider = ({ children }: iPatientProvider) => {
             if (response.status === 200) {
                 return response.data as iPatientObject[];
             }
-        } catch (error) {
+        } catch (error: any) {
             if (error.response) {
                 toast.error(error.response.data.message);
             } else {
@@ -99,6 +99,80 @@ export const PatientProvider = ({ children }: iPatientProvider) => {
         return 0;
     }, []);
 
+    const addTreatmentToPatient = useCallback(async (id_: number) => {
+        try {
+            const response = await Api.delete(`/Patient/${id_}`);
+
+            if (response.status === 200) {
+                return response.data as iaddTreatmentToPatient;
+            }
+        } catch (error: any) {
+            if (error.response) {
+                toast.error(error.response.data.message);
+            } else {
+                toast.error('Ocorreu um erro ao processar a requisição.');
+                console.error('Error Message:', error.message);
+            }
+        }
+        return {} as iaddTreatmentToPatient;
+    }, []);
+
+
+    const deletePatientTreatmentFromPatient = useCallback(async (data: iaddTreatmentToPatient) => {
+        try {
+            const response = await Api.delete('/Patient/remove-treatment-from-patient', {data});
+
+            if (response.status === 200) {
+                return response.data as iaddTreatmentToPatient;
+            }
+        } catch (error: any) {
+            if (error.response) {
+                toast.error(error.response.data.message);
+            } else {
+                toast.error('Ocorreu um erro ao processar a requisição.');
+                console.error('Error Message:', error.message);
+            }
+        }
+        return {} as iaddTreatmentToPatient;
+    }, []);
+
+
+    const patientTreatment = async () => {
+        try {
+            const response = await Api.get('/PatientTreatment');
+
+            if (response.status === 200) {
+                return response.data as iaddTreatmentToPatient[];
+            }
+        } catch (error: any) {
+            if (error.response) {
+                toast.error(error.response.data.message);
+            } else {
+                toast.error('Ocorreu um erro ao processar a requisição.');
+                console.error('Error Message:', error.message);
+            }
+        }
+        return [];
+    };
+
+    const patientTreatmentCount = async () => {
+        try {
+            const response = await Api.get('/PatientTreatment/count');
+
+            if (response.status === 200) {
+                return response.data as number;
+            }
+        } catch (error: any) {
+            if (error.response) {
+                toast.error(error.response.data.message);
+            } else {
+                toast.error('Ocorreu um erro ao processar a requisição.');
+                console.error('Error Message:', error.message);
+            }
+        }
+        return 0;
+    };
+
 
     return (
         <PatientContext.Provider
@@ -108,7 +182,11 @@ export const PatientProvider = ({ children }: iPatientProvider) => {
                 viewPatient,
                 registerPatient,
                 updatePatient,
-                countPatient
+                countPatient,
+                addTreatmentToPatient,
+                deletePatientTreatmentFromPatient,
+                patientTreatment,
+                patientTreatmentCount
             }}>
             {children}
         </PatientContext.Provider>

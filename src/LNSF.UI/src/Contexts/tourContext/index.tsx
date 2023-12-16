@@ -32,26 +32,26 @@ export const TourProvider = ({ children }: iTourProvider) => {
         return [];
     }
 
-    // const viewTourOutput = async (input: boolean) => {
-    //     try {
+    const viewTourOutput = async (input: boolean) => {
+        try {
 
-    //         const urlRelativa = `/Tour?InOpen=${input}`;
-    //         const response = await Api.get(urlRelativa);
+            const urlRelativa = `/Tour?InOpen=${input}`;
+            const response = await Api.get(urlRelativa);
 
-    //         if (response.status === 200) {
-    //             return response.data as iTourObject[];
-    //         }
-    //     } catch (error: any) {
-    //         if (error.response) {
-    //             toast.error(error.response.data.message);
-    //         } else {
-    //             toast.error('Ocorreu um erro ao processar a requisição.');
-    //             console.error('Error Message:', error.message);
-    //         }
-    //         return new Error((error as { message: string }).message || 'Ops, não foi possível acessar o banco.')
-    //     }
-    //     return [];
-    // }
+            if (response.status === 200) {
+                return response.data as iTourObject[];
+            }
+        } catch (error: any) {
+            if (error.response) {
+                toast.error(error.response.data.message);
+            } else {
+                toast.error('Ocorreu um erro ao processar a requisição.');
+                console.error('Error Message:', error.message);
+            }
+            return new Error((error as { message: string }).message || 'Ops, não foi possível acessar o banco.')
+        }
+        return [];
+    }
 
     const registerTour = useCallback(async (data: iTourRegister) => {
         try {
