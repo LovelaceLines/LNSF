@@ -21,7 +21,8 @@ public class AuthTestApi : GlobalClientRequest
 
         // Assert
         Assert.NotNull(token);
-        Assert.NotNull(token.Token);
+        Assert.NotNull(token.AccessToken);
+        Assert.NotNull(token.RefreshToken);
     }
 
     [Theory]
@@ -52,14 +53,16 @@ public class AuthTestApi : GlobalClientRequest
         // Arrange - Login
         var login = new UserLoginViewModel { UserName = user.UserName, Password = password };
         var token = await Post<AuthenticationToken>(_loginClient, login);
-        _acessToken = token.Token;
+        _acessToken = token.AccessToken;
+        _refreshToken = token.RefreshToken;
 
         // Act
         var refreshToken = await Get<AuthenticationToken>(_refreshTokenClient);
 
         // Assert
         Assert.NotNull(refreshToken);
-        Assert.NotEmpty(refreshToken.Token);
+        Assert.NotEmpty(refreshToken.AccessToken);
+        Assert.NotEmpty(refreshToken.RefreshToken);
     }
 
     [Theory]
@@ -68,6 +71,7 @@ public class AuthTestApi : GlobalClientRequest
     {
         // Arrange - Token
         _acessToken = token;
+        _refreshToken = token;
 
         // Act - Assert
         var exception = await Get<AppException>(_refreshTokenClient);
@@ -86,7 +90,8 @@ public class AuthTestApi : GlobalClientRequest
         // Arrange - Login
         var login = new UserLoginViewModel{ UserName = user.UserName, Password = password };
         var token = await Post<AuthenticationToken>(_loginClient, login);
-        _acessToken = token.Token;
+        _acessToken = token.AccessToken;
+        _refreshToken = token.RefreshToken;
 
         // Act
         var userGet = await Get<UserGetViewModel>(_authUserClient);

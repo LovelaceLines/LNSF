@@ -27,7 +27,7 @@ export interface iDataLogin {
 
 export interface iToken {
     accessToken: string;
-    expires: string;
+    refreshToken: string;
 }
 
 export interface iRegisterUser {

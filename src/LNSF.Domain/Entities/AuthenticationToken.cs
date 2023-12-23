@@ -2,14 +2,14 @@
 
 public class AuthenticationToken
 {
-    public string Token { get; set; } = "";
-    public DateTime Expires { get; set; }
+    public string AccessToken { get; set; } = "";
+    public string RefreshToken { get; set; } = "";
 
     public AuthenticationToken() { }
 
-    public AuthenticationToken(string token, DateTime expires)
+    public AuthenticationToken(string accessToken, string refreshToken)
     {
-        Token = token;
-        Expires = expires;
+        AccessToken = accessToken;
+        RefreshToken = refreshToken;
     }
 }

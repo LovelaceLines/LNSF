@@ -17,6 +17,7 @@ public class GlobalClientRequest
 {
     public const string BaseUrl = "http://localhost:5206/api/";
     public string _acessToken = "";
+    public string _refreshToken = "";
     public readonly HttpClient _authClient = new() { BaseAddress = new Uri($"{BaseUrl}Auth/") };
     public readonly HttpClient _loginClient = new() { BaseAddress = new Uri($"{BaseUrl}Auth/login") };
     public readonly HttpClient _refreshTokenClient = new() { BaseAddress = new Uri($"{BaseUrl}Auth/refresh-token") };
@@ -140,6 +141,7 @@ public class GlobalClientRequest
     private HttpClient AddAuthorization(HttpClient client)
     {
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _acessToken);
+        client.DefaultRequestHeaders.Add("RefreshToken", _refreshToken);
         return client;
     }
 

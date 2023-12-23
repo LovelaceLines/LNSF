@@ -7,31 +7,33 @@ export const AuthContext = createContext<iAuthTypes>({} as iAuthTypes);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [token, setToken] = useState<iToken>({} as iToken);
 
-  const saveToken = useCallback((token: iToken) => {
+  const saveToken = useCallback(() => {
     setIsAuthenticated(true);
 
     localStorage.setItem('@lnsf:accessToken', token.accessToken);
-    localStorage.setItem('@lnsf:expires', token.expires);
-  }, []);
+    localStorage.setItem('@lnsf:refreshToken', token.refreshToken);
+  }, [token]);
 
   const login = useCallback(async (data: iDataLogin) => {
     const res = await Api.post<iToken>('/Auth/login', data);
-    const token: iToken = res.data;
-    saveToken(token);
+    setToken(res.data);
+    saveToken();
   }, [saveToken]);
   
   const refreshToken = useCallback(async () => {
+    localStorage.setItem('@lnsf:accessToken', token.refreshToken);
     const res = await Api.post<iToken>('/Auth/refresh-token');
-    const token: iToken = res.data;
-    saveToken(token);
-  }, [saveToken]);
+    setToken(res.data);
+    saveToken();
+  }, [saveToken, token]);
 
   const logout = useCallback(() => {
     setIsAuthenticated(false);
 
     localStorage.removeItem('@lnsf:accessToken');
-    localStorage.removeItem('@lnsf:expires');
+    localStorage.removeItem('@lnsf:refreshToken');
   }, []);
 
   const getUser = useCallback(async (): Promise<iUser> => {

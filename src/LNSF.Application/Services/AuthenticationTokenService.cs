@@ -32,15 +32,15 @@ public class AuthenticationTokenService : IAuthenticationTokenService
         return await GetAuthenticationToken(user);
     }
 
-    public async Task<AuthenticationToken> RefreshToken(string token)
+    public async Task<AuthenticationToken> RefreshToken(string refreshToken)
     {
-        var result = await new JsonWebTokenHandler().ValidateTokenAsync(token, new TokenValidationParameters()
+        var result = await new JsonWebTokenHandler().ValidateTokenAsync(refreshToken, new TokenValidationParameters()
         {
             ValidIssuer = Issuer,
             ValidAudience = Audience,
             IssuerSigningKey = SecurityKey,
         });
-        if (!result.IsValid) throw new AppException("Acess Token expired!", HttpStatusCode.Unauthorized);
+        if (!result.IsValid) throw new AppException("Access Token expired!", HttpStatusCode.Unauthorized);
         
         var userId = result.Claims["nameid"].ToString() ?? throw new AppException("Claims NameId not found!", HttpStatusCode.InternalServerError);
         var user = await _userRepository.GetById(userId);
@@ -48,7 +48,7 @@ public class AuthenticationTokenService : IAuthenticationTokenService
     }
 
     private async Task<AuthenticationToken> GetAuthenticationToken(IdentityUser user) =>
-        new(token: await GenerateAccessToken(user), Expires);
+        new(accessToken: await GenerateAccessToken(user), refreshToken: GenerateRefreshToken(user));
 
     private async Task<string> GenerateAccessToken(IdentityUser user)
     {
@@ -56,10 +56,28 @@ public class AuthenticationTokenService : IAuthenticationTokenService
         {
             Issuer = Issuer,
             Audience = Audience,
-            Subject = await Subject(user),
-            Expires = Expires,
+            Subject = await SubjectAccessToken(user),
+            Expires = ExpiresAccessToken,
             SigningCredentials = SigningCredentials,
             TokenType = "at+jwt"
+        };
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+
+        return tokenHandler.WriteToken(token);
+    }
+
+    private string GenerateRefreshToken(IdentityUser user)
+    {
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Issuer = Issuer,
+            Audience = Audience,
+            Subject = SubjectRefreshToken(user),
+            Expires = ExpiresRefreshToken,
+            SigningCredentials = SigningCredentials,
+            TokenType = "rt+jwt"
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();
@@ -81,14 +99,15 @@ public class AuthenticationTokenService : IAuthenticationTokenService
     private string Audience =>
         _configuration["Audience"] ?? throw new AppException("JwtConfig: Audience is null!", HttpStatusCode.InternalServerError);
 
-    private DateTime Expires =>
+    private DateTime ExpiresAccessToken =>
         DateTime.UtcNow.AddHours(int.Parse(
-            _configuration["ExpireHours"] ?? throw new AppException("JwtConfig: ExpireHours is null!", HttpStatusCode.InternalServerError)));
+            _configuration["HoursAccessTokenExpires"] ?? throw new AppException("JwtConfig: HoursAccessTokenExpires is null!", HttpStatusCode.InternalServerError)));
+    
+    private DateTime ExpiresRefreshToken =>
+        DateTime.UtcNow.AddHours(int.Parse(
+            _configuration["HoursRefreshTokenExpires"] ?? throw new AppException("JwtConfig: ExpireRefreshTokenHours is null!", HttpStatusCode.InternalServerError)));
 
-    private async Task<ClaimsIdentity> Subject(IdentityUser user) =>
-        new(await GetClaims(user));
-
-    private async Task<List<Claim>> GetClaims(IdentityUser user)
+    private async Task<ClaimsIdentity> SubjectAccessToken(IdentityUser user)
     {
         var claims = new List<Claim>
         {
@@ -99,7 +118,17 @@ public class AuthenticationTokenService : IAuthenticationTokenService
         var roles = await _userRepository.GetRoles(user);
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
-        return claims;
+        return new ClaimsIdentity(claims);
+    }
+
+    private ClaimsIdentity SubjectRefreshToken(IdentityUser user)
+    {
+        var claims = new List<Claim>
+        {
+            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+        };
+
+        return new ClaimsIdentity(claims);
     }
 
     public async Task<UserDTO> GetUser(string token)
@@ -110,7 +139,7 @@ public class AuthenticationTokenService : IAuthenticationTokenService
             ValidAudience = Audience,
             IssuerSigningKey = SecurityKey,
         });
-        if (!result.IsValid) throw new AppException("Acess Token expired!", HttpStatusCode.Unauthorized);
+        if (!result.IsValid) throw new AppException("Access Token expired!", HttpStatusCode.Unauthorized);
         
         var userId = result.Claims["nameid"].ToString() ?? throw new AppException("Claims NameId not found!", HttpStatusCode.InternalServerError);
         var user = await _userRepository.GetById(userId);

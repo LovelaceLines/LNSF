@@ -1,5 +1,5 @@
 
-import { Box, Button, CircularProgress, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Button, Checkbox, CircularProgress, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import * as yup from 'yup';
 import { AuthContext } from "../../Contexts/authcontext/AuthContext_";
@@ -12,8 +12,8 @@ import React from "react";
 import { iDataLogin } from "../../Contexts";
 
 const loginSchema = yup.object().shape({
-  userName: yup.string().required("Nome de usuário é um campo obrigatório!").min(10),
-  password: yup.string().required("A senha deve ter pelo menos 6 caracteres!").min(6),
+  userName: yup.string().required("Nome de usuário é um campo obrigatório!"),
+  password: yup.string().required("Senha é um campo obrigatório!"),
 })
 
 export const LoginPage: React.FC = () => {
@@ -39,23 +39,22 @@ export const LoginPage: React.FC = () => {
   }, [isAuthenticated, navigate]);
 
   const handlesubimit = () => {
-    loginSchema
-      .validate({ userName, password }, { abortEarly: false })
-      .then(dadosValidados => {
-        const data: iDataLogin = {
-          userName: dadosValidados.userName,
-          password: dadosValidados.password,
-        }
-        login(data)
-        setIsLoading(true)
-      })
-      .catch((errors: yup.ValidationError) => {
-        errors.inner.forEach(error => {
-          if (error.path === 'email') setUserNameError(error.message);
-          else if (error.path === 'password') setPasswordError(error.message);
-        });
-        setIsLoading(false);
+    loginSchema.validate({ userName, password }, { abortEarly: false })
+    .then(dadosValidados => {
+      const data: iDataLogin = {
+        userName: dadosValidados.userName,
+        password: dadosValidados.password,
+      }
+      login(data)
+      setIsLoading(true)
+    })
+    .catch((errors: yup.ValidationError) => {
+      errors.inner.forEach(error => {
+        if (error.path === 'userName') setUserNameError(error.message);
+        else if (error.path === 'password') setPasswordError(error.message);
       });
+      setIsLoading(false);
+    });
     setIsLoading(false);
   };
 
@@ -101,40 +100,25 @@ export const LoginPage: React.FC = () => {
     <Box component="form" onSubmit={handlesubimit}>
       <Box display='flex' flexDirection='column' gap={2}>
         <TextField
-          id="Email"
-          label='Email'
-          type="email"
+          id="userName"
+          label='Nome de Usuário'
+          type="text"
           value={userName}
           error={!!userNameError}
           helperText={userNameError}
           onKeyDown={() => setUserNameError('')}
           onChange={e => setUserName(e.target.value)}
         />
-        <FormControl variant="outlined">
-          <InputLabel htmlFor="outlined-adornment-password">Senha</InputLabel>
-          <OutlinedInput
-            id="Senha"
-            type={showPassword ? 'text' : 'password'}
-            value={password}
-            error={!!passwordError}
-            onKeyDown={() => setPasswordError('')}
-            onChange={e => setPassword(e.target.value)}
-            endAdornment={
-            <InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={handleClickShowPassword}
-                onMouseDown={handleMouseDownPassword}
-                edge="end"
-              >
-                {showPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            </InputAdornment>
-            }
-            label="Password"
-            aria-describedby="component-error-text"
-          ></OutlinedInput>
-        </FormControl>
+        <TextField
+          id="Senha"
+          label='Senha'
+          type={showPassword ? 'text' : 'password'}
+          value={password}
+          error={!!passwordError}
+          onKeyDown={() => setPasswordError('')}
+          onChange={e => setPassword(e.target.value)}
+          helperText={passwordError}
+        />
         <Box display='flex' justifyContent='right'>
           <MaterialUILink href="https://www.exemplo.com" target="_blank" rel="noopener">
             Pedir ajuda
