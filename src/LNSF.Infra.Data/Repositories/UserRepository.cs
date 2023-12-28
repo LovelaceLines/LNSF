@@ -65,10 +65,10 @@ public class UserRepository : IUserRepository
 
     public async Task<IdentityUser> Auth(string userName, string password)
     {
-        if (!await ExistsByUserName(userName)) throw new AppException("Erro ao autenticar!", HttpStatusCode.Unauthorized);
+        if (!await ExistsByUserName(userName)) throw new AppException("Erro ao fazer login!", HttpStatusCode.Unauthorized);
         var user = await GetByUserName(userName);
 
-        if (!await CheckPassword(user, password)) throw new AppException("Erro ao autenticar!", HttpStatusCode.Unauthorized); 
+        if (!await CheckPassword(user, password)) throw new AppException("Erro ao fazer login!", HttpStatusCode.Unauthorized); 
 
         return user;
     }
