@@ -14,13 +14,20 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
     const { isDrawerOpen, toggleDrawerOpen, drawerOptions, setDrawerOptions } = useDrawerContext();
     const [openIndex, setOpenIndex] = useState<number>(-1);
     const { getUser } = useContext(AuthContext);
-    const [user, setUser] = useState<iUser>({} as iUser);
+    const [user, setUser] = useState<iUser>({
+        id: "string;",
+        userName: "string",
+        role: ["Administrador"],
+        email: "string",
+        phone: "string",
+    } as iUser);
 
-    useEffect(() => {
-        getUser().then((userData) => {
-            setUser(userData);
-        });
-    }, [getUser]);
+    // useEffect(() => {
+    //     getUser()
+    //         .then((userData) => {
+    //             setUser(userData);
+    //         });
+    // }, []);
 
     const handleClick = (index: number) => {
         setOpenIndex(index === openIndex ? -1 : index);
@@ -87,7 +94,7 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
             },
         ];
 
-            if ("Desenvolvedor" in user.role || "Administrador" in user.role || "Secretário" in user.role) {
+        if ("Desenvolvedor" in user.role || "Administrador" in user.role || "Secretário" in user.role) {
             menu[3].options.push(
                 {
                     pathOption: '/inicio/apartamentos/gerenciar',

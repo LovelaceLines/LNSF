@@ -11,15 +11,13 @@ import { Hosting } from '../Pages/hosting/viewHosting/ViewHosting_';
 
 
 export const AppRoutes = () => {
-
     
-
     return (
         <>
             <Routes>
                 <Route path='/' element={<LoginPage />} />
 
-                {/* <Route element={<ProtectedRoutes />}> */}
+                <Route element={<ProtectedRoutes />}>
                     <Route path="/inicio" element={<Dashboard />} />
 
                     <Route path="/inicio/apartamentos/visualizar" element={<Dashboard children={<ViewRoom />} />} />
@@ -47,7 +45,7 @@ export const AppRoutes = () => {
                     <Route path="/inicio/registrodiario/visualizar" element={<Dashboard children={<ViewTour />} />} />
                     <Route path="/inicio/registrodiario/adicionar" element={<Dashboard children={<RegisterTour />} />} />
                     <Route path="/inicio/registrodiario/visualizar/:id" element={<Dashboard children={<PutAllPasseio />} />} />
-                {/* </Route> */}
+                </Route>
                 <Route path='*' element={<Navigate to='/' />} />
             </Routes >
         </>

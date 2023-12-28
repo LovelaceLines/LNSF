@@ -9,25 +9,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [token, setToken] = useState<iToken>({} as iToken);
 
-  const saveToken = useCallback(() => {
-    setIsAuthenticated(true);
-
-    localStorage.setItem('@lnsf:accessToken', token.accessToken);
-    localStorage.setItem('@lnsf:refreshToken', token.refreshToken);
-  }, [token]);
+  // const saveToken = () => {
+  //   setIsAuthenticated(true);
+  //   console.log("token.accessToken", token.accessToken)
+  //   localStorage.setItem('@lnsf:accessToken', token.accessToken);
+  //   localStorage.setItem('@lnsf:refreshToken', token.refreshToken);
+  // };
 
   const login = useCallback(async (data: iDataLogin) => {
     const res = await Api.post<iToken>('/Auth/login', data);
+
+    localStorage.setItem('@lnsf:accessToken', res.data.accessToken);
+    localStorage.setItem('@lnsf:refreshToken', res.data.refreshToken);
+    setIsAuthenticated(true);
     setToken(res.data);
-    saveToken();
-  }, [saveToken]);
-  
+  }, []);
+
   const refreshToken = useCallback(async () => {
     localStorage.setItem('@lnsf:accessToken', token.refreshToken);
     const res = await Api.post<iToken>('/Auth/refresh-token');
+   
+    localStorage.setItem('@lnsf:accessToken', res.data.accessToken);
+    localStorage.setItem('@lnsf:refreshToken', res.data.refreshToken);
     setToken(res.data);
-    saveToken();
-  }, [saveToken, token]);
+    setIsAuthenticated(true);
+  }, []);
 
   const logout = useCallback(() => {
     setIsAuthenticated(false);

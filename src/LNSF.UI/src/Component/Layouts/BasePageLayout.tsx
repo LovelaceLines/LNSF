@@ -91,7 +91,7 @@ export const BasePageLayout: React.FC<IBasePageLayoutProps> = ({ children }) => 
                             <Typography
                             //variant={mdDown ? 'body2' : 'subtitle1'}
                             >
-                                {user.role.toString()}
+                                {/* {user.role.toString()} */}
                                 <Typography fontSize={12}>
                                     {user.userName}
                                 </Typography>
@@ -125,7 +125,7 @@ export const BasePageLayout: React.FC<IBasePageLayoutProps> = ({ children }) => 
                                         variant={mdDown ? 'body2' : 'subtitle1'}
                                         textAlign='center'
                                     >
-                                        {user.role.toString()}
+                                        {/* {user.role.toString()} */}
                                         <Typography fontSize={12}>
                                             lnsf@gmail.com
                                         </Typography>

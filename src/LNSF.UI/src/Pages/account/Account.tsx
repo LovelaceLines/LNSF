@@ -6,14 +6,15 @@ import { useNavigate } from 'react-router-dom';
 import SupervisedUserCircleRoundedIcon from '@mui/icons-material/SupervisedUserCircleRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
-import { AccountContext, iaccount, idelAccount } from '../../Contexts';
+import { AccountContext } from '../../Contexts';
 import { useDebounce } from '../../Component/hooks/UseDebounce';
 import { ButtonAction } from '../../Component';
+import { iUser, idelUserID } from '../../Contexts/accountContext/type';
 
 export const Account: React.FC = () => {
 
-    const { viewAccount, deleteAccount } = useContext(AccountContext);
-    const [account, setAccount] = useState<iaccount[]>([]);
+    const { viewUser, deleteUserId } = useContext(AccountContext);
+    const [account, setAccount] = useState<iUser[]>([]);
     const [isLoadind, setIsLoading] = useState(true);
     const { debounce } = useDebounce();
     const theme = useTheme();
@@ -26,7 +27,7 @@ export const Account: React.FC = () => {
 
         debounce(() => {
 
-            viewAccount()
+            viewUser()
                 .then((response) => {
                     if (response instanceof Error) {
                         setIsLoading(false);
@@ -46,11 +47,11 @@ export const Account: React.FC = () => {
     const deletePeopleUser = (id_: string) => {
 
         if (confirm('Realmente deseja remover usuário?')) {
-            const data: idelAccount = {
+            const data: idelUserID = {
                 id: id_
             }
             setIsLoading(true);
-            deleteAccount(data)
+            deleteUserId(data)
                 .then((response) => {
                     if (response instanceof Error) {
                         setIsLoading(false);
@@ -64,8 +65,6 @@ export const Account: React.FC = () => {
                     console.error('Detalhes do erro:', error);
                 });
         }
-
-
     }
 
     return (
@@ -114,11 +113,12 @@ export const Account: React.FC = () => {
                             <TableRow key={row.id}>
                                 <TableCell sx={{ textAlign: 'center' }}>{row.userName}</TableCell>
                                 <TableCell sx={{ textAlign: 'center' }}>
-                                    {row.role === 0 ? 'Voluntário' :
+                                    oiii
+                                    {/* {row === 0 ? 'Voluntário' :
                                         row.role === 1 ? 'Administrador' :
                                             row.role === 2 ? 'Assistente Social' :
                                                 'Secretária'
-                                    }
+                                    } */}
                                 </TableCell>
 
                                 <TableCell sx={{ textAlign: 'center' }}>

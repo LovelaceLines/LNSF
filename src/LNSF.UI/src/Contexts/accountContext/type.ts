@@ -52,7 +52,7 @@ export interface iUserTypes {
     registerUserRole(data: iregisterUserRole): Promise<iUser | Error>;
     updateUser(data: iUser): Promise<iUser | Error>;
     updatePassword(data: iattPasswordUser): Promise<iUser | Error>;
-    deleteUserId(data: iUser): Promise<iUser | Error>;
+    deleteUserId(data: idelUserID): Promise<iUser | Error>;
     deleteUserRole(data: idelUserRole): Promise<iUser | Error>;
 
 
