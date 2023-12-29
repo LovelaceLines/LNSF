@@ -2,12 +2,15 @@ import { createContext, useCallback, useState } from 'react';
 import { iAuthTypes, iDataLogin, iToken, iUser } from './type';
 import { Api } from '../../services/api/axios';
 
-// TODO - usar outra abordagem
 export const AuthContext = createContext<iAuthTypes>({} as iAuthTypes);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [token, setToken] = useState<iToken>({} as iToken);
+  // TODO: Implementar outra forma de verificar se o usuário está autenticado no front-end
+  const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem('@lnsf:accessToken') ? true : false);
+  const [token, setToken] = useState<iToken>({
+    accessToken: localStorage.getItem('@lnsf:accessToken') || '',
+    refreshToken: localStorage.getItem('@lnsf:refreshToken') || ''
+  } as iToken);
 
   // const saveToken = () => {
   //   setIsAuthenticated(true);
@@ -31,8 +34,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
    
     localStorage.setItem('@lnsf:accessToken', res.data.accessToken);
     localStorage.setItem('@lnsf:refreshToken', res.data.refreshToken);
-    setToken(res.data);
     setIsAuthenticated(true);
+    setToken(res.data);
   }, []);
 
   const logout = useCallback(() => {

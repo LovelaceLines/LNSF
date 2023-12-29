@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
+import { App } from './App.tsx'
 import { BrowserRouter } from 'react-router-dom'
 import { AccountProvider, AppThemeProvider, AuthProvider, DrawerProvider, EmergencyContactProvider, PeopleProvider, RoomProvider, TourProvider } from './Contexts/index.ts'
 import { EscortProvider } from './Contexts/escortContext/index.tsx'

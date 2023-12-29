@@ -7,7 +7,7 @@ export const ProtectedRoutes = () => {
 
   return (
     <>
-      { isAuthenticated ? <Outlet /> : <Navigate to="/" /> }
+      { isAuthenticated ? <Outlet /> : <Navigate to="/login" /> }
     </>
   )
 }

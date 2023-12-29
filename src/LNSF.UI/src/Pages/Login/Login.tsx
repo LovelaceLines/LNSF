@@ -147,7 +147,6 @@ export const LoginPage: React.FC = () => {
     <Box
       width='100%'
       height='100vh'
-      overflow='hidden'
       display='flex'
       flexDirection={smDown ? 'column' : 'row'}
       alignItems='center'
