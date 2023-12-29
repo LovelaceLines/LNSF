@@ -1,8 +1,6 @@
 import axios from 'axios';
-import { errorInterceptor, responseInterceptor } from './interceptors';
+import { requestErrorInterceptor, requestInterceptor, responseErrorInterceptor, responseInterceptor } from './interceptors';
 import { apiUrl } from '../../../environment/environment.temp';
-import { config } from 'process';
-import { requestInterceptor } from './interceptors/RequestInterceptor';
 
 export const Api = axios.create({
   baseURL: apiUrl,
@@ -15,12 +13,12 @@ export const Api = axios.create({
 
 Api.interceptors.response.use(
   (response) => responseInterceptor(response),
-  (error) => errorInterceptor(error),
+  (error) => responseErrorInterceptor(error),
 );
 
 Api.interceptors.request.use(
- (config)  => requestInterceptor(config)
- // to do (error) = 
+  (config) => requestInterceptor(config),
+  (error) => requestErrorInterceptor(error),
 )
 
 

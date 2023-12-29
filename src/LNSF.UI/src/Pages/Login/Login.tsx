@@ -1,5 +1,4 @@
-
-import { Box, Button, Checkbox, CircularProgress, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Button, CircularProgress, TextField, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import * as yup from 'yup';
 import { AuthContext } from "../../Contexts/authcontext/AuthContext_";
@@ -7,7 +6,6 @@ import nomelogo from '../../assets/lnsf_icone.svg';
 import fundo from '../../assets/fundoLogin.jpg';
 import { useNavigate } from 'react-router-dom'
 import { Link as MaterialUILink } from '@mui/material';
-import { Visibility, VisibilityOff } from "@mui/icons-material";
 import React from "react";
 import { iDataLogin } from "../../Contexts";
 
@@ -27,10 +25,7 @@ export const LoginPage: React.FC = () => {
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   
   const [showPassword, setShowPassword] = React.useState(false);
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-  };
+  const handleClickShowPassword = () => setShowPassword(show => !show);
   
   const { isAuthenticated, login } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -38,7 +33,10 @@ export const LoginPage: React.FC = () => {
     if (isAuthenticated) { navigate("/inicio") }
   }, [isAuthenticated, navigate]);
 
+  // TODO: Corrigir setIsLoading(false) quando o login falhar (não está funcionando)
   const handlesubimit = () => {
+    setIsLoading(true)
+
     loginSchema.validate({ userName, password }, { abortEarly: false })
     .then(dadosValidados => {
       const data: iDataLogin = {
@@ -46,15 +44,14 @@ export const LoginPage: React.FC = () => {
         password: dadosValidados.password,
       }
       login(data)
-      setIsLoading(true)
     })
     .catch((errors: yup.ValidationError) => {
       errors.inner.forEach(error => {
         if (error.path === 'userName') setUserNameError(error.message);
         else if (error.path === 'password') setPasswordError(error.message);
       });
-      setIsLoading(false);
     });
+    
     setIsLoading(false);
   };
 
@@ -106,19 +103,29 @@ export const LoginPage: React.FC = () => {
           value={userName}
           error={!!userNameError}
           helperText={userNameError}
-          onKeyDown={() => setUserNameError('')}
+          onKeyUp={() => setUserNameError('')}
           onChange={e => setUserName(e.target.value)}
         />
+        <Box display='flex' flexDirection='column' gap={1}>
         <TextField
           id="Senha"
           label='Senha'
           type={showPassword ? 'text' : 'password'}
           value={password}
           error={!!passwordError}
-          onKeyDown={() => setPasswordError('')}
+          onKeyUp={() => setPasswordError('')}
           onChange={e => setPassword(e.target.value)}
           helperText={passwordError}
         />
+        <Box display='flex' justifyContent='left'>
+          <Button 
+            size="small"
+            onClick={handleClickShowPassword}  
+          >
+            {showPassword ? 'Esconder senha' : 'Mostrar senha'}
+          </Button>
+        </Box>
+        </Box>
         <Box display='flex' justifyContent='right'>
           <MaterialUILink href="https://www.exemplo.com" target="_blank" rel="noopener">
             Pedir ajuda

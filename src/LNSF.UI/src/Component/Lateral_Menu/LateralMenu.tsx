@@ -163,48 +163,61 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
         setDrawerOptions(menu)
     }, [setDrawerOptions, user.role]);
 
+    const LateralMenu = (
+        <Drawer 
+            open={isDrawerOpen} 
+            variant={smDown ? "temporary" : "permanent"}
+            onClose={toggleDrawerOpen}
+        >
+            <Box
+                id="LateralMenu"
+                width={theme.spacing(32)}
+                height='100%'
+                display='flex'
+                flexDirection='column'
+                overflow='hidden'
+            >
+                <Box
+                    width='100%'
+                    padding={theme.spacing(3)}
+                    display='flex'
+                    alignItems='center'
+                    gap={theme.spacing(1)}
+                >
+                    <img src={nomelogo} />
+                </Box>
 
+                {/* Itens do menu lateral */}
+                <Box flex={1}>
+                    {drawerOptions.map(drawerOption => (
+                        <ListUlMenu
+                            key={drawerOption.path}
+                            index={drawerOption.index}
+                            icon={drawerOption.icon}
+                            maintitle={drawerOption.label}
+                            subItems={drawerOption.options}
+                            openIndex={openIndex}
+                            onClickCollapse={handleClick} 
+                        />
+                    ))}
+                </Box>
+            </Box>
+        </Drawer>
+    );
 
     return (
-        <>
-            {/* menu lateral */}
-            <Drawer open={isDrawerOpen} variant={smDown ? "temporary" : "permanent"} onClose={toggleDrawerOpen}>
-                <Box
-                    width={theme.spacing(32)}
-                    height='100%'
-                    display='flex'
-                    flexDirection='column'
-                    overflow='hidden'
-                >
-                    <Box
-                        width='100%'
-                        padding={theme.spacing(3)}
-                        display='flex'
-                        alignItems='center'
-                        gap={theme.spacing(1)}
-                    >
-                        <img src={nomelogo} />
-                    </Box>
-
-                    {/* Itens do menu lateral */}
-                    <Box flex={1}>
-                        {drawerOptions.map(drawerOption => (
-                            <ListUlMenu
-                                key={drawerOption.path}
-                                index={drawerOption.index}
-                                icon={drawerOption.icon}
-                                maintitle={drawerOption.label}
-                                subItems={drawerOption.options}
-                                openIndex={openIndex}
-                                onClickCollapse={handleClick} />
-                        ))}
-                    </Box>
-                </Box>
-            </Drawer>
-
-            <Box>
+        <Box
+            height='100vh'
+            display='flex'
+        >
+            {LateralMenu}
+            <Box
+                display='flex'
+                flexGrow={1}
+                marginLeft={theme.spacing(32)}
+            >
                 {children}
             </Box>
-        </>
+        </Box>
     );
 };

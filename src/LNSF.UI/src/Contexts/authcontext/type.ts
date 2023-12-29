@@ -15,7 +15,7 @@ export interface iObjectUser {
 export interface iUser {
     id: string;
     userName: string;
-    role: [string];
+    role: string[];
     email: string;
     phone: string;
 }

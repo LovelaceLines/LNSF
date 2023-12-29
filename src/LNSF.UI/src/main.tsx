@@ -33,7 +33,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                           </TreatmentProvider>
                         </HospitalProvider>
                       </EscortProvider>
-
                     </TourProvider>
                   </EmergencyContactProvider>
                 </PeopleProvider>
