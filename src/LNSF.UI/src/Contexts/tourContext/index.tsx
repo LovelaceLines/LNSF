@@ -136,7 +136,7 @@ export const TourProvider = ({ children }: iTourProvider) => {
 
 
     return (
-        <TourContext.Provider value={{ tour, setTour, viewTour, registerTour, updateTour, updateAllTour, returnQuantity }}>
+        <TourContext.Provider value={{ tour, setTour, viewTour, viewTourOutput, registerTour, updateTour, updateAllTour, returnQuantity }}>
             {children}
         </TourContext.Provider>
     )

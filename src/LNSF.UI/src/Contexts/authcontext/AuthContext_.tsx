@@ -38,12 +38,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setToken(res.data);
   }, []);
 
-  const logout = useCallback(() => {
+  const logout =() => {
     setIsAuthenticated(false);
 
     localStorage.removeItem('@lnsf:accessToken');
     localStorage.removeItem('@lnsf:refreshToken');
-  }, []);
+  };
 
   const getUser = useCallback(async (): Promise<iUser> => {
     const res = await Api.get<iUser>('/Auth/user');

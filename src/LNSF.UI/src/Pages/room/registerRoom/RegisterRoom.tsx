@@ -102,7 +102,6 @@ export const RegisterRoom: React.FC = () => {
                     <TableHead>
                         <TableRow>
                             <TableCell sx={{ textAlign: 'center' }}>N°</TableCell>
-                            <TableCell sx={{ textAlign: 'center' }}>Ocupação</TableCell>
                             <TableCell sx={{ textAlign: 'center' }}>Andar</TableCell>
                             <TableCell sx={{ textAlign: 'center' }}>Banheiro</TableCell>
                             <TableCell sx={{ textAlign: 'center' }}>Disponível</TableCell>
@@ -115,7 +114,6 @@ export const RegisterRoom: React.FC = () => {
                         {rows.map(row => (
                             <TableRow key={row.id}>
                                 <TableCell sx={{ textAlign: 'center' }}>{row.number}</TableCell>
-                                <TableCell sx={{ textAlign: 'center' }}>{row.occupation}</TableCell>
                                 <TableCell sx={{ textAlign: 'center' }}>{row.storey}</TableCell>
                                 <TableCell sx={{ textAlign: 'center' }}>{row.bathroom ? 'Individual' : 'Coletivo'}</TableCell>
                                 <TableCell sx={{ textAlign: 'center' }}>{row.available ? <CheckCircleOutlineRoundedIcon color='primary' /> : <UnpublishedOutlinedIcon sx={{ color: 'rgba(255, 0, 0, 0.8)' }} />}</TableCell>

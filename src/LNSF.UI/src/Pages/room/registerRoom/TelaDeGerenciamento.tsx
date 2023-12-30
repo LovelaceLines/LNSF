@@ -13,7 +13,6 @@ const formValidateSchema: yup.Schema<iRoomRegister> = yup.object().shape({
     number: yup.string().required().min(1),
     bathroom: yup.boolean().required(),
     beds: yup.number().required().min(1),
-    occupation: yup.number().required(),
     storey: yup.number().required().min(1),
     available: yup.boolean().required(),
 })
@@ -64,7 +63,6 @@ export const TelaDeGerenciamentoRoom: React.FC = () => {
                         number: dadosValidados.number,
                         bathroom: Boolean(dadosValidados.bathroom),
                         beds: Number(dadosValidados.beds),
-                        occupation: Number(dadosValidados.occupation),
                         storey: Number(dadosValidados.storey),
                         available: Boolean(dadosValidados.available)
                     }
@@ -92,7 +90,6 @@ export const TelaDeGerenciamentoRoom: React.FC = () => {
                         number: dadosValidados.number,
                         bathroom: Boolean(dadosValidados.bathroom),
                         beds: Number(dadosValidados.beds),
-                        occupation: Number(dadosValidados.occupation),
                         storey: Number(dadosValidados.storey),
                         available: Boolean(dadosValidados.available)
                     }
@@ -211,22 +208,15 @@ export const TelaDeGerenciamentoRoom: React.FC = () => {
                                 <Grid item xs={6}>
                                     <TextFieldCustom
                                         fullWidth
-                                        label="N° de Ocupação"
-                                        name="occupation"
+                                        label="N° do Andar"
+                                        name="storey"
                                         disabled={isLoadind}
                                     />
                                 </Grid>
                             </Grid>
 
                             <Grid container item direction='row' spacing={2}>
-                                <Grid item xs={6}>
-                                    <TextFieldCustom
-                                        fullWidth
-                                        label="N° do Andar"
-                                        name="storey"
-                                        disabled={isLoadind}
-                                    />
-                                </Grid>
+
                                 <Grid item xs={6}>
 
                                     <TextSelectCustom

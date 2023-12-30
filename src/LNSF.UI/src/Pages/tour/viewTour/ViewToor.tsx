@@ -62,10 +62,11 @@ export const ViewTour: React.FC = () => {
                     const updatedData = await Promise.all(
                         secondResponse.map(async row => {
                             const namePromise = BuscarPessoa(row.peopleId);
+                            console.log(namePromise)
                             const name = await namePromise.then((result) => { if (result) { return result.name } })
-                            const idRoom = await namePromise.then((result) => { if (result) { return result.roomId } })
-
-                            if (typeof idRoom === 'number' && typeof name === 'string') {
+                            //const idRoom = await namePromise.then((result) => { if (result) { return result.roomId } })
+                            const idRoom = 210
+;                            if (typeof idRoom === 'number' && typeof name === 'string') {
                                 const roomPromise = BuscarQuarto(idRoom);
                                 const room = await roomPromise;
 
