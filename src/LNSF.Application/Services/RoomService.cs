@@ -35,13 +35,14 @@ public class RoomService : IRoomService
         return await _roomRepository.Add(room);
     }
 
-    public async Task<Room> Update(Room room)
+    public async Task<Room> Update(Room newRoom)
     {
-        var validationResult = _validator.Validate(room);
+        var validationResult = _validator.Validate(newRoom);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
-        if (await _roomRepository.ExistsByNumber(room.Number)) throw new AppException("Número do quarto já existe!", HttpStatusCode.Conflict);
+        var oldRoom = await _roomRepository.GetById(newRoom.Id);
+        if (oldRoom.Number != newRoom.Number && await _roomRepository.ExistsByNumber(newRoom.Number)) throw new AppException("Número do quarto já existe!", HttpStatusCode.Conflict);
 
-        return await _roomRepository.Update(room);
+        return await _roomRepository.Update(newRoom);
     }
 }

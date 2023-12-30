@@ -87,6 +87,32 @@ public class RoomTestApi : GlobalClientRequest
     }
 
     [Fact]
+    public async Task Put_ValidRoomWithSameRoomNumber_Ok()
+    {
+        // Arrange - Room
+        var room = await GetRoom();
+        var roomToPut = new RoomViewModelFake(id: room.Id, number: room.Number).Generate();
+
+        // Arrange - Count
+        var countBefore = await GetCount(_roomClient);
+
+        // Act - Room
+        var roomPuted = await Put<RoomViewModel>(_roomClient, roomToPut);
+
+        // Act - Count
+        var countAfter = await GetCount(_roomClient);
+
+        // Act - Query
+        var query = await Query<List<RoomViewModel>>(_roomClient, new RoomFilter(id: roomPuted.Id));
+        var roomQueried = query.FirstOrDefault();
+
+        // Assert
+        Assert.Equivalent(roomToPut, roomPuted);
+        Assert.Equal(countBefore, countAfter);
+        Assert.Equivalent(roomPuted, roomQueried);
+    }
+
+    [Fact]
     public async Task Put_RoomInvalidWithEmptyNumber_BadRequest()
     {
         // Arrange - Room
