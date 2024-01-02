@@ -48,8 +48,8 @@ export interface iDelUser {
 
 export interface iAuthTypes {
     isAuthenticated: boolean;
-    login(data: iDataLogin): void;
-    refreshToken(): void;
+    login(data: iDataLogin): Promise<void>;
+    refreshToken(): Promise<void>;
     logout(): void;
     getUser(): Promise<iUser>;
 }

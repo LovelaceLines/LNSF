@@ -19,6 +19,7 @@ export const BasePageLayout: React.FC<IBasePageLayoutProps> = ({ children }) => 
   const [user, setUser] = useState<iUser | null>(null);
 
   useEffect(() => {
+    console.log("basePageLayout")
     const fetchUser = async () => {
       try {
         setUser(await getUser());
@@ -28,7 +29,7 @@ export const BasePageLayout: React.FC<IBasePageLayoutProps> = ({ children }) => 
     };
     
     fetchUser();
-  }, [getUser]);
+  }, []);
 
   const [popoverAnchorEl, setPopoverAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -78,7 +79,7 @@ export const BasePageLayout: React.FC<IBasePageLayoutProps> = ({ children }) => 
             <Brightness6RoundedIcon color='primary' />
           </Button>
         
-          {user && (
+          {!!user && (
             <Box>
               <Typography variant={mdDown ? 'body2' : 'subtitle1'}>
                 {user.userName}
@@ -117,7 +118,7 @@ export const BasePageLayout: React.FC<IBasePageLayoutProps> = ({ children }) => 
                     >
                       {/* {user.role.toString()} */}
                       <Typography fontSize={12}>
-                          {user && user.email}
+                          {!!user && user.email}
                       </Typography>
                     </Typography>
                   </Box>

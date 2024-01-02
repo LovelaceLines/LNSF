@@ -1,9 +1,8 @@
-
 import {InternalAxiosRequestConfig} from "axios"
+import { LocalStorage } from "../../../../Global";
 
 export const requestInterceptor = (config: InternalAxiosRequestConfig) => {
-  const token = localStorage.getItem('@lnsf:accessToken');
-  config.headers['Authorization'] = `Bearer ${token}`;
-  
+  console.log("RequestInterceptor: ", config);
+  config.headers['Authorization'] = `Bearer ${LocalStorage.getAccessToken()}`;
   return config;  
 }

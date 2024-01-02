@@ -17,6 +17,7 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
   const [user, setUser] = useState<iUser | null>(null);
 
   useEffect(() => {
+    console.log("useEffect LateralMenu")
     const fetchUser = async () => {
       try {
         setUser(await getUser());
@@ -88,11 +89,11 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
       },
     ];
 
-    const isDesenvolvedor = user && user.roles.includes("Desenvolvedor");
-    const isAdministrador = user && user.roles.includes("Administrador");
-    const isSecretario = user && user.roles.includes("Secretário");
-    const isAssistenteSocial = user && user.roles.includes("Assistente Social");
-    const isVoluntario = user && user.roles.includes("Voluntário");
+    const isDesenvolvedor = !!user && user.roles.includes("Desenvolvedor");
+    const isAdministrador = !!user && user.roles.includes("Administrador");
+    const isSecretario = !!user && user.roles.includes("Secretário");
+    const isAssistenteSocial = !!user && user.roles.includes("Assistente Social");
+    const isVoluntario = !!user && user.roles.includes("Voluntário");
 
     if (isDesenvolvedor || isAdministrador || isSecretario) {
       menu[3].options.push(
@@ -209,7 +210,7 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
 
         {/* Itens do menu lateral */}
         <Box>
-          {user && drawerOptions.map(drawerOption => (
+          {!!user && drawerOptions.map(drawerOption => (
             <ListUlMenu
               key={drawerOption.path}
               index={drawerOption.index}

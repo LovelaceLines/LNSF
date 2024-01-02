@@ -4,6 +4,8 @@ export * from './ThemeContext';
 export * from './authcontext/AuthContext_'
 export * from './authcontext/type'
 
+export * from './roleContext/RoleContext_'
+export * from './roleContext/type'
 
 export * from './roomContext/type'
 export * from './roomContext/index'

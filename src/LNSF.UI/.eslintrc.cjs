@@ -16,7 +16,9 @@ module.exports = {
     ],
     "no-empty-pattern": "warn",
     "@typescript-eslint/no-explicit-any": "warn",
-    "@typescript-eslint/no-unused-vars": "warn"
+    "@typescript-eslint/no-unused-vars": "warn",
+    "react-hooks/rules-of-hooks": "warn",
+    "no-extra-boolean-cast": "warn",
   },
 }
 

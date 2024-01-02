@@ -1,19 +1,20 @@
 import axios from 'axios';
 import { requestErrorInterceptor, requestInterceptor, responseErrorInterceptor, responseInterceptor } from './interceptors';
 import { apiUrl } from '../../../environment/environment.temp';
+import { LocalStorage } from '../../../Global';
 
 export const Api = axios.create({
   baseURL: apiUrl,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${localStorage.getItem('@lnsf:accessToken')}`,
+    Authorization: `Bearer ${LocalStorage.getAccessToken()}`,
   },
 });
 
 Api.interceptors.response.use(
   (response) => responseInterceptor(response),
-  (error) => responseErrorInterceptor(error),
+  async (error) => await responseErrorInterceptor(error),
 );
 
 Api.interceptors.request.use(

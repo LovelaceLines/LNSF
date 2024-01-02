@@ -30,7 +30,7 @@ export const LoginPage: React.FC = () => {
   const { isAuthenticated, login } = useContext(AuthContext);
   const navigate = useNavigate();
   useEffect(() => {
-    if (isAuthenticated) { navigate("/inicio") }
+    if (isAuthenticated) navigate("/inicio")
   }, [isAuthenticated, navigate]);
 
   // TODO: Corrigir setIsLoading(false) quando o login falhar (não está funcionando)
@@ -38,12 +38,12 @@ export const LoginPage: React.FC = () => {
     setIsLoading(true)
 
     loginSchema.validate({ userName, password }, { abortEarly: false })
-    .then(dadosValidados => {
+    .then(async dadosValidados => {
       const data: iDataLogin = {
         userName: dadosValidados.userName,
         password: dadosValidados.password,
       }
-      login(data)
+      await login(data)
     })
     .catch((errors: yup.ValidationError) => {
       errors.inner.forEach(error => {
