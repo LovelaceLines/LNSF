@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { AuthContext, RoleContext, iUser } from '../Contexts';
-import { useContext, useEffect, useState } from 'react';
+import { RoleContext } from '../Contexts';
+import { useContext } from 'react';
 import { Account, Dashboard, LoginPage, PersonalData, PutAllPasseio, RegisterRoom, RegisterTour, TelaDeGerenciamentoAccount, TelaDeGerenciamentoPeople, TelaDeGerenciamentoRoom, TelaRegisterUpdateContactEmergence, ViewPeople, ViewRoom, ViewTour } from '../Pages/index';
 import { ProtectedRoutes } from '../ProtectedRoutes';
 import { ViewHospital } from '../Pages/hospital/viewHospital/ViewHospital';
@@ -10,43 +10,7 @@ import { ViewTratamentos } from '../Pages/tratamentos/viewTratamentos/ViewTratam
 import { Hosting } from '../Pages/hosting/viewHosting/ViewHosting_';
 
 export const AppRoutes = () => {
-  const { getUser } = useContext(AuthContext);
-
-  // const { isAdministrador, isAssistenteSocial, isDesenvolvedor, isSecretario, isVoluntario } = useContext(RoleContext);
-  const [isAdministrador, setIsAdministrador] = useState(true);
-  const [isAssistenteSocial, setIsAssistenteSocial] = useState(true);
-  const [isDesenvolvedor, setIsDesenvolvedor] = useState(true);
-  const [isSecretario, setIsSecretario] = useState(true);
-  const [isVoluntario, setIsVoluntario] = useState(true);
-
-  // useEffect(() => {
-  //   console.log("useEffect AppRoutes")
-  //   const loadUser = async () => {
-  //     setUser(await getUser());
-  //   }
-
-  //   loadUser();
-
-  //   if (!!user && user.roles.includes("Desenvolvedor")) {
-  //     setIsDesenvolvedor(true);
-  //   }
-
-  //   if (!!user && user.roles.includes("Administrador")) {
-  //     setIsAdministrador(true);
-  //   }
-
-  //   if (!!user && user.roles.includes("Assistente Social")) {
-  //     setIsAssistenteSocial(true);
-  //   }
-
-  //   if (!!user && user.roles.includes("Secretário")) {
-  //     setIsSecretario(true);
-  //   }
-
-  //   if (!!user && user.roles.includes("Voluntário")) {
-  //     setIsVoluntario(true);
-  //   }
-  // }, []);
+  const { isAdministrador, isAssistenteSocial, isDesenvolvedor, isSecretario, isVoluntario } = useContext(RoleContext);
 
   return (
     <>

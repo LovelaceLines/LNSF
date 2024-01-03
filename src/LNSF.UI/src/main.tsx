@@ -16,7 +16,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <AppThemeProvider>
       <BrowserRouter>
         <AuthProvider>
-          {/*<RoleProvider>*/}
+          <RoleProvider>
             <AccountProvider>
               <DrawerProvider>
                 <RoomProvider>
@@ -40,7 +40,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                 </RoomProvider>
               </DrawerProvider>
             </AccountProvider>
-          {/*</RoleProvider>*/}
+          </RoleProvider>
         </AuthProvider>
       </BrowserRouter>
     </AppThemeProvider>

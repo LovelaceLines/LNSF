@@ -5,7 +5,7 @@ import { AuthContext } from "../authcontext/AuthContext_";
 export const RoleContext = createContext<iRoleTypes>({} as iRoleTypes);
 
 export const RoleProvider = ({ children }: iRoleProvider) => {
-  const [roles, setRoles] = useState<iRoleTypes>({
+  const [Roles, setRole] = useState<iRoleTypes>({
     isDesenvolvedor: false,
     isAdministrador: false,
     isAssistenteSocial: false,
@@ -19,7 +19,7 @@ export const RoleProvider = ({ children }: iRoleProvider) => {
     const fetchUserRoles = async () => {
       const user = await getUser();
 
-      setRoles(() => ({
+      setRole(() => ({
         isDesenvolvedor: user.roles.includes("Desenvolvedor"),
         isAdministrador: user.roles.includes("Administrador"),
         isAssistenteSocial: user.roles.includes("Assistente Social"),
@@ -30,11 +30,10 @@ export const RoleProvider = ({ children }: iRoleProvider) => {
 
     fetchUserRoles();
   }, []);
-  /*
+  
   return (
-    <RoleContext.Provider value={roles}>
+    <RoleContext.Provider value={Roles}>
       {children}
     </RoleContext.Provider>
   );
-  */
 };

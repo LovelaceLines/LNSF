@@ -148,6 +148,8 @@ export const BasePageLayout: React.FC<IBasePageLayoutProps> = ({ children }) => 
         component={Paper}
         marginX={smDown ? 2 : mdDown ? 5 : 8}
         gap={1}
+        sx={{ overflowX: 'hidden', overflowY: 'auto' }}
+        height={smDown ? 'calc(100vh - 64px)' : mdDown ? 'calc(100vh - 72px)' : 'calc(100vh - 80px)'}
       >
         {children}
       </Box >
