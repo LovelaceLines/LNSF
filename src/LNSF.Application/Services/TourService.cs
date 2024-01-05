@@ -29,7 +29,7 @@ public class TourService : ITourService
     public async Task<int> GetCount() => 
         await _tourRepository.GetCount();
 
-    public async Task<Tour> Create(Tour tour)
+    public async Task<Tour> CreateOpenTour(Tour tour)
     {
         var validationResult = _validator.Validate(tour);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
@@ -42,7 +42,7 @@ public class TourService : ITourService
         return await _tourRepository.Add(tour);
     }
 
-    public async Task<Tour> Update(Tour newTour)
+    public async Task<Tour> UpdateOpenTourToClose(Tour newTour)
     {
         var validationResult = _validator.Validate(newTour);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
@@ -57,7 +57,7 @@ public class TourService : ITourService
         return await _tourRepository.Update(oldTour); 
     }
 
-    public async Task<Tour> UpdateAll(Tour tour)
+    public async Task<Tour> Update(Tour tour)
     {
         var validationResult = _validator.Validate(tour);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);

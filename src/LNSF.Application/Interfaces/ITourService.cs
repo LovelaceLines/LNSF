@@ -7,7 +7,7 @@ public interface ITourService
 {
     Task<List<Tour>> Query(TourFilter filter); 
     Task<int> GetCount();
-    Task<Tour> Create(Tour tour);
+    Task<Tour> CreateOpenTour(Tour tour);
+    Task<Tour> UpdateOpenTourToClose(Tour tour);
     Task<Tour> Update(Tour tour);
-    Task<Tour> UpdateAll(Tour tour);
 }

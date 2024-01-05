@@ -39,24 +39,24 @@ public class TourController : ControllerBase
         await _service.GetCount();
 
     /// <summary>
-    /// Creates the output of a tour.
+    /// Creates the output of a tour. Note: the input is automatically set to the current date.
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<TourViewModel>> Post([FromBody]TourPostViewModel tourPostViewModel)
+    public async Task<ActionResult<TourViewModel>> PostOpenTour([FromBody]TourPostViewModel tourPostViewModel)
     {
         var tour = _mapper.Map<Tour>(tourPostViewModel);
-        tour = await _service.Create(tour);
+        tour = await _service.CreateOpenTour(tour);
         return _mapper.Map<TourViewModel>(tour);
     }
 
     /// <summary>
-    /// Updates the input and note of a tour.
+    /// Updates the input and note of a tour. Note: the input is automatically set to the current date.
     /// </summary>
     [HttpPut]
-    public async Task<ActionResult<TourViewModel>> Put([FromBody]TourPutViewModel tourPutViewModel)
+    public async Task<ActionResult<TourViewModel>> PutCloseTour([FromBody]TourPutViewModel tourPutViewModel)
     {
         var tour = _mapper.Map<Tour>(tourPutViewModel);
-        tour = await _service.Update(tour);
+        tour = await _service.UpdateOpenTourToClose(tour);
         return _mapper.Map<TourViewModel>(tour);
     }
 
@@ -67,7 +67,7 @@ public class TourController : ControllerBase
     public async Task<ActionResult<TourViewModel>> Put([FromBody]TourViewModel tourViewModel)
     {
         var tour = _mapper.Map<Tour>(tourViewModel);
-        tour = await _service.UpdateAll(tour);
+        tour = await _service.Update(tour);
         return _mapper.Map<TourViewModel>(tour);
     }
 }
