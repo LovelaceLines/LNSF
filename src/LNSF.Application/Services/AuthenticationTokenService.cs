@@ -14,12 +14,12 @@ using System.Text;
 
 namespace LNSF.Application.Services;
 
-public class AuthenticationTokenService : IAuthenticationTokenService
+public class AuthTokenService : IAuthTokenService
 {
     private readonly IConfiguration _configuration;
     private readonly IUserRepository _userRepository;
 
-    public AuthenticationTokenService(IConfiguration configuration,
+    public AuthTokenService(IConfiguration configuration,
         IUserRepository userRepository)
     {
         _configuration = configuration;

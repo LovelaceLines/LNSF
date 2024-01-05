@@ -106,7 +106,7 @@ builder.Services.AddTransient<RoleValidator>();
 builder.Services.AddTransient<IUserRoleRepository, UserRoleRepository>();
 builder.Services.AddTransient<IUserRoleService, UserRoleService>();
 
-builder.Services.AddTransient<IAuthenticationTokenService, AuthenticationTokenService>();
+builder.Services.AddTransient<IAuthTokenService, AuthTokenService>();
 
 builder.Services.AddTransient<PasswordValidator>();
 

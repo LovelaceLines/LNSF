@@ -12,10 +12,10 @@ namespace LNSF.Api.Controllers;
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
-    private readonly IAuthenticationTokenService _service;
+    private readonly IAuthTokenService _service;
     private readonly IMapper _mapper;
 
-    public AuthController(IAuthenticationTokenService service, 
+    public AuthController(IAuthTokenService service, 
         IMapper mapper)
     {
         _service = service;
