@@ -1,4 +1,4 @@
-import { Box, Button, CircularProgress, TextField, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Button, CircularProgress, Container, Paper, TextField, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import * as yup from 'yup';
 import { AuthContext } from "../../Contexts/authcontext/AuthContext_";
@@ -66,25 +66,10 @@ export const LoginPage: React.FC = () => {
         <img src={nomelogo} />
       </Box>
       <Box>
-        <Typography variant="h6" align="center"
-          fontSize='1.5rem'
-          fontStyle='normal'
-          fontWeight='400'
-          lineHeight='normal'
-        >
+        <Typography variant="h5" align="center">
           Seja bem-vindo ao nosso lar digital!
         </Typography>
-        <Typography
-          variant="subtitle1"
-          align="center"
-          fontSize='1rem'
-          fontStyle='normal'
-          fontWeight='400'
-          lineHeight='normal'
-          letterSpacing='0.00938rem'
-          display='flex'
-          flexDirection='column'
-        >
+        <Typography variant="subtitle1" align="center">
           Estamos muito felizes em recebê-lo! 
           <br />
           Deixe tudo conosco, iremos facilitar todo o seu trabalho ❤️
@@ -145,23 +130,21 @@ export const LoginPage: React.FC = () => {
 
   return (
     <Box
-      width='100%'
-      height='100vh'
       display='flex'
       flexDirection={smDown ? 'column' : 'row'}
-      alignItems='center'
-      bgcolor={'white'}
-      gap='2rem'
+      height='100vh'
     >
-      <Box width={smDown ? '100%' : '50%'} style={{ height: '100%' }}>
+      <Box flex={1}>
         <img src={fundo} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
       </Box>
       <Box
+        component={Container}
         display='flex'
+        flex={1}
         justifyContent='center'
-        width={smDown ? '100%' : '50%'}
+        alignItems='center'
       >
-        <Box display='flex' flexDirection='column' gap={2} width={smDown ? 350 : 400}>
+        <Box display='flex' flexDirection='column' gap={2}>
             {header()}
             {loginForm()}
         </Box>

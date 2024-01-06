@@ -52,6 +52,21 @@ export class LocalStorage {
     localStorage.removeItem('@lnsf:tryToRefreshToken');
   }
 
+  static getMode(): 'light' | 'dark' {
+    const mode = localStorage.getItem('@lnsf:mode');
+
+    if (!mode) return 'light';
+    return mode === 'dark' ? 'dark' : 'light';
+  }
+
+  static setMode(mode: 'light' | 'dark') {
+    localStorage.setItem('@lnsf:mode', mode);
+  }
+
+  static clearMode() {
+    localStorage.removeItem('@lnsf:mode');
+  }
+
   static clearAll() {
     localStorage.clear();
   }

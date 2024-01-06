@@ -19,5 +19,13 @@ export const LightTheme = createTheme({
             paper: grey[50],
             default: grey[200],
         }
-    }
+    },
+    typography: {
+        allVariants:{
+            color: 'black',
+        },
+        subtitle1: {
+            lineHeight:'normal'
+        },
+    },
 });
