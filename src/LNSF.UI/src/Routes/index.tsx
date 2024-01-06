@@ -72,7 +72,7 @@ export const AppRoutes = () => {
           {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
             <Route path="/inicio/registrodiario/visualizar/:id" element={<Dashboard children={<PutAllPasseio />} />} />}
         </Route>
-        <Route path='*' element={<Navigate to='/login' />} />
+        <Route path='*' element={<Navigate to='/inicio' />} />
       </Routes >
     </>
   );

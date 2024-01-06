@@ -22,16 +22,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsAuthenticated(true);
   }, []);
 
-  const refreshToken = useCallback(async () => {
-    LocalStorage.setAccessToken(LocalStorage.getRefreshToken() || '');
-    const res = await Api.post<iToken>('/Auth/refresh-token');
-   
-    LocalStorage.setAccessToken(res.data.accessToken);
-    LocalStorage.setRefreshToken(res.data.refreshToken);
-    LocalStorage.setUser(await getUser());
-    setIsAuthenticated(true);
-  }, []);
-
   const logout = () => {
     LocalStorage.clearTokens();
     LocalStorage.clearUser();
@@ -39,24 +29,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const getUser = useCallback(async (): Promise<iUser> => {
-    console.log("AuthContext getUser");
-
     let user: iUser | null = LocalStorage.getUser();
 
     if (!!user) return user;
 
     const res = await Api.get<iUser>('/Auth/user');
     user = res.data;
-
-    console.log("AuthContext getUser: ", user);
-
     LocalStorage.setUser(user);
 
     return user;
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, refreshToken, logout, getUser }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout, getUser }}>
       {children}
     </AuthContext.Provider>
   )

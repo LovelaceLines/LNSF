@@ -37,6 +37,21 @@ export class LocalStorage {
     localStorage.removeItem('@lnsf:user');
   }
 
+  static getTryToRefreshToken(): boolean {
+    const tryToRefreshToken = localStorage.getItem('@lnsf:tryToRefreshToken');
+
+    if (!tryToRefreshToken) return false;
+    return tryToRefreshToken === 'true';
+  }
+  
+  static setTryToRefreshToken() {
+    localStorage.setItem('@lnsf:tryToRefreshToken', 'true');
+  }
+
+  static clearTryToRefreshToken() {
+    localStorage.removeItem('@lnsf:tryToRefreshToken');
+  }
+
   static clearAll() {
     localStorage.clear();
   }

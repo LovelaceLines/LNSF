@@ -1,6 +1,5 @@
 import { Avatar, Box, Button, Container, Divider, Paper, Popover, Typography, useMediaQuery, useTheme } from "@mui/material"
 import MenuIcon from '@mui/icons-material/Menu';
-import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import Brightness6RoundedIcon from '@mui/icons-material/Brightness6Rounded';
 import iconelogoProvisoria from '../../assets/icone_logo.svg';
 import { AuthContext, iUser, useAppThemeContext, useDrawerContext } from "../../Contexts";

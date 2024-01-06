@@ -1,7 +1,9 @@
 import { toast } from "react-toastify";
-import { AxiosError } from "axios";
+import { AxiosError, AxiosRequestConfig } from "axios";
 import { iAppException, iDotNetException } from "../../types";
+import { Api } from "../index";
 import { LocalStorage } from "../../../../Global";
+import { refreshToken } from "../../../AuthService";
 
 // 401 unauthorized 403 forbidden 404 not found 500 internal server error
 
@@ -23,9 +25,18 @@ export const responseErrorInterceptor = async (error: AxiosError) => {
   }
 
   if (!!error.response && error.response.status == 401) {
-    LocalStorage.clearTokens();
-    toast.error('Acesso não autorizado.');
-    return;
+    if (LocalStorage.getTryToRefreshToken()) {
+      LocalStorage.clearAll();
+      toast.error('Acesso não autorizado.');
+      return;
+    }
+
+    return refreshToken()
+    .then(() => {
+      const originalRequestConfig = error.config;
+      Api(originalRequestConfig as AxiosRequestConfig);
+      LocalStorage.clearTryToRefreshToken();
+    });
   }
 
   if (!!error.response && error.response.status == 403) {
@@ -35,6 +46,12 @@ export const responseErrorInterceptor = async (error: AxiosError) => {
 
   if (!!error.response && error.response.status == 404) {
     toast.error('Recurso não encontrado.');
+    return;
+  }
+
+  if (!!error.response && error.response.status == 405) {
+    // TODO - Exibir apenas em ambiente de desenvolvimento
+    toast.error('Método não permitido.');
     return;
   }
 
