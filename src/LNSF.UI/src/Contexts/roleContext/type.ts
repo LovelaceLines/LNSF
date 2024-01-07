@@ -5,7 +5,3 @@ export interface iRoleTypes {
   isSecretario: boolean,
   isVoluntario: boolean,
 }
-
-export interface iRoleProvider {
-  children: React.ReactNode
-}

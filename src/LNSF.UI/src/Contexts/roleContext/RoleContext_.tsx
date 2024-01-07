@@ -1,10 +1,10 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { iRoleTypes, iRoleProvider } from "./type";
+import { iRoleTypes } from "./type";
 import { AuthContext } from "../authcontext/AuthContext_";
 
 export const RoleContext = createContext<iRoleTypes>({} as iRoleTypes);
 
-export const RoleProvider = ({ children }: iRoleProvider) => {
+export const RoleProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [Roles, setRole] = useState<iRoleTypes>({
     isDesenvolvedor: false,
     isAdministrador: false,
@@ -13,10 +13,12 @@ export const RoleProvider = ({ children }: iRoleProvider) => {
     isVoluntario: false,
   });
 
-  const { getUser } = useContext(AuthContext);
+  const { isAuthenticated, getUser } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchUserRoles = async () => {
+      if (!isAuthenticated) return;
+
       const user = await getUser();
 
       setRole(() => ({
@@ -29,7 +31,7 @@ export const RoleProvider = ({ children }: iRoleProvider) => {
     };
 
     fetchUserRoles();
-  }, []);
+  }, [isAuthenticated]);
   
   return (
     <RoleContext.Provider value={Roles}>
