@@ -12,11 +12,13 @@ public class ToursRepository : BaseRepository<Tour>, ITourRepository
 {
     private readonly AppDbContext _context;
     private readonly IQueryable<Tour> _tours;
+    private readonly IQueryable<People> _peoples;
 
     public ToursRepository(AppDbContext context) : base(context)
     {
         _context = context;
         _tours = _context.Tours.AsNoTracking();
+        _peoples = _context.Peoples.AsNoTracking();
     }
 
     public async Task<List<Tour>> Query(TourFilter filter)
@@ -39,6 +41,9 @@ public class ToursRepository : BaseRepository<Tour>, ITourRepository
             .Skip((filter.Page.Page - 1) * filter.Page.PageSize)
             .Take(filter.Page.PageSize)
             .ToListAsync();
+        
+        if (filter.GetPeople == true)
+            tours.ForEach(async t => t.People = await _peoples.FirstAsync(p => p.Id == t.PeopleId));
 
         return tours;
     }

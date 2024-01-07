@@ -8,6 +8,7 @@ public class TourViewModel
     public string Note { get; set; } = "";
 
     public int PeopleId { get; set; }
+    public PeopleViewModel? People { get; set; } = null;
 }
 
 public class TourPostViewModel

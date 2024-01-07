@@ -10,6 +10,7 @@ public class TourFilter
     public string? Note { get; set; }
     public bool? InOpen { get; set; }
     public int? PeopleId { get; set; }
+    public bool? GetPeople { get; set; }
 
     public Pagination Page { get; set; } = new();
     public OrderBy? OrderBy { get; set; }
@@ -22,6 +23,7 @@ public class TourFilter
         string? note = null, 
         bool? inOpen = null, 
         int? peopleId = null,
+        bool? getPeople = null,
         Pagination? page = null,
         OrderBy? orderBy = null)
     {
@@ -31,6 +33,7 @@ public class TourFilter
         Note = note;
         InOpen = inOpen;
         PeopleId = peopleId;
+        GetPeople = getPeople;
         Page = page ?? new();
         OrderBy = orderBy;
     }
