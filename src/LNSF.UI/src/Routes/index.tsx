@@ -8,6 +8,7 @@ import { TelaDeGerenciamentoHospital } from '../Pages/hospital/registerHospital/
 import { TelaDeGerenciamentoTratamentos } from '../Pages/tratamentos/registerTratamentos/TelaDeGerenciamentoTratamento';
 import { ViewTratamentos } from '../Pages/tratamentos/viewTratamentos/ViewTratamentos';
 import { Hosting } from '../Pages/hosting/viewHosting/ViewHosting_';
+import { Footer } from '../Component/Layouts/footer/Footer';
 
 export const AppRoutes = () => {
   const { isAdministrador, isAssistenteSocial, isDesenvolvedor, isSecretario, isVoluntario } = useContext(RoleContext);
@@ -18,6 +19,7 @@ export const AppRoutes = () => {
 
       <Route element={<ProtectedRoutes />}>
         <Route path="/inicio" element={<Dashboard />} />
+        <Route path="/sobre" element={<Dashboard children={<Footer />} />} />
 
         {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
           <Route path="/inicio/apartamentos/visualizar" element={<Dashboard children={<ViewRoom />} />} />}

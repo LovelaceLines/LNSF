@@ -1,9 +1,11 @@
-import { Drawer, useMediaQuery, useTheme } from "@mui/material";
-import { AuthContext, iUser, useDrawerContext } from "../../Contexts";
+import { AppBar, Button, Drawer, Link, Toolbar, useMediaQuery, useTheme } from "@mui/material";
+import { AuthContext, RoleContext, iUser, useDrawerContext } from "../../Contexts";
+import { Logout } from '@mui/icons-material';
 import { Box } from '@mui/system';
 import { useContext, useEffect, useState } from "react";
 import { ListUlMenu } from "./Lists";
 import nomelogo from '../../assets/logo_Variant4.svg';
+import { NavLink } from "react-router-dom";
 
 interface ILateralMenuProps { children: React.ReactNode; }
 
@@ -13,18 +15,12 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
   const [drawerVariant, setDrawerVariant] = useState<"permanent" | "temporary">("permanent");
   const { isDrawerOpen, setIsDrawerOpen, toggleDrawerOpen, drawerOptions, setDrawerOptions } = useDrawerContext();
   const [openIndex, setOpenIndex] = useState<number>(-1);
-  const { getUser } = useContext(AuthContext);
+  const { getUser, logout } = useContext(AuthContext);
+  const { isAdministrador, isAssistenteSocial, isDesenvolvedor, isSecretario, isVoluntario } = useContext(RoleContext);
   const [user, setUser] = useState<iUser | null>(null);
 
   useEffect(() => {
-    console.log("useEffect LateralMenu")
-    const fetchUser = async () => {
-      try {
-        setUser(await getUser());
-      } catch (error) {
-        console.log("error useEffect LateralMenu: ", error);
-      }
-    };
+    const fetchUser = async () => setUser(await getUser());
 
     fetchUser();
   }, []);
@@ -88,12 +84,6 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
         ],
       },
     ];
-
-    const isDesenvolvedor = !!user && user.roles.includes("Desenvolvedor");
-    const isAdministrador = !!user && user.roles.includes("Administrador");
-    const isSecretario = !!user && user.roles.includes("Secretário");
-    const isAssistenteSocial = !!user && user.roles.includes("Assistente Social");
-    const isVoluntario = !!user && user.roles.includes("Voluntário");
 
     if (isDesenvolvedor || isAdministrador || isSecretario) {
       menu[3].options.push(
@@ -173,7 +163,7 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
     }
 
     setDrawerOptions(menu)
-  }, [setDrawerOptions, user]);
+  }, [user]);
 
   useEffect(() => {
     if (smDown) {
@@ -183,7 +173,11 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
       setDrawerVariant("permanent");
       setIsDrawerOpen(true);
     }
-  }, [setIsDrawerOpen, smDown]);
+  }, [smDown]);
+
+  const handleLogout = () => {
+    logout();
+  };
 
   const LateralMenu = (
     <Drawer
@@ -192,21 +186,22 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
       onClose={toggleDrawerOpen}
     >
       <Box
-        id="LateralMenu"
         width={theme.spacing(32)}
         height='100%'
         display='flex'
         flexDirection='column'
       >
-        <Box
-          width='100%'
-          padding={theme.spacing(3)}
-          display='flex'
-          alignItems='center'
-          gap={theme.spacing(1)}
+        <AppBar
+          component={Toolbar}
+          position='relative'
+          elevation={0}
+          color='inherit'
+          sx={{ flexDirection: 'row', alignItems: 'center'}}
         >
-          <img src={nomelogo} />
-        </Box>
+          <Link component={NavLink} to='/inicio' sx={{ display:'flex', alignItems:'center' }}>
+            <img src={nomelogo} style={{ height: '30px' }} />
+          </Link>
+        </AppBar>
 
         {/* Itens do menu lateral */}
         <Box>
@@ -221,6 +216,32 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
               onClickCollapse={handleClick}
             />
           ))}
+        </Box>
+
+        <Box marginTop='auto'>
+          {/* Botão sair */}
+          <Box
+            component={Toolbar}
+            display='flex'
+            flexDirection='column'
+            gap={1}
+            sx={{ justifyContent: 'center' }}
+          >
+            <Link
+              underline='hover'
+              component={NavLink} 
+              to='/sobre'>
+              Sobre
+            </Link>
+            <Button
+              size='large' 
+              fullWidth
+              startIcon={<Logout />}
+              onClick={handleLogout}
+            >
+              Sair
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Drawer>

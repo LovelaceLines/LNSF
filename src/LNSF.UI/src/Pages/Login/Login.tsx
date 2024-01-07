@@ -1,4 +1,4 @@
-import { Box, Button, CircularProgress, Container, Paper, TextField, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Button, CircularProgress, Container, TextField, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import * as yup from 'yup';
 import { AuthContext } from "../../Contexts/authcontext/AuthContext_";
@@ -33,26 +33,20 @@ export const LoginPage: React.FC = () => {
     if (isAuthenticated) navigate("/inicio")
   }, [isAuthenticated, navigate]);
 
-  // TODO: Corrigir setIsLoading(false) quando o login falhar (não está funcionando)
   const handlesubimit = () => {
     setIsLoading(true)
 
-    loginSchema.validate({ userName, password }, { abortEarly: false })
-    .then(async dadosValidados => {
-      const data: iDataLogin = {
-        userName: dadosValidados.userName,
-        password: dadosValidados.password,
-      }
-      await login(data)
+    loginSchema.validate({ userName, password } as iDataLogin, { abortEarly: false })
+    .then(async (data: iDataLogin) => {
+      await login(data);
     })
     .catch((errors: yup.ValidationError) => {
       errors.inner.forEach(error => {
         if (error.path === 'userName') setUserNameError(error.message);
         else if (error.path === 'password') setPasswordError(error.message);
       });
-    });
-    
-    setIsLoading(false);
+    })
+    .finally(() => setIsLoading(false))
   };
 
   const header = () => (
@@ -131,7 +125,9 @@ export const LoginPage: React.FC = () => {
   return (
     <Box
       display='flex'
-      flexDirection={smDown ? 'column' : 'row'}
+      flexDirection={smDown ? 'column-reverse' : 'row'}
+      gap={smDown ? 4 : 0}
+      overflow={smDown ? 'auto' : 'hidden'}
       height='100vh'
     >
       <Box flex={1}>
