@@ -188,6 +188,7 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
       <Box
         width={theme.spacing(32)}
         height='100%'
+        marginBottom={1}
         display='flex'
         flexDirection='column'
       >
@@ -195,7 +196,7 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
           component={Toolbar}
           position='relative'
           elevation={0}
-          color='inherit'
+          color='transparent'
           sx={{ flexDirection: 'row', alignItems: 'center'}}
         >
           <Link component={NavLink} to='/inicio' sx={{ display:'flex', alignItems:'center' }}>

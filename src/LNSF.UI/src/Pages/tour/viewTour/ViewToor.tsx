@@ -136,8 +136,6 @@ export const ViewTour: React.FC = () => {
                     component={Paper}
                     bgcolor={theme.palette.background.default}
                     margin={smDown ? 0 : 1}
-                    height={498}
-                    overflow='scroll'
                     gap={smDown ? 5 : 0}
                 >
                     <Typography variant="h6" padding={1}>
