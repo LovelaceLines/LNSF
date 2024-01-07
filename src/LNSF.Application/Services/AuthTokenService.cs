@@ -40,7 +40,7 @@ public class AuthTokenService : IAuthTokenService
             ValidAudience = Audience,
             IssuerSigningKey = SecurityKey,
         });
-        if (!result.IsValid) throw new AppException("Access Token expired!", HttpStatusCode.Unauthorized);
+        if (!result.IsValid) throw new AppException("Sessão expirada!", HttpStatusCode.Unauthorized);
         
         var userId = result.Claims["nameid"].ToString() ?? throw new AppException("Claims NameId not found!", HttpStatusCode.InternalServerError);
         var user = await _userRepository.GetById(userId);
@@ -139,7 +139,7 @@ public class AuthTokenService : IAuthTokenService
             ValidAudience = Audience,
             IssuerSigningKey = SecurityKey,
         });
-        if (!result.IsValid) throw new AppException("Access Token expired!", HttpStatusCode.Unauthorized);
+        if (!result.IsValid) throw new AppException("Sessão expirada!", HttpStatusCode.Unauthorized);
         
         var userId = result.Claims["nameid"].ToString() ?? throw new AppException("Claims NameId not found!", HttpStatusCode.InternalServerError);
         var user = await _userRepository.GetById(userId);
