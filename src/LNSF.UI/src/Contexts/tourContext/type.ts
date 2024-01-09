@@ -1,3 +1,6 @@
+import { iPeopleObject } from "..";
+import { iOrderBy, iPage } from "../types";
+
 export interface iTourProvider {
     children: React.ReactNode
 }
@@ -7,7 +10,8 @@ export interface iTourObject {
     output: Date,
     input: Date,
     note: string,
-    peopleId: number,  
+    peopleId: number,
+    people: iPeopleObject | null,
 }
 
 export interface iAttObject {
@@ -38,6 +42,17 @@ export interface iTourUpdate {
     peopleId: number, 
 }
 
+export interface iTourFilter {
+    id?: number,
+    output?: Date, 
+    input?: Date, 
+    note?: string, 
+    inOpen?: boolean, 
+    peopleId?: number, 
+    getPeople?: boolean, 
+    page?: iPage,
+    orderBy?: iOrderBy,
+}
 
 export interface iTourTypes {
     tour: iTourObject,
@@ -48,4 +63,5 @@ export interface iTourTypes {
     updateTour(data: iTourUpdate): Promise<iTourObject | Error>;
     returnQuantity(): Promise<number>;
     updateAllTour(data: iTourObject): Promise<iTourObject | Error>;
+    getTours(filter?: iTourFilter): Promise<iTourObject[]>;
 }

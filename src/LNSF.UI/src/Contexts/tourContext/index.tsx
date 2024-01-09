@@ -2,14 +2,13 @@ import { createContext, useCallback, useState } from "react";
 import { toast } from "react-toastify";
 import { Api } from "../../services/api/axios";
 import { Environment } from "../../environment";
-import { iTourObject, iTourProvider, iTourRegister, iTourTypes, iTourUpdate } from "./type";
-
+import { iTourFilter, iTourObject, iTourRegister, iTourTypes, iTourUpdate } from "./type";
+import { apiUrl } from "../../environment/environment.temp";
 
 export const TourContext = createContext({} as iTourTypes);
 
-export const TourProvider = ({ children }: iTourProvider) => {
+export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [tour, setTour] = useState<iTourObject>({} as iTourObject)
-
 
     const viewTour = async (page = 1, filter = '', textFilter = '', qntLine = 0) => {
         try {
@@ -134,9 +133,14 @@ export const TourProvider = ({ children }: iTourProvider) => {
         return 0;
     }, []);
 
+    const getTours = async (filter?: iTourFilter): Promise<iTourObject[]> => {
+        const res = await Api.get<iTourObject[]>(`${apiUrl}/Tour`, { params: filter });
+        const tours = res.data;
+        return tours;
+    }
 
     return (
-        <TourContext.Provider value={{ tour, setTour, viewTour, viewTourOutput, registerTour, updateTour, updateAllTour, returnQuantity }}>
+        <TourContext.Provider value={{ tour, setTour, viewTour, viewTourOutput, registerTour, updateTour, updateAllTour, returnQuantity, getTours }}>
             {children}
         </TourContext.Provider>
     )
