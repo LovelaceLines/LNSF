@@ -50,6 +50,10 @@ export interface iTourFilter {
     inOpen?: boolean, 
     peopleId?: number, 
     getPeople?: boolean, 
+    peopleName?: string,
+    peopleRG?: string,
+    peopleCPF?: string,
+    globalFilter?: string,
     page?: iPage,
     orderBy?: iOrderBy,
 }

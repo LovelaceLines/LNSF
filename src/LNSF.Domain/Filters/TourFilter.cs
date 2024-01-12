@@ -11,6 +11,10 @@ public class TourFilter
     public bool? InOpen { get; set; }
     public int? PeopleId { get; set; }
     public bool? GetPeople { get; set; }
+    public string? PeopleName { get; set; }
+    public string? PeopleRG { get; set; }
+    public string? PeopleCPF { get; set; }
+    public string? GlobalFilter { get; set; }
 
     public Pagination Page { get; set; } = new();
     public OrderBy? OrderBy { get; set; }

@@ -4,6 +4,6 @@ export interface iPage {
 }
 
 export enum iOrderBy {
-    ascendent = 1,
-    descendent = 0
+    ascendent = 0,
+    descendent = 1
 }

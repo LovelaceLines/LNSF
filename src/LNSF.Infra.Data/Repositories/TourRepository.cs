@@ -28,8 +28,17 @@ public class ToursRepository : BaseRepository<Tour>, ITourRepository
         if (filter.Id.HasValue) query = query.Where(t => t.Id == filter.Id);
         if (filter.Output.HasValue) query = query.Where(t => t.Output >= filter.Output);
         if (filter.Input.HasValue) query = query.Where(t => t.Input <= filter.Input);
-        if (filter.PeopleId.HasValue) query = query.Where(t => t.PeopleId == filter.PeopleId);
         if (!filter.Note.IsNullOrEmpty()) query = query.Where(t => t.Note.ToLower().Contains(filter.Note!.ToLower()));
+        if (filter.PeopleId.HasValue) query = query.Where(t => t.PeopleId == filter.PeopleId);
+        if (!filter.PeopleName.IsNullOrEmpty()) query = query.Where(t => t.People!.Name.ToLower().Contains(filter.PeopleName!.ToLower()));
+        if (!filter.PeopleRG.IsNullOrEmpty()) query = query.Where(t => t.People!.RG.ToLower().Contains(filter.PeopleRG!.ToLower()));
+        if (!filter.PeopleCPF.IsNullOrEmpty()) query = query.Where(t => t.People!.CPF.ToLower().Contains(filter.PeopleCPF!.ToLower()));
+
+        if (!filter.GlobalFilter.IsNullOrEmpty())
+            query = query.Where(t => t.Note.ToLower().Contains(filter.GlobalFilter!.ToLower()) ||
+                t.People!.Name.ToLower().Contains(filter.GlobalFilter!.ToLower()) ||
+                t.People!.RG.ToLower().Contains(filter.GlobalFilter!.ToLower()) ||
+                t.People!.CPF.ToLower().Contains(filter.GlobalFilter!.ToLower()));
         
         if (filter.InOpen == true) query = query.Where(t => t.Input == null);
         else if (filter.InOpen == false) query = query.Where(t => t.Input != null);
