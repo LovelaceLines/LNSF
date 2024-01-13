@@ -13,7 +13,7 @@ export * from './peoples/registerPeople/TelaRegisterUpdateContactEmergence'
 
 export * from './tour/registerTour/RegisterTour'
 export * from './tour/registerTour/PutAllPasseio'
-export * from './tour/viewTour/ViewToor'
+export * from './tour/viewTour/ViewTour'
 
 export * from './account/Account'
 export * from './account/registerAccount/TelaDeGerenciamentoAccount'
