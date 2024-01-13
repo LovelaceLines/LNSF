@@ -60,7 +60,10 @@ export const ViewTour: React.FC = () => {
         header: 'Saída',
         size: 150,
         enableColumnActions: false,
-        Cell: ({ cell }) => format(parseISO(cell.getValue()), 'dd/MM/yyyy HH:mm')
+        Cell: ({ row }) => {
+          const output = row.original.output;
+          return format(parseISO(output.toString()), 'dd/MM/yyyy HH:mm')
+        } 
       },
       {
         accessorKey: 'input',
@@ -68,10 +71,15 @@ export const ViewTour: React.FC = () => {
         size: 150,
         enableColumnActions: false,
         enableSorting: false,
-        Cell: ({ cell, row }) => cell.getValue() ? format(parseISO(cell.getValue()), 'dd/MM/yyyy HH:mm') :
-        <Button variant='contained' fullWidth onClick={() => confirmTourReturn({id: row.original.id, peopleId: row.original.peopleId, note: row.original.note})}>
-          <CheckIcon />
-        </Button>
+        Cell: ({ row }) => {
+          const input = row.original.input;
+          return input ? format(parseISO(input.toString()), 'dd/MM/yyyy HH:mm') :
+          (
+            <Button variant='contained' fullWidth onClick={() => confirmTourReturn({id: row.original.id, peopleId: row.original.peopleId, note: row.original.note})}>
+              <CheckIcon />
+            </Button>
+          )
+        }
       },
       {
         accessorKey: 'note',
