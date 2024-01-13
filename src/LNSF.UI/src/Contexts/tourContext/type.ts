@@ -59,13 +59,10 @@ export interface iTourFilter {
 }
 
 export interface iTourTypes {
-    tour: iTourObject,
-    setTour: React.Dispatch<React.SetStateAction<iTourObject>>
-    viewTour (page: number, filter: string, textFilter: string, qntLine?: number): Promise<iTourObject[] | Error>;
-    viewTourOutput (input: boolean): Promise<iTourObject[] | Error>;
-    registerTour(data: iTourRegister): Promise<iTourObject | Error>;
-    updateTour(data: iTourUpdate): Promise<iTourObject | Error>;
-    returnQuantity(): Promise<number>;
-    updateAllTour(data: iTourObject): Promise<iTourObject | Error>;
     getTours(filter?: iTourFilter): Promise<iTourObject[]>;
+    getTourById(data: { id: number, getPeople: true }): Promise<iTourObject>;
+    getCount(): Promise<number>;
+    postTour(data: iTourRegister): Promise<iTourObject>;
+    putTour(data: iTourUpdate): Promise<iTourObject>;
+    putAllTour(data: iTourObject): Promise<iTourObject>;
 }

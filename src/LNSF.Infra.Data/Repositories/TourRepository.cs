@@ -47,7 +47,7 @@ public class ToursRepository : BaseRepository<Tour>, ITourRepository
         else if (filter.OrderBy == OrderBy.Descending) query = query.OrderByDescending(t => t.Output);
 
         var tours = await query
-            .Skip((filter.Page.Page - 1) * filter.Page.PageSize)
+            .Skip(filter.Page.Page * filter.Page.PageSize)
             .Take(filter.Page.PageSize)
             .ToListAsync();
         

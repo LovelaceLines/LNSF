@@ -67,6 +67,17 @@ export class LocalStorage {
     localStorage.removeItem('@lnsf:mode');
   }
 
+  static getPageSize(): number {
+    const pageSize = localStorage.getItem('@lnsf:pageSize');
+
+    if (!pageSize) return 100;
+    return parseInt(pageSize);
+  }
+
+  static setPageSize(pageSize: number) {
+    localStorage.setItem('@lnsf:pageSize', pageSize.toString());
+  }
+
   static clearAll() {
     localStorage.clear();
   }

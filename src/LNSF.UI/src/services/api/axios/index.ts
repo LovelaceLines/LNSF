@@ -18,7 +18,7 @@ Api.interceptors.response.use(
 Api.interceptors.request.use(
   config => requestInterceptor(config),
   error => requestErrorInterceptor(error),
-)
+);
 
 
 // headers: {
