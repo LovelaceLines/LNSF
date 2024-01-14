@@ -1,212 +1,181 @@
-
 import { useContext, useMemo, useState } from 'react'
 import { useEffect } from "react"
-import { Box, Button, LinearProgress, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material';
-import { Environment } from '../../../environment';
-import { ButtonAction, SearchButton } from '../../../Component';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useDebounce } from '../../../Component/hooks/UseDebounce';
-import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import { Box, Button, IconButton, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
+import AddIcon from '@mui/icons-material/Add';
+import ContentPasteSearchIcon from '@mui/icons-material/ContentPasteSearch';  
 import { TreatmentContext } from '../../../Contexts/treatmentContext';
-import { iTreatment } from '../../../Contexts/treatmentContext/type';
+import { iTreatment, iTreatmentFilter, iTypeTreatment } from '../../../Contexts/treatmentContext/type';
 import VaccinesIcon from '@mui/icons-material/Vaccines';
+import { MRT_ColumnDef, MRT_ColumnFiltersState, MRT_PaginationState, MRT_Row, MRT_SortingState, MRT_TableInstance, MRT_VisibilityState, MaterialReactTable, useMaterialReactTable } from 'material-react-table';
+import { LocalStorage } from '../../../Global';
+import { iOrderBy, iPage } from '../../../Contexts/types';
+import { MRT_Localization_PT_BR } from 'material-react-table/locales/pt-BR';
 
 export const ViewTratamentos: React.FC = () => {
-
-    const { countTreatment, viewTreatment, deleteTreatment } = useContext(TreatmentContext);
-    const [rows, setRows] = useState<iTreatment[]>([]);
-    const [totalCount, setTotalCount] = useState(0);
-    const [isLoadind, setIsLoading] = useState(true);
-    const [searchParams, setSearchParams] = useSearchParams();
-    const { debounce } = useDebounce();
-    const theme = useTheme();
-    const smDown = useMediaQuery(theme.breakpoints.down('sm'));
     const navigate = useNavigate();
-    const [modify, setModify] = useState(false);
-
-
-    const busca = useMemo(() => {
-        return (searchParams.get('busca') || '');
-    }, [searchParams])
-
-    const pagina = useMemo(() => {
-        return Number(searchParams.get('pagina') || '1');
-    }, [searchParams])
-
+    const smDown = useMediaQuery(useTheme().breakpoints.down('sm'));
+    const { getTreatments, getCount } = useContext(TreatmentContext);
+    const [count, setCount] = useState<number>();
+    const [globalFilter, setGlobalFilter] = useState<string>('');
+    const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>([]);
+    const [sortFilters, setSortFilters] = useState<MRT_SortingState>([{ id: 'id', desc: false }]);
+    const [columnVisibleState, setColumnVisibleState] = useState<MRT_VisibilityState>(LocalStorage.getColumnVisibilityTreatment());
+    const [pagination, setPagination] = useState<MRT_PaginationState>({ pageIndex: 0, pageSize: LocalStorage.getPageSize() });
+    const [treatments, setTreatments] = useState<iTreatment[]>([]);
+    const [filters, setFilters] = useState<iTreatmentFilter>({
+      page: { page: pagination.pageIndex, pageSize: pagination.pageSize },
+    });
+  
+    const columns = useMemo<MRT_ColumnDef<iTreatment>[]>(
+      () => [
+        {
+          accessorKey: 'name',
+          header: 'Nome',
+          size: 150,
+          enableColumnActions: false,
+        },
+        {
+          accessorKey: 'type',
+          header: 'Tipo',
+          size: 50,
+          enableColumnActions: false,
+          enableSorting: false,
+          Cell: ({ row }) => {
+            const type = row.original.type;
+            return type == 0 ? 'Câncer' : 
+              type == 1 ? 'Pré-Transplante' : 
+              type == 2 ? 'Pós-Transplante' :
+              type == 3 ? 'Outro' : '???';
+          },
+        },
+      ],
+      [],
+    );
+  
+    const fetchTreatments = async () => {
+      const treatments = await getTreatments(filters);
+      setTreatments(treatments);
+    };
+  
+    const fetchCount = async () => {
+      const count = await getCount();
+      setCount(count);
+    };
+  
     useEffect(() => {
-        setIsLoading(true);
-
-        debounce(() => {
-        
-            viewTreatment(pagina, busca, 'name')
-                .then((response) => {
-                    if (response instanceof Error) {
-                        setIsLoading(false);
-                    } else {
-                        setRows(response);
-                        setIsLoading(false);
-                    }
-                })
-                .catch((error) => {
-                    setIsLoading(false);
-                    console.error('Detalhes do erro:', error);
-                });
-        });
-
-    }, [busca, pagina, modify]);
-
+      fetchCount();
+    }, []);
+  
     useEffect(() => {
-        countTreatment()
-            .then((response) => {
-                setTotalCount(response);
-            });
-    }, [modify]);
-
-
-    const deletehospital = (id_: number) => {
-
-        if (confirm('Realmente deseja remover esse tratamento?')) {
-           
-            setIsLoading(true);
-            deleteTreatment(String(id_))
-                .then((response) => {
-                    if (response instanceof Error) {
-                        setIsLoading(false);
-                    } else {
-                        setModify(!modify)
-                        setIsLoading(false);
-                    }
-                })
-                .catch((error) => {
-                    setIsLoading(false);
-                    console.error('Detalhes do erro:', error);
-                });
-        }
-    }
-
-
-
-    return (
-        <Box
-            display='flex'
-            flexDirection='column'
-            width='100%'
-        >
-            <Box>
-                <Toolbar sx={{ margin: 0 }}>
-                    <Typography
-                        variant={smDown ? "h5" : "h4"}
-                        noWrap
-                        component="div"
-                        sx={{ flexGrow: 1, display: 'flex', alignItems: 'flex-end' }}
-                    >
-                        {!smDown && (<VaccinesIcon color='primary' sx={{ fontSize: '2.7rem', paddingRight: '10px' }} />)}
-                        Tratamentos
-                    </Typography>
-
-                    <SearchButton
-                        textoDaBusca={busca}
-                        aoMudarTextoDeBusca={texto => setSearchParams({ busca: texto, pagina: '1' }, { replace: true })}
-                    />
-
-                    < ButtonAction
-                        mostrarBotaoNovo={true}
-                        mostrarBotaoSalvar={false}
-                        mostrarBotaoVoltar={false}
-
-                        mostrarBotaoApagar={false}
-                        aoClicarEmNovo={() => { navigate('/inicio/tratamentos/gerenciar/cadastrar') }}
-                    />
-
-                </Toolbar>
-            </Box>
-
-            <TableContainer component={Paper} variant='outlined' >
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell sx={{ textAlign: 'left' }}>Nome</TableCell>
-                            <TableCell sx={{ textAlign: 'center' }}>Tipo</TableCell>
-                            <TableCell sx={{ textAlign: 'center' }}>Editar</TableCell>
-                            <TableCell sx={{ textAlign: 'center' }}>Deletar</TableCell>
-                        </TableRow>
-                    </TableHead>
-
-                    <TableBody>
-                        {rows.map(row => (
-                            <TableRow key={row.id}>
-
-                                <TableCell sx={{ textAlign: 'left' }}>
-                                    {row.name}
-                                </TableCell>
-
-                                <TableCell sx={{ textAlign: 'center' }}>
-                                    {row.type === 0 ? 'Cancer' : row.type === 1 ? 'Pré-Transplante' : row.type === 2 ? 'Pós-Transplante' : 'Outro' }
-                                </TableCell>
-                              
-                                <TableCell sx={{ textAlign: 'center' }}>
-                                    <Button
-                                        size='small'
-                                        color='primary'
-                                        disableElevation
-                                        variant='outlined'
-                                        onClick={() => navigate(`/inicio/tratamentos/gerenciar/${row.id}`)}
-                                    >
-                                        <EditRoundedIcon color='primary' fontSize='small' />
-                                    </Button>
-                                </TableCell>
-
-                                <TableCell sx={{ textAlign: 'center' }}>
-                                    <Button
-                                        size='small'
-                                        color='primary'
-                                        disableElevation
-                                        variant='outlined'
-                                        onClick={() => {deletehospital(row.id)}}
-                                    >
-                                        { <DeleteRoundedIcon sx={{ color: 'red' }} fontSize='small' />}
-                                    </Button>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-
-                    {totalCount === 0 && !isLoadind && (
-                        <caption>{Environment.LISTAGEM_VAZIA}</caption>
-                    )}
-
-                    <TableFooter>
-                        {isLoadind && (
-                            <TableRow>
-                                <TableCell colSpan={7}>
-                                    <LinearProgress />
-                                </TableCell>
-                            </TableRow>
-                        )}
-
-                    </TableFooter>
-                </Table>
-                {(totalCount > 0 && totalCount > Environment.LIMITE_DE_LINHA) && (
-                    <Box
-                        display='flex'
-                        flexDirection='column'
-                        alignItems='center'
-                        justifyContent='center'
-                    >
-                        <TableRow >
-                            <TableCell>
-                                <Pagination
-                                    page={pagina}
-                                    count={Math.ceil(totalCount / Environment.LIMITE_DE_LINHA)}
-                                    color="primary"
-                                    onChange={(_, newPage) => setSearchParams({ busca, pagina: newPage.toString() })}
-                                />
-                            </TableCell>
-                        </TableRow>
-                    </Box>
-                )}
-            </TableContainer>
+      setFilters({ ...filters, globalFilter: globalFilter });
+    }, [globalFilter]);
+   
+    useEffect(() => {
+      const updatedFilters = { ...filters };
+      const columnIds = columnFilters.map(columnFilter => columnFilter.id);
+      let value: unknown;
+   
+      value = columnFilters.find(cf => cf.id === 'name')?.value;
+      if (columnIds.includes('name') && typeof value === 'string')
+        updatedFilters.name = value;
+      else updatedFilters.name = undefined;
+  
+      value = columnFilters.find(cf => cf.id === 'type')?.value;
+      if (columnIds.includes('type') && typeof value === 'string') {
+        if ('câncer'.includes(value.toLowerCase())) updatedFilters.type = iTypeTreatment.cancer;
+        else if ('pré-transplante'.includes(value.toLowerCase())) updatedFilters.type = iTypeTreatment.pretransplant
+        else if ('pós-transplante'.includes(value.toLowerCase())) updatedFilters.type = iTypeTreatment.posttransplant
+        else if ('outro'.includes(value.toLowerCase())) updatedFilters.type = iTypeTreatment.other
+      } else updatedFilters.type = undefined;
+   
+      setFilters(updatedFilters);
+    }, [columnFilters]);
+   
+    useEffect(() => {
+      const updatedFilters = { ...filters };
+      const columnIds = sortFilters.map(sort => sort.id);
+     
+      const desc = sortFilters.find(cf => cf.id === 'name')?.desc;
+      if (columnIds.includes('name') && typeof desc === 'boolean')
+        updatedFilters.orderBy = desc ? iOrderBy.descendent : iOrderBy.ascendent;
+      else updatedFilters.orderBy = undefined;
+   
+      setFilters(updatedFilters);
+    }, [sortFilters]);
+  
+    useEffect(() => {
+      LocalStorage.setColumnVisibilityTreatment(columnVisibleState);
+    }, [columnVisibleState]);
+   
+    useEffect(() => {
+      const page: iPage = { page: pagination.pageIndex, pageSize: pagination.pageSize };
+      setFilters({ ...filters, page: page });
+  
+      LocalStorage.setPageSize(page.pageSize!);
+      
+      const fetchTreatments = async () => setTreatments(await getTreatments({ ...filters, page: page }));
+      fetchTreatments();
+    }, [pagination]);
+  
+    const renderTopToolbar = (table: MRT_TableInstance<iTreatment>) => (
+      <Box display='flex' flexDirection='column' gap={2} paddingRight='auto'>
+        <Typography variant={smDown ? "h6" : "h5"} display='flex' alignItems='center' gap={1} paddingRight='auto' >
+          <VaccinesIcon fontSize={smDown ? "medium" : "large"} color='primary' />
+          Tratamentos
+        </Typography>
+        <Box display='flex' gap={2}>
+          <Button variant='contained' size='small' startIcon={<AddIcon />} onClick={() => navigate('/inicio/tratamentos/gerenciar/cadastrar')}>
+            Novo
+          </Button>
+          <Box display='flex' alignItems='center'>
+          </Box>
+          <Button variant='contained' size='small' startIcon={<ContentPasteSearchIcon />} onClick={fetchTreatments}>
+            Buscar
+          </Button>
         </Box>
-    )
+      </Box>
+    );
+  
+    const renderActions = (row: MRT_Row<iTreatment>) => (
+      <Box display='flex' flexDirection='row' flexWrap='nowrap'>
+        <IconButton onClick={() => navigate(`/inicio/tratamentos/gerenciar/${row.original.id}`)}>
+          <EditRoundedIcon />
+        </IconButton>
+      </Box>
+    );
+  
+    const table = useMaterialReactTable<iTreatment>({
+      columns,
+      data: treatments,
+      state: { 
+        sorting: sortFilters, 
+        pagination: pagination,
+        columnVisibility: columnVisibleState,
+      },
+   
+      renderTopToolbarCustomActions: ({ table }) => renderTopToolbar(table),
+   
+      enableRowActions: true,
+      renderRowActions: ({ row, cell, table }) => renderActions(row),
+   
+      manualFiltering: true,
+      onGlobalFilterChange: setGlobalFilter,
+      onColumnFiltersChange: setColumnFilters,
+   
+      manualSorting: true,
+      onSortingChange: setSortFilters,
+  
+      onColumnVisibilityChange: setColumnVisibleState,
+   
+      manualPagination: true,
+      onPaginationChange: setPagination,
+      paginationDisplayMode: 'pages',
+      rowCount: count,
+   
+      localization: MRT_Localization_PT_BR,
+    });
+  
+    return <MaterialReactTable table={table} />
 }

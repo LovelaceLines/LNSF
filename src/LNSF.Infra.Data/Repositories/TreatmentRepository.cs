@@ -22,6 +22,9 @@ public class TreatmentRepository : BaseRepository<Treatment>, ITreatmentReposito
     public async Task<List<Treatment>> Query(TreatmentFilter filter)
     {
         var query = _treatments;
+
+        if (!filter.GlobalFilter.IsNullOrEmpty()) query = query.Where(t => 
+            t.Name != null && t.Name.ToLower().Contains(filter.GlobalFilter!.ToLower()));
         
         if (filter.Id.HasValue) query = query.Where(t => t.Id == filter.Id);
         if (!filter.Name.IsNullOrEmpty()) query = query.Where(t => t.Name != null && t.Name.ToLower().Contains(filter.Name!.ToLower()));
@@ -31,7 +34,7 @@ public class TreatmentRepository : BaseRepository<Treatment>, ITreatmentReposito
         else if (filter.OrderBy == OrderBy.Descending) query = query.OrderByDescending(t => t.Name);
 
         var treatments = await query
-            .Skip((filter.Page?.Page -1 ) * filter.Page?.PageSize ?? 0)
+            .Skip(filter.Page?.Page * filter.Page?.PageSize ?? 0)
             .Take(filter.Page?.PageSize ?? 0)
             .ToListAsync();
 

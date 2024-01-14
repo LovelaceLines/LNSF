@@ -1,5 +1,28 @@
+import { iOrderBy, iPage } from "../types";
+
 export interface iTreatmentProvider {
     children: React.ReactNode
+}
+
+export enum iTypeTreatment {
+    cancer = 0,
+    pretransplant = 1,
+    posttransplant = 2,
+    other = 3,
+}
+
+export interface iTreatmentFilter {
+    id?: number,
+    name?: string,
+    type?: iTypeTreatment,
+    globalFilter?: string,
+    page?: iPage,
+    orderBy?: iOrderBy
+}
+
+export interface iTreatmentPost {
+    name: string,
+    type: iTypeTreatment,
 }
 
 export interface iTreatmentObject {
@@ -28,4 +51,10 @@ export interface iTreatmentTypes {
     updateTreatment(data: iTreatmentObject): Promise<iTreatmentObject | Error>;
     countTreatment(): Promise<number>;
     deleteTreatment(data: string): Promise<iTreatment | Error>;
+
+    getTreatments(filter?: iTreatmentFilter): Promise<iTreatment[]>;
+    getTreatmentById(id: number): Promise<iTreatment>;
+    getCount(): Promise<number>;
+    postTreatment(data: iTreatmentPost): Promise<iTreatment>;
+    putTreatment(data: iTreatment): Promise<iTreatment>;
 }
