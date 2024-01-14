@@ -22,7 +22,7 @@ export const ViewTour: React.FC = () => {
   const [globalFilter, setGlobalFilter] = useState<string>('');
   const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>([]);
   const [sortFilters, setSortFilters] = useState<MRT_SortingState>([{ id: "output", desc: true }]);
-  const [columnVisibleState, setColumnVisibleState] = useState<MRT_VisibilityState>(LocalStorage.getColumnVisibilityPeople());
+  const [columnVisibleState, setColumnVisibleState] = useState<MRT_VisibilityState>(LocalStorage.getColumnVisibilityTour());
   const [pagination, setPagination] = useState<MRT_PaginationState>({ pageIndex: 0, pageSize: LocalStorage.getPageSize() });
   const [tours, setTours] = useState<iTourObject[]>([]);
   const [inOpenFilter, setInOpenFilter] = useState<boolean>(true);
@@ -168,7 +168,7 @@ export const ViewTour: React.FC = () => {
   }, [sortFilters]);
 
   useEffect(() => {
-    LocalStorage.setColumnVisibilityPeople(columnVisibleState);
+    LocalStorage.setColumnVisibilityTour(columnVisibleState);
   }, [columnVisibleState]);
  
   useEffect(() => {
