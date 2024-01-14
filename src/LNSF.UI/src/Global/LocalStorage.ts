@@ -100,6 +100,39 @@ export class LocalStorage {
     localStorage.setItem('@lnsf:columnVisibilityPeople', JSON.stringify(columnVisibilityPeople));
   }
 
+  static getColumnVisibilityHospital(): { [x: string]: boolean } {
+    const columnVisibilityHospital = localStorage.getItem('@lnsf:columnVisibilityHospital');
+
+    if (!columnVisibilityHospital) return { id: false };
+    return JSON.parse(columnVisibilityHospital);
+  }
+
+  static setColumnVisibilityHospital(columnVisibilityHospital: { [x: string]: boolean }) {
+    localStorage.setItem('@lnsf:columnVisibilityHospital', JSON.stringify(columnVisibilityHospital));
+  }
+
+  static getColumnVisibilityTreatment(): { [x: string]: boolean } {
+    const columnVisibilityTreatment = localStorage.getItem('@lnsf:columnVisibilityTreatment');
+
+    if (!columnVisibilityTreatment) return { id: false };
+    return JSON.parse(columnVisibilityTreatment);
+  }
+
+  static setColumnVisibilityTreatment(columnVisibilityTreatment: { [x: string]: boolean }) {
+    localStorage.setItem('@lnsf:columnVisibilityTreatment', JSON.stringify(columnVisibilityTreatment));
+  }
+
+  static getColumnVisibilityHosting(): { [x: string]: boolean } {
+    const columnVisibilityHosting = localStorage.getItem('@lnsf:columnVisibilityHosting');
+
+    if (!columnVisibilityHosting) return { id: false };
+    return JSON.parse(columnVisibilityHosting);
+  }
+
+  static setColumnVisibilityHosting(columnVisibilityHosting: { [x: string]: boolean }) {
+    localStorage.setItem('@lnsf:columnVisibilityHosting', JSON.stringify(columnVisibilityHosting));
+  }
+
   static clearAll() {
     localStorage.clear();
   }
