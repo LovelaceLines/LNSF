@@ -78,6 +78,28 @@ export class LocalStorage {
     localStorage.setItem('@lnsf:pageSize', pageSize.toString());
   }
 
+  static getColumnVisibilityTour(): { [x: string]: boolean } {
+    const columnVisibilityTour = localStorage.getItem('@lnsf:columnVisibilityTour');
+
+    if (!columnVisibilityTour) return { 'people.cpf': false };
+    return JSON.parse(columnVisibilityTour);
+  }
+
+  static setColumnVisibilityTour(columnVisibilityTour: { [x: string]: boolean }) {
+    localStorage.setItem('@lnsf:columnVisibilityTour', JSON.stringify(columnVisibilityTour));
+  }
+
+  static getColumnVisibilityPeople(): { [x: string]: boolean } {
+    const columnVisibilityPeople = localStorage.getItem('@lnsf:columnVisibilityPeople');
+
+    if (!columnVisibilityPeople) return { phone: false, gender: false, city: false, neighborhood: false, street: false, houseNumber: false};
+    return JSON.parse(columnVisibilityPeople);
+  }
+
+  static setColumnVisibilityPeople(columnVisibilityPeople: { [x: string]: boolean }) {
+    localStorage.setItem('@lnsf:columnVisibilityPeople', JSON.stringify(columnVisibilityPeople));
+  }
+
   static clearAll() {
     localStorage.clear();
   }

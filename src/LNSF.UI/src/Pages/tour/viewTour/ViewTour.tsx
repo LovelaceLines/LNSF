@@ -3,7 +3,7 @@ import { useEffect } from "react"
 import { useNavigate } from 'react-router-dom';
 import { TourContext, iTourFilter, iTourObject, iTourUpdate } from '../../../Contexts';
 import { iOrderBy, iPage } from '../../../Contexts/types';
-import { MaterialReactTable, useMaterialReactTable, type MRT_ColumnDef, MRT_Row, MRT_TableInstance, MRT_ColumnFiltersState, MRT_SortingState, MRT_PaginationState } from 'material-react-table';
+import { MaterialReactTable, useMaterialReactTable, type MRT_ColumnDef, MRT_Row, MRT_TableInstance, MRT_ColumnFiltersState, MRT_SortingState, MRT_PaginationState, MRT_VisibilityState } from 'material-react-table';
 import { MRT_Localization_PT_BR } from 'material-react-table/locales/pt-BR';
 import { Box, Button, Checkbox, IconButton, Typography, useMediaQuery, useTheme } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
@@ -22,6 +22,7 @@ export const ViewTour: React.FC = () => {
   const [globalFilter, setGlobalFilter] = useState<string>('');
   const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>([]);
   const [sortFilters, setSortFilters] = useState<MRT_SortingState>([{ id: "output", desc: true }]);
+  const [columnVisibleState, setColumnVisibleState] = useState<MRT_VisibilityState>(LocalStorage.getColumnVisibilityPeople());
   const [pagination, setPagination] = useState<MRT_PaginationState>({ pageIndex: 0, pageSize: LocalStorage.getPageSize() });
   const [tours, setTours] = useState<iTourObject[]>([]);
   const [inOpenFilter, setInOpenFilter] = useState<boolean>(true);
@@ -165,6 +166,10 @@ export const ViewTour: React.FC = () => {
  
     setFilters(updatedFilters);
   }, [sortFilters]);
+
+  useEffect(() => {
+    LocalStorage.setColumnVisibilityPeople(columnVisibleState);
+  }, [columnVisibleState]);
  
   useEffect(() => {
     const page: iPage = { page: pagination.pageIndex, pageSize: pagination.pageSize };
@@ -217,6 +222,7 @@ export const ViewTour: React.FC = () => {
     state: { 
       sorting: sortFilters, 
       pagination: pagination, 
+      columnVisibility: columnVisibleState
     },
  
     renderTopToolbarCustomActions: ({ table }) => renderTopToolbar(table),
@@ -230,6 +236,8 @@ export const ViewTour: React.FC = () => {
  
     manualSorting: true,
     onSortingChange: setSortFilters,
+
+    onColumnVisibilityChange: setColumnVisibleState,
  
     manualPagination: true,
     onPaginationChange: setPagination,
