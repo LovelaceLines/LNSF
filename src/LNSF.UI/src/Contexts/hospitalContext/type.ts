@@ -1,3 +1,5 @@
+import { iOrderBy, iPage } from "../types";
+
 export interface iHospitalProvider {
     children: React.ReactNode
 }
@@ -13,6 +15,15 @@ export interface iHospital {
     acronym: string,
 }
 
+export interface iHospitalFilter {
+    id?: number,
+    name?: string,
+    acronym?: string,
+    globalFilter?: string,
+    page?: iPage,
+    orderBy?: iOrderBy
+}
+
 export interface iHospitalTypes {
     hospital: iHospitalObject,
     setHospital: React.Dispatch<React.SetStateAction<iHospitalObject>>
@@ -21,4 +32,10 @@ export interface iHospitalTypes {
     updateHospital(data: iHospitalObject): Promise<iHospitalObject | Error>;
     countHospital(): Promise<number>;
     deleteHospital(data: string): Promise<iHospitalObject | Error>;
+
+    getHospitals(filter?: iHospitalFilter): Promise<iHospitalObject[]>;
+    getHospitalById(id: number): Promise<iHospitalObject>;
+    getCount(): Promise<number>;
+    postHospital(data: iHospital): Promise<iHospitalObject>;
+    putHospital(data: iHospitalObject): Promise<iHospitalObject>;
 }
