@@ -1,5 +1,34 @@
+import { iOrderBy, iPage } from "../types"
+
 export interface iPeopleProvider {
     children: React.ReactNode
+}
+
+export interface iPeopleFilter {
+    id?: number,
+    name?: string,
+    rg?: string,
+    cpf?: string,
+    phone?: string,
+    gender?: Gender,
+    birthDate?: Date,
+    city?: string,
+    state?: string,
+    neighborhood?: string,
+    street?: string,
+    houseNumber?: string,
+    note?: string,
+    patient?: boolean,
+    escort?: boolean,
+    active?: boolean,
+    globalFilter?: string,
+    page?: iPage,
+    orderBy?: iOrderBy,
+}
+
+export enum Gender {
+    male = 0,
+    female = 1,
 }
 
 export interface iPeopleObject {
@@ -70,4 +99,10 @@ export interface iPeopleTypes {
 
     viewPeopleRoom(page: number): Promise<iAddPeopleToRoom[] | Error>;
     returnQuantityPeople(): Promise<number>;
+
+    getPeoples(filter?: iPeopleFilter): Promise<iPeopleObject[]>;
+    getPeopleById(id: number): Promise<iPeopleObject>;
+    getCount(): Promise<number>;
+    postPeople(data: iPeopleRegister): Promise<iPeopleObject>;
+    putPeople(data: iPeopleObject): Promise<iPeopleObject>;
 }

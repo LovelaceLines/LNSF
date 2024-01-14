@@ -1,298 +1,334 @@
-
 import { useContext, useMemo, useState } from 'react'
 import { useEffect } from "react"
-import { PeopleContext, RoomContext, iPeopleObject, iRemovePeopleRoom, iRoomObject } from '../../../Contexts';
-import { Box, Button, LinearProgress, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material';
-import { Environment } from '../../../environment';
-import { ButtonAction, SearchButton } from '../../../Component';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useDebounce } from '../../../Component/hooks/UseDebounce';
+import { Gender, PeopleContext, iPeopleFilter, iPeopleObject } from '../../../Contexts';
+import { Box, Button, Checkbox, IconButton, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import PersonIcon from '@mui/icons-material/Person';
-import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
-import AddRoundedIcon from '@mui/icons-material/AddRounded';
-import PersonOffRoundedIcon from '@mui/icons-material/PersonOffRounded';
-import { Modal, Fade } from '@mui/material';
+import EditRoundedIcon from '@mui/icons-material/EditRounded';
+import ContentPasteSearchIcon from '@mui/icons-material/ContentPasteSearch';
+import AddIcon from '@mui/icons-material/Add';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import { TelaAddRemovePeopleRoom } from '../registerPeople/TelaAddRemovePeopleRoom';
+import { MRT_ColumnDef, MRT_ColumnFiltersState, MRT_PaginationState, MRT_Row, MRT_SortingState, MRT_TableInstance, MRT_VisibilityState, MaterialReactTable, useMaterialReactTable } from 'material-react-table';
+import { LocalStorage } from '../../../Global';
+import { iOrderBy, iPage } from '../../../Contexts/types';
+import { MRT_Localization_PT_BR } from 'material-react-table/locales/pt-BR';
+import { format } from 'date-fns';
 
 export const ViewPeople: React.FC = () => {
+  const navigate = useNavigate();
+  const smDown = useMediaQuery(useTheme().breakpoints.down('sm'));
+  const { getPeoples, getCount } = useContext(PeopleContext);
+  const [count, setCount] = useState<number>();
+  const [globalFilter, setGlobalFilter] = useState<string>('');
+  const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>([]);
+  const [sortFilters, setSortFilters] = useState<MRT_SortingState>([{ id: 'id', desc: false }]);
+  const [columnVisibleState, setColumnVisibleState] = useState<MRT_VisibilityState>(LocalStorage.getColumnVisibilityPeople());
+  const [pagination, setPagination] = useState<MRT_PaginationState>({ pageIndex: 0, pageSize: LocalStorage.getPageSize() });
+  const [peoples, setPeoples] = useState<iPeopleObject[]>([]);
+  const [activeFilter, setActiveFilter] = useState<boolean>(true);
+  const [PatientFilter, setPatientFilter] = useState<boolean>(true);
+  const [EscortFilter, setEscortFilter] = useState<boolean>(false);
+  const [filters, setFilters] = useState<iPeopleFilter>({
+    patient: PatientFilter,
+    escort: EscortFilter,
+    page: { page: pagination.pageIndex, pageSize: pagination.pageSize },
+    active: activeFilter,
+  });
 
-    const { viewPeople, returnQuantity, removePeopleRoom } = useContext(PeopleContext);
-    const { viewRoom } = useContext(RoomContext);
-    const [rows, setRows] = useState<iPeopleObject[]>([]);
-    const [roomValues, setRoomValues] = useState<iRoomObject[]>([]);
-    const [totalCount, setTotalCount] = useState(0);
-    const [isLoadind, setIsLoading] = useState(true);
-    const [searchParams, setSearchParams] = useSearchParams();
-    const { debounce } = useDebounce();
-    const theme = useTheme();
-    const smDown = useMediaQuery(theme.breakpoints.down('sm'));
-    const navigate = useNavigate();
-    const [modify, setModify] = useState(false);
+  const columns = useMemo<MRT_ColumnDef<iPeopleObject>[]>(
+    () => [
+      {
+        accessorKey: 'name',
+        header: 'Nome',
+        size: 150,
+        enableColumnActions: false,
+      },
+      {
+        accessorKey: 'rg',
+        header: 'RG',
+        size: 50,
+        enableColumnActions: false,
+        enableSorting: false,
+      },
+      {
+        accessorKey: 'cpf',
+        header: 'CPF',
+        size: 50,
+        enableColumnActions: false,
+        enableSorting: false,
+      },
+      {
+        accessorKey: 'gender',
+        header: 'Sexo',
+        size: 50,
+        enableColumnActions: false,
+        enableSorting: false,
+        Cell: ({ row }) => {
+          const gender = row.original.gender;
+          return gender == 0 ? 'Masculino' : gender == 1 ? 'Feminino' : '';
+        },
+      },
+      {
+        accessorKey: 'phone',
+        header: 'Telefone',
+        size: 150,
+        enableColumnActions: false,
+        enableSorting: false,
+      },
+      {
+        accessorKey: 'birthDate',
+        header: 'Data de Nascimento',
+        size: 50,
+        enableColumnActions: false,
+        enableSorting: false,
+        Cell: ({ row }) => {
+          const date = new Date(row.original.birthDate);
+          return date ? format(date, 'dd/MM/yyyy') : '';
+        },
+      },
+      {
+        accessorKey: 'city',
+        header: 'Cidade',
+        size: 50,
+        enableColumnActions: false,
+        enableSorting: false,
+      },
+      {
+        accessorKey: 'state',
+        header: 'Estado',
+        size: 50,
+        enableColumnActions: false,
+        enableSorting: false,
+      },
+      {
+        accessorKey: 'neighborhood',
+        header: 'Bairro',
+        size: 50,
+        enableColumnActions: false,
+        enableSorting: false,
+      },
+      {
+        accessorKey: 'street',
+        header: 'Rua',
+        size: 50,
+        enableColumnActions: false,
+        enableSorting: false,
+      },
+      {
+        accessorKey: 'houseNumber',
+        header: 'Número',
+        size: 50,
+        enableColumnActions: false,
+        enableSorting: false,
+      },
+      {
+        accessorKey: 'note',
+        header: 'Observação',
+        size: 200,
+        enableColumnActions: false,
+        enableSorting: false,
+      },
+    ],
+    [],
+  );
 
-    const [idModal, setIdModal] = useState(0);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+  const fetchPeoples = async () => {
+    const peoples = await getPeoples(filters);
+    setPeoples(peoples);
+  };
 
-    const busca = useMemo(() => {
-        return (searchParams.get('busca') || '');
-    }, [searchParams])
+  const fetchCount = async () => {
+    const count = await getCount();
+    setCount(count);
+  };
 
-    const pagina = useMemo(() => {
-        return Number(searchParams.get('pagina') || '1');
-    }, [searchParams])
+  useEffect(() => {
+    fetchCount();
+  }, []);
 
-    useEffect(() => {
-        setIsLoading(true);
+  useEffect(() => {
+    setFilters({ ...filters, globalFilter: globalFilter });
+  }, [globalFilter]);
+ 
+  useEffect(() => {
+    const updatedFilters = { ...filters };
+    const columnIds = columnFilters.map(columnFilter => columnFilter.id);
+    let value: unknown;
+ 
+    value = columnFilters.find(cf => cf.id === 'name')?.value;
+    if (columnIds.includes('name') && typeof value === 'string')
+      updatedFilters.name = value;
+    else updatedFilters.name = undefined;
+ 
+    value = columnFilters.find(cf => cf.id === 'rg')?.value;
+    if (columnIds.includes('rg') && typeof value === 'string')
+      updatedFilters.rg = value;
+    else updatedFilters.rg = undefined;
+ 
+    value = columnFilters.find(cf => cf.id === 'cpf')?.value;
+    if (columnIds.includes('cpf') && typeof value === 'string')
+      updatedFilters.cpf = value;
+    else updatedFilters.cpf = undefined;
+ 
+    value = columnFilters.find(cf => cf.id === 'phone')?.value;
+    if (columnIds.includes('phone') && typeof value === 'string')
+      updatedFilters.phone = value;
+    else updatedFilters.phone = undefined;
 
-        debounce(() => {
+    value = columnFilters.find(cf => cf.id === 'gender')?.value;
+    if (columnIds.includes('gender') && typeof value === 'string') {
+      if ('masculino'.includes(value.toLowerCase())) updatedFilters.gender = Gender.male;
+      else if ('feminino'.includes(value.toLowerCase())) updatedFilters.gender = Gender.female;
+    } else updatedFilters.gender = undefined;
 
-            viewPeople(pagina, busca, 'name')
-                .then((response) => {
-                    if (response instanceof Error) {
-                        setIsLoading(false);
-                    } else {
-                        setRows(response);
-                        setIsLoading(false);
-                    }
-                })
-                .catch((error) => {
-                    setIsLoading(false);
-                    console.error('Detalhes do erro:', error);
-                });
-        });
+    value = columnFilters.find(cf => cf.id === 'birthDate')?.value;
+    if (columnIds.includes('birthDate') && value instanceof Date)
+      updatedFilters.birthDate = value;
+    else updatedFilters.birthDate = undefined;
 
-    }, [busca, pagina, modify]);
+    value = columnFilters.find(cf => cf.id === 'city')?.value;
+    if (columnIds.includes('city') && typeof value === 'string')
+      updatedFilters.city = value;
+    else updatedFilters.city = undefined;
 
+    value = columnFilters.find(cf => cf.id === 'state')?.value;
+    if (columnIds.includes('state') && typeof value === 'string')
+      updatedFilters.state = value;
+    else updatedFilters.state = undefined;
 
-    useEffect(() => {
-        setIsLoading(true);
-        debounce(() => {
-            viewRoom(pagina, busca, 'id', 100)
-                .then((response) => {
-                    if (response instanceof Error) {
-                        setIsLoading(false);
-                    } else {
-                        setRoomValues(response);
-                        setIsLoading(false);
-                      
-                    }
-                })
-                .catch((error) => {
-                    setIsLoading(false);
-                    console.error('Detalhes do erro:', error);
-                });
-        });
+    value = columnFilters.find(cf => cf.id === 'neighborhood')?.value; 
+    if (columnIds.includes('neighborhood') && typeof value === 'string')
+      updatedFilters.neighborhood = value;
+    else updatedFilters.neighborhood = undefined;
 
-    }, []);
+    value = columnFilters.find(cf => cf.id === 'street')?.value;
+    if (columnIds.includes('street') && typeof value === 'string')
+      updatedFilters.street = value;
+    else updatedFilters.street = undefined;
 
+    value = columnFilters.find(cf => cf.id === 'houseNumber')?.value;
+    if (columnIds.includes('houseNumber') && typeof value === 'string')
+      updatedFilters.houseNumber = value;
+    else updatedFilters.houseNumber = undefined;
 
-    const getRoomNumber = (roomId: number) => {
-        if (roomId !== null) {
-            const room = roomValues.find(room => room.id === roomId);
-            return room ? room.number : 'N/A';
-        }
-        return 'N/A';
-    };
+    value = columnFilters.find(cf => cf.id === 'note')?.value;
+    if (columnIds.includes('note') && typeof value === 'string')
+      updatedFilters.note = value;
+    else updatedFilters.note = undefined;
+ 
+    setFilters(updatedFilters);
+  }, [columnFilters]);
+ 
+  useEffect(() => {
+    const updatedFilters = { ...filters };
+    const columnIds = sortFilters.map(sort => sort.id);
+   
+    const desc = sortFilters.find(cf => cf.id === 'name')?.desc;
+    if (columnIds.includes('name') && typeof desc === 'boolean')
+      updatedFilters.orderBy = desc ? iOrderBy.descendent : iOrderBy.ascendent;
+    else updatedFilters.orderBy = undefined;
+ 
+    setFilters(updatedFilters);
+  }, [sortFilters]);
 
+  useEffect(() => {
+    LocalStorage.setColumnVisibilityPeople(columnVisibleState);
+  }, [columnVisibleState]);
+ 
+  useEffect(() => {
+    const page: iPage = { page: pagination.pageIndex, pageSize: pagination.pageSize };
+    setFilters({ ...filters, page: page });
 
+    LocalStorage.setPageSize(page.pageSize!);
+    
+    const fetchPeoples = async () => setPeoples(await getPeoples({ ...filters, page: page }));
+    fetchPeoples();
+  }, [pagination]);
 
-    useEffect(() => {
-        returnQuantity()
-            .then((response) => {
-                setTotalCount(response);
-            });
-    }, []);
+  useEffect(() => {
+    setFilters({ ...filters, active: activeFilter });
+  }, [activeFilter]);
 
+  useEffect(() => {
+    setFilters({ ...filters, patient: PatientFilter });
+  }, [PatientFilter]);
 
-    const deletePeopleRoom = (id_: number) => {
+  useEffect(() => {
+    setFilters({ ...filters, escort: EscortFilter });
+  }, [EscortFilter]);
 
-        if (confirm('Realmente deseja remover esssa pessoa do quarto?')) {
-            const data: iRemovePeopleRoom = {
-                peopleId: id_
-            }
-            setIsLoading(true);
-            removePeopleRoom(data)
-                .then((response) => {
-                    if (response instanceof Error) {
-                        setIsLoading(false);
-                    } else {
-                        setModify(!modify)
-                        setIsLoading(false);
-                    }
-                })
-                .catch((error) => {
-                    setIsLoading(false);
-                    console.error('Detalhes do erro:', error);
-                });
-        }
-    }
-
-    const addPeopleRoom = (id_: number) => {
-        setIdModal(id_)
-        setIsModalOpen(true)
-    }
-
-    return (
-        <Box
-            display='flex'
-            flexDirection='column'
-            width='100%'
-        >
-            <Box>
-                <Toolbar sx={{ margin: 0 }}>
-                    <Typography
-                        variant={smDown ? "h5" : "h4"}
-                        noWrap
-                        component="div"
-                        sx={{ flexGrow: 1, display: 'flex', alignItems: 'flex-end' }}
-                    >
-                        {!smDown && (<PersonIcon color='primary' sx={{ fontSize: '2.7rem', paddingRight: '10px' }} />)}
-                        Pessoas
-                    </Typography>
-
-                    <SearchButton
-                        textoDaBusca={busca}
-                        aoMudarTextoDeBusca={texto => setSearchParams({ busca: texto, pagina: '1' }, { replace: true })}
-                    />
-
-                    < ButtonAction
-                        mostrarBotaoNovo={true}
-                        mostrarBotaoSalvar={false}
-                        mostrarBotaoVoltar={false}
-
-                        mostrarBotaoApagar={false}
-                        aoClicarEmNovo={() => { navigate('/inicio/pessoas/gerenciar/cadastrar') }}
-                    />
-
-                </Toolbar>
-            </Box>
-
-            <TableContainer component={Paper} variant='outlined' >
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell sx={{ textAlign: 'left' }}>Nome</TableCell>
-                            <TableCell sx={{ textAlign: 'center' }}>Perfil</TableCell>
-                            <TableCell sx={{ textAlign: 'center' }}>Apartamentos</TableCell>
-                            <TableCell sx={{ textAlign: 'center' }}>Ação</TableCell>
-                        </TableRow>
-                    </TableHead>
-
-                    <TableBody>
-                        {rows.map(row => (
-                            <TableRow key={row.id}>
-
-                                <TableCell sx={{ textAlign: 'left' }}>
-                                    {row.name}
-                                </TableCell>
-
-                                <TableCell sx={{ textAlign: 'center' }}>
-                                    <Button
-                                        size='small'
-                                        color='primary'
-                                        disableElevation
-                                        variant='outlined'
-                                        onClick={() => navigate(`/inicio/pessoas/dados/${row.id}`)}
-                                    >
-                                        <InfoOutlinedIcon color='primary' fontSize='small' />
-                                    </Button>
-                                </TableCell>
-
-                                <TableCell sx={{ textAlign: 'center' }}>{row.roomId === null ? <PersonOffRoundedIcon /> : getRoomNumber(row.roomId)}</TableCell>
-
-                                <TableCell sx={{ textAlign: 'center' }}>
-                                    <Button
-                                        size='small'
-                                        color='primary'
-                                        disableElevation
-                                        variant='outlined'
-                                        onClick={() => {
-                                            row.roomId === null ? addPeopleRoom(row.id) : deletePeopleRoom(row.id)
-                                        }}
-                                    >
-                                        {row.roomId === null ? <AddRoundedIcon color='primary' fontSize='small' /> : <DeleteRoundedIcon sx={{ color: 'red' }} fontSize='small' />}
-                                    </Button>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-
-                    {totalCount === 0 && !isLoadind && (
-                        <caption>{Environment.LISTAGEM_VAZIA}</caption>
-                    )}
-
-                    <TableFooter>
-                        {isLoadind && (
-                            <TableRow>
-                                <TableCell colSpan={7}>
-                                    <LinearProgress />
-                                </TableCell>
-                            </TableRow>
-                        )}
-
-                    </TableFooter>
-                </Table>
-                {(totalCount > 0 && totalCount > Environment.LIMITE_DE_LINHA) && (
-                    <Box
-                        display='flex'
-                        flexDirection='column'
-                        alignItems='center'
-                        justifyContent='center'
-                    >
-                        <TableRow >
-                            <TableCell>
-                                <Pagination
-                                    page={pagina}
-                                    count={Math.ceil(totalCount / Environment.LIMITE_DE_LINHA)}
-                                    color="primary"
-                                    onChange={(_, newPage) => setSearchParams({ busca, pagina: newPage.toString() })}
-                                />
-                            </TableCell>
-                        </TableRow>
-                    </Box>
-                )}
-            </TableContainer>
-
-            <Modal
-                open={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                closeAfterTransition
-                sx={
-                    {
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }
-                }
-            >
-                <Fade in={isModalOpen}>
-                    <Box sx={{
-                        minWidth: 300,
-                        maxWidth: 500,
-                        bgcolor: 'background.paper',
-                        p: 2,
-                        borderRadius: 1.5,
-                        position: 'relative',
-                    }}>
-                        <Box sx={{
-                            display: 'flex',
-                            justifyContent: 'end',
-                            alignItem: 'center',
-                            position: 'absolute',
-                            top: 10,
-                            right: 10,
-                            zIndex: 1
-                        }}>
-                            <Button onClick={() => { setIsModalOpen(false), setModify(!modify) }}>
-                                < CloseRoundedIcon sx={{ fontSize: '2rem' }} />
-                            </Button>
-                        </Box>
-                        <TelaAddRemovePeopleRoom idPeople={idModal} />
-                    </Box>
-                </Fade>
-            </Modal>
+  const renderTopToolbar = (table: MRT_TableInstance<iPeopleObject>) => (
+    <Box display='flex' flexDirection='column' gap={2} paddingRight='auto'>
+      <Typography variant={smDown ? "h6" : "h5"} display='flex' alignItems='center' gap={1} paddingRight='auto' >
+        <PersonIcon fontSize={smDown ? "medium" : "large"} color='primary' />
+        Pessoas
+      </Typography>
+      <Box display='flex' gap={2}>
+        <Button variant='contained' size='small' startIcon={<AddIcon />} onClick={() => navigate('/inicio/pessoas/gerenciar/cadastrar')}>
+          Novo
+        </Button>
+        <Box display='flex' alignItems='center'>
+          <Typography>
+            Ativos
+          </Typography>
+          <Checkbox checked={activeFilter} onChange={(e) => setActiveFilter(e.target.checked)} />
+          <Typography>
+            Pacientes
+          </Typography>
+          <Checkbox checked={PatientFilter} onChange={(e) => setPatientFilter(e.target.checked)} />
+          <Typography>
+            Acompanhantes
+          </Typography>
+          <Checkbox checked={EscortFilter} onChange={(e) => setEscortFilter(e.target.checked)} />
         </Box>
-    )
+        <Button variant='contained' size='small' startIcon={<ContentPasteSearchIcon />} onClick={fetchPeoples}>
+          Buscar
+        </Button>
+      </Box>
+    </Box>
+  );
+
+  const renderActions = (row: MRT_Row<iPeopleObject>) => (
+    <Box display='flex' flexDirection='row' flexWrap='nowrap'>
+      <IconButton onClick={() => navigate(`/inicio/pessoa/editar/${row.original.id}`)}>
+        <EditRoundedIcon />
+      </IconButton>
+      <IconButton onClick={() => navigate(`/inicio/pessoas/dados/${row.original.id}`)}>
+        <InfoOutlinedIcon />
+      </IconButton>
+    </Box>
+  );
+
+  const table = useMaterialReactTable<iPeopleObject>({
+    columns,
+    data: peoples,
+    state: { 
+      sorting: sortFilters, 
+      pagination: pagination,
+      columnVisibility: columnVisibleState,
+    },
+ 
+    renderTopToolbarCustomActions: ({ table }) => renderTopToolbar(table),
+ 
+    enableRowActions: true,
+    renderRowActions: ({ row, cell, table }) => renderActions(row),
+ 
+    manualFiltering: true,
+    onGlobalFilterChange: setGlobalFilter,
+    onColumnFiltersChange: setColumnFilters,
+ 
+    manualSorting: true,
+    onSortingChange: setSortFilters,
+
+    onColumnVisibilityChange: setColumnVisibleState,
+ 
+    manualPagination: true,
+    onPaginationChange: setPagination,
+    paginationDisplayMode: 'pages',
+    rowCount: count,
+ 
+    localization: MRT_Localization_PT_BR,
+  });
+
+  return <MaterialReactTable table={table} />
 }
