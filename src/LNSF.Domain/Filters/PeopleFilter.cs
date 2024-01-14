@@ -9,6 +9,14 @@ public class PeopleFilter
     public string? RG { get; set; }
     public string? CPF { get; set; }
     public string? Phone { get; set; }
+    public Gender? Gender { get; set; }
+    public DateTime? BirthDate { get; set; }
+    public string? Street { get; set; }
+    public string? HouseNumber { get; set; } 
+    public string? Neighborhood { get; set; } 
+    public string? City { get; set; } 
+    public string? State { get; set; } 
+    public string? Note { get; set; } 
     public bool? Patient { get; set; }
     public bool? Escort { get; set; }
     public bool? Active { get; set; }
@@ -24,6 +32,14 @@ public class PeopleFilter
         string? rg = null,
         string? cpf = null,
         string? phone = null,
+        Gender? gender = null,
+        DateTime? birthDate = null,
+        string? street = null,
+        string? houseNumber = null,
+        string? neighborhood = null,
+        string? city = null,
+        string? state = null,
+        string? note = null,
         bool? patient = null,
         bool? escort = null,
         bool? active = null,
@@ -35,6 +51,14 @@ public class PeopleFilter
         RG = rg;
         CPF = cpf;
         Phone = phone;
+        Gender = gender;
+        BirthDate = birthDate;
+        Street = street;
+        HouseNumber = houseNumber;
+        Neighborhood = neighborhood;
+        City = city;
+        State = state;
+        Note = note;
         Patient = patient;
         Escort = escort;
         Active = active;
