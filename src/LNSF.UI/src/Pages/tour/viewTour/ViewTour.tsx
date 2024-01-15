@@ -16,7 +16,8 @@ import { format, parseISO } from 'date-fns';
  
 export const ViewTour: React.FC = () => {
   const navigate = useNavigate();
-  const smDown = useMediaQuery(useTheme().breakpoints.down('sm'));
+  const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const { getTours, putTour, getCount } = useContext(TourContext);
   const [count, setCount] = useState<number>();
   const [globalFilter, setGlobalFilter] = useState<string>('');
@@ -24,6 +25,7 @@ export const ViewTour: React.FC = () => {
   const [sortFilters, setSortFilters] = useState<MRT_SortingState>([{ id: "output", desc: true }]);
   const [columnVisibleState, setColumnVisibleState] = useState<MRT_VisibilityState>(LocalStorage.getColumnVisibilityTour());
   const [pagination, setPagination] = useState<MRT_PaginationState>({ pageIndex: 0, pageSize: LocalStorage.getPageSize() });
+  const [isFullScreen, setIsFullScreen] = useState<boolean>(false);
   const [tours, setTours] = useState<iTourObject[]>([]);
   const [inOpenFilter, setInOpenFilter] = useState<boolean>(true);
   const [filters, setFilters] = useState<iTourFilter>({
@@ -221,8 +223,9 @@ export const ViewTour: React.FC = () => {
     data: tours,
     state: { 
       sorting: sortFilters, 
-      pagination: pagination, 
-      columnVisibility: columnVisibleState
+      pagination: pagination,
+      columnVisibility: columnVisibleState,
+      isFullScreen,
     },
  
     renderTopToolbarCustomActions: ({ table }) => renderTopToolbar(table),
@@ -243,6 +246,16 @@ export const ViewTour: React.FC = () => {
     onPaginationChange: setPagination,
     paginationDisplayMode: 'pages',
     rowCount: count,
+
+    onIsFullScreenChange: () => setIsFullScreen(!isFullScreen),
+
+    muiTablePaperProps: ({ table }) => ({ style: {
+      zIndex: isFullScreen ? 10000 : undefined,
+    }}),
+
+    mrtTheme : {
+      baseBackgroundColor: theme.palette.background.paper,
+    },
  
     localization: MRT_Localization_PT_BR,
   });

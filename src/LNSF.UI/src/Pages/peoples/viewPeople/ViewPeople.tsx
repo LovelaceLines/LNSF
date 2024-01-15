@@ -16,7 +16,8 @@ import { format } from 'date-fns';
 
 export const ViewPeople: React.FC = () => {
   const navigate = useNavigate();
-  const smDown = useMediaQuery(useTheme().breakpoints.down('sm'));
+  const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const { getPeoples, getCount } = useContext(PeopleContext);
   const [count, setCount] = useState<number>();
   const [globalFilter, setGlobalFilter] = useState<string>('');
@@ -24,6 +25,7 @@ export const ViewPeople: React.FC = () => {
   const [sortFilters, setSortFilters] = useState<MRT_SortingState>([{ id: 'id', desc: false }]);
   const [columnVisibleState, setColumnVisibleState] = useState<MRT_VisibilityState>(LocalStorage.getColumnVisibilityPeople());
   const [pagination, setPagination] = useState<MRT_PaginationState>({ pageIndex: 0, pageSize: LocalStorage.getPageSize() });
+  const [isFullScreen, setIsFullScreen] = useState<boolean>(false);
   const [peoples, setPeoples] = useState<iPeopleObject[]>([]);
   const [activeFilter, setActiveFilter] = useState<boolean>(true);
   const [PatientFilter, setPatientFilter] = useState<boolean>(true);
@@ -306,6 +308,7 @@ export const ViewPeople: React.FC = () => {
       sorting: sortFilters, 
       pagination: pagination,
       columnVisibility: columnVisibleState,
+      isFullScreen,
     },
  
     renderTopToolbarCustomActions: ({ table }) => renderTopToolbar(table),
@@ -326,6 +329,16 @@ export const ViewPeople: React.FC = () => {
     onPaginationChange: setPagination,
     paginationDisplayMode: 'pages',
     rowCount: count,
+
+    onIsFullScreenChange: () => setIsFullScreen(!isFullScreen),
+
+    muiTablePaperProps: ({ table }) => ({ style: {
+      zIndex: isFullScreen ? 10000 : undefined,
+    }}),
+
+    mrtTheme : {
+      baseBackgroundColor: theme.palette.background.paper,
+    },
  
     localization: MRT_Localization_PT_BR,
   });
