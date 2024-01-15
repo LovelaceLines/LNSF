@@ -3,6 +3,7 @@ using LNSF.Domain.Enums;
 using LNSF.Domain.Exceptions;
 using LNSF.Domain.Filters;
 using LNSF.Domain.Repositories;
+using LNSF.Infra.Data.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -15,27 +16,37 @@ public class UserRepository : IUserRepository
     private readonly UserManager<IdentityUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IdentityUserRole<string> _userRoleManager;
+    private readonly AppDbContext _context;
 
     public UserRepository(UserManager<IdentityUser> userManager,
         RoleManager<IdentityRole> roleManager,
-        IdentityUserRole<string> userRoleManager)
+        IdentityUserRole<string> userRoleManager,
+        AppDbContext context)
     {
         _userManager = userManager;
         _roleManager = roleManager;
         _userRoleManager = userRoleManager;
+        _context = context;
     }
 
     public async Task<List<UserDTO>> Query(UserFilter filter)
     {
         var query = _userManager.Users.AsNoTracking();
 
+        if (!filter.GlobalFilter.IsNullOrEmpty()) query = query.Where(u =>
+            u.UserName != null && u.UserName.ToLower().Contains(filter.GlobalFilter!.ToLower()) ||
+            u.Email != null && u.Email.ToLower().Contains(filter.GlobalFilter!.ToLower()) ||
+            u.PhoneNumber != null && u.PhoneNumber.ToLower().Contains(filter.GlobalFilter!.ToLower()) ||
+            _context.Roles.Any(r => r.Name!.ToLower().Contains(filter.GlobalFilter!.ToLower()) &&
+                _context.UserRoles.Any(ur => ur.RoleId == r.Id && ur.UserId == u.Id)));
+
         if (!filter.Id.IsNullOrEmpty()) query = query.Where(u => u.Id == filter.Id);
         if (!filter.UserName.IsNullOrEmpty()) query = query.Where(u => u.UserName != null && u.UserName.ToLower().Contains(filter.UserName!.ToLower()));
         if (!filter.Email.IsNullOrEmpty()) query = query.Where(u => u.Email != null && u.Email.ToLower().Contains(filter.Email!.ToLower()));
         if (!filter.PhoneNumber.IsNullOrEmpty()) query = query.Where(u => u.PhoneNumber != null && u.PhoneNumber.ToLower().Contains(filter.PhoneNumber!.ToLower()));
         if (!filter.Role.IsNullOrEmpty()) query = query.Where(u =>
-            _roleManager.Roles.Any(r => r.Name!.ToLower().Contains(filter.Role!.ToLower()) &&
-                _userRoleManager.RoleId == r.Id && _userRoleManager.UserId == u.Id));
+            _context.Roles.Any(r => r.Name!.ToLower().Contains(filter.Role!.ToLower()) &&
+                _context.UserRoles.Any(ur => ur.RoleId == r.Id && ur.UserId == u.Id)));
         
         if (filter.OrderBy == OrderBy.Ascending) query = query.OrderBy(u => u.UserName);
         else if (filter.OrderBy == OrderBy.Descending) query = query.OrderByDescending(u => u.UserName);
