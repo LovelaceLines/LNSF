@@ -26,10 +26,10 @@ interface IButtonActionProps {
 export const ButtonAction: React.FC<IButtonActionProps> = ({
   textoBotaoNovo = 'Novo',
 
-  mostrarBotaoNovo = true,
-  mostrarBotaoVoltar = true,
-  mostrarBotaoApagar = true,
-  mostrarBotaoSalvar = true,
+  mostrarBotaoNovo = false,
+  mostrarBotaoVoltar = false,
+  mostrarBotaoApagar = false,
+  mostrarBotaoSalvar = false,
   mostrarBotaoSalvarEFechar = false,
 
   mostrarBotaoNovoCarregando = false,

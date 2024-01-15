@@ -45,8 +45,7 @@ const formValidateSchema: yup.Schema = yup.object().shape({
     birthDate: yup.date().required(),
     rg: yup
         .string()
-        .required('RG é obrigatório')
-        .matches(/^\d{2}\.\d{3}\.\d{3}-\d{1}$/, 'RG inválido. Use o formato 00.000.000-0'),
+        .required('RG é obrigatório'),
     cpf: yup
         .string()
         .required('CPF é obrigatório')
