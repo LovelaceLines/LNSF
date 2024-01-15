@@ -1,5 +1,5 @@
 import { createContext, useCallback } from "react";
-import { iRole, iUser, iUserProvider, iUserRole, iUserTypes, iattPasswordUser, idelUserID, idelUserRole, iregisterUser, iregisterUserRole } from "./type";
+import { iRole, iUser, iUserFilter, iUserProvider, iUserRole, iUserTypes, iattPasswordUser, idelUserID, idelUserRole, iregisterUser, iregisterUserRole } from "./type";
 import { toast } from "react-toastify";
 import { Api } from "../../services/api/axios";
 
@@ -333,10 +333,63 @@ export const AccountProvider = ({ children }: iUserProvider) => {
         return [];
     }
 
+    const getUsers = useCallback(async (filter?: iUserFilter): Promise<iUser[]> => {
+        const res = await Api.get<iUser[]>('/User', { params: filter });
+        const users = res.data;
+        return users;
+    }, []);
+
+    const getUserById = useCallback(async (id: string): Promise<iUser> => {
+        const res = await Api.get<iUser>(`/User/`, { params: { id: id } });
+        const user = res.data;
+        return user;
+    }, []);
+
+    const getCount = useCallback(async (): Promise<number> => {
+        const res = await Api.get<number>('/User/count');
+        const count = res.data;
+        return count;
+    }, []);
+
+    const postUser = useCallback(async (data: iregisterUser): Promise<iUser> => {
+        const res = await Api.post<iUser>('/User', data);
+        const user = res.data;
+        return user;
+    }, []);
+
+    const putUser = useCallback(async (data: iUser): Promise<iUser> => {
+        const res = await Api.put<iUser>('/User', data);
+        const user = res.data;
+        return user;
+    }, []);
+
+    const postAddUserToRole = useCallback(async (data: iregisterUserRole): Promise<iUser> => {
+        const res = await Api.post<iUser>('/User', data);
+        const user = res.data;
+        return user;
+    }, []);
+
+    const putPassword = useCallback(async (data: iattPasswordUser): Promise<iUser> => {
+        const res = await Api.put<iUser>('/User/password', data);
+        const user = res.data;
+        return user;
+    }, []);
+
+    const deleteUser = useCallback(async (id: string): Promise<iUser> => {
+        const res = await Api.delete<iUser>(`/User/${id}`);
+        const user = res.data;
+        return user;
+    }, []);
+
+    const deleteRemoveUserFromRole = useCallback(async (data: idelUserRole): Promise<iUser> => {
+        const res = await Api.delete<iUser>('/Account/remove-user-from-role', {data});
+        const user = res.data;
+        return user;
+    }, []);
 
     return (
 
-        <AccountContext.Provider value={{ viewUser, registerUser, registerUserRole, updateUser, updatePassword, deleteUserId, deleteUserRole, viewRole, viewUserRole }}>
+        <AccountContext.Provider value={{ viewUser, registerUser, registerUserRole, updateUser, updatePassword, deleteUserId, deleteUserRole, viewRole, viewUserRole, getUsers, getUserById, getCount, postUser, putUser, postAddUserToRole, putPassword, deleteUser, deleteRemoveUserFromRole }}>
             {children}
         </AccountContext.Provider>
     )

@@ -3,6 +3,7 @@ import { iEscortObject, iEscortProvider, iEscortTypes } from "./type";
 import { Api } from "../../services/api/axios";
 import { toast } from "react-toastify";
 import { Environment } from "../../environment";
+import { number } from "yup";
 
 export const EscortContext = createContext({} as iEscortTypes);
 
@@ -119,6 +120,12 @@ export const EscortProvider = ({ children }: iEscortProvider) => {
 
     }, []);
 
+    const getEscortById = useCallback(async (filter: { id: number, getPeople: boolean }): Promise<iEscortObject> => {
+        const res = await Api.get<iEscortObject[]>('/Escort/', { params: filter });
+        const escort = res.data[0];
+        return escort;
+    }, []);
+
     return (
         <EscortContext.Provider
             value={{
@@ -128,7 +135,9 @@ export const EscortProvider = ({ children }: iEscortProvider) => {
                 registerEscort,
                 updateEscort,
                 countEscort,
-                deleteEscort
+                deleteEscort,
+
+                getEscortById
             }}>
             {children}
         </EscortContext.Provider>
