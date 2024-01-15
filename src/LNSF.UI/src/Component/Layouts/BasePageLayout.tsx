@@ -52,81 +52,85 @@ export const BasePageLayout: React.FC<IBasePageLayoutProps> = ({ children }) => 
   const openPopover = Boolean(popoverAnchorEl);
 
   const topBar = (
-    <AppBar 
-      component={Toolbar}
-      position='relative'
-      color='inherit'
-      enableColorOnDark={true}
-      sx={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', gap: 2 }}
+    <Box
+      bgcolor={theme.palette.background.paper}
     >
-      {smDown && (
-        <Button
-          color='primary'
-          onClick={toggleDrawerOpen}
-          sx={{ marginLeft: 0, marginRight: 'auto', paddingLeft: 0, minWidth: 'min-content' }}
-        >
-          <MenuIcon sx={{ marginLeft: 0, paddingLeft: 0 }}/>
-        </Button>
-      )}
-      
-      <Button onClick={toggleTheme}>
-        <Brightness6RoundedIcon color='primary' />
-      </Button>
-    
-      {!smDown && !!user && (
-        <Box display='flex' flexDirection='column' gap={1}>
-          <Typography variant={mdDown ? 'body2' : 'subtitle1'}>
-            {user.userName}
-          </Typography>
-
-          <Typography variant={mdDown ? 'body2' : 'subtitle1'}>
-            {displayRoles()}
-          </Typography>
-        </Box>
-      )}
-
-      <Box onClick={handlePopoverOpen}>
-        <Avatar src={iconelogoProvisoria} sx={{ width: 30, height: 30 }} />
-      </Box>
-      <Popover
-        open={openPopover}
-        anchorEl={popoverAnchorEl}
-        onClose={handlePopoverClose}
-        anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
-        }}
+      <AppBar 
+        component={Toolbar}
+        position='relative'
+        color='transparent'
+        enableColorOnDark={true}
+        sx={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', gap: 2 }}
       >
-        <Box padding={2}
-          display= 'flex'
-          flexDirection='column'
-          alignItems='center'
-          justifyContent= 'center'
-        >
-          <Box
-            marginBottom={2}>
-            <Typography
-              variant={mdDown ? 'body2' : 'subtitle1'}
-              textAlign='center'
-            >
-              {/* {user.role.toString()} */}
-              <Typography fontSize={12}>
-                  {!!user && user.email}
-              </Typography>
+        {smDown && (
+          <Button
+            color='primary'
+            onClick={toggleDrawerOpen}
+            sx={{ marginLeft: 0, marginRight: 'auto', paddingLeft: 0, minWidth: 'min-content' }}
+          >
+            <MenuIcon sx={{ marginLeft: 0, paddingLeft: 0 }}/>
+          </Button>
+        )}
+        
+        <Button onClick={toggleTheme}>
+          <Brightness6RoundedIcon color='primary' />
+        </Button>
+      
+        {!smDown && !!user && (
+          <Box display='flex' flexDirection='column' gap={1}>
+            <Typography variant={mdDown ? 'body2' : 'subtitle1'}>
+              {user.userName}
+            </Typography>
+
+            <Typography variant={mdDown ? 'body2' : 'subtitle1'}>
+              {displayRoles()}
             </Typography>
           </Box>
+        )}
 
-          <Divider />
-
-          <Button 
-            onClick={handleLogout}
-            startIcon={<LogoutIcon color='primary' />}
-          >
-            Sair
-          </Button>
+        <Box onClick={handlePopoverOpen}>
+          <Avatar src={iconelogoProvisoria} sx={{ width: 30, height: 30 }} />
         </Box>
-      </Popover>
-    </AppBar>
+        <Popover
+          open={openPopover}
+          anchorEl={popoverAnchorEl}
+          onClose={handlePopoverClose}
+          anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+          }}
+        >
+          <Box padding={2}
+            display= 'flex'
+            flexDirection='column'
+            alignItems='center'
+            justifyContent= 'center'
+          >
+            <Box
+              marginBottom={2}>
+              <Typography
+                variant={mdDown ? 'body2' : 'subtitle1'}
+                textAlign='center'
+              >
+                {/* {user.role.toString()} */}
+                <Typography fontSize={12}>
+                    {!!user && user.email}
+                </Typography>
+              </Typography>
+            </Box>
+
+            <Divider />
+
+            <Button 
+              onClick={handleLogout}
+              startIcon={<LogoutIcon color='primary' />}
+            >
+              Sair
+            </Button>
+          </Box>
+        </Popover>
+      </AppBar>
+    </Box>
   );
 
   const childrenContent = (
