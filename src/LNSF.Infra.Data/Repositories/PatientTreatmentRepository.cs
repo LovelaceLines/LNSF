@@ -27,7 +27,7 @@ public class PatientTreatmentRepository : BaseRepository<PatientTreatment>, IPat
         if (filter.TreatmentId.HasValue) query = query.Where(pt => pt.TreatmentId == filter.TreatmentId);
 
         var patientsTreatments = await query
-            .Skip((filter.Page.Page - 1) * filter.Page.PageSize)
+            .Skip(filter.Page.Page * filter.Page.PageSize)
             .Take(filter.Page.PageSize)
             .ToListAsync();
 

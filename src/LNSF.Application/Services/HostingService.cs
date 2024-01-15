@@ -1,5 +1,6 @@
 using LNSF.Application.Interfaces;
 using LNSF.Application.Validators;
+using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
 using LNSF.Domain.Filters;
@@ -23,7 +24,7 @@ public class HostingService : IHostingService
         _patientRepository = patientRepository;
     }
 
-    public async Task<List<Hosting>> Query(HostingFilter filter) => 
+    public async Task<List<HostingDTO>> Query(HostingFilter filter) => 
         await _hostingRepository.Query(filter);
 
     public async Task<int> GetCount() => 

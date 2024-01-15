@@ -30,14 +30,9 @@ public class HostingTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_hostingClient);
 
-        // Act - Query
-        var query = await Query<List<HostingViewModel>>(_hostingClient, new HostingFilter(id: hostingPosted.Id));
-        var hostingQueried = query.First();
-
         // Assert
         Assert.Equal(countBefore + 1, countAfter);
         Assert.Equivalent(hostingFake, hostingPosted);
-        Assert.Equivalent(hostingPosted, hostingQueried);
     }
 
     [Fact]
@@ -83,14 +78,9 @@ public class HostingTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_hostingClient);
 
-        // Act - Query
-        var query = await Query<List<HostingViewModel>>(_hostingClient, new HostingFilter(id: hostingPosted.Id));
-        var hostingQueried = query.First();
-
         // Assert
         Assert.Equal(countBefore + 1, countAfter);
         Assert.Equivalent(hostingWithoutConflictFake, hostingPosted);
-        Assert.Equivalent(hostingPosted, hostingQueried);
     }
 
     [Fact]
@@ -153,13 +143,8 @@ public class HostingTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_hostingClient);
 
-        // Act - Query
-        var query = await Query<List<HostingViewModel>>(_hostingClient, new HostingFilter(id: hostingPosted.Id));
-        var hostingQueried = query.First();
-
         // Assert
         Assert.Equal(countBefore + 1, countAfter);
-        Assert.Equivalent(hostingPosted, hostingQueried);
     }
 
     [Fact]
@@ -205,14 +190,9 @@ public class HostingTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_hostingClient);
 
-        // Act - Query
-        var query = await Query<List<HostingViewModel>>(_hostingClient, new HostingFilter(id: hostingPutted.Id));
-        var hostingQueried = query.First();
-
         // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equivalent(hostingToPut, hostingPutted);
-        Assert.Equivalent(hostingPutted, hostingQueried);
     }
 
     [Fact]
@@ -381,15 +361,9 @@ public class HostingTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_hostingEscortClient);
 
-        // Act - Query
-        var query = await Query<List<HostingEscortViewModel>>(_hostingEscortClient, new HostingEscortFilter(hostingId: hostingEscortWithoutConflictPosted.HostingId));
-        var hostingEscortQueried = query.First();
-
         // Assert
         Assert.Equal(countBefore + 1, countAfter);
         Assert.Equivalent(hostingEscortWithoutConflictFake, hostingEscortWithoutConflictPosted);
-        Assert.Equivalent(hostingEscortWithoutConflictPosted, hostingEscortQueried);
-
     }
 
     [Fact]

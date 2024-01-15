@@ -26,7 +26,7 @@ public class HostingController : ControllerBase
     }
 
     /// <summary>
-    /// Retrieves a list of hostings based on the provided filter.
+    /// Retrieves a list of hostings based on the provided filter. Note: if getPeople is true, getPatient must be true.
     /// </summary>
     [HttpGet]
     public async Task<ActionResult<List<HostingViewModel>>> Get([FromQuery] HostingFilter filter)

@@ -31,7 +31,7 @@ public class HostingEscortRepository : BaseRepository<HostingEscort>, IHostingEs
         else if (filter.OrderBy == OrderBy.Descending) query = query.OrderByDescending(he => he.EscortId);
 
         var hostingEscorts = await query
-            .Skip((filter.Page.Page - 1) * filter.Page.PageSize)
+            .Skip(filter.Page.Page * filter.Page.PageSize)
             .Take(filter.Page.PageSize)
             .ToListAsync();
 
