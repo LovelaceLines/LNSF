@@ -106,6 +106,10 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
               pathOption: '/inicio/pessoas/visualizar',
               labelOption: 'Visualizar',
             },
+            {
+              pathOption: '/inicio/pessoas/gerenciar/cadastrar',
+              labelOption: 'Gerenciar',
+            }
           ],
         },
       )
@@ -123,6 +127,10 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
               pathOption: '/inicio/hospital/visualizar',
               labelOption: 'Visualizar',
             },
+            {
+              pathOption: '/inicio/hospital/gerenciar/cadastrar',
+              labelOption: 'Gerenciar',
+            }
           ],
         },
       )
@@ -140,6 +148,10 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
               pathOption: '/inicio/tratamentos/visualizar',
               labelOption: 'Visualizar',
             },
+            {
+              pathOption: '/inicio/tratamentos/gerenciar/cadastrar',
+              labelOption: 'Gerenciar',
+            }
           ],
         },
       )
