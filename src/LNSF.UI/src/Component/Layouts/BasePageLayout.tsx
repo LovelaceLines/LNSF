@@ -133,7 +133,7 @@ export const BasePageLayout: React.FC<IBasePageLayoutProps> = ({ children }) => 
     <Box
       id="ChildrenContentContainer"
       component={Container}
-      disableGutters={smDown}
+      disableGutters
       maxWidth={smDown ? 'false' : 'xl'}
       maxHeight={smDown ? 'calc(100vh - 56px)' : 'calc(100vh - (64px + 32px))'}
       overflow='auto'
