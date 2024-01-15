@@ -29,13 +29,26 @@ public class PeopleRepository : BaseRepository<People>, IPeopleRepository
             p.RG.Contains(filter.GlobalFilter!) ||
             p.CPF.Contains(filter.GlobalFilter!) ||
             p.Phone.Contains(filter.GlobalFilter!) ||
-            p.City.ToLower().Contains(filter.GlobalFilter!.ToLower()));
+            p.Street.ToLower().Contains(filter.GlobalFilter!.ToLower()) ||
+            p.HouseNumber.ToLower().Contains(filter.GlobalFilter!.ToLower()) ||
+            p.Neighborhood.ToLower().Contains(filter.GlobalFilter!.ToLower()) ||
+            p.City.ToLower().Contains(filter.GlobalFilter!.ToLower()) ||
+            p.State.ToLower().Contains(filter.GlobalFilter!.ToLower()) ||
+            p.Note.ToLower().Contains(filter.GlobalFilter!.ToLower()));
 
         if (filter.Id.HasValue) query = query.Where(p => p.Id == filter.Id);
         if (!filter.Name.IsNullOrEmpty()) query = query.Where(p => p.Name.ToLower().Contains(filter.Name!.ToLower()));
         if (!filter.RG.IsNullOrEmpty()) query = query.Where(p => p.RG.Contains(filter.RG!));
         if (!filter.CPF.IsNullOrEmpty()) query = query.Where(p => p.CPF.Contains(filter.CPF!));
         if (!filter.Phone.IsNullOrEmpty()) query = query.Where(p => p.Phone.Contains(filter.Phone!));
+        if (filter.Gender.HasValue) query = query.Where(p => p.Gender == filter.Gender);
+        if (filter.BirthDate.HasValue) query = query.Where(p => p.BirthDate == filter.BirthDate);
+        if (!filter.Street.IsNullOrEmpty()) query = query.Where(p => p.Street.ToLower().Contains(filter.Street!.ToLower()));
+        if (!filter.HouseNumber.IsNullOrEmpty()) query = query.Where(p => p.HouseNumber.ToLower().Contains(filter.HouseNumber!.ToLower()));
+        if (!filter.Neighborhood.IsNullOrEmpty()) query = query.Where(p => p.Neighborhood.ToLower().Contains(filter.Neighborhood!.ToLower()));
+        if (!filter.City.IsNullOrEmpty()) query = query.Where(p => p.City.ToLower().Contains(filter.City!.ToLower()));
+        if (!filter.State.IsNullOrEmpty()) query = query.Where(p => p.State.ToLower().Contains(filter.State!.ToLower()));
+        if (!filter.Note.IsNullOrEmpty()) query = query.Where(p => p.Note.ToLower().Contains(filter.Note!.ToLower()));
 
         if (filter.Patient == true) query = query.Where(p => 
             patients.Any(pt => pt.PeopleId == p.Id));
@@ -64,7 +77,7 @@ public class PeopleRepository : BaseRepository<People>, IPeopleRepository
         else if (filter.OrderBy == OrderBy.Descending) query = query.OrderByDescending(p => p.Name);
 
         var peoples = await query
-            .Skip((filter.Page.Page - 1) * filter.Page.PageSize)
+            .Skip(filter.Page.Page * filter.Page.PageSize)
             .Take(filter.Page.PageSize)
             .ToListAsync();
 

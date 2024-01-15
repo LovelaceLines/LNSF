@@ -1,3 +1,5 @@
+import { iPeopleObject } from "..";
+
 export interface iPatientProvider {
     children: React.ReactNode
 }
@@ -5,6 +7,7 @@ export interface iPatientProvider {
 export interface iPatientObject {
     id: number,
     peopleId: number,
+    people?: iPeopleObject,
     hospitalId: number,
     socioeconomicRecord: boolean,
     term: boolean,

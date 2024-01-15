@@ -1,12 +1,26 @@
+import { iOrderBy, iPage } from "../types";
+
 export interface iUserProvider {
     children: React.ReactNode
+}
+
+export interface iUserFilter {
+    id?: string,
+    userName?: string,
+    email?: string,
+    phoneNumber?: string,
+    role?: string,
+    globalFilter?: string,
+    page?: iPage,
+    orderBy?: iOrderBy,
 }
 
 export interface iUser {
     id: string,
     userName: string,
     email: string,
-    phoneNumber?: string
+    phoneNumber?: string,
+    roles?: string[],
 }
 
 export interface iregisterUser {
@@ -59,5 +73,15 @@ export interface iUserTypes {
     viewRole(): Promise<iRole[] | Error>;
 
     viewUserRole(): Promise<iUserRole[] | Error>;
+
+    getUsers(filter: iUserFilter): Promise<iUser[]>;
+    getUserById(id: string): Promise<iUser>;
+    getCount(): Promise<number>;
+    postUser(data: iregisterUser): Promise<iUser>;
+    putUser(data: iUser): Promise<iUser>;
+    postAddUserToRole(data: iregisterUserRole): Promise<iUser>;
+    putPassword(data: iattPasswordUser): Promise<iUser>;
+    deleteUser(id: string): Promise<iUser>;
+    deleteRemoveUserFromRole(data: idelUserRole): Promise<iUser>;
 
 }

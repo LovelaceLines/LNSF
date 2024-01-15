@@ -1,3 +1,5 @@
+import { iPeopleObject } from "..";
+
 export interface iEscortProvider {
     children: React.ReactNode
 }
@@ -5,6 +7,7 @@ export interface iEscortProvider {
 export interface iEscortObject {
     id?: number,
     peopleId?: number,
+    people?: iPeopleObject,
 }
 
 export interface iEscortTypes {
@@ -15,4 +18,6 @@ export interface iEscortTypes {
     updateEscort(data: iEscortObject): Promise<iEscortObject | Error>;
     deleteEscort(data: iEscortObject): Promise<iEscortObject | Error>;
     countEscort(): Promise<number>;
+
+    getEscortById(filter: { id: number, getPeople: boolean }): Promise<iEscortObject>,
 }

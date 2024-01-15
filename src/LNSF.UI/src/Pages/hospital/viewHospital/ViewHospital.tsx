@@ -15,7 +15,8 @@ import { MRT_Localization_PT_BR } from 'material-react-table/locales/pt-BR';
 
 export const ViewHospital: React.FC = () => {
   const navigate = useNavigate();
-  const smDown = useMediaQuery(useTheme().breakpoints.down('sm'));
+  const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
   const { getHospitals, getCount } = useContext(HospitalContext);
   const [count, setCount] = useState<number>();
   const [globalFilter, setGlobalFilter] = useState<string>('');
@@ -23,6 +24,7 @@ export const ViewHospital: React.FC = () => {
   const [sortFilters, setSortFilters] = useState<MRT_SortingState>([{ id: "output", desc: true }]);
   const [columnVisibleState, setColumnVisibleState] = useState<MRT_VisibilityState>(LocalStorage.getColumnVisibilityHospital());
   const [pagination, setPagination] = useState<MRT_PaginationState>({ pageIndex: 0, pageSize: LocalStorage.getPageSize() });
+  const [isFullScreen, setIsFullScreen] = useState<boolean>(false);
   const [hospitals, setHospitals] = useState<iHospitalObject[]>([]);
   const [filters, setFilters] = useState<iHospitalFilter>({
     page: { page: pagination.pageIndex, pageSize: pagination.pageSize },
@@ -143,8 +145,9 @@ export const ViewHospital: React.FC = () => {
     data: hospitals,
     state: { 
       sorting: sortFilters, 
-      pagination: pagination, 
-      columnVisibility: columnVisibleState
+      pagination: pagination,
+      columnVisibility: columnVisibleState,
+      isFullScreen,
     },
  
     renderTopToolbarCustomActions: ({ table }) => renderTopToolbar(table),
@@ -165,6 +168,16 @@ export const ViewHospital: React.FC = () => {
     onPaginationChange: setPagination,
     paginationDisplayMode: 'pages',
     rowCount: count,
+
+    onIsFullScreenChange: () => setIsFullScreen(!isFullScreen),
+
+    muiTablePaperProps: ({ table }) => ({ style: {
+      zIndex: isFullScreen ? 10000 : undefined,
+    }}),
+
+    mrtTheme : {
+      baseBackgroundColor: theme.palette.background.paper,
+    },
  
     localization: MRT_Localization_PT_BR,
   });

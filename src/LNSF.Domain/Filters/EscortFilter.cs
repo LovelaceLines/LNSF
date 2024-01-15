@@ -4,6 +4,7 @@ public class EscortFilter
 {
     public int? Id { get; set; }
     public int? PeopleId { get; set; }
+    public bool? GetPeople { get; set; }
     public bool? Active { get; set; }
     public bool? IsVeteran { get; set; }
     

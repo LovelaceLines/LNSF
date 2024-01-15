@@ -24,8 +24,8 @@ public class RoomsRepository : BaseRepository<Room>, IRoomRepository
         var query = _rooms;
 
         if (filter.Id.HasValue) query = query.Where(r => r.Id == filter.Id);
-        if (!filter.Number.IsNullOrEmpty()) query = query.Where(r => r.Number.ToLower() == filter.Number!.ToLower());
-        if (filter.Bathroom.HasValue) query = query.Where(r => r.Bathroom);
+        if (!filter.Number.IsNullOrEmpty()) query = query.Where(r => r.Number.ToLower().Contains(filter.Number!.ToLower()));
+        if (filter.Bathroom.HasValue) query = query.Where(r => r.Bathroom == filter.Bathroom);
         if (filter.Beds.HasValue) query = query.Where(r => r.Beds == filter.Beds);
         if (filter.Storey.HasValue) query = query.Where(r => r.Storey == filter.Storey);
         if (filter.Available.HasValue) query = query.Where(r => r.Available == filter.Available);
@@ -34,7 +34,7 @@ public class RoomsRepository : BaseRepository<Room>, IRoomRepository
         else if (filter.OrderBy == OrderBy.Descending) query = query.OrderByDescending(r => r.Number);
 
         var rooms = await query
-            .Skip((filter.Page.Page - 1) * filter.Page.PageSize)
+            .Skip(filter.Page.Page * filter.Page.PageSize)
             .Take(filter.Page.PageSize)
             .ToListAsync();
 

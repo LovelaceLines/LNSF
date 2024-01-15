@@ -1,3 +1,4 @@
+using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Enums;
 using LNSF.Domain.Filters;
@@ -22,7 +23,7 @@ public class HostingRepository : BaseRepository<Hosting>, IHostingRepository
         _hostingsEscorts = _context.HostingsEscorts.AsNoTracking();
     }
 
-    public async Task<List<Hosting>> Query(HostingFilter filter)
+    public async Task<List<HostingDTO>> Query(HostingFilter filter)
     {
         var query = _hostings;
         var hostingsEscorts = _hostingsEscorts;
@@ -39,13 +40,33 @@ public class HostingRepository : BaseRepository<Hosting>, IHostingRepository
         else if (filter.Active == false) query = query.Where(h =>
             !(h.CheckIn <= DateTime.Now && DateTime.Now <= h.CheckOut));
 
-        if (filter.OrderBy == OrderBy.Ascending) query = query.OrderBy(h => h.CheckIn);
-        else if (filter.OrderBy == OrderBy.Descending) query = query.OrderByDescending(h => h.CheckIn);
-
-        var hostings = await query
-            .Skip((filter.Page.Page - 1) * filter.Page.PageSize)
+        List<HostingDTO> hostings = await query
+            .Skip(filter.Page.Page * filter.Page.PageSize)
             .Take(filter.Page.PageSize)
+            .Select(h => new HostingDTO
+            {
+                Id = h.Id,
+                CheckIn = h.CheckIn,
+                CheckOut = h.CheckOut,
+                PatientId = h.PatientId,
+                Patient = filter.GetPatient.GetValueOrDefault(false) ? h.Patient : null,
+            })
             .ToListAsync();
+        
+        if (filter.GetPatient == true && filter.GetPatientPeople == true)
+            hostings.ForEach(h => h.Patient!.People = _context.Peoples.AsNoTracking()
+                .FirstOrDefault(p => p.Id == h.Patient.PeopleId));
+
+        if (filter.GetEscort == true)
+        {
+            hostings.ForEach(h => h.Escorts = _context.Escorts.AsNoTracking()
+                .Where(e => hostingsEscorts.Any(he => he.HostingId == h.Id && he.EscortId == e.Id))
+                .ToArray());
+            
+            if (filter.GetEscortPeople == true)
+                hostings.ForEach(h => h.Escorts!.ToList().ForEach(e => e.People = _context.Peoples.AsNoTracking()
+                    .FirstOrDefault(p => p.Id == e.PeopleId)));
+        }
 
         return hostings;
     }

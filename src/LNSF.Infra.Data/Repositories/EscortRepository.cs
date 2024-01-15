@@ -45,9 +45,13 @@ public class EscortRepository : BaseRepository<Escort>, IEscortRepository
         else if (filter.OrderBy == OrderBy.Descending) query = query.OrderByDescending(x => x.Id);
 
         var escorts = await query
-            .Skip((filter.Page.Page - 1) * filter.Page.PageSize)
+            .Skip(filter.Page.Page * filter.Page.PageSize)
             .Take(filter.Page.PageSize)
             .ToListAsync();
+
+        if (filter.GetPeople == true)
+            escorts.ForEach(e => e.People = _context.Peoples.AsNoTracking()
+                .FirstOrDefault(p => p.Id == e.PeopleId));
 
         return escorts;
     }

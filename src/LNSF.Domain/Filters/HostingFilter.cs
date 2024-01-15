@@ -8,7 +8,11 @@ public class HostingFilter
 	public DateTime? CheckIn { get; set; }
 	public DateTime? CheckOut { get; set; }
 	public int? PatientId { get; set; }
+	public bool? GetPatient { get; set; }
+	public bool? GetPatientPeople { get; set; }
 	public int? EscortId { get; set; }
+	public bool? GetEscort { get; set; }
+	public bool? GetEscortPeople { get; set; }
 	public bool? Active { get; set; }
 
 	public Pagination Page { get; set; } = new();

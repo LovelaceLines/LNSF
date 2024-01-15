@@ -8,7 +8,6 @@ public class RoomFilter
     public string? Number { get; set; }
     public bool? Bathroom { get; set; }
     public int? Beds { get; set; }
-    public bool? Vacant { get; set; }
     public int? Storey { get; set; }
     public bool? Available { get; set; }
 
@@ -21,7 +20,6 @@ public class RoomFilter
         string? number = null, 
         bool? bathroom = null, 
         int? beds = null, 
-        bool? vacant = null, 
         int? storey = null, 
         bool? available = null, 
         Pagination? page = null, 
@@ -31,7 +29,6 @@ public class RoomFilter
         Number = number;
         Bathroom = bathroom;
         Beds = beds;
-        Vacant = vacant;
         Storey = storey;
         Available = available;
         Page = page ?? Page;

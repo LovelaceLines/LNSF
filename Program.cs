@@ -79,6 +79,7 @@ var autoMapperConfig = new MapperConfiguration(configure =>
     configure.CreateMap<Treatment, TreatmentPostViewModel>().ReverseMap();
 
     configure.CreateMap<Hosting, HostingViewModel>().ReverseMap();
+    configure.CreateMap<HostingDTO, HostingViewModel>().ReverseMap();
     configure.CreateMap<Hosting, HostingPostViewModel>().ReverseMap();
 
     configure.CreateMap<HostingEscort, HostingEscortViewModel>().ReverseMap();

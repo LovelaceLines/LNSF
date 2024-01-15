@@ -133,6 +133,28 @@ export class LocalStorage {
     localStorage.setItem('@lnsf:columnVisibilityHosting', JSON.stringify(columnVisibilityHosting));
   }
 
+  static getColumnVisibilityRoom(): { [x: string]: boolean } {
+    const columnVisibilityRoom = localStorage.getItem('@lnsf:columnVisibilityRoom');
+
+    if (!columnVisibilityRoom) return { id: false };
+    return JSON.parse(columnVisibilityRoom);
+  }
+
+  static setColumnVisibilityRoom(columnVisibilityRoom: { [x: string]: boolean }) {
+    localStorage.setItem('@lnsf:columnVisibilityRoom', JSON.stringify(columnVisibilityRoom));
+  }
+
+  static getColumnVisibilityUser(): { [x: string]: boolean } {
+    const columnVisibilityUser = localStorage.getItem('@lnsf:columnVisibilityUser');
+
+    if (!columnVisibilityUser) return { id: false };
+    return JSON.parse(columnVisibilityUser);
+  }
+
+  static setColumnVisibilityUser(columnVisibilityUser: { [x: string]: boolean }) {
+    localStorage.setItem('@lnsf:columnVisibilityUser', JSON.stringify(columnVisibilityUser));
+  }
+
   static clearAll() {
     localStorage.clear();
   }

@@ -1,8 +1,9 @@
 import { createContext, useCallback, useState } from "react";
-import { iRoomObject, iRoomProvider, iRoomRegister, iRoomTypes } from "./type";
+import { iRoomFilter, iRoomObject, iRoomProvider, iRoomRegister, iRoomTypes } from "./type";
 import { toast } from "react-toastify";
 import { Api } from "../../services/api/axios";
 import { Environment } from "../../environment";
+import { Filter } from "@mui/icons-material";
 
 
 export const RoomContext = createContext({} as iRoomTypes);
@@ -95,9 +96,39 @@ export const RoomProvider = ({ children }: iRoomProvider) => {
         return 0;
     }, []);
 
+    const getRooms = useCallback(async (Filter?: iRoomFilter) => {
+        const res = await Api.get<iRoomObject[]>('/Room', { params: Filter });
+        const rooms = res.data;
+        return rooms;
+    }, []);
+
+    const getRoomById = useCallback(async (id: number) => {
+        const res = await Api.get<iRoomObject>(`/Room/`, { params: id });
+        const room = res.data;
+        return room;
+    }, []);
+
+    const getCount = useCallback(async () => {
+        const res = await Api.get<number>('/Room/count');
+        const count = res.data;
+        return count;
+    }, []);
+
+    const postRoom = useCallback(async (data: iRoomRegister) => {
+        const res = await Api.post<iRoomObject>('/Room', data);
+        const room = res.data;
+        return room;
+    }, []);
+
+    const putRoom = useCallback(async (data: iRoomObject) => {
+        const res = await Api.put<iRoomObject>('/Room', data);
+        const room = res.data;
+        return room;
+    }, []);
+
 
     return (
-        <RoomContext.Provider value={{ room, setRoom, viewRoom, registerRoom, updateRoom, returnQuantity }}>
+        <RoomContext.Provider value={{ room, setRoom, viewRoom, registerRoom, updateRoom, returnQuantity, getRooms, getRoomById, getCount, postRoom, putRoom }}>
             {children}
         </RoomContext.Provider>
     )
