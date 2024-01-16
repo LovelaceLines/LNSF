@@ -13,7 +13,7 @@ public class GlobalValidator
     public static string InvalidEmailFormat() => "E-mail inválido.";
     public static string InvalidAge() => "Idade inválida.";
     public static string InvalidDateTimeFormat() => "Data inválida. Use o formato dd/MM/yyyy HH:mm";
-    public static string InvalidPhoneFormat() => "Telefone inválido. Use o formato (XX) X XXXX-XXXX";
+    public static string InvalidPhoneFormat() => "Telefone inválido. Use o formato (XX) XXXXX-XXXX ou XXXX-XXXX";
     public static string InvalidDateFormat() =>  "Data inválida. Use o formato dd/MM/yyyy";
 }
 
@@ -22,7 +22,8 @@ public class PhoneValidator : AbstractValidator<string>
     public PhoneValidator()
     {
         RuleFor(x => x)
-            .Matches(@"^\(\d{2}\) \d \d{4}-\d{4}$").WithMessage(GlobalValidator.InvalidPhoneFormat());
+            .Matches(@"^(?:\(\d{2}\)\s\d{1})?(\d{4}-\d{4})$")
+            .WithMessage(GlobalValidator.InvalidPhoneFormat());
     }
 }
 

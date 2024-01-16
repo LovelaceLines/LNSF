@@ -19,7 +19,7 @@ public class PeoplePostViewModelFake : Faker<PeoplePostViewModel>
         RuleFor(p => p.Neighborhood, f => neighborhood ?? f.Address.State());
         RuleFor(p => p.City, f => city ?? f.Address.City());
         RuleFor(p => p.State, f => state ?? f.Address.State());
-        RuleFor(p => p.Phone, f => phone ?? f.Phone.PhoneNumber("(##) # ####-####"));
+        RuleFor(p => p.Phone, f => phone ?? f.Phone.PhoneNumber("(##) #####-####"));
         RuleFor(p => p.Note, f => note ?? f.Lorem.Sentence(10));
     }
 }

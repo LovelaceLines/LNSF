@@ -33,6 +33,41 @@ public class PeopleTestApi : GlobalClientRequest
         Assert.Equivalent(peopleFake, peoplePosted);
         Assert.Equivalent(peoplePosted, peopleQueried);
     }
+
+    [Fact]
+    public async Task Post_validPeopleWithPhoneNumber_OK()
+    {
+        // Arrange - People
+        var acceptPeople1 = new PeoplePostViewModelFake(phone: new Bogus.DataSets.PhoneNumbers().PhoneNumber("(##) #####-####"));
+        var acceptPeople2 = new PeoplePostViewModelFake(phone: new Bogus.DataSets.PhoneNumbers().PhoneNumber("####-####"));
+
+        var peopleNotAccept1 = new PeoplePostViewModelFake(phone: new Bogus.DataSets.PhoneNumbers().PhoneNumber("(##) # ####-####"));
+        var peopleNotAccept2 = new PeoplePostViewModelFake(phone: new Bogus.DataSets.PhoneNumbers().PhoneNumber("(##) ####-####"));
+        var peopleNotAccept6 = new PeoplePostViewModelFake(phone: new Bogus.DataSets.PhoneNumbers().PhoneNumber("## (##) ####-####"));
+        var peopleNotAccept7 = new PeoplePostViewModelFake(phone: new Bogus.DataSets.PhoneNumbers().PhoneNumber("## (##) # ####-####"));
+
+        // Arrange - Count
+        var countBefore = await GetCount(_peopleClient);
+
+        // Act - People
+        var peoplePosted1 = await Post<PeopleViewModel>(_peopleClient, acceptPeople1.Generate());
+        var peoplePosted2 = await Post<PeopleViewModel>(_peopleClient, acceptPeople2.Generate());
+
+        var exception1 = await Post<AppException>(_peopleClient, peopleNotAccept1.Generate());
+        var exception2 = await Post<AppException>(_peopleClient, peopleNotAccept2.Generate());
+        var exception6 = await Post<AppException>(_peopleClient, peopleNotAccept6.Generate());
+        var exception7 = await Post<AppException>(_peopleClient, peopleNotAccept7.Generate());
+
+        // Act - Count
+        var countAfter = await GetCount(_peopleClient);
+
+        // Assert
+        Assert.Equal(countBefore + 2, countAfter);
+        Assert.Equal(HttpStatusCode.BadRequest, exception1.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, exception2.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, exception6.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, exception7.StatusCode);
+    }
     
     [Fact]
     public async Task Post_InvalidPeople_BadRequest()
