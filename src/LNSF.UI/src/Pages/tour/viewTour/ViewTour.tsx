@@ -212,7 +212,7 @@ export const ViewTour: React.FC = () => {
  
   const renderActions = (row: MRT_Row<iTourObject>) => (
     <Box display='flex' flexDirection='row' flexWrap='nowrap'>
-      <IconButton onClick={() => navigate(`/inicio/passeio/editar/${row.original.id}`)}>
+      <IconButton onClick={() => navigate(`/inicio/registrodiario/${row.original.id}`)}>
         <EditRoundedIcon />
       </IconButton>
     </Box>

@@ -32,7 +32,7 @@ export const useCustomForm = () => {
     }, []);
   
     const handleIsSaveAndClose = useCallback(() => {
-      return isSavingAndClose.current;
+      return isSavingAndClose.current ;
     }, []);
   
   

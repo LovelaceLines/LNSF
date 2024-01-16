@@ -1,12 +1,15 @@
-import { Box, Divider, Grid, LinearProgress, Toolbar, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Divider, Grid, InputLabel, LinearProgress, OutlinedInput, Toolbar, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom"
 import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
 import { ButtonAction } from "../../../Component";
 import { useContext, useEffect, useState, } from "react";
-import { TourContext, iAttObject, iTourObject } from "../../../Contexts";
+import { TourContext, iAttObject, iTourFilter, iTourObject } from "../../../Contexts";
 import { Form } from "@unform/web";
 import { IFormErrorsCustom, TextFieldCustom, useCustomForm } from "../../../Component/forms";
 import * as yup from 'yup';
+import { MRT_PaginationState } from "material-react-table";
+import { iOrderBy } from "../../../Contexts/types";
+import { LocalStorage } from '../../../Global/LocalStorage';
 
 const formValidateSchema: yup.Schema<iAttObject> = yup.object().shape({
     output: yup.date().required('Campo de data é obrigatório'),
@@ -18,80 +21,110 @@ const formValidateSchema: yup.Schema<iAttObject> = yup.object().shape({
 export const PutAllPasseio: React.FC = () => {
 
     const { id = 'false' } = useParams<'id'>();
-    const theme = useTheme();
-    const smDown = useMediaQuery(theme.breakpoints.down('sm'));
     const navigate = useNavigate();
-    const [isLoadind, setIsLoading] = useState(false);
-    const { viewTour, updateAllTour } = useContext(TourContext);
-    const [modify, setModify] = useState(false);
-
+    const smDown = useMediaQuery(useTheme().breakpoints.down('sm'));
+    const { getTours, putAllTour } = useContext(TourContext);
+    const [tours, setTours] = useState<iTourObject[]>([]);
+    const [globalFilter, setGlobalFilter] = useState<string>('');
+    const [pagination, setPagination] = useState<MRT_PaginationState>({ pageIndex: 0, pageSize: LocalStorage.getPageSize() });
+    const [inOpenFilter, setInOpenFilter] = useState<boolean>(true);
+    const [filters, setFilters] = useState<iTourFilter>({
+        page: { page: pagination.pageIndex, pageSize: pagination.pageSize },
+        orderBy: iOrderBy.descendent,
+        inOpen: inOpenFilter,
+        id: Number(id),
+        getPeople: true
+    });
+    const [isLoadind, setIsLoading] = useState(true);
     const { formRef, save } = useCustomForm();
 
+    const [outputDate, setOutputDate] = useState<Date | null>(null);
+    const [outputTime, setOutputTime] = useState<Date | null>(null);
+
+    const [inputDate, setInputDate] = useState<Date | null>(null);
+    const [inputTime, setInputTime] = useState<Date | null>(null);
+
+
+    const combineDateAndTime = (date: Date | null, time: Date | null): Date | null => {
+        if (!date || !time) return null;
+        const combinedDateTime = new Date(date);
+        combinedDateTime.setHours(time.getHours(), time.getMinutes(), time.getSeconds());
+        return combinedDateTime;
+    };
+
     useEffect(() => {
+        setFilters({ ...filters, globalFilter: globalFilter });
+    }, [globalFilter]);
 
-        if (id !== 'false') {
-            setIsLoading(true);
+    const fetchTours = async () => {
+        setIsLoading(true)
+        const tours = await getTours(filters);
 
-            viewTour(1, id, 'id')
-                .then((response) => {
-                    if (response instanceof Error) {
-                        setIsLoading(false);
-                    } else {
-                        formRef.current?.setData(response[0]);
-                        setIsLoading(false);
-                    }
-                })
-                .catch((error) => {
-                    setIsLoading(false);
-                    console.error('Detalhes do erro:', error);
-                });
-        }
-    }, [id, modify])
+        const outputDateTime = new Date(tours[0].output);
+
+        setOutputDate(outputDateTime);
+        setOutputTime(outputDateTime);
+        const inputDateTime = new Date(tours[0].input);
+        setInputDate(inputDateTime);
+        setInputTime(inputDateTime);
+
+        tours[0].output = outputDateTime.toISOString().split('T')[0]
+
+        formRef.current?.setData(tours[0]);
+        setTours(tours);
+        setIsLoading(false)
+    };
+
+    useEffect(() => {
+        fetchTours()
+    }, [])
 
 
     const handSave = (dados: iAttObject) => {
+        console.log("oiiiii")
 
-        formValidateSchema.
-            validate(dados, { abortEarly: false })
-            .then((dadosValidados) => {
-                setIsLoading(true)
+        // formValidateSchema.
+        //     validate(dados, { abortEarly: false })
+        //     .then((dadosValidados) => {
 
-                if (id !== 'false') {
 
-                    const data: iTourObject = {
-                        id: Number(id),
-                        output: dadosValidados.output,
-                        input: dadosValidados.input,
-                        note: dadosValidados.note,
-                        peopleId: dadosValidados.peopleId,
-                    }
+        //         if (id !== 'false') {
 
-                    updateAllTour(data)
-                        .then((response) => {
-                            if (response instanceof Error) {
-                                setIsLoading(false);
-                            } else {
-                                setModify(!modify)
-                                setIsLoading(false);
-                                navigate(`/inicio/registrodiario/visualizar`)
-                            }
-                        })
-                        .catch((error) => {
-                            setIsLoading(false);
-                            console.error('Detalhes do erro:', error);
-                        });
-                }
-            })
-            .catch((errors: yup.ValidationError) => {
-                const ValidationError: IFormErrorsCustom = {}
+        //             const data: iTourObject = {
+        //                 id: Number(id),
+        //                 output: dadosValidados.output,
+        //                 input: dadosValidados.input,
+        //                 note: dadosValidados.note,
+        //                 peopleId: dadosValidados.peopleId,
+        //             }
 
-                errors.inner.forEach(error => {
-                    if (!error.path) return;
-                    ValidationError[error.path] = error.message;
-                });
-                console.log(errors.errors);
-                formRef.current?.setErrors(ValidationError)
-            })
+
+        //             putAllTour(data)
+        //                 .then((response) => {
+        //                     if (response instanceof Error) {
+        //                         toast.error(response.message);
+        //                     } else {
+        //                         setModify(!modify)
+
+        //                         navigate(`/inicio/registrodiario/visualizar`)
+        //                     }
+        //                 })
+        //                 .catch((error) => {
+
+        //                     console.error('Detalhes do erro:', error);
+        //                 });
+        //         }
+        //     })
+        //     .catch((errors: yup.ValidationError) => {
+        //         const ValidationError: IFormErrorsCustom = {}
+
+        //         errors.inner.forEach(error => {
+        //             if (!error.path) return;
+        //             ValidationError[error.path] = error.message;
+        //         });
+        //         console.log(errors.errors);
+        //         formRef.current?.setErrors(ValidationError)
+        //     })
     };
 
     return (
@@ -113,11 +146,9 @@ export const PutAllPasseio: React.FC = () => {
                     </Typography>
 
                     < ButtonAction
+                        mostrarBotaoSalvar
+                        mostrarBotaoVoltar
 
-                        mostrarBotaoNovo={false}
-                        mostrarBotaoApagar={false}
-                        mostrarBotaoSalvar={true}
-                        mostrarBotaoSalvarEFechar={false}
                         aoClicarEmSalvar={save}
 
                         aoClicarEmVoltar={() => { navigate('/inicio/registrodiario/visualizar') }}
@@ -145,18 +176,21 @@ export const PutAllPasseio: React.FC = () => {
                             <Grid container item direction='row' spacing={2}>
                                 <Grid item xs={4}>
                                     <TextFieldCustom
+                                        id="date"
                                         fullWidth
-                                        type="datetime-local"
+                                        type="date"
                                         label="Horário de Saída"
                                         name="output"
                                         disabled={isLoadind}
                                     />
+
                                 </Grid>
                                 <Grid item xs={4}>
                                     <TextFieldCustom
+                                        id="date"
                                         fullWidth
-                                        type="datetime-local"
-                                        label="Horário de Chegada"
+                                        type="date"
+                                        label="Horário de chegada"
                                         name="input"
                                         disabled={isLoadind}
                                     />

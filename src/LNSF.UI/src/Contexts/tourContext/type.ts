@@ -35,6 +35,10 @@ export interface iTourRegister {
     note: string,
     peopleId: number, 
 }
+export interface iTourRegisterYupSchema {
+    note: string,
+    id: number, 
+}
 
 export interface iTourUpdate {
     id: number,

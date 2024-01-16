@@ -62,13 +62,13 @@ export const AppRoutes = () => {
           <Route path="/inicio/tratamentos/gerenciar/:id" element={<Dashboard children={<TelaDeGerenciamentoTratamentos />} />} />}
 
         {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
-          <Route path="/inicio/registrodiario/visualizar/:id" element={<Dashboard children={<PutAllPasseio />} />} />}
+          <Route path="/inicio/registrodiario/:id" element={<Dashboard children={<PutAllPasseio />} />} />}
 
         {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
           <Route path="/inicio/registrodiario/visualizar" element={<Dashboard children={<ViewTour />} />} />}
 
         {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
-          <Route path="/inicio/registrodiario/adicionar" element={<Dashboard children={<RegisterTour />} />} />}
+          <Route path="/inicio/registrodiario/cadastrar" element={<Dashboard children={<RegisterTour />} />} />}
 
         {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
           <Route path="/inicio" element={<Dashboard />} />}
