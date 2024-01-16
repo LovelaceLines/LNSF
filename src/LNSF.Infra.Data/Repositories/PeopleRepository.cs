@@ -72,6 +72,13 @@ public class PeopleRepository : BaseRepository<People>, IPeopleRepository
             &&
             !hostingsEscorts.Any(he => he.Escort!.PeopleId == p.Id &&
                 he.Hosting!.CheckIn <= DateTime.Now && DateTime.Now <= he.Hosting.CheckOut));
+        
+        if (filter.Veteran == true) query = query.Where(p =>
+            hostings.Count(h => h.Patient!.PeopleId == p.Id) +
+            hostingsEscorts.Count(he => he.Escort!.PeopleId == p.Id) > 1);
+        else if (filter.Veteran == false) query = query.Where(p =>
+            hostings.Count(h => h.Patient!.PeopleId == p.Id) +
+            hostingsEscorts.Count(he => he.Escort!.PeopleId == p.Id) <= 1);
 
         if (filter.OrderBy == OrderBy.Ascending) query = query.OrderBy(p => p.Name);
         else if (filter.OrderBy == OrderBy.Descending) query = query.OrderByDescending(p => p.Name);

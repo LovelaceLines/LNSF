@@ -20,6 +20,7 @@ public class PeopleFilter
     public bool? Patient { get; set; }
     public bool? Escort { get; set; }
     public bool? Active { get; set; }
+    public bool? Veteran { get; set; }
     public string? GlobalFilter { get; set; }
     
     public Pagination Page { get; set; } = new();
@@ -43,6 +44,7 @@ public class PeopleFilter
         bool? patient = null,
         bool? escort = null,
         bool? active = null,
+        bool? veteran = null,
         Pagination? page = null,
         OrderBy? orderBy = null)
     {
