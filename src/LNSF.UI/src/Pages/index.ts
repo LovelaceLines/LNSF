@@ -15,7 +15,7 @@ export * from './tour/registerTour/RegisterTour'
 export * from './tour/registerTour/PutAllPasseio'
 export * from './tour/viewTour/ViewTour'
 
-export * from './account/Account'
+export * from './account/ViewAccount'
 export * from './account/registerAccount/TelaDeGerenciamentoAccount'
 
 

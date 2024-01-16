@@ -13,7 +13,7 @@ import { LocalStorage } from '../../Global';
 import { iOrderBy, iPage } from '../../Contexts/types';
 import { MRT_Localization_PT_BR } from 'material-react-table/locales/pt-BR';
 
-export const Account: React.FC = () => {
+export const ViewAccount: React.FC = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
