@@ -340,8 +340,8 @@ export const AccountProvider = ({ children }: iUserProvider) => {
     }, []);
 
     const getUserById = useCallback(async (id: string): Promise<iUser> => {
-        const res = await Api.get<iUser>(`/User/`, { params: { id: id } });
-        const user = res.data;
+        const res = await Api.get<iUser[]>(`/User/`, { params: { id: id } });
+        const user = res.data[0];
         return user;
     }, []);
 

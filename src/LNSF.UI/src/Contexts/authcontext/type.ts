@@ -32,8 +32,9 @@ export interface iToken {
 
 export interface iRegisterUser {
     userName: string;
+    email: string;
+    phoneNumber: string;
     password: string;
-    role: number;
 }
 export interface iAttUser {
     id: string;

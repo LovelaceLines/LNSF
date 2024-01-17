@@ -1,263 +1,301 @@
-import { Box, Divider, FormControl, FormControlLabel, Grid, LinearProgress, Switch, Toolbar, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Button, Chip, Divider, FormControl, FormControlLabel, Grid, InputLabel, LinearProgress, MenuItem, NativeSelect, Select, Switch, TextField, Toolbar, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom"
 import SupervisedUserCircleRoundedIcon from '@mui/icons-material/SupervisedUserCircleRounded';
 import { ButtonAction } from "../../../Component";
 import { ChangeEvent, useContext, useEffect, useState, } from "react";
-import { AccountContext, iUser, iattAccount, iregisterAccount } from "../../../Contexts";
+import { AccountContext, RoleContext, iRegisterUser } from "../../../Contexts";
+import { iregisterUser, iattPasswordUser, iregisterUserRole } from "../../../Contexts/accountContext/type";
+import { RoleString } from "../../../Contexts/roleContext/type";
 import { Form } from "@unform/web";
+import SaveIcon from '@mui/icons-material/Save';
 import { IFormErrorsCustom, TextFieldCustom, useCustomForm } from "../../../Component/forms";
 import * as yup from 'yup';
 import { TextSelectCustom } from "../../../Component/forms/TextSelectCustom";
-import { is } from "date-fns/locale";
+import { iUser } from "../../../Contexts/accountContext/type";
+ 
+const putUserFormValidateSchema: yup.Schema = yup.object<iUser>().shape({
+  id: yup.string().required(),
+  userName: yup.string().required().min(1),
+  email: yup.string().required().email(),
+  phoneNumber: yup.string().required().min(11),
+});
+
+const addUserFormValidateSchema: yup.Schema = yup.object<iRegisterUser>().shape({
+  userName: yup.string().required().min(1),
+  email: yup.string().required().email(),
+  phoneNumber: yup.string().required().min(11),
+  password: yup.string().required().min(6),
+});
+
+const passwordFormValidateSchema: yup.Schema = yup.object<iattPasswordUser>().shape({
+  id: yup.string().required(),
+  newPassword: yup.string().required().min(6),
+  oldPassword: yup.string().required().min(6),
+});
+
+const userRoleFormValidateSchema: yup.Schema = yup.object<iregisterUserRole>().shape({
+  userId: yup.string().required(),
+  roleName: yup.string().required(),
+});
 
 export const TelaDeGerenciamentoAccount: React.FC = () => {
-    const { id = 'cadastrar' } = useParams<'id'>();
-    const theme = useTheme();
-    const smDown = useMediaQuery(theme.breakpoints.down('sm'));
-    const navigate = useNavigate();
-    const [isLoadind, setIsLoading] = useState(false);
-    const [valueId, setvalueId] = useState('');
-    const { getUserById, postUser, postAddUserToRole, putUser, putPassword, deleteRemoveUserFromRole } = useContext(AccountContext);
-    const { formRef, save, isSaveAndClose, saveAndClose } = useCustomForm();
-    const [isPasswordChange, setIsPasswordChange] = useState(false);
-
-    const handleSwitchChange = (event: ChangeEvent<HTMLInputElement>) => {
-        console.log(event.target.checked)
-        setIsPasswordChange(event.target.checked);
-    };
-
-    const formValidateSchema: yup.Schema<iattAccount> = yup.object().shape({
-        userName: yup.string().required().min(1),
-        password: isPasswordChange === false ? yup.string() : yup.string().required().min(6),
-        oldPassword: (isPasswordChange === false || id === 'cadastrar') ? yup.string() : yup.string().required().min(6),
-        role: yup.number().required(),
-    })
-
-    useEffect(() => {
-
-        if (id !== 'cadastrar') {
-            setIsLoading(true);
-
-            getUserById(id)
-                .then((response) => {
-                    if (response instanceof Error) {
-                        setIsLoading(false);
-                    } else {
-                        formRef.current?.setData(response);
-                        setvalueId(response.id)
-                        setIsLoading(false);
-                    }
+  const { id = 'cadastrar' } = useParams<'id'>();
+  const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const mdDown = useMediaQuery(theme.breakpoints.down('md'));
+  const navigate = useNavigate();
+  const [isLoadind, setIsLoading] = useState(false);
+  const [valueId, setvalueId] = useState('');
+  const { getUserById, postUser, postAddUserToRole, putUser, putPassword, deleteRemoveUserFromRole } = useContext(AccountContext);
+  const { formRef, save, isSaveAndClose, saveAndClose } = useCustomForm();
+  const [isPasswordChange, setIsPasswordChange] = useState(false);
+  const [user, setUser] = useState<iUser>({} as iUser);
+  const [updatedUser, setUpdatedUser] = useState<iUser>({} as iUser);
+  const [updatedPassword, setUpdatedPassword] = useState<iattPasswordUser>({} as iattPasswordUser);
+ 
+  useEffect(() => {
+    if (id !== 'cadastrar') {
+      setIsLoading(true);
+ 
+      getUserById(id)
+        .then(user => {
+          setUser(user);
+          setUpdatedUser(user);
+          setUpdatedPassword({...updatedPassword, id: user.id})
+        })
+        .finally(() => setIsLoading(false))
+    }
+  }, [id])
+ 
+  useEffect(() => console.log('user', user), [user])
+  useEffect(() => console.log('updatedUser', updatedUser), [updatedUser])
+  useEffect(() => console.log('updatedPassword', updatedPassword), [updatedPassword])
+  useEffect(() => console.log('isPasswordChange', isPasswordChange), [isPasswordChange])
+ 
+  const handlerSave = () => {
+    setIsLoading(true);
+    if (id === 'cadastrar') {
+      addUserFormValidateSchema.validate(user, { abortEarly: false })
+      .then(validData => {
+        postUser(validData)
+        .then(user => {
+          setUser(user);
+          setUpdatedUser(user);
+        })
+        .then(_ => {
+          userRoleFormValidateSchema.validate({userId: updatedUser.id, roleName: updatedUser.roles ? updatedUser.roles[0] : ''}, { abortEarly: false })
+          .then(validData => {
+            postAddUserToRole(validData)
+            .then(user => {
+              setUser(user);
+              setUpdatedUser(user);
+            })
+          })
+        })
+        .finally(() => setIsLoading(false))
+      })
+    } else {
+      if (user.roles !== updatedUser.roles) {
+        userRoleFormValidateSchema.validate({userId: updatedUser.id, roleName: updatedUser.roles ? updatedUser.roles[0] : ''}, { abortEarly: false })
+        .then(validData => {
+          deleteRemoveUserFromRole(validData)
+          .then(user => {
+            setUser(user);
+            setUpdatedUser(user);
+          })
+        })
+        .then(_ => {
+          putUserFormValidateSchema.validate(updatedUser, { abortEarly: false })
+          .then(validData => {
+            putUser(validData)
+            .then(user => {
+              setUser(user);
+              setUpdatedUser(user);
+            })
+            .then(_ => {
+              userRoleFormValidateSchema.validate({userId: updatedUser.id, roleName: updatedUser.roles ? updatedUser.roles[0] : ''}, { abortEarly: false })
+              .then(validData => {
+                postAddUserToRole(validData)
+                .then(user => {
+                  setUser(user);
+                  setUpdatedUser(user);
                 })
-                .catch((error) => {
-                    setIsLoading(false);
-                    console.error('Detalhes do erro:', error);
-                });
-        } else {
-            setIsPasswordChange(true)
-        }
-    }, [id])
-
-
-    const handSave = (dados: iregisterAccount) => {
-
-        formValidateSchema.
-            validate(dados, { abortEarly: false })
-            .then((dadosValidados) => {
-                setIsLoading(true)
-
-                if (id === 'cadastrar') {
-
-                    const data: iregisterAccount = {
-                        userName: dadosValidados.userName || '',
-                        password: dadosValidados.password || '',
-                        role: Number(dadosValidados.role),
-                    }
-
-                    postUser(data)
-                        .then((response) => {
-                            if (response instanceof Error) {
-                                setIsLoading(false);
-                            } else {
-                                setIsLoading(false);
-                                if (isSaveAndClose()) {
-                                    navigate('/inicio/usuarios/gerenciar')
-                                } else {
-                                    navigate(`/inicio/usuarios/gerenciar/${response.id}`)
-                                }
-                            }
-                        })
-                        .catch((error) => {
-                            setIsLoading(false);
-                            console.error('Detalhes do erro:', error);
-                        });
-
-                } else {
-
-                    const data: iUser = {
-                        id: valueId,
-                        userName: dadosValidados.userName,
-                        email: dadosValidados.email,
-                        phone: dadosValidados.phone,
-                        roles: []
-                    }
-                    const data1: iattAccount = {
-                        id: valueId,
-                        newPassword: dadosValidados.password,
-                        oldPassword: dadosValidados.oldPassword,
-                    }
-
-                    isPasswordChange ? putUser(data)
-                        .then((response) => {
-                            if (response instanceof Error) {
-                                setIsLoading(false);
-                            } else {
-                                setIsLoading(false);
-                            }
-                        })
-                        .catch((error) => {
-                            setIsLoading(false);
-                            console.error('Detalhes do erro:', error);
-                        })
-                        :
-                        putUser(data1)
-                            .then((response) => {
-                                if (response instanceof Error) {
-                                    setIsLoading(false);
-                                } else {
-                                    setIsLoading(false);
-                                }
-                            })
-                            .catch((error) => {
-                                setIsLoading(false);
-                                console.error('Detalhes do erro:', error);
-                            });
-                }
+              })
             })
-            .catch((errors: yup.ValidationError) => {
-                const ValidationError: IFormErrorsCustom = {}
+            .finally(() => setIsLoading(false))
+          }) 
+        })
+        // .catch((errors: yup.ValidationError) => {
+        //     const ValidationError: IFormErrorsCustom = {}
 
-                errors.inner.forEach(error => {
-                    if (!error.path) return;
-                    ValidationError[error.path] = error.message;
-                });
-                console.log(errors.errors);
-                formRef.current?.setErrors(ValidationError)
-            })
-    };
+        //     errors.inner.forEach(error => {
+        //         if (!error.path) return;
+        //         ValidationError[error.path] = error.message;
+        //     });
+        //     console.log(errors.errors);
+        //     formRef.current?.setErrors(ValidationError)
+        // })
+      }
+    }
+  };
+ 
+  const changePassword = () => (
+    <Grid container item direction='row' spacing={2} paddingTop={2}>
+      <FormControlLabel
+        value="start"
+        control={ <Switch checked={isPasswordChange} onChange={_ => setIsPasswordChange(!isPasswordChange)} /> }
+        label="Alterar Senha?"
+        labelPlacement="start"
+      />
+      <Grid container item direction='row' spacing={2}>
+        <Grid item xs={smDown ? 12 : mdDown ? 6 : 4}>
+          <TextFieldCustom
+            value={updatedPassword.newPassword ?? ''}
+            onChange={(e) => setUpdatedPassword({ ...updatedPassword, newPassword: e.target.value})}
+            fullWidth
+            label="Senha Nova"
+            name="password"
+            disabled={isLoadind || !isPasswordChange}
+          />
+        </Grid>
+        <Grid item xs={smDown ? 12 : mdDown ? 6 : 4}>
+          <TextFieldCustom
+            value={updatedPassword.oldPassword ?? ''}
+            onChange={(e) => setUpdatedPassword({ ...updatedPassword, oldPassword: e.target.value})}
+            fullWidth
+            label="Senha Antiga"
+            name="oldPassword"
+            disabled={isLoadind || !isPasswordChange}
+          />
+        </Grid>
+      </ Grid>
+    </Grid>
+  );
+
+  const registerOrChangeUser = () => (
+    <Grid container spacing={2}>
+      <Grid item xs={smDown ? 12 : mdDown ? 6 : 4}>
+        <TextFieldCustom
+          value={updatedUser?.userName ?? ''}
+          onChange={(e) => setUpdatedUser({ ...updatedUser, userName: e.target.value})}
+          fullWidth
+          label="Nome de Usuário"
+          name="userName"
+          disabled={isLoadind}
+        />
+      </Grid>
+      <Grid item xs={smDown ? 12 : mdDown ? 6 : 4}>
+        <TextFieldCustom
+          value={updatedUser?.email ?? ''}
+          onChange={(e) => setUpdatedUser({ ...updatedUser, email: e.target.value})}
+          fullWidth
+          label="Email"
+          name="userName"
+          disabled={isLoadind}
+        />
+      </Grid>
+      <Grid item xs={smDown ? 12 : mdDown ? 6 : 4}>
+        <TextFieldCustom
+          value={updatedUser?.phoneNumber ?? ''}
+          onChange={(e) => setUpdatedUser({ ...updatedUser, phoneNumber: e.target.value})}
+          fullWidth
+          label="Número de Telefone"
+          name="phoneNumber"
+          disabled={isLoadind}
+        />
+      </Grid>
+      <Grid item xs={smDown ? 12 : mdDown ? 6 : 4}>
+        <TextSelectCustom
+          value={updatedUser?.roles ? updatedUser.roles[0] : RoleString.voluntario}
+          onChange={(e) => setUpdatedUser({ ...updatedUser, roles: [e.target.value]})}
+          fullWidth
+          name="role"
+          menu={[
+            {
+              nome: RoleString.administrador,
+              id: RoleString.administrador
+            },
+            {
+              nome: RoleString.assistenteSocial,
+              id: RoleString.assistenteSocial
+            },
+            {
+              nome: RoleString.secretario,
+              id: RoleString.secretario
+            },
+            {
+              nome: RoleString.voluntario,
+              id: RoleString.voluntario
+            },
+          ]}
+          disabled={isLoadind}
+          label="Função"
+        />
+      </Grid>
+      {id === 'cadastrar' && (<>
+      <Grid item xs={smDown ? 12 : mdDown ? 6 : 4}>
+        <TextFieldCustom
+          fullWidth
+          label="Senha"
+          name="password"
+          disabled={isLoadind}
+        />
+      </Grid>
+      <Grid item xs={smDown ? 12 : mdDown ? 6 : 4}>
+        <TextFieldCustom
+          fullWidth
+          label="Confirme a Senha"
+          name="password"
+          disabled={isLoadind}
+        />
+      </Grid>
+      </>)}
+    </Grid>
+  );
+
+  const header = () => (
+    <Box component={Toolbar} display='flex' flexDirection={smDown ? 'column' : 'row'}>
+      <Typography variant={smDown ? "h5" : "h4"} display='flex' alignItems='center' gap={2} flexGrow={1}>
+        {!smDown && (<SupervisedUserCircleRoundedIcon color='primary' fontSize="large"/>)}
+        Usuário
+      </Typography>
+
+      {!smDown && saveButton()}
+    </Box>
+  );
+
+  const saveButton = () => (
+    <Button 
+      variant={smDown ? 'contained' : 'outlined'}
+      startIcon={<SaveIcon />}
+      onClick={_ => handlerSave()}
+    >
+      Salvar
+    </Button>
+  );
 
   return (
-    <Box display='flex' flexDirection='column'>
-      <Box>
-        <Toolbar sx={{ flexGrow: 1, display: 'flex', flexDirection: smDown ? 'column' : 'row', alignItems: smDown ? 'left' : 'flex-end' }}>
-          <Typography
-            variant={smDown ? "h5" : "h4"}
-            noWrap
-            component="div"
-            sx={{ flexGrow: 1, display: 'flex', alignItems: 'flex-end' }}
-          >
-            {!smDown && (<SupervisedUserCircleRoundedIcon color='primary' sx={{ fontSize: '2.7rem', paddingRight: '10px' }} />)}
-            Usuários
-          </Typography>
+    <Box>
+      {header()}
 
-          <ButtonAction
-            mostrarBotaoNovo={false}
-            mostrarBotaoApagar={false}
-            mostrarBotaoSalvar={id === 'cadastrar' ? false : true}
-            mostrarBotaoSalvarEFechar={id !== 'cadastrar' ? false : true}
-            aoClicarEmSalvar={id !== 'cadastrar' ? save : undefined}
-            aoClicarEmSalvarEFechar={id === 'cadastrar' ? saveAndClose : undefined}
-            aoClicarEmVoltar={() => window.history.back()}
-          />
-        </Toolbar>
-      </Box>
       <Divider />
-      <Box style={{ maxHeight: '350px', overflowY: 'auto' }}>
-        <Form ref={formRef} onSubmit={(dados) => handSave(dados)}>
-          <Box margin={1} display='flex' flexDirection='column' >
-            <Grid container direction='column' padding={2} spacing={2}>
-              {isLoadind && (
-                <Grid item>
-                  <LinearProgress variant="indeterminate" />
-                </Grid>
-              )}
-              <Grid item>
-                <Typography variant={smDown ? "h6" : "h5"} >
-                  {(id !== 'cadastrar') ? 'Editar este usuário' : 'Cadastrar um novo usuário'}
-                  <Divider />
-                </Typography>
-              </Grid>
-              <Grid container item direction='row' spacing={2}>
-                <Grid item xs={6}>
-                  <TextFieldCustom
-                    fullWidth
-                    label="Email"
-                    name="userName"
-                    disabled={isLoadind}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextSelectCustom
-                      fullWidth
-                      name="role"
-                      menu={[
-                        {
-                          nome: 'Voluntário',
-                          id: '0'
-                        },
-                        {
-                          nome: 'Administrador',
-                          id: '1'
-                        },
-                        {
-                          nome: 'Assistente Social',
-                          id: '2'
-                        },
-                        {
-                          nome: 'Secretária',
-                          id: '3'
-                        }
-                      ]}
-                    disabled={isLoadind}
-                    label="Função"
-                  />
-                </Grid>
-              </Grid>
-              {id !== 'cadastrar' && (<Grid item xs={6}>
-                <FormControl >
-                  <FormControlLabel
-                    value="start"
-                    control={
-                      <Switch color="primary"
-                        checked={isPasswordChange}
-                        onChange={handleSwitchChange}
-                      />}
-                    label="Alterar Senha?"
-                    labelPlacement="start"
-                  />
-                </FormControl>
-              </Grid>)}
 
-              <Grid container item direction='row' spacing={2}>
-                <Grid item xs={6} >
+      <Box>
+        <Form ref={formRef} onSubmit={_ => handlerSave()}>
+          <Grid container direction='column' padding={2} gap={2}>
 
-                  <TextFieldCustom
-                    fullWidth
-                    label="Senha Nova"
-                    name="password"
-                    disabled={isLoadind || !isPasswordChange}
-                  />
-                </Grid>
-                {id !== 'cadastrar' && (<Grid item xs={6}>
-                  <TextFieldCustom
-                    fullWidth
-                    label="Senha Antiga"
-                    name="oldPassword"
-                    disabled={isLoadind || !isPasswordChange}
-                  />
-                </Grid>)}
-              </Grid>
-            </Grid>
-          </Box>
+            {isLoadind && <LinearProgress variant="indeterminate" />}
+
+            <Typography variant={smDown ? "h6" : "h5"} >
+              {id === 'cadastrar' ? 'Cadastrar um novo usuário' : 'Editar este usuário'}
+            </Typography>
+
+            {registerOrChangeUser()}
+
+            {id !== 'cadastrar' && changePassword()}
+
+            {smDown && saveButton()}
+          </Grid>
         </Form>
       </Box>
     </Box>
