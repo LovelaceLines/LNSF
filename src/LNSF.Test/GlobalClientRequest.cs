@@ -132,7 +132,7 @@ public class GlobalClientRequest
         var content = await response.Content.ReadAsStringAsync();
 
         if (response.StatusCode == HttpStatusCode.OK || typeof(T) == typeof(AppException))
-            return JsonConvert.DeserializeObject<T>(content) ?? 
+            return JsonConvert.DeserializeObject<T>(content) ??
                 throw new Exception("Deserialized object is null");
 
         throw new Exception($"Unexpected response status code: {content},\n{response.StatusCode},\n{response},\n{response!.RequestMessage!.RequestUri!.AbsoluteUri}}}");
@@ -154,20 +154,20 @@ public class GlobalClientRequest
 
         if (role.IsNullOrEmpty()) return user;
 
-        return await Post<UserViewModel>(_addUserToRoleClient, new UserRoleViewModel() { UserId = user.Id, RoleName = role!  } );
+        return await Post<UserViewModel>(_addUserToRoleClient, new UserRoleViewModel() { UserId = user.Id, RoleName = role! });
     }
 
     /// <returns>A new room if the id is null, otherwise the updated room.</returns>
     public async Task<RoomViewModel> GetRoom(int? id = null, bool? available = null, string? number = null, int? beds = null, int? storey = null)
     {
-        if (!id.HasValue) 
+        if (!id.HasValue)
             return await Post<RoomViewModel>(_roomClient, new RoomPostViewModelFake(available: available, number: number, beds: beds, storey: storey).Generate());
-        
+
         return await Put<RoomViewModel>(_roomClient, new RoomViewModelFake(id: id.Value, available: available, number: number, beds: beds, storey: storey).Generate());
     }
 
-    public async Task<PeopleViewModel> GetPeople(string? name = null, Gender? gender = null, DateTime? birthDate = null, string? rg = null, string? cpf = null, string? street = null, string? houseNumber = null, string? neighborhood = null, string? city = null, string? state = null, string? phone = null, string? note = null) =>
-        await Post<PeopleViewModel>(_peopleClient, new PeoplePostViewModelFake(name: name, gender: gender, birthDate: birthDate, rg: rg, cpf: cpf, street: street, houseNumber: houseNumber, neighborhood: neighborhood, city: city, state: state, phone: phone, note: note).Generate());
+    public async Task<PeopleViewModel> GetPeople(string? name = null, Gender? gender = null, DateTime? birthDate = null, string? rg = null, string? issuingBody = null, string? cpf = null, string? street = null, string? houseNumber = null, string? neighborhood = null, string? city = null, string? state = null, string? phone = null, string? note = null) =>
+        await Post<PeopleViewModel>(_peopleClient, new PeoplePostViewModelFake(name: name, gender: gender, birthDate: birthDate, rg: rg, issuingBody: issuingBody, cpf: cpf, street: street, houseNumber: houseNumber, neighborhood: neighborhood, city: city, state: state, phone: phone, note: note).Generate());
 
     public async Task<PeopleRoomViewModel> GetPeopleRoom(int? peopleId = null, int? roomId = null, int? hostingId = null, int? beds = null)
     {
@@ -178,7 +178,7 @@ public class GlobalClientRequest
             patient = await GetPatient();
             peopleId = patient.PeopleId;
         }
-        
+
         if (!roomId.HasValue)
         {
             var room = await GetRoom(available: true, beds: beds ?? 2);
@@ -205,10 +205,10 @@ public class GlobalClientRequest
 
         if (!id.HasValue)
             return await Post<EmergencyContactViewModel>(_emergencyContactClient, new EmergencyContactPostViewModelFake(peopleId: peopleId.Value, name: name, phone: phone).Generate());
-        
+
         if (id.HasValue && peopleId.HasValue)
             return await Put<EmergencyContactViewModel>(_emergencyContactClient, new EmergencyContactViewModelFake(id: id.Value, peopleId: peopleId.Value, name: name, phone: phone).Generate());
-        
+
         throw new AppException("Invalid parameters! You must provide id and peopleId or only peopleId.", HttpStatusCode.BadRequest);
     }
 
@@ -222,7 +222,7 @@ public class GlobalClientRequest
 
         if (id == 0)
             return await Post<TourViewModel>(_tourClient, new TourPostViewModelFake(peopleId: peopleId).Generate());
-        
+
         return await Put<TourViewModel>(_tourClient, new TourPutViewModelFake(id: id, peopleId: peopleId).Generate());
     }
 
@@ -230,7 +230,7 @@ public class GlobalClientRequest
     {
         if (!id.HasValue)
             return await Post<HospitalViewModel>(_hospitalClient, new HospitalPostViewModelFake(name: name, acronym: acronym).Generate());
-        
+
         return await Put<HospitalViewModel>(_hospitalClient, new HospitalViewModelFake(id.Value, name: name, acronym: acronym).Generate());
     }
 
@@ -258,9 +258,9 @@ public class GlobalClientRequest
 
         if (!id.HasValue)
             return await Post<PatientViewModel>(_patientClient, new PatientPostViewModelFake(peopleId: peopleId.Value, hospitalId: hospitalId.Value, socioeconomicRecord: socioeconomicRecord, term: term).Generate());
-        
+
         return await Put<PatientViewModel>(_patientClient, new PatientViewModelFake(id.Value, peopleId: peopleId.Value, hospitalId: hospitalId.Value, socioeconomicRecord: socioeconomicRecord, term: term).Generate());
-    } 
+    }
 
     public async Task<PatientTreatmentViewModel> GetPatientTreatment(int? patientId = null, int? treatmentId = null)
     {
@@ -290,7 +290,7 @@ public class GlobalClientRequest
 
         if (!id.HasValue)
             return await Post<EscortViewModel>(_escortClient, new EscortPostViewModelFake(peopleId: peopleId.Value).Generate());
-            
+
         return await Put<EscortViewModel>(_escortClient, new EscortViewModelFake(id.Value, peopleId: peopleId.Value).Generate());
     }
 

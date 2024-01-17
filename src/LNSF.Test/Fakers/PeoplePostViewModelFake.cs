@@ -7,13 +7,13 @@ namespace LNSF.Test.Fakers;
 
 public class PeoplePostViewModelFake : Faker<PeoplePostViewModel>
 {
-    public PeoplePostViewModelFake(string? name = null, Gender? gender = null, DateTime? birthDate = null, string? rg = null, string? cpf = null, string? street = null, string? houseNumber = null, string? neighborhood = null, string? city = null, string? state = null, string? phone = null, string? note = null)
+    public PeoplePostViewModelFake(string? name = null, Gender? gender = null, DateTime? birthDate = null, string? rg = null, string? issuingBody = null, string? cpf = null, string? street = null, string? houseNumber = null, string? neighborhood = null, string? city = null, string? state = null, string? phone = null, string? note = null)
     {
         RuleFor(p => p.Name, f => name ?? f.Person.FullName);
         RuleFor(p => p.Gender, f => gender ?? f.PickRandom<Gender>());
         RuleFor(p => p.BirthDate, f => birthDate ?? f.Person.DateOfBirth);
         RuleFor(p => p.RG, f => rg ?? f.Random.ReplaceNumbers("##.###.###-#"));
-        RuleFor(p => p.IssuingBody, f => f.Random.Replace("?????").ToUpper() + "-" + f.Random.Replace("??").ToUpper());
+        RuleFor(p => p.IssuingBody, f => issuingBody ?? f.Random.Replace("?????").ToUpper() + "-" + f.Random.Replace("??").ToUpper());
         RuleFor(p => p.CPF, f => cpf ?? f.Person.Cpf());
         RuleFor(p => p.Street, f => street ?? f.Address.StreetName());
         RuleFor(p => p.HouseNumber, f => houseNumber ?? f.Address.BuildingNumber());

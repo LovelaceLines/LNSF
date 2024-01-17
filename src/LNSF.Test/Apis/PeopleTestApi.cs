@@ -1,4 +1,6 @@
-﻿using LNSF.Api.ViewModels;
+﻿using Bogus.Extensions.Brazil;
+using LNSF.Api.ViewModels;
+using LNSF.Domain.Enums;
 using LNSF.Domain.Exceptions;
 using LNSF.Domain.Filters;
 using LNSF.Test.Fakers;
@@ -9,6 +11,297 @@ namespace LNSF.Test.Apis;
 
 public class PeopleTestApi : GlobalClientRequest
 {
+    [Fact]
+    public async Task Get_ValidPeopleNameQuery_Ok()
+    {
+        // Arrange - People
+        var name = new Bogus.DataSets.Name().FullName();
+        var people = await GetPeople(name: name);
+
+        // Act - Query
+        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, name: name));
+        var peopleQueried = query.FirstOrDefault();
+
+        // Assert
+        Assert.Equivalent(people, peopleQueried);
+    }
+
+    [Fact]
+    public async Task Get_ValidPeopleGenderQuery_Ok()
+    {
+        // Arrange - People
+        var gender = new Bogus.Faker().PickRandom<Gender>();
+        var people = await GetPeople(gender: gender);
+
+        // Act - Query
+        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, gender: gender));
+        var peopleQueried = query.FirstOrDefault();
+
+        // Assert
+        Assert.Equivalent(people, peopleQueried);
+    }
+
+    [Fact]
+    public async Task Get_ValidPeopleBirthDateQuery_Ok()
+    {
+        // Arrange - People
+        var birthDate = new Bogus.DataSets.Date().Past(100);
+        var people = await GetPeople(birthDate: birthDate);
+
+        // Act - Query
+        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, birthDate: birthDate));
+        var peopleQueried = query.FirstOrDefault();
+
+        // Assert
+        Assert.Equivalent(people, peopleQueried);
+    }
+
+    [Fact]
+    public async Task Get_ValidPeopleRGQuery_Ok()
+    {
+        // Arrange - People
+        var rg = new Bogus.Faker().Random.ReplaceNumbers("##.###.###-#");
+        var people = await GetPeople(rg: rg);
+
+        // Act - Query
+        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, rg: rg));
+        var peopleQueried = query.FirstOrDefault();
+
+        // Assert
+        Assert.Equivalent(people, peopleQueried);
+    }
+
+    [Fact]
+    public async Task Get_ValidPeopleIssuingBodyQuery_Ok()
+    {
+        // Arrange - People
+        var issuingBody = new Bogus.Faker().Random.Replace("?????").ToUpper() + "-" + new Bogus.Faker().Random.Replace("??").ToUpper();
+        var people = await GetPeople(issuingBody: issuingBody);
+
+        // Act - Query
+        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, issuingBody: issuingBody));
+        var peopleQueried = query.FirstOrDefault();
+
+        // Assert
+        Assert.Equivalent(people, peopleQueried);
+    }
+
+    [Fact]
+    public async Task Get_ValidPeopleCPFQuery_Ok()
+    {
+        // Arrange - People
+        var cpf = new Bogus.Faker().Person.Cpf();
+        var people = await GetPeople(cpf: cpf);
+
+        // Act - Query
+        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, cpf: cpf));
+        var peopleQueried = query.FirstOrDefault();
+
+        // Assert
+        Assert.Equivalent(people, peopleQueried);
+    }
+
+    [Fact]
+    public async Task Get_ValidPeopleStreetQuery_Ok()
+    {
+        // Arrange - People
+        var street = new Bogus.Faker().Address.StreetName();
+        var people = await GetPeople(street: street);
+
+        // Act - Query
+        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, street: street));
+        var peopleQueried = query.FirstOrDefault();
+
+        // Assert
+        Assert.Equivalent(people, peopleQueried);
+    }
+
+    [Fact]
+    public async Task Get_ValidPeopleHouseNumberQuery_Ok()
+    {
+        // Arrange - People
+        var houseNumber = new Bogus.Faker().Address.BuildingNumber();
+        var people = await GetPeople(houseNumber: houseNumber);
+
+        // Act - Query
+        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, houseNumber: houseNumber));
+        var peopleQueried = query.FirstOrDefault();
+
+        // Assert
+        Assert.Equivalent(people, peopleQueried);
+    }
+
+    [Fact]
+    public async Task Get_ValidPeopleNeighborhoodQuery_Ok()
+    {
+        // Arrange - People
+        var neighborhood = new Bogus.Faker().Address.SecondaryAddress();
+        var people = await GetPeople(neighborhood: neighborhood);
+
+        // Act - Query
+        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, neighborhood: neighborhood));
+        var peopleQueried = query.FirstOrDefault();
+
+        // Assert
+        Assert.Equivalent(people, peopleQueried);
+    }
+
+    [Fact]
+    public async Task Get_ValidPeopleCityQuery_Ok()
+    {
+        // Arrange - People
+        var city = new Bogus.Faker().Address.City();
+        var people = await GetPeople(city: city);
+
+        // Act - Query
+        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, city: city));
+        var peopleQueried = query.FirstOrDefault();
+
+        // Assert
+        Assert.Equivalent(people, peopleQueried);
+    }
+
+    [Fact]
+    public async Task Get_ValidPeopleStateQuery_Ok()
+    {
+        // Arrange - People
+        var state = new Bogus.Faker().Address.StateAbbr();
+        var people = await GetPeople(state: state);
+
+        // Act - Query
+        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, state: state));
+        var peopleQueried = query.FirstOrDefault();
+
+        // Assert
+        Assert.Equivalent(people, peopleQueried);
+    }
+
+    [Fact]
+    public async Task Get_ValidPeoplePhoneQuery_Ok()
+    {
+        // Arrange - People
+        var phone = new Bogus.DataSets.PhoneNumbers().PhoneNumber("(##) #####-####");
+        var people = await GetPeople(phone: phone);
+
+        // Act - Query
+        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, phone: phone));
+        var peopleQueried = query.FirstOrDefault();
+
+        // Assert
+        Assert.Equivalent(people, peopleQueried);
+    }
+
+    [Fact]
+    public async Task Get_ValidPeopleNoteQuery_Ok()
+    {
+        // Arrange - People
+        var note = new Bogus.Faker().Lorem.Sentence();
+        var people = await GetPeople(note: note);
+
+        // Act - Query
+        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, note: note));
+        var peopleQueried = query.FirstOrDefault();
+
+        // Assert
+        Assert.Equivalent(people, peopleQueried);
+    }
+
+    [Fact]
+    public async Task Get_ValidPatientQuery_Ok()
+    {
+        // Arrange - People
+        var people = await GetPeople();
+        var patient = await GetPatient(peopleId: people.Id);
+
+        // Act - Query
+        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, patient: true));
+        var peopleQueried = query.FirstOrDefault();
+
+        // Assert
+        Assert.Equivalent(people, peopleQueried);
+    }
+
+    [Fact]
+    public async Task Get_ValidEscortQuery_Ok()
+    {
+        // Arrange - People
+        var people = await GetPeople();
+        var escort = await GetEscort(peopleId: people.Id);
+
+        // Act - Query
+        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, escort: true));
+        var peopleQueried = query.FirstOrDefault();
+
+        // Assert
+        Assert.Equivalent(people, peopleQueried);
+    }
+
+    [Fact]
+    public async Task Get_ValidActiveQuery_Ok()
+    {
+        // Arrange - People
+        var people = await GetPeople();
+        var patient = await GetPatient(peopleId: people.Id);
+        var hosting = await GetHosting(patientId: patient.Id, checkIn: DateTime.Now.AddDays(-1), checkOut: DateTime.Now.AddDays(1));
+
+        // Act - Query
+        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, active: true));
+        var peopleQueried = query.FirstOrDefault();
+
+        // Assert
+        Assert.Equivalent(people, peopleQueried);
+    }
+
+    [Fact]
+    public async Task Get_ValidVeteranQuery_Ok()
+    {
+        // Arrange - People
+        var people = await GetPeople();
+        var patient = await GetPatient(peopleId: people.Id);
+        var hosting1 = await GetHosting(patientId: patient.Id, checkIn: DateTime.Now.AddDays(-10), checkOut: DateTime.Now.AddDays(-5));
+        var hosting2 = await GetHosting(patientId: patient.Id, checkIn: DateTime.Now.AddDays(-1), checkOut: DateTime.Now.AddDays(1));
+
+        // Act - Query
+        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, veteran: true));
+        var peopleQueried = query.FirstOrDefault();
+
+        // Assert
+        Assert.Equivalent(people, peopleQueried);
+    }
+
+    [Fact]
+    public async Task Get_ValidPeopleGlobalQuery_Ok()
+    {
+        // Arrange - People
+        var people = await GetPeople();
+
+        // Act - Query
+        var queryName = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.Name));
+        var queryRG = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.RG));
+        var queryIssuingBody = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.IssuingBody));
+        var queryCPF = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.CPF));
+        var queryPhone = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.Phone));
+        var queryStreet = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.Street));
+        var queryHouseNumber = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.HouseNumber));
+        var queryNeighborhood = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.Neighborhood));
+        var queryCity = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.City));
+        var queryState = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.State));
+        var queryNote = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.Note));
+
+        // Assert
+        Assert.Equivalent(people, queryName.FirstOrDefault());
+        Assert.Equivalent(people, queryRG.FirstOrDefault());
+        Assert.Equivalent(people, queryIssuingBody.FirstOrDefault());
+        Assert.Equivalent(people, queryCPF.FirstOrDefault());
+        Assert.Equivalent(people, queryPhone.FirstOrDefault());
+        Assert.Equivalent(people, queryStreet.FirstOrDefault());
+        Assert.Equivalent(people, queryHouseNumber.FirstOrDefault());
+        Assert.Equivalent(people, queryNeighborhood.FirstOrDefault());
+        Assert.Equivalent(people, queryCity.FirstOrDefault());
+        Assert.Equivalent(people, queryState.FirstOrDefault());
+        Assert.Equivalent(people, queryNote.FirstOrDefault());
+    }
+
     [Fact]
     public async Task Post_ValidPeople_Ok()
     {
@@ -68,7 +361,7 @@ public class PeopleTestApi : GlobalClientRequest
         Assert.Equal(HttpStatusCode.BadRequest, exception6.StatusCode);
         Assert.Equal(HttpStatusCode.BadRequest, exception7.StatusCode);
     }
-    
+
     [Fact]
     public async Task Post_InvalidPeople_BadRequest()
     {
@@ -111,7 +404,7 @@ public class PeopleTestApi : GlobalClientRequest
         var people = await GetPeople();
 
         var peopleToPut = new PeopleViewModelFake(people.Id).Generate();
-        
+
         // Arrange - Count
         var countBefore = await GetCount(_peopleClient);
 
@@ -318,8 +611,8 @@ public class PeopleTestApi : GlobalClientRequest
         var patient = await GetPatient();
 
         // Arrange - Hosting
-        var hosting = await GetHosting(patientId: patient.Id, 
-            checkIn: DateTime.Now.AddDays(new Random().Next(1, 10) * -1), 
+        var hosting = await GetHosting(patientId: patient.Id,
+            checkIn: DateTime.Now.AddDays(new Random().Next(1, 10) * -1),
             checkOut: DateTime.Now.AddDays(new Random().Next(1, 10)));
 
         // Arrange - PeopleRoom
@@ -362,8 +655,8 @@ public class PeopleTestApi : GlobalClientRequest
         var escort = await GetEscort();
 
         // Arrange - Hosting
-        var hosting = await GetHosting(patientId: patient.Id, 
-            checkIn: DateTime.Now.AddDays(new Random().Next(1, 10) * -1), 
+        var hosting = await GetHosting(patientId: patient.Id,
+            checkIn: DateTime.Now.AddDays(new Random().Next(1, 10) * -1),
             checkOut: DateTime.Now.AddDays(new Random().Next(1, 10)));
 
         // Arrange - HostingEscort
@@ -617,7 +910,7 @@ public class PeopleTestApi : GlobalClientRequest
 
         // Arrange - PeopleRoom
         var peopleRoomFake = new PeopleRoomViewModelFake(roomId: roomFake.Id, peopleId: patientFake.PeopleId, hostingId: hostingFake.Id).Generate();
-        
+
         // Arrange - Count
         var countPeopleRoomsBefore = await GetCount(_peopleRoomClient);
         var countRoomsBefore = await GetCount(_roomClient);
@@ -643,7 +936,7 @@ public class PeopleTestApi : GlobalClientRequest
         Assert.Equal(countPeopleRoomsBefore, countPeopleRoomsAfter);
         Assert.Equal(HttpStatusCode.Conflict, exception.StatusCode);
     }
-    
+
     [Fact]
     public async Task AddPeopleToRoom_InvalidPeoplePatientHotingRoomWithoutVacancyToPatientAndEscort_Conflict()
     {
@@ -788,9 +1081,9 @@ public class PeopleTestApi : GlobalClientRequest
         var countPeopleRoomsBefore = await GetCount(_peopleRoomClient);
 
         // Act - RemovePeopleFromRoom
-        var exceptionRoom = await DeleteByBody<AppException>(_removePeopleFromRoom, new PeopleRoomViewModel(){ RoomId = 0, PeopleId = peopleRoom.PeopleId, HostingId = peopleRoom.HostingId });
-        var exceptionPeople = await DeleteByBody<AppException>(_removePeopleFromRoom, new PeopleRoomViewModel(){ RoomId = peopleRoom.RoomId, PeopleId = 0, HostingId = peopleRoom.HostingId });
-        var exceptionHosting = await DeleteByBody<AppException>(_removePeopleFromRoom, new PeopleRoomViewModel(){ RoomId = peopleRoom.RoomId, PeopleId = peopleRoom.PeopleId, HostingId = 0 });
+        var exceptionRoom = await DeleteByBody<AppException>(_removePeopleFromRoom, new PeopleRoomViewModel() { RoomId = 0, PeopleId = peopleRoom.PeopleId, HostingId = peopleRoom.HostingId });
+        var exceptionPeople = await DeleteByBody<AppException>(_removePeopleFromRoom, new PeopleRoomViewModel() { RoomId = peopleRoom.RoomId, PeopleId = 0, HostingId = peopleRoom.HostingId });
+        var exceptionHosting = await DeleteByBody<AppException>(_removePeopleFromRoom, new PeopleRoomViewModel() { RoomId = peopleRoom.RoomId, PeopleId = peopleRoom.PeopleId, HostingId = 0 });
 
         // Act - Count
         var countRoomsAfter = await GetCount(_roomClient);
@@ -813,4 +1106,3 @@ public class PeopleTestApi : GlobalClientRequest
         Assert.NotEqual(HttpStatusCode.InternalServerError, exceptionHosting.StatusCode);
     }
 }
-    
