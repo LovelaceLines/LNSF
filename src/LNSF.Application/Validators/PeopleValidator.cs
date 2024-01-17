@@ -18,6 +18,10 @@ public class PeopleValidator : AbstractValidator<People>
         
         RuleFor(people => people.RG)
             .Matches(@"^\d{2}\.\d{3}\.\d{3}-\d{1}$").WithMessage(GlobalValidator.InvalidRGFormat());
+        
+        RuleFor(people => people.IssuingBody)
+            .MaximumLength(16).WithMessage(GlobalValidator.MaxLength("Órgão Emissor", 16))
+            .Matches(@"^[A-Z]+(?:-[A-Z]+)?$").WithMessage(GlobalValidator.InvalidIssuingBodyFormat());
 
         RuleFor(people => people.CPF)
             .Matches(@"^\d{3}\.\d{3}\.\d{3}-\d{2}$").WithMessage(GlobalValidator.InvalidCPFFormat());

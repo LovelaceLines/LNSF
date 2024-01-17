@@ -15,6 +15,7 @@ public class GlobalValidator
     public static string InvalidDateTimeFormat() => "Data inválida. Use o formato dd/MM/yyyy HH:mm";
     public static string InvalidPhoneFormat() => "Telefone inválido. Use o formato (XX) XXXXX-XXXX ou XXXX-XXXX";
     public static string InvalidDateFormat() =>  "Data inválida. Use o formato dd/MM/yyyy";
+    public static string InvalidIssuingBodyFormat() => "Órgão Emissor inválido. Use apenas letras maiúsculas e hífen.";
 }
 
 public class PhoneValidator : AbstractValidator<string>

@@ -9,6 +9,7 @@ public class People
     public Gender Gender { get; set; }
     public DateTime BirthDate { get; set; }
     public string RG { get; set; } = "";
+    public string IssuingBody { get; set; } = "";
     public string CPF { get; set; } = "";
     public string Street { get; set; } = "";
     public string HouseNumber { get; set; }  = "";

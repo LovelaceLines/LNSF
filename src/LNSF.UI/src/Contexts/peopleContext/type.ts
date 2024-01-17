@@ -37,6 +37,7 @@ export interface iPeopleObject {
     gender: number,
     birthDate: Date,
     rg: string,
+    issuingBody: string,
     cpf: string,
     street: string,
     houseNumber: string,

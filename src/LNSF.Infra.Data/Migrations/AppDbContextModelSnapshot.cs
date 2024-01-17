@@ -184,6 +184,10 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("IssuingBody")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -349,35 +353,35 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                         new
                         {
                             Id = "1",
-                            ConcurrencyStamp = "091d4f47-19da-46d6-9d62-17c2a70650f9",
+                            ConcurrencyStamp = "f088ee92-75bb-4231-b424-6dde72ffce71",
                             Name = "Desenvolvedor",
                             NormalizedName = "DESENVOLVEDOR"
                         },
                         new
                         {
                             Id = "2",
-                            ConcurrencyStamp = "a1639c63-150f-4e08-ad47-f2b7175d5759",
+                            ConcurrencyStamp = "6baf65ff-c374-456b-bff8-1bb6ed8f16cf",
                             Name = "Administrador",
                             NormalizedName = "ADMINISTRADOR"
                         },
                         new
                         {
                             Id = "3",
-                            ConcurrencyStamp = "e630881c-f652-439d-87a7-9836ce466a8b",
+                            ConcurrencyStamp = "62d1bf66-2e39-4cd3-8dc0-97a8f492fb92",
                             Name = "Assistente Social",
                             NormalizedName = "ASSISTENTESOCIAL"
                         },
                         new
                         {
                             Id = "4",
-                            ConcurrencyStamp = "2ccf053e-94b4-4f35-9c75-a66d202b1826",
+                            ConcurrencyStamp = "55700132-6049-4701-b766-0a0572f17b2b",
                             Name = "Secretário",
                             NormalizedName = "SECRETARIO"
                         },
                         new
                         {
                             Id = "5",
-                            ConcurrencyStamp = "22d326a6-60ca-4460-85fd-27b68276a33d",
+                            ConcurrencyStamp = "f574cee5-02d7-43e2-8cec-0bd1d4945775",
                             Name = "Voluntário",
                             NormalizedName = "VOLUNTARIO"
                         });
@@ -474,16 +478,16 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3f7332de-cfa2-400a-9b8d-60a47ce59424",
+                            ConcurrencyStamp = "2ef5cfb8-c75f-43b0-b6dd-a269893af758",
                             Email = "georgemaiaf@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "GEORGEMAIAF@GMAIL.COM",
                             NormalizedUserName = "GEORGEDEV",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKP/KR9t0v2tuUybcr9wKJzJL39E8Jba1CahRVYehkfk8I7zhEl2VHdBJJoqq0JZPQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEG/CVBwMUAKGJOj6Y6BL3jG8fA9yF6BnJ66ntovBB7qZDf6Q/x7QUCde4SUAb3d5Rw==",
                             PhoneNumber = "(55) 88 9 9246-5315",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "2a38c57f-43e2-438a-a005-56e766ce2421",
+                            SecurityStamp = "37acc48d-1823-4470-b5b5-088a51a88675",
                             TwoFactorEnabled = false,
                             UserName = "georgedev"
                         },
@@ -491,16 +495,16 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                         {
                             Id = "2",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "530bc4a7-eb81-4327-b577-2a7eb1d5a876",
+                            ConcurrencyStamp = "180ec830-7270-47f6-bd4c-aedef4bbedbd",
                             Email = "lnsf@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "LNSF@GMAIL.COM",
                             NormalizedUserName = "LNSF",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKiUCAxT+KCRvH1VmWx6OUELObs4Wad5kNrOf0kTIbIJoyS6p/f6VH4eVUkBTnydDA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJgvTcOls83LpJcPkGH3+PhYwyjTyCrbGhBzl2eQmVX3oOpiWlnZfAEbH5IVWIUpew==",
                             PhoneNumber = "(11) 11 1 1111-1111",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "fddbf082-1be8-4b1d-bdf9-88c5f755ea29",
+                            SecurityStamp = "6a7c7a38-d08e-46b5-aa07-1a780669bbe5",
                             TwoFactorEnabled = false,
                             UserName = "lnsf"
                         },
@@ -508,16 +512,16 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                         {
                             Id = "3",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "303d201d-5aeb-4a35-8561-0dc55eee421d",
+                            ConcurrencyStamp = "7d080845-5438-4560-8019-f20442bdccfa",
                             Email = "lnsf2@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "LNSF2@GMAIL.COM",
                             NormalizedUserName = "LNSF2",
-                            PasswordHash = "AQAAAAIAAYagAAAAED1qzu9ddfKYgSvs0et1OEClDqKPPb9x5fhEOdILuNUCnm9HcCWWr9LkJyHIHO8/ig==",
+                            PasswordHash = "AQAAAAIAAYagAAAAED7Imi+jKGTNsswCaC+IRhMD5mFITwsk3TfbxB2S7xa5bb1Bq+ru7qhoZMyXk1Rmpw==",
                             PhoneNumber = "(22) 22 2 2222-2222",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "4bb6069c-a52f-412c-8a56-3dc029d55e97",
+                            SecurityStamp = "036827ec-1afc-4e30-83cd-695f966af647",
                             TwoFactorEnabled = false,
                             UserName = "lnsf2"
                         });

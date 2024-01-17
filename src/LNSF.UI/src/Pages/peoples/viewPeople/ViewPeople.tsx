@@ -53,6 +53,13 @@ export const ViewPeople: React.FC = () => {
         enableSorting: false,
       },
       {
+        accessorKey: 'issuingBody',
+        header: 'Orgão Emissor',
+        size: 50,
+        enableColumnActions: false,
+        enableSorting: false,
+      },
+      {
         accessorKey: 'cpf',
         header: 'CPF',
         size: 50,
@@ -151,27 +158,27 @@ export const ViewPeople: React.FC = () => {
   useEffect(() => {
     setFilters({ ...filters, globalFilter: globalFilter });
   }, [globalFilter]);
- 
+
   useEffect(() => {
     const updatedFilters = { ...filters };
     const columnIds = columnFilters.map(columnFilter => columnFilter.id);
     let value: unknown;
- 
+
     value = columnFilters.find(cf => cf.id === 'name')?.value;
     if (columnIds.includes('name') && typeof value === 'string')
       updatedFilters.name = value;
     else updatedFilters.name = undefined;
- 
+
     value = columnFilters.find(cf => cf.id === 'rg')?.value;
     if (columnIds.includes('rg') && typeof value === 'string')
       updatedFilters.rg = value;
     else updatedFilters.rg = undefined;
- 
+
     value = columnFilters.find(cf => cf.id === 'cpf')?.value;
     if (columnIds.includes('cpf') && typeof value === 'string')
       updatedFilters.cpf = value;
     else updatedFilters.cpf = undefined;
- 
+
     value = columnFilters.find(cf => cf.id === 'phone')?.value;
     if (columnIds.includes('phone') && typeof value === 'string')
       updatedFilters.phone = value;
@@ -198,7 +205,7 @@ export const ViewPeople: React.FC = () => {
       updatedFilters.state = value;
     else updatedFilters.state = undefined;
 
-    value = columnFilters.find(cf => cf.id === 'neighborhood')?.value; 
+    value = columnFilters.find(cf => cf.id === 'neighborhood')?.value;
     if (columnIds.includes('neighborhood') && typeof value === 'string')
       updatedFilters.neighborhood = value;
     else updatedFilters.neighborhood = undefined;
@@ -217,32 +224,32 @@ export const ViewPeople: React.FC = () => {
     if (columnIds.includes('note') && typeof value === 'string')
       updatedFilters.note = value;
     else updatedFilters.note = undefined;
- 
+
     setFilters(updatedFilters);
   }, [columnFilters]);
- 
+
   useEffect(() => {
     const updatedFilters = { ...filters };
     const columnIds = sortFilters.map(sort => sort.id);
-   
+
     const desc = sortFilters.find(cf => cf.id === 'name')?.desc;
     if (columnIds.includes('name') && typeof desc === 'boolean')
       updatedFilters.orderBy = desc ? iOrderBy.descendent : iOrderBy.ascendent;
     else updatedFilters.orderBy = undefined;
- 
+
     setFilters(updatedFilters);
   }, [sortFilters]);
 
   useEffect(() => {
     LocalStorage.setColumnVisibilityPeople(columnVisibleState);
   }, [columnVisibleState]);
- 
+
   useEffect(() => {
     const page: iPage = { page: pagination.pageIndex, pageSize: pagination.pageSize };
     setFilters({ ...filters, page: page });
 
     LocalStorage.setPageSize(page.pageSize!);
-    
+
     const fetchPeoples = async () => setPeoples(await getPeoples({ ...filters, page: page }));
     fetchPeoples();
   }, [pagination]);
@@ -304,27 +311,27 @@ export const ViewPeople: React.FC = () => {
   const table = useMaterialReactTable<iPeopleObject>({
     columns,
     data: peoples,
-    state: { 
-      sorting: sortFilters, 
+    state: {
+      sorting: sortFilters,
       pagination: pagination,
       columnVisibility: columnVisibleState,
       isFullScreen,
     },
- 
+
     renderTopToolbarCustomActions: ({ table }) => renderTopToolbar(table),
- 
+
     enableRowActions: true,
     renderRowActions: ({ row, cell, table }) => renderActions(row),
- 
+
     manualFiltering: true,
     onGlobalFilterChange: setGlobalFilter,
     onColumnFiltersChange: setColumnFilters,
- 
+
     manualSorting: true,
     onSortingChange: setSortFilters,
 
     onColumnVisibilityChange: setColumnVisibleState,
- 
+
     manualPagination: true,
     onPaginationChange: setPagination,
     paginationDisplayMode: 'pages',
@@ -332,14 +339,16 @@ export const ViewPeople: React.FC = () => {
 
     onIsFullScreenChange: () => setIsFullScreen(!isFullScreen),
 
-    muiTablePaperProps: ({ table }) => ({ style: {
-      zIndex: isFullScreen ? 10000 : undefined,
-    }}),
+    muiTablePaperProps: ({ table }) => ({
+      style: {
+        zIndex: isFullScreen ? 10000 : undefined,
+      }
+    }),
 
-    mrtTheme : {
+    mrtTheme: {
       baseBackgroundColor: theme.palette.background.paper,
     },
- 
+
     localization: MRT_Localization_PT_BR,
   });
 
