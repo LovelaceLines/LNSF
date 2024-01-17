@@ -9,7 +9,7 @@ public class UserPostViewModelFake : Faker<UserPostViewModel>
     {
         RuleFor(x => x.UserName, f => userName ?? f.Person.UserName);
         RuleFor(x => x.Email, f => email ?? f.Person.Email);
-        RuleFor(x => x.PhoneNumber, f => phoneNumber ?? f.Random.Replace("(##) # ####-####"));
+        RuleFor(x => x.PhoneNumber, f => phoneNumber ?? f.Random.Replace("(##) #####-####"));
         RuleFor(x => x.Password, f => password ?? f.Person.FirstName + "#" + f.Random.Replace("###"));
     }
 }
@@ -21,7 +21,7 @@ public class UserViewModelFake : Faker<UserViewModel>
         RuleFor(x => x.Id, f => id);
         RuleFor(x => x.UserName, f => userName ?? f.Person.UserName);
         RuleFor(x => x.Email, f => email ?? f.Person.Email);
-        RuleFor(x => x.PhoneNumber, f => phoneNumber ?? f.Random.Replace("(##) # ####-####"));
+        RuleFor(x => x.PhoneNumber, f => phoneNumber ?? f.Random.Replace("(##) #####-####"));
     }
 }
 
