@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LNSF.src.LNSF.Infra.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class DBLNSFV00 : Migration
+    public partial class DBLNSFV01 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -76,6 +76,7 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                     Gender = table.Column<int>(type: "INTEGER", nullable: false),
                     BirthDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     RG = table.Column<string>(type: "TEXT", nullable: false),
+                    IssuingBody = table.Column<string>(type: "TEXT", nullable: false),
                     CPF = table.Column<string>(type: "TEXT", nullable: false),
                     Street = table.Column<string>(type: "TEXT", nullable: false),
                     HouseNumber = table.Column<string>(type: "TEXT", nullable: false),
@@ -303,7 +304,7 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Output = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Input = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    Note = table.Column<string>(type: "TEXT", nullable: true),
+                    Note = table.Column<string>(type: "TEXT", nullable: false),
                     PeopleId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
@@ -367,9 +368,7 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                 columns: table => new
                 {
                     HostingId = table.Column<int>(type: "INTEGER", nullable: false),
-                    EscortId = table.Column<int>(type: "INTEGER", nullable: false),
-                    CheckIn = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    CheckOut = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    EscortId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -424,11 +423,33 @@ namespace LNSF.src.LNSF.Infra.Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "1", "a769bb6f-aca7-4cf3-8e8c-c49edd7d2215", "Desenvolvedor", "DESENVOLVEDOR" },
-                    { "2", "dc59c7d6-4668-40b4-a718-d72f864e67ee", "Administrador", "ADMINISTRADOR" },
-                    { "3", "aed2e98f-b798-4c1b-bc98-9fc6c2e70ae7", "Assistente Social", "ASSISTENTESOCIAL" },
-                    { "4", "4ab6943d-1483-4c5a-83cd-00239d49c21f", "Secretário", "SECRETARIO" },
-                    { "5", "85f1657e-b7ce-4b1a-ba98-14fe92018fbe", "Voluntário", "VOLUNTARIO" }
+                    { "1", "f088ee92-75bb-4231-b424-6dde72ffce71", "Desenvolvedor", "DESENVOLVEDOR" },
+                    { "2", "6baf65ff-c374-456b-bff8-1bb6ed8f16cf", "Administrador", "ADMINISTRADOR" },
+                    { "3", "62d1bf66-2e39-4cd3-8dc0-97a8f492fb92", "Assistente Social", "ASSISTENTESOCIAL" },
+                    { "4", "55700132-6049-4701-b766-0a0572f17b2b", "Secretário", "SECRETARIO" },
+                    { "5", "f574cee5-02d7-43e2-8cec-0bd1d4945775", "Voluntário", "VOLUNTARIO" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[,]
+                {
+                    { "1", 0, "2ef5cfb8-c75f-43b0-b6dd-a269893af758", "georgemaiaf@gmail.com", false, false, null, "GEORGEMAIAF@GMAIL.COM", "GEORGEDEV", "AQAAAAIAAYagAAAAEG/CVBwMUAKGJOj6Y6BL3jG8fA9yF6BnJ66ntovBB7qZDf6Q/x7QUCde4SUAb3d5Rw==", "(55) 88 9 9246-5315", false, "37acc48d-1823-4470-b5b5-088a51a88675", false, "georgedev" },
+                    { "2", 0, "180ec830-7270-47f6-bd4c-aedef4bbedbd", "lnsf@gmail.com", false, false, null, "LNSF@GMAIL.COM", "LNSF", "AQAAAAIAAYagAAAAEJgvTcOls83LpJcPkGH3+PhYwyjTyCrbGhBzl2eQmVX3oOpiWlnZfAEbH5IVWIUpew==", "(11) 11 1 1111-1111", false, "6a7c7a38-d08e-46b5-aa07-1a780669bbe5", false, "lnsf" },
+                    { "3", 0, "7d080845-5438-4560-8019-f20442bdccfa", "lnsf2@gmail.com", false, false, null, "LNSF2@GMAIL.COM", "LNSF2", "AQAAAAIAAYagAAAAED7Imi+jKGTNsswCaC+IRhMD5mFITwsk3TfbxB2S7xa5bb1Bq+ru7qhoZMyXk1Rmpw==", "(22) 22 2 2222-2222", false, "036827ec-1afc-4e30-83cd-695f966af647", false, "lnsf2" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUserRoles",
+                columns: new[] { "RoleId", "UserId" },
+                values: new object[,]
+                {
+                    { "1", "1" },
+                    { "2", "1" },
+                    { "3", "1" },
+                    { "2", "2" },
+                    { "5", "3" }
                 });
 
             migrationBuilder.CreateIndex(
