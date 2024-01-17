@@ -22,16 +22,12 @@ export const TextFieldCustom : React.FC<TextFieldPropsProps> = ({name, ...rest})
 
 
     return(
-        <TextField 
+        <TextField
             {...rest}
-        
+            
             error={!!error}
             helperText={error}
-            defaultValue={defaultValue}
             onKeyDown={() => error ? clearError() : undefined}
-            
-            value={value}
-            onChange={e => setValue(e.target.value)}
         />
     )
 }

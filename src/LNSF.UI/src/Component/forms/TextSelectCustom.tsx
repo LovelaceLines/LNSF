@@ -33,11 +33,10 @@ export const TextSelectCustom: React.FC<TTextSelectCustomProps> = ({ name, menu,
             select
             error={!!error}
             helperText={error}
-            defaultValue={defaultValue}
             onKeyDown={() => error ? clearError() : undefined}
 
-            value={value}
-            onChange={e => setValue(e.target.value)}
+            // value={value}
+            // onChange={e => setValue(e.target.value)}
         >
             {menu.map((option) => (
                 <MenuItem key={option.id} value={option.id}>
