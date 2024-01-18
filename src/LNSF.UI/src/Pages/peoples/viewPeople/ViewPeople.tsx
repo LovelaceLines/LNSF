@@ -27,9 +27,9 @@ export const ViewPeople: React.FC = () => {
   const [pagination, setPagination] = useState<MRT_PaginationState>({ pageIndex: 0, pageSize: LocalStorage.getPageSize() });
   const [isFullScreen, setIsFullScreen] = useState<boolean>(false);
   const [peoples, setPeoples] = useState<iPeopleObject[]>([]);
-  const [activeFilter, setActiveFilter] = useState<boolean>(true);
-  const [PatientFilter, setPatientFilter] = useState<boolean>(true);
-  const [EscortFilter, setEscortFilter] = useState<boolean>(false);
+  const [activeFilter, setActiveFilter] = useState<true | undefined>(true);
+  const [PatientFilter, setPatientFilter] = useState<true | undefined>(true);
+  const [EscortFilter, setEscortFilter] = useState<true | undefined>(undefined);
   const [filters, setFilters] = useState<iPeopleFilter>({
     patient: PatientFilter,
     escort: EscortFilter,
@@ -43,6 +43,18 @@ export const ViewPeople: React.FC = () => {
         accessorKey: 'name',
         header: 'Nome',
         size: 150,
+        enableColumnActions: false,
+      },
+      {
+        accessorKey: 'experience',
+        header: 'Experiência',
+        size: 50,
+        enableColumnActions: false,
+      },
+      {
+        accessorKey: 'status',
+        header: 'Status',
+        size: 50,
         enableColumnActions: false,
       },
       {
@@ -280,15 +292,15 @@ export const ViewPeople: React.FC = () => {
           <Typography>
             Ativos
           </Typography>
-          <Checkbox checked={activeFilter} onChange={(e) => setActiveFilter(e.target.checked)} />
+          <Checkbox checked={activeFilter} onChange={(e) => setActiveFilter(e.target.checked ? e.target.checked : undefined)} />
           <Typography>
             Pacientes
           </Typography>
-          <Checkbox checked={PatientFilter} onChange={(e) => setPatientFilter(e.target.checked)} />
+          <Checkbox checked={PatientFilter} onChange={(e) => setPatientFilter(e.target.checked ? e.target.checked : undefined)} />
           <Typography>
             Acompanhantes
           </Typography>
-          <Checkbox checked={EscortFilter} onChange={(e) => setEscortFilter(e.target.checked)} />
+          <Checkbox checked={EscortFilter} onChange={(e) => setEscortFilter(e.target.checked ? e.target.checked : undefined)} />
         </Box>
         <Button variant='contained' size='small' startIcon={<ContentPasteSearchIcon />} onClick={fetchPeoples}>
           Buscar

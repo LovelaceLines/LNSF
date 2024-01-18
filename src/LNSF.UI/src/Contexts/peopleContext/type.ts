@@ -21,6 +21,7 @@ export interface iPeopleFilter {
     patient?: boolean,
     escort?: boolean,
     active?: boolean,
+    veteran?: boolean,
     globalFilter?: string,
     page?: iPage,
     orderBy?: iOrderBy,
@@ -46,6 +47,8 @@ export interface iPeopleObject {
     state: string,
     phone: string,
     note: string,
+    experience?: string,
+    status?: string,
 }
 export interface iAddPeopleRoom {
     peopleId: number,

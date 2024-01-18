@@ -5,6 +5,7 @@ using LNSF.Domain.Enums;
 using LNSF.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using LNSF.Domain.DTOs;
 
 namespace LNSF.Infra.Data.Repositories;
 
@@ -25,7 +26,7 @@ public class PeopleRepository : BaseRepository<People>, IPeopleRepository
         _hostingsEscorts = _context.HostingsEscorts.AsNoTracking();
     }
 
-    public async Task<List<People>> Query(PeopleFilter filter)
+    public async Task<List<PeopleDTO>> Query(PeopleFilter filter)
     {
         var query = _context.Peoples.AsNoTracking();
 
@@ -58,7 +59,16 @@ public class PeopleRepository : BaseRepository<People>, IPeopleRepository
             .Take(filter.Page.PageSize)
             .ToListAsync();
 
-        return peoples;
+        var peoplesDTO = new List<PeopleDTO>();
+        peoples.ForEach(people =>
+        {
+            var peopleDTO = new PeopleDTO(people);
+            peopleDTO.Experience = IsVeteran(people.Id) ? "Veterano" : "Novato";
+            peopleDTO.Status = IsPatient(people.Id) ? "Paciente" : IsEscort(people.Id) ? "Acompanhante" : "Sem status";
+            peoplesDTO.Add(peopleDTO);
+        });
+
+        return peoplesDTO;
     }
 
     protected static IQueryable<People> QueryGlobalFilter(IQueryable<People> peoples, string globalFilter) =>
@@ -146,4 +156,17 @@ public class PeopleRepository : BaseRepository<People>, IPeopleRepository
             peoples.Where(p =>
             _hostings.Count(h => h.Patient!.PeopleId == p.Id) +
             _hostingsEscorts.Count(he => he.Escort!.PeopleId == p.Id) <= 1);
+
+    public bool IsVeteran(int peopleId)
+    {
+        var patientCount = _hostings.Count(h => h.Patient!.PeopleId == peopleId);
+        var escortCount = _hostingsEscorts.Count(he => he.Escort!.PeopleId == peopleId);
+        return patientCount + escortCount > 1;
+    }
+
+    public bool IsPatient(int peopleId) =>
+        _patients.Any(p => p.PeopleId == peopleId);
+
+    public bool IsEscort(int peopleId) =>
+        _escorts.Any(e => e.PeopleId == peopleId);
 }

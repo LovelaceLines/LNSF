@@ -26,7 +26,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 #region Logger
 
-Log.Logger = new LoggerConfiguration() 
+Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
     .ReadFrom.Configuration(builder.Configuration)
     .CreateLogger();
@@ -48,10 +48,11 @@ var autoMapperConfig = new MapperConfiguration(configure =>
     configure.CreateMap<Room, RoomPostViewModel>().ReverseMap();
     configure.CreateMap<Room, RoomViewModel>().ReverseMap();
     configure.CreateMap<RoomViewModel, RoomPostViewModel>().ReverseMap();
-    
+
     configure.CreateMap<People, PeoplePostViewModel>().ReverseMap();
     configure.CreateMap<People, PeoplePutViewModel>().ReverseMap();
     configure.CreateMap<People, PeopleViewModel>().ReverseMap();
+    configure.CreateMap<PeopleDTO, PeopleViewModel>().ReverseMap();
 
     configure.CreateMap<PeopleRoom, PeopleRoomViewModel>().ReverseMap();
 
@@ -220,10 +221,10 @@ builder.Services.AddAuthentication(options =>
 
 #region Swagger
 
-builder.Services.AddSwaggerGen(setup => 
+builder.Services.AddSwaggerGen(setup =>
 {
-    setup.SwaggerDoc("v1", new() 
-    { 
+    setup.SwaggerDoc("v1", new()
+    {
         Title = "LNSF.API - Lar Nossa Senhora de Fátima",
         Version = "v1",
         Description = "O sistema LNSF foi desenvolvido com um propósito fundamental: aprimorar a eficiência das operações realizadas pelos servidores dedicados ao Lar Nossa Senhora de Fátima. Este sistema visa a melhoria do processo de gestão dos pacientes e quartos, além de automatizar tarefas complexas, anteriormente realizadas de forma manual, como a emissão de relatórios essenciais para os servidores e entidades superiores.",
@@ -281,8 +282,8 @@ var helperMigration = new HelperMigration(app.Services);
 
 app.UseExceptionHandler("/api/Error");
 
-if (app.Environment.IsDevelopment() || 
-    app.Environment.IsProduction() || 
+if (app.Environment.IsDevelopment() ||
+    app.Environment.IsProduction() ||
     app.Environment.IsStaging())
 {
     // app.UseDeveloperExceptionPage();

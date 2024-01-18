@@ -20,7 +20,10 @@ public class PeopleTestApi : GlobalClientRequest
 
         // Act - Query
         var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, name: name));
-        var peopleQueried = query.FirstOrDefault();
+        var peopleQueried = query.First();
+
+        peopleQueried.Experience = null;
+        peopleQueried.Status = null;
 
         // Assert
         Assert.Equivalent(people, peopleQueried);
@@ -35,7 +38,10 @@ public class PeopleTestApi : GlobalClientRequest
 
         // Act - Query
         var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, gender: gender));
-        var peopleQueried = query.FirstOrDefault();
+        var peopleQueried = query.First();
+
+        peopleQueried.Experience = null;
+        peopleQueried.Status = null;
 
         // Assert
         Assert.Equivalent(people, peopleQueried);
@@ -50,7 +56,10 @@ public class PeopleTestApi : GlobalClientRequest
 
         // Act - Query
         var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, birthDate: birthDate));
-        var peopleQueried = query.FirstOrDefault();
+        var peopleQueried = query.First();
+
+        peopleQueried.Experience = null;
+        peopleQueried.Status = null;
 
         // Assert
         Assert.Equivalent(people, peopleQueried);
@@ -65,7 +74,10 @@ public class PeopleTestApi : GlobalClientRequest
 
         // Act - Query
         var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, rg: rg));
-        var peopleQueried = query.FirstOrDefault();
+        var peopleQueried = query.First();
+
+        peopleQueried.Experience = null;
+        peopleQueried.Status = null;
 
         // Assert
         Assert.Equivalent(people, peopleQueried);
@@ -80,7 +92,10 @@ public class PeopleTestApi : GlobalClientRequest
 
         // Act - Query
         var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, issuingBody: issuingBody));
-        var peopleQueried = query.FirstOrDefault();
+        var peopleQueried = query.First();
+
+        peopleQueried.Experience = null;
+        peopleQueried.Status = null;
 
         // Assert
         Assert.Equivalent(people, peopleQueried);
@@ -95,7 +110,10 @@ public class PeopleTestApi : GlobalClientRequest
 
         // Act - Query
         var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, cpf: cpf));
-        var peopleQueried = query.FirstOrDefault();
+        var peopleQueried = query.First();
+
+        peopleQueried.Experience = null;
+        peopleQueried.Status = null;
 
         // Assert
         Assert.Equivalent(people, peopleQueried);
@@ -110,7 +128,10 @@ public class PeopleTestApi : GlobalClientRequest
 
         // Act - Query
         var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, street: street));
-        var peopleQueried = query.FirstOrDefault();
+        var peopleQueried = query.First();
+
+        peopleQueried.Experience = null;
+        peopleQueried.Status = null;
 
         // Assert
         Assert.Equivalent(people, peopleQueried);
@@ -125,7 +146,10 @@ public class PeopleTestApi : GlobalClientRequest
 
         // Act - Query
         var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, houseNumber: houseNumber));
-        var peopleQueried = query.FirstOrDefault();
+        var peopleQueried = query.First();
+
+        peopleQueried.Experience = null;
+        peopleQueried.Status = null;
 
         // Assert
         Assert.Equivalent(people, peopleQueried);
@@ -140,7 +164,10 @@ public class PeopleTestApi : GlobalClientRequest
 
         // Act - Query
         var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, neighborhood: neighborhood));
-        var peopleQueried = query.FirstOrDefault();
+        var peopleQueried = query.First();
+
+        peopleQueried.Experience = null;
+        peopleQueried.Status = null;
 
         // Assert
         Assert.Equivalent(people, peopleQueried);
@@ -155,7 +182,10 @@ public class PeopleTestApi : GlobalClientRequest
 
         // Act - Query
         var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, city: city));
-        var peopleQueried = query.FirstOrDefault();
+        var peopleQueried = query.First();
+
+        peopleQueried.Experience = null;
+        peopleQueried.Status = null;
 
         // Assert
         Assert.Equivalent(people, peopleQueried);
@@ -170,7 +200,10 @@ public class PeopleTestApi : GlobalClientRequest
 
         // Act - Query
         var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, state: state));
-        var peopleQueried = query.FirstOrDefault();
+        var peopleQueried = query.First();
+
+        peopleQueried.Experience = null;
+        peopleQueried.Status = null;
 
         // Assert
         Assert.Equivalent(people, peopleQueried);
@@ -185,7 +218,10 @@ public class PeopleTestApi : GlobalClientRequest
 
         // Act - Query
         var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, phone: phone));
-        var peopleQueried = query.FirstOrDefault();
+        var peopleQueried = query.First();
+
+        peopleQueried.Experience = null;
+        peopleQueried.Status = null;
 
         // Assert
         Assert.Equivalent(people, peopleQueried);
@@ -200,7 +236,10 @@ public class PeopleTestApi : GlobalClientRequest
 
         // Act - Query
         var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, note: note));
-        var peopleQueried = query.FirstOrDefault();
+        var peopleQueried = query.First();
+
+        peopleQueried.Experience = null;
+        peopleQueried.Status = null;
 
         // Assert
         Assert.Equivalent(people, peopleQueried);
@@ -215,7 +254,10 @@ public class PeopleTestApi : GlobalClientRequest
 
         // Act - Query
         var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, patient: true));
-        var peopleQueried = query.FirstOrDefault();
+        var peopleQueried = query.First();
+
+        peopleQueried.Experience = null;
+        peopleQueried.Status = null;
 
         // Assert
         Assert.Equivalent(people, peopleQueried);
@@ -230,7 +272,10 @@ public class PeopleTestApi : GlobalClientRequest
 
         // Act - Query
         var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, escort: true));
-        var peopleQueried = query.FirstOrDefault();
+        var peopleQueried = query.First();
+
+        peopleQueried.Experience = null;
+        peopleQueried.Status = null;
 
         // Assert
         Assert.Equivalent(people, peopleQueried);
@@ -246,7 +291,10 @@ public class PeopleTestApi : GlobalClientRequest
 
         // Act - Query
         var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, active: true));
-        var peopleQueried = query.FirstOrDefault();
+        var peopleQueried = query.First();
+
+        peopleQueried.Experience = null;
+        peopleQueried.Status = null;
 
         // Assert
         Assert.Equivalent(people, peopleQueried);
@@ -263,7 +311,10 @@ public class PeopleTestApi : GlobalClientRequest
 
         // Act - Query
         var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, veteran: true));
-        var peopleQueried = query.FirstOrDefault();
+        var peopleQueried = query.First();
+
+        peopleQueried.Experience = null;
+        peopleQueried.Status = null;
 
         // Assert
         Assert.Equivalent(people, peopleQueried);
@@ -288,18 +339,53 @@ public class PeopleTestApi : GlobalClientRequest
         var queryState = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.State));
         var queryNote = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.Note));
 
+        var queriedName = queryName.First();
+        var queriedRG = queryRG.First();
+        var queriedIssuingBody = queryIssuingBody.First();
+        var queriedCPF = queryCPF.First();
+        var queriedPhone = queryPhone.First();
+        var queriedStreet = queryStreet.First();
+        var queriedHouseNumber = queryHouseNumber.First();
+        var queriedNeighborhood = queryNeighborhood.First();
+        var queriedCity = queryCity.First();
+        var queriedState = queryState.First();
+        var queriedNote = queryNote.First();
+
+        queriedName.Experience = null;
+        queriedName.Status = null;
+        queriedRG.Experience = null;
+        queriedRG.Status = null;
+        queriedIssuingBody.Experience = null;
+        queriedIssuingBody.Status = null;
+        queriedCPF.Experience = null;
+        queriedCPF.Status = null;
+        queriedPhone.Experience = null;
+        queriedPhone.Status = null;
+        queriedStreet.Experience = null;
+        queriedStreet.Status = null;
+        queriedHouseNumber.Experience = null;
+        queriedHouseNumber.Status = null;
+        queriedNeighborhood.Experience = null;
+        queriedNeighborhood.Status = null;
+        queriedCity.Experience = null;
+        queriedCity.Status = null;
+        queriedState.Experience = null;
+        queriedState.Status = null;
+        queriedNote.Experience = null;
+        queriedNote.Status = null;
+
         // Assert
-        Assert.Equivalent(people, queryName.FirstOrDefault());
-        Assert.Equivalent(people, queryRG.FirstOrDefault());
-        Assert.Equivalent(people, queryIssuingBody.FirstOrDefault());
-        Assert.Equivalent(people, queryCPF.FirstOrDefault());
-        Assert.Equivalent(people, queryPhone.FirstOrDefault());
-        Assert.Equivalent(people, queryStreet.FirstOrDefault());
-        Assert.Equivalent(people, queryHouseNumber.FirstOrDefault());
-        Assert.Equivalent(people, queryNeighborhood.FirstOrDefault());
-        Assert.Equivalent(people, queryCity.FirstOrDefault());
-        Assert.Equivalent(people, queryState.FirstOrDefault());
-        Assert.Equivalent(people, queryNote.FirstOrDefault());
+        Assert.Equivalent(people, queriedName);
+        Assert.Equivalent(people, queriedRG);
+        Assert.Equivalent(people, queriedIssuingBody);
+        Assert.Equivalent(people, queriedCPF);
+        Assert.Equivalent(people, queriedPhone);
+        Assert.Equivalent(people, queriedStreet);
+        Assert.Equivalent(people, queriedHouseNumber);
+        Assert.Equivalent(people, queriedNeighborhood);
+        Assert.Equivalent(people, queriedCity);
+        Assert.Equivalent(people, queriedState);
+        Assert.Equivalent(people, queriedNote);
     }
 
     [Fact]
@@ -319,7 +405,10 @@ public class PeopleTestApi : GlobalClientRequest
 
         // Act - Query
         var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: peoplePosted.Id));
-        var peopleQueried = query.FirstOrDefault();
+        var peopleQueried = query.First();
+
+        peopleQueried.Experience = null;
+        peopleQueried.Status = null;
 
         // Assert
         Assert.Equal(countBefore + 1, countAfter);
@@ -416,7 +505,10 @@ public class PeopleTestApi : GlobalClientRequest
 
         // Act - Query
         var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id));
-        var peopleQueried = query.FirstOrDefault();
+        var peopleQueried = query.First();
+
+        peopleQueried.Experience = null;
+        peopleQueried.Status = null;
 
         // Assert
         Assert.Equal(countBefore, countAfter);

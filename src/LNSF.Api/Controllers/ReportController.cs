@@ -1,4 +1,5 @@
 ﻿using LNSF.Application.Interfaces;
+using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Filters;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +15,7 @@ public class ReportController : ControllerBase
 
     private const string contentType = "application/pdf";
 
-    public ReportController(IReportService reportService, 
+    public ReportController(IReportService reportService,
         IPeopleService peopleService)
     {
         _reportService = reportService;
@@ -27,9 +28,9 @@ public class ReportController : ControllerBase
         var peoples = await _peopleService.Query(filter);
         var fileNameFRX = "people.frx";
         var referenceName = "People";
-        
-        var fileContents = _reportService.ExportReport<People>(peoples, fileNameFRX, referenceName);
-        
+
+        var fileContents = _reportService.ExportReport<PeopleDTO>(peoples, fileNameFRX, referenceName);
+
         var fileNamePDF = "people_" + DateTime.Now + ".pdf";
 
         return File(fileContents, contentType, fileNamePDF);

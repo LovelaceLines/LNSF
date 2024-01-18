@@ -1,4 +1,5 @@
 ﻿using LNSF.Application.Interfaces;
+using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
 using LNSF.Domain.Filters;
@@ -19,9 +20,9 @@ public class PeopleService : IPeopleService
         _validator = peopleValidator;
     }
 
-    public async Task<List<People>> Query(PeopleFilter filter) => 
+    public async Task<List<PeopleDTO>> Query(PeopleFilter filter) =>
         await _repository.Query(filter);
-    
+
     public async Task<int> GetCount() =>
         await _repository.GetCount();
 
@@ -37,9 +38,9 @@ public class PeopleService : IPeopleService
     {
         var validationResult = _validator.Validate(people);
         if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
-        
+
         if (!await _repository.ExistsById(people.Id)) throw new AppException("Pessoa não encontrada!", HttpStatusCode.NotFound);
 
-        return await _repository.Update(people);	
+        return await _repository.Update(people);
     }
 }
