@@ -11,5 +11,5 @@ export const RoleString = {
   administrador: "Administrador",
   assistenteSocial: "Assistente Social",
   secretario: "Secretario",
-  voluntario: "Voluntario",
+  voluntario: "Voluntário",
 }
