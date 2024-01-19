@@ -9,6 +9,97 @@ namespace LNSF.Test.Apis;
 
 public class HostingTestApi : GlobalClientRequest
 {
+    [Fact]
+    public async Task Get_ValidHostingId_Ok()
+    {
+        // Arrange - Hosting
+        var hosting = await GetHosting();
+
+        // Act - Hosting
+        var queryId = await Query<List<HostingViewModel>>(_hostingClient, new HostingFilter(id: hosting.Id));
+        var hostingIdQueried = queryId.First();
+
+        // Assert
+        Assert.Equivalent(hosting.Id, hostingIdQueried.Id);
+    }
+
+    [Fact]
+    public async Task Get_ValidHostingPatientId_Ok()
+    {
+        // Arrange - Hosting
+        var hosting = await GetHosting();
+
+        // Act - Hosting
+        var queryPatientId = await Query<List<HostingViewModel>>(_hostingClient, new HostingFilter(id: hosting.Id, patientId: hosting.PatientId));
+        var hostingPatientIdQueried = queryPatientId.First();
+
+        // Assert
+        Assert.Equivalent(hosting.PatientId, hostingPatientIdQueried.PatientId);
+    }
+
+    [Fact]
+    public async Task Get_ValidHostingEscortId_Ok()
+    {
+        // Arrange - Hosting
+        var hosting = await GetHosting();
+
+        // Arrange - HostingEscort
+        var hostingEscort = await GetAddEscortToHosting(hostingId: hosting.Id);
+
+        // Act - Hosting
+        var queryEscortId = await Query<List<HostingViewModel>>(_hostingClient, new HostingFilter(id: hosting.Id, escortId: hostingEscort.EscortId));
+        var hostingEscortIdQueried = queryEscortId.First();
+
+        if (hostingEscortIdQueried.Escorts!.Count == 0) hostingEscortIdQueried.Escorts = null;
+
+        // Assert
+        Assert.Equivalent(hosting, hostingEscortIdQueried);
+    }
+
+    [Fact]
+    public async Task Get_ValidHostingCheckIn_Ok()
+    {
+        // Arrange - Hosting
+        var hosting = await GetHosting();
+
+        // Act - Hosting
+        var queryCheckIn = await Query<List<HostingViewModel>>(_hostingClient, new HostingFilter(id: hosting.Id, checkIn: hosting.CheckIn));
+        var hostingCheckInQueried = queryCheckIn.First();
+
+        // Assert
+        Assert.Equivalent(hosting.CheckIn, hostingCheckInQueried.CheckIn);
+    }
+
+    [Fact]
+    public async Task Get_ValidHostingCheckOut_Ok()
+    {
+        // Arrange - Hosting
+        var hosting = await GetHosting();
+
+        // Act - Hosting
+        var queryCheckOut = await Query<List<HostingViewModel>>(_hostingClient, new HostingFilter(id: hosting.Id, checkOut: hosting.CheckOut!.Value.AddSeconds(1)));
+        var hostingCheckOutQueried = queryCheckOut.First();
+
+        // Assert
+        Assert.Equivalent(hosting.CheckOut, hostingCheckOutQueried.CheckOut);
+    }
+
+    [Fact]
+    public async Task Get_ValidHostingActive_Ok()
+    {
+        // Arrange - Hosting
+        var hosting = await GetHosting(checkIn: DateTime.Now.AddDays(-1), checkOut: DateTime.Now.AddDays(1));
+
+        // Act - Hosting
+        var queryActive = await Query<List<HostingViewModel>>(_hostingClient, new HostingFilter(id: hosting.Id, active: true));
+        var hostingActiveQueried = queryActive.First();
+
+        if (hostingActiveQueried.Escorts!.Count == 0) hostingActiveQueried.Escorts = null;
+
+        // Assert
+        Assert.Equivalent(hosting, hostingActiveQueried);
+    }
+
     [Theory]
     [InlineData(true)]
     [InlineData(false)]
@@ -183,7 +274,7 @@ public class HostingTestApi : GlobalClientRequest
 
         // Arrange - Count
         var countBefore = await GetCount(_hostingClient);
-        
+
         // Act - Hosting
         var hostingPutted = await Put<HostingViewModel>(_hostingClient, hostingToPut);
 
@@ -202,7 +293,7 @@ public class HostingTestApi : GlobalClientRequest
         var checkIn = new Bogus.DataSets.Date().Past().AddDays(-5);
         var checkOut = new Bogus.DataSets.Date().Future().AddDays(5);
         var hosting = await GetHosting(checkIn: checkIn, checkOut: checkOut);
-        
+
         var hostingToPutWithBeforeCheckInAndDuringCheckOut = new HostingViewModelFake(id: hosting.Id, patientId: hosting.PatientId, checkIn: checkIn.AddDays(-1), checkOut: checkOut).Generate();
         var hostingToPutWithBeforeCheckInAndBeforeCheckOut = new HostingViewModelFake(id: hosting.Id, patientId: hosting.PatientId, checkIn: checkIn.AddDays(-1), checkOut: checkOut.AddDays(-1)).Generate();
         var hostingToPutWithBeforeCheckInAndBeforeCheckIn = new HostingViewModelFake(id: hosting.Id, patientId: hosting.PatientId, checkIn: checkIn.AddDays(-5), checkOut: checkIn.AddDays(-1)).Generate();
@@ -214,7 +305,7 @@ public class HostingTestApi : GlobalClientRequest
 
         // Arrange - Count
         var countBefore = await GetCount(_hostingClient);
-        
+
         // Act - Hosting
         var hostingPuttedWithBeforeCheckInAndDuringCheckOut = await Put<HostingViewModel>(_hostingClient, hostingToPutWithBeforeCheckInAndDuringCheckOut);
         var hostingPuttedWithBeforeCheckInAndBeforeCheckOut = await Put<HostingViewModel>(_hostingClient, hostingToPutWithBeforeCheckInAndBeforeCheckOut);
@@ -224,7 +315,7 @@ public class HostingTestApi : GlobalClientRequest
         var hostingPuttedWithBeforeCheckOutAndAfterCheckOut = await Put<HostingViewModel>(_hostingClient, hostingToPutWithBeforeCheckOutAndAfterCheckOut);
         var hostingPuttedWithDuringCheckOutAndAfterCheckOut = await Put<HostingViewModel>(_hostingClient, hostingToPutWithDuringCheckOutAndAfterCheckOut);
         var hostingPuttedWithAfterCheckOutAndAfterCheckOut = await Put<HostingViewModel>(_hostingClient, hostingToPutWithAfterCheckOutAndAfterCheckOut);
-        
+
         // Act - Count
         var countAfter = await GetCount(_hostingClient);
 
@@ -252,7 +343,7 @@ public class HostingTestApi : GlobalClientRequest
 
         // Arrange - Count
         var countBefore = await GetCount(_hostingClient);
-        
+
         // Act - Hosting
         var exception = await Put<AppException>(_hostingClient, hostingToPut);
 
@@ -273,7 +364,7 @@ public class HostingTestApi : GlobalClientRequest
 
         // Arrange - Count
         var countBefore = await GetCount(_hostingClient);
-        
+
         // Act - Hosting
         var exception = await Put<AppException>(_hostingClient, hostingToPut);
 
@@ -345,7 +436,7 @@ public class HostingTestApi : GlobalClientRequest
 
         // Arrange - HostingEscort
         var hostingEscort = await GetAddEscortToHosting(hostingId: hosting.Id, escortId: escort.Id);
-        
+
         // Arrange - HostingWithoutConflictDates
         var hostingWithoutConflict = await GetHosting(checkIn: checkOut.AddDays(1), checkOut: checkOut.AddDays(5));
 
@@ -356,7 +447,7 @@ public class HostingTestApi : GlobalClientRequest
         var countBefore = await GetCount(_hostingEscortClient);
 
         // Act - HostingEscort
-        var hostingEscortWithoutConflictPosted = await Post<HostingEscortViewModel>(_addEscortToHostingClient, hostingEscortWithoutConflictFake); 
+        var hostingEscortWithoutConflictPosted = await Post<HostingEscortViewModel>(_addEscortToHostingClient, hostingEscortWithoutConflictFake);
 
         // Act - Count
         var countAfter = await GetCount(_hostingEscortClient);
@@ -395,7 +486,7 @@ public class HostingTestApi : GlobalClientRequest
         var hostingEscortWithConflictDuringCheckInAndBeforeCheckOut = new HostingEscortViewModelFake(hostingId: hostingWithConflictDuringCheckInAndBeforeCheckOut.Id, escortId: escort.Id).Generate();
         var hostingEscortWithConflictBeforeCheckOutAndAfterCheckOut = new HostingEscortViewModelFake(hostingId: hostingWithConflictBeforeCheckOutAndAfterCheckOut.Id, escortId: escort.Id).Generate();
         var hostingEscortWithConflictDuringCheckOutAndAfterCheckOut = new HostingEscortViewModelFake(hostingId: hostingWithConflictDuringCheckOutAndAfterCheckOut.Id, escortId: escort.Id).Generate();
-        
+
         // Arrange - Count
         var countBefore = await GetCount(_hostingEscortClient);
 

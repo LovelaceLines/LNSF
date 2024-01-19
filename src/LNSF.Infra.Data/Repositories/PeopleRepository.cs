@@ -12,6 +12,7 @@ namespace LNSF.Infra.Data.Repositories;
 public class PeopleRepository : BaseRepository<People>, IPeopleRepository
 {
     private readonly AppDbContext _context;
+    private readonly IQueryable<People> _peoples;
     private readonly IQueryable<Patient> _patients;
     private readonly IQueryable<Escort> _escorts;
     private readonly IQueryable<Hosting> _hostings;
@@ -20,6 +21,7 @@ public class PeopleRepository : BaseRepository<People>, IPeopleRepository
     public PeopleRepository(AppDbContext context) : base(context)
     {
         _context = context;
+        _peoples = _context.Peoples.AsNoTracking();
         _patients = _context.Patients.AsNoTracking();
         _escorts = _context.Escorts.AsNoTracking();
         _hostings = _context.Hostings.AsNoTracking();
@@ -46,10 +48,10 @@ public class PeopleRepository : BaseRepository<People>, IPeopleRepository
         if (!filter.State.IsNullOrEmpty()) query = QueryState(query, filter.State!);
         if (!filter.Note.IsNullOrEmpty()) query = QueryNote(query, filter.Note!);
 
-        if (filter.Patient.HasValue) query = QueryPatient(query, filter.Patient.Value);
-        if (filter.Escort.HasValue) query = QueryEscort(query, filter.Escort.Value);
-        if (filter.Active.HasValue) query = QueryActive(query, filter.Active.Value);
-        if (filter.Veteran.HasValue) query = QueryVeteran(query, filter.Veteran.Value);
+        if (filter.Patient.HasValue) query = QueryPatient(query, filter.Patient.Value, _patients);
+        if (filter.Escort.HasValue) query = QueryEscort(query, filter.Escort.Value, _escorts);
+        if (filter.Active.HasValue) query = QueryActive(query, filter.Active.Value, _patients, _escorts, _hostings, _hostingsEscorts);
+        if (filter.Veteran.HasValue) query = QueryVeteran(query, filter.Veteran.Value, _hostings, _hostingsEscorts);
 
         if (filter.OrderBy == OrderBy.Ascending) query = query.OrderBy(p => p.Name);
         else if (filter.OrderBy == OrderBy.Descending) query = query.OrderByDescending(p => p.Name);
@@ -59,19 +61,12 @@ public class PeopleRepository : BaseRepository<People>, IPeopleRepository
             .Take(filter.Page.PageSize)
             .ToListAsync();
 
-        var peoplesDTO = new List<PeopleDTO>();
-        peoples.ForEach(people =>
-        {
-            var peopleDTO = new PeopleDTO(people);
-            peopleDTO.Experience = IsVeteran(people.Id) ? "Veterano" : "Novato";
-            peopleDTO.Status = IsPatient(people.Id) ? "Paciente" : IsEscort(people.Id) ? "Acompanhante" : "Sem status";
-            peoplesDTO.Add(peopleDTO);
-        });
+        var peoplesDTO = ConvertToDTO(peoples);
 
         return peoplesDTO;
     }
 
-    protected static IQueryable<People> QueryGlobalFilter(IQueryable<People> peoples, string globalFilter) =>
+    public static IQueryable<People> QueryGlobalFilter(IQueryable<People> peoples, string globalFilter) =>
         peoples.Where(p =>
             p.Name.ToLower().Contains(globalFilter.ToLower()) ||
             p.RG.Contains(globalFilter) ||
@@ -85,77 +80,65 @@ public class PeopleRepository : BaseRepository<People>, IPeopleRepository
             p.State.ToLower().Contains(globalFilter.ToLower()) ||
             p.Note.ToLower().Contains(globalFilter.ToLower()));
 
-    protected static IQueryable<People> QueryPeopleId(IQueryable<People> peoples, int id) =>
+    public static IQueryable<People> QueryPeopleId(IQueryable<People> peoples, int id) =>
         peoples.Where(p => p.Id == id);
 
-    protected static IQueryable<People> QueryName(IQueryable<People> peoples, string name) =>
+    public static IQueryable<People> QueryName(IQueryable<People> peoples, string name) =>
         peoples.Where(p => p.Name.ToLower().Contains(name.ToLower()));
 
-    protected static IQueryable<People> QueryRG(IQueryable<People> peoples, string rg) =>
+    public static IQueryable<People> QueryRG(IQueryable<People> peoples, string rg) =>
         peoples.Where(p => p.RG.Contains(rg));
 
-    protected static IQueryable<People> QueryIssuingBody(IQueryable<People> peoples, string issuingBody) =>
+    public static IQueryable<People> QueryIssuingBody(IQueryable<People> peoples, string issuingBody) =>
         peoples.Where(p => p.IssuingBody.ToLower().Contains(issuingBody.ToLower()));
 
-    protected static IQueryable<People> QueryCPF(IQueryable<People> peoples, string cpf) =>
+    public static IQueryable<People> QueryCPF(IQueryable<People> peoples, string cpf) =>
         peoples.Where(p => p.CPF.Contains(cpf));
 
-    protected static IQueryable<People> QueryPhone(IQueryable<People> peoples, string phone) =>
+    public static IQueryable<People> QueryPhone(IQueryable<People> peoples, string phone) =>
         peoples.Where(p => p.Phone.Contains(phone));
 
-    protected static IQueryable<People> QueryGender(IQueryable<People> peoples, Gender gender) =>
+    public static IQueryable<People> QueryGender(IQueryable<People> peoples, Gender gender) =>
         peoples.Where(p => p.Gender == gender);
 
-    protected static IQueryable<People> QueryBirthDate(IQueryable<People> peoples, DateTime birthDate) =>
+    public static IQueryable<People> QueryBirthDate(IQueryable<People> peoples, DateTime birthDate) =>
         peoples.Where(p => p.BirthDate.Date == birthDate.Date);
 
-    protected static IQueryable<People> QueryStreet(IQueryable<People> peoples, string street) =>
+    public static IQueryable<People> QueryStreet(IQueryable<People> peoples, string street) =>
         peoples.Where(p => p.Street.ToLower().Contains(street.ToLower()));
 
-    protected static IQueryable<People> QueryHouseNumber(IQueryable<People> peoples, string houseNumber) =>
+    public static IQueryable<People> QueryHouseNumber(IQueryable<People> peoples, string houseNumber) =>
         peoples.Where(p => p.HouseNumber.ToLower().Contains(houseNumber.ToLower()));
 
-    protected static IQueryable<People> QueryNeighborhood(IQueryable<People> peoples, string neighborhood) =>
+    public static IQueryable<People> QueryNeighborhood(IQueryable<People> peoples, string neighborhood) =>
         peoples.Where(p => p.Neighborhood.ToLower().Contains(neighborhood.ToLower()));
 
-    protected static IQueryable<People> QueryCity(IQueryable<People> peoples, string city) =>
+    public static IQueryable<People> QueryCity(IQueryable<People> peoples, string city) =>
         peoples.Where(p => p.City.ToLower().Contains(city.ToLower()));
 
-    protected static IQueryable<People> QueryState(IQueryable<People> peoples, string state) =>
+    public static IQueryable<People> QueryState(IQueryable<People> peoples, string state) =>
         peoples.Where(p => p.State.ToLower().Contains(state.ToLower()));
 
-    protected static IQueryable<People> QueryNote(IQueryable<People> peoples, string note) =>
+    public static IQueryable<People> QueryNote(IQueryable<People> peoples, string note) =>
         peoples.Where(p => p.Note.ToLower().Contains(note.ToLower()));
 
-    protected IQueryable<People> QueryPatient(IQueryable<People> peoples, bool getPatient) =>
-        getPatient ? peoples.Where(p => _patients.Any(pt => pt.PeopleId == p.Id)) :
-            peoples.Where(p => !_patients.Any(pt => pt.PeopleId == p.Id));
+    public static IQueryable<People> QueryPatient(IQueryable<People> peoples, bool getPatient, IQueryable<Patient> patients) =>
+        getPatient ? peoples.Where(p => patients.Any(pt => pt.PeopleId == p.Id)) :
+            peoples.Where(p => !patients.Any(pt => pt.PeopleId == p.Id));
 
-    protected IQueryable<People> QueryEscort(IQueryable<People> peoples, bool getEscort) =>
-        getEscort ? peoples.Where(p => _escorts.Any(e => e.PeopleId == p.Id)) :
-            peoples.Where(p => !_escorts.Any(e => e.PeopleId == p.Id));
+    public static IQueryable<People> QueryEscort(IQueryable<People> peoples, bool getEscort, IQueryable<Escort> escorts) =>
+        getEscort ? peoples.Where(p => escorts.Any(e => e.PeopleId == p.Id)) :
+            peoples.Where(p => !escorts.Any(e => e.PeopleId == p.Id));
 
-    protected IQueryable<People> QueryActive(IQueryable<People> peoples, bool getActive) =>
-        getActive ? peoples.Where(p =>
-            _hostings.Any(h => h.Patient!.PeopleId == p.Id &&
-                h.CheckIn <= DateTime.Now && DateTime.Now <= h.CheckOut)
-            ||
-            _hostingsEscorts.Any(he => he.Escort!.PeopleId == p.Id &&
-                he.Hosting!.CheckIn <= DateTime.Now && DateTime.Now <= he.Hosting.CheckOut)) :
-            peoples.Where(p =>
-            !_hostings.Any(h => h.Patient!.PeopleId == p.Id &&
-                h.CheckIn <= DateTime.Now && DateTime.Now <= h.CheckOut)
-            &&
-            !_hostingsEscorts.Any(he => he.Escort!.PeopleId == p.Id &&
-                he.Hosting!.CheckIn <= DateTime.Now && DateTime.Now <= he.Hosting.CheckOut));
+    public static IQueryable<People> QueryActive(IQueryable<People> peoples, bool getActive, IQueryable<Patient> patients, IQueryable<Escort> escorts, IQueryable<Hosting> hostings, IQueryable<HostingEscort> hostingsEscorts) =>
+        getActive ? peoples.Where(p => PatientRepository.QueryActive(patients, hostings, true).Any(pt => pt.PeopleId == p.Id) ||
+            EscortRepository.QueryActive(escorts, getActive, hostings, hostingsEscorts).Any(e => e.PeopleId == p.Id)) :
+            peoples.Where(p => !PatientRepository.QueryActive(patients, hostings, true).Any(pt => pt.PeopleId == p.Id) &&
+                !EscortRepository.QueryActive(escorts, getActive, hostings, hostingsEscorts).Any(e => e.PeopleId == p.Id));
 
-    protected IQueryable<People> QueryVeteran(IQueryable<People> peoples, bool getVeteran) =>
-        getVeteran ? peoples.Where(p =>
-            _hostings.Count(h => h.Patient!.PeopleId == p.Id) +
-            _hostingsEscorts.Count(he => he.Escort!.PeopleId == p.Id) > 1) :
-            peoples.Where(p =>
-            _hostings.Count(h => h.Patient!.PeopleId == p.Id) +
-            _hostingsEscorts.Count(he => he.Escort!.PeopleId == p.Id) <= 1);
+    public static IQueryable<People> QueryVeteran(IQueryable<People> peoples, bool getVeteran, IQueryable<Hosting> hostings, IQueryable<HostingEscort> hostingsEscorts) =>
+        getVeteran ? peoples.Where(p => hostings.Count(h => h.Patient!.PeopleId == p.Id) + hostingsEscorts.Count(he => he.Escort!.PeopleId == p.Id) > 1) :
+            peoples.Where(p => hostings.Count(h => h.Patient!.PeopleId == p.Id) + hostingsEscorts.Count(he => he.Escort!.PeopleId == p.Id) <= 1);
 
     public bool IsVeteran(int peopleId)
     {
@@ -169,4 +152,19 @@ public class PeopleRepository : BaseRepository<People>, IPeopleRepository
 
     public bool IsEscort(int peopleId) =>
         _escorts.Any(e => e.PeopleId == peopleId);
+
+    public List<PeopleDTO> ConvertToDTO(List<People> peoples)
+    {
+        var peoplesDTO = new List<PeopleDTO>();
+
+        peoples.ForEach(people =>
+        {
+            var peopleDTO = new PeopleDTO(people);
+            peopleDTO.Experience = IsVeteran(people.Id) ? "Veterano" : "Novato";
+            peopleDTO.Status = IsPatient(people.Id) ? "Paciente" : IsEscort(people.Id) ? "Acompanhante" : "Sem status";
+            peoplesDTO.Add(peopleDTO);
+        });
+
+        return peoplesDTO;
+    }
 }

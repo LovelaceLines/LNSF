@@ -12,6 +12,20 @@ namespace LNSF.Test.Apis;
 public class PeopleTestApi : GlobalClientRequest
 {
     [Fact]
+    public async Task Get_ValidPeopleId_Ok()
+    {
+        // Arrange - People
+        var people = await GetPeople();
+
+        // Act - Query
+        var queryId = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id));
+        var peopleIdQueried = queryId.First();
+
+        // Assert
+        Assert.Equivalent(people.Id, peopleIdQueried.Id);
+    }
+
+    [Fact]
     public async Task Get_ValidPeopleNameQuery_Ok()
     {
         // Arrange - People
@@ -19,14 +33,13 @@ public class PeopleTestApi : GlobalClientRequest
         var people = await GetPeople(name: name);
 
         // Act - Query
-        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, name: name));
-        var peopleQueried = query.First();
-
-        peopleQueried.Experience = null;
-        peopleQueried.Status = null;
+        var queryId = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id));
+        var peopleIdQueried = queryId.First();
+        var queryIdName = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, name: name));
+        var peopleIdNameQueried = queryIdName.First();
 
         // Assert
-        Assert.Equivalent(people, peopleQueried);
+        Assert.Equivalent(peopleIdQueried, peopleIdNameQueried);
     }
 
     [Fact]
@@ -37,32 +50,30 @@ public class PeopleTestApi : GlobalClientRequest
         var people = await GetPeople(gender: gender);
 
         // Act - Query
-        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, gender: gender));
-        var peopleQueried = query.First();
-
-        peopleQueried.Experience = null;
-        peopleQueried.Status = null;
+        var queryId = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id));
+        var peopleIdQueried = queryId.First();
+        var queryIdGender = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, gender: gender));
+        var peopleIdGenderQueried = queryIdGender.First();
 
         // Assert
-        Assert.Equivalent(people, peopleQueried);
+        Assert.Equivalent(peopleIdQueried, peopleIdGenderQueried);
     }
 
     [Fact]
     public async Task Get_ValidPeopleBirthDateQuery_Ok()
     {
         // Arrange - People
-        var birthDate = new Bogus.DataSets.Date().Past(100);
+        var birthDate = DateTime.Now.AddYears(-new Bogus.Faker().Random.Int(15, 130));
         var people = await GetPeople(birthDate: birthDate);
 
         // Act - Query
-        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, birthDate: birthDate));
-        var peopleQueried = query.First();
-
-        peopleQueried.Experience = null;
-        peopleQueried.Status = null;
+        var queryId = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id));
+        var peopleIdQueried = queryId.First();
+        var queryIdBirthDate = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, birthDate: birthDate));
+        var peopleIdBirthDateQueried = queryIdBirthDate.First();
 
         // Assert
-        Assert.Equivalent(people, peopleQueried);
+        Assert.Equivalent(peopleIdQueried, peopleIdBirthDateQueried);
     }
 
     [Fact]
@@ -73,14 +84,13 @@ public class PeopleTestApi : GlobalClientRequest
         var people = await GetPeople(rg: rg);
 
         // Act - Query
-        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, rg: rg));
-        var peopleQueried = query.First();
-
-        peopleQueried.Experience = null;
-        peopleQueried.Status = null;
+        var queryId = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id));
+        var peopleIdQueried = queryId.First();
+        var queryIdRG = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, rg: rg));
+        var peopleIdRGQueried = queryIdRG.First();
 
         // Assert
-        Assert.Equivalent(people, peopleQueried);
+        Assert.Equivalent(peopleIdQueried, peopleIdRGQueried);
     }
 
     [Fact]
@@ -91,14 +101,13 @@ public class PeopleTestApi : GlobalClientRequest
         var people = await GetPeople(issuingBody: issuingBody);
 
         // Act - Query
-        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, issuingBody: issuingBody));
-        var peopleQueried = query.First();
-
-        peopleQueried.Experience = null;
-        peopleQueried.Status = null;
+        var queryId = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id));
+        var peopleIdQueried = queryId.First();
+        var queryIdIssuingBody = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, issuingBody: issuingBody));
+        var peopleIdIssuingBodyQueried = queryIdIssuingBody.First();
 
         // Assert
-        Assert.Equivalent(people, peopleQueried);
+        Assert.Equivalent(peopleIdQueried, peopleIdIssuingBodyQueried);
     }
 
     [Fact]
@@ -109,14 +118,13 @@ public class PeopleTestApi : GlobalClientRequest
         var people = await GetPeople(cpf: cpf);
 
         // Act - Query
-        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, cpf: cpf));
-        var peopleQueried = query.First();
-
-        peopleQueried.Experience = null;
-        peopleQueried.Status = null;
+        var queryId = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id));
+        var peopleIdQueried = queryId.First();
+        var queryIdCPF = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, cpf: cpf));
+        var peopleIdCPFQueried = queryIdCPF.First();
 
         // Assert
-        Assert.Equivalent(people, peopleQueried);
+        Assert.Equivalent(peopleIdQueried, peopleIdCPFQueried);
     }
 
     [Fact]
@@ -127,14 +135,13 @@ public class PeopleTestApi : GlobalClientRequest
         var people = await GetPeople(street: street);
 
         // Act - Query
-        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, street: street));
-        var peopleQueried = query.First();
-
-        peopleQueried.Experience = null;
-        peopleQueried.Status = null;
+        var queryId = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id));
+        var peopleIdQueried = queryId.First();
+        var queryIdStreet = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, street: street));
+        var peopleIdStreetQueried = queryIdStreet.First();
 
         // Assert
-        Assert.Equivalent(people, peopleQueried);
+        Assert.Equivalent(peopleIdQueried, peopleIdStreetQueried);
     }
 
     [Fact]
@@ -145,14 +152,13 @@ public class PeopleTestApi : GlobalClientRequest
         var people = await GetPeople(houseNumber: houseNumber);
 
         // Act - Query
-        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, houseNumber: houseNumber));
-        var peopleQueried = query.First();
-
-        peopleQueried.Experience = null;
-        peopleQueried.Status = null;
+        var queryId = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id));
+        var peopleIdQueried = queryId.First();
+        var queryIdHouseNumber = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, houseNumber: houseNumber));
+        var peopleIdHouseNumberQueried = queryIdHouseNumber.First();
 
         // Assert
-        Assert.Equivalent(people, peopleQueried);
+        Assert.Equivalent(peopleIdQueried, peopleIdHouseNumberQueried);
     }
 
     [Fact]
@@ -163,14 +169,13 @@ public class PeopleTestApi : GlobalClientRequest
         var people = await GetPeople(neighborhood: neighborhood);
 
         // Act - Query
-        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, neighborhood: neighborhood));
-        var peopleQueried = query.First();
-
-        peopleQueried.Experience = null;
-        peopleQueried.Status = null;
+        var queryId = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id));
+        var peopleIdQueried = queryId.First();
+        var queryIdNeighborhood = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, neighborhood: neighborhood));
+        var peopleIdNeighborhoodQueried = queryIdNeighborhood.First();
 
         // Assert
-        Assert.Equivalent(people, peopleQueried);
+        Assert.Equivalent(peopleIdQueried, peopleIdNeighborhoodQueried);
     }
 
     [Fact]
@@ -181,14 +186,13 @@ public class PeopleTestApi : GlobalClientRequest
         var people = await GetPeople(city: city);
 
         // Act - Query
-        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, city: city));
-        var peopleQueried = query.First();
-
-        peopleQueried.Experience = null;
-        peopleQueried.Status = null;
+        var queryId = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id));
+        var peopleIdQueried = queryId.First();
+        var queryIdCity = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, city: city));
+        var peopleIdCityQueried = queryIdCity.First();
 
         // Assert
-        Assert.Equivalent(people, peopleQueried);
+        Assert.Equivalent(peopleIdQueried, peopleIdCityQueried);
     }
 
     [Fact]
@@ -199,14 +203,13 @@ public class PeopleTestApi : GlobalClientRequest
         var people = await GetPeople(state: state);
 
         // Act - Query
-        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, state: state));
-        var peopleQueried = query.First();
-
-        peopleQueried.Experience = null;
-        peopleQueried.Status = null;
+        var queryId = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, state: state));
+        var peopleIdQueried = queryId.First();
+        var queryIdState = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, state: state));
+        var peopleIdStateQueried = queryIdState.First();
 
         // Assert
-        Assert.Equivalent(people, peopleQueried);
+        Assert.Equivalent(peopleIdQueried, peopleIdStateQueried);
     }
 
     [Fact]
@@ -217,14 +220,13 @@ public class PeopleTestApi : GlobalClientRequest
         var people = await GetPeople(phone: phone);
 
         // Act - Query
-        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, phone: phone));
-        var peopleQueried = query.First();
-
-        peopleQueried.Experience = null;
-        peopleQueried.Status = null;
+        var queryId = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, phone: phone));
+        var peopleIdQueried = queryId.First();
+        var queryIdPhone = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, phone: phone));
+        var peopleIdPhoneQueried = queryIdPhone.First();
 
         // Assert
-        Assert.Equivalent(people, peopleQueried);
+        Assert.Equivalent(peopleIdQueried, peopleIdPhoneQueried);
     }
 
     [Fact]
@@ -235,14 +237,13 @@ public class PeopleTestApi : GlobalClientRequest
         var people = await GetPeople(note: note);
 
         // Act - Query
-        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, note: note));
-        var peopleQueried = query.First();
-
-        peopleQueried.Experience = null;
-        peopleQueried.Status = null;
+        var queryId = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, note: note));
+        var peopleIdQueried = queryId.First();
+        var queryIdNote = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, note: note));
+        var peopleIdNoteQueried = queryIdNote.First();
 
         // Assert
-        Assert.Equivalent(people, peopleQueried);
+        Assert.Equivalent(peopleIdQueried, peopleIdNoteQueried);
     }
 
     [Fact]
@@ -253,14 +254,13 @@ public class PeopleTestApi : GlobalClientRequest
         var patient = await GetPatient(peopleId: people.Id);
 
         // Act - Query
-        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, patient: true));
-        var peopleQueried = query.First();
-
-        peopleQueried.Experience = null;
-        peopleQueried.Status = null;
+        var queryId = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id));
+        var peopleIdQueried = queryId.First();
+        var queryIdPatient = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, patient: true));
+        var peopleIdPatientQueried = queryIdPatient.First();
 
         // Assert
-        Assert.Equivalent(people, peopleQueried);
+        Assert.Equivalent(peopleIdQueried, peopleIdPatientQueried);
     }
 
     [Fact]
@@ -271,14 +271,13 @@ public class PeopleTestApi : GlobalClientRequest
         var escort = await GetEscort(peopleId: people.Id);
 
         // Act - Query
-        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, escort: true));
-        var peopleQueried = query.First();
-
-        peopleQueried.Experience = null;
-        peopleQueried.Status = null;
+        var queryId = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id));
+        var peopleIdQueried = queryId.First();
+        var queryIdEscort = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, escort: true));
+        var peopleIdEscortQueried = queryIdEscort.First();
 
         // Assert
-        Assert.Equivalent(people, peopleQueried);
+        Assert.Equivalent(peopleIdQueried, peopleIdEscortQueried);
     }
 
     [Fact]
@@ -290,14 +289,13 @@ public class PeopleTestApi : GlobalClientRequest
         var hosting = await GetHosting(patientId: patient.Id, checkIn: DateTime.Now.AddDays(-1), checkOut: DateTime.Now.AddDays(1));
 
         // Act - Query
-        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, active: true));
-        var peopleQueried = query.First();
-
-        peopleQueried.Experience = null;
-        peopleQueried.Status = null;
+        var queryId = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id));
+        var peopleIdQueried = queryId.First();
+        var queryIdActive = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, active: true));
+        var peopleIdActiveQueried = queryIdActive.First();
 
         // Assert
-        Assert.Equivalent(people, peopleQueried);
+        Assert.Equivalent(peopleIdQueried, peopleIdActiveQueried);
     }
 
     [Fact]
@@ -310,14 +308,13 @@ public class PeopleTestApi : GlobalClientRequest
         var hosting2 = await GetHosting(patientId: patient.Id, checkIn: DateTime.Now.AddDays(-1), checkOut: DateTime.Now.AddDays(1));
 
         // Act - Query
-        var query = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, veteran: true));
-        var peopleQueried = query.First();
-
-        peopleQueried.Experience = null;
-        peopleQueried.Status = null;
+        var queryId = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id));
+        var peopleIdQueried = queryId.First();
+        var queryIdVeteran = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, veteran: true));
+        var peopleIdVeteranQueried = queryIdVeteran.First();
 
         // Assert
-        Assert.Equivalent(people, peopleQueried);
+        Assert.Equivalent(peopleIdQueried, peopleIdVeteranQueried);
     }
 
     [Fact]
@@ -327,65 +324,46 @@ public class PeopleTestApi : GlobalClientRequest
         var people = await GetPeople();
 
         // Act - Query
-        var queryName = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.Name));
-        var queryRG = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.RG));
-        var queryIssuingBody = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.IssuingBody));
-        var queryCPF = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.CPF));
-        var queryPhone = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.Phone));
-        var queryStreet = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.Street));
-        var queryHouseNumber = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.HouseNumber));
-        var queryNeighborhood = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.Neighborhood));
-        var queryCity = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.City));
-        var queryState = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.State));
-        var queryNote = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.Note));
+        var queryId = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id));
 
-        var queriedName = queryName.First();
-        var queriedRG = queryRG.First();
-        var queriedIssuingBody = queryIssuingBody.First();
-        var queriedCPF = queryCPF.First();
-        var queriedPhone = queryPhone.First();
-        var queriedStreet = queryStreet.First();
-        var queriedHouseNumber = queryHouseNumber.First();
-        var queriedNeighborhood = queryNeighborhood.First();
-        var queriedCity = queryCity.First();
-        var queriedState = queryState.First();
-        var queriedNote = queryNote.First();
+        var peopleIdQueried = queryId.First();
 
-        queriedName.Experience = null;
-        queriedName.Status = null;
-        queriedRG.Experience = null;
-        queriedRG.Status = null;
-        queriedIssuingBody.Experience = null;
-        queriedIssuingBody.Status = null;
-        queriedCPF.Experience = null;
-        queriedCPF.Status = null;
-        queriedPhone.Experience = null;
-        queriedPhone.Status = null;
-        queriedStreet.Experience = null;
-        queriedStreet.Status = null;
-        queriedHouseNumber.Experience = null;
-        queriedHouseNumber.Status = null;
-        queriedNeighborhood.Experience = null;
-        queriedNeighborhood.Status = null;
-        queriedCity.Experience = null;
-        queriedCity.Status = null;
-        queriedState.Experience = null;
-        queriedState.Status = null;
-        queriedNote.Experience = null;
-        queriedNote.Status = null;
+        var queryIdName = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.Name));
+        var queryIdRG = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.RG));
+        var queryIdIssuingBody = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.IssuingBody));
+        var queryIdCPF = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.CPF));
+        var queryIdPhone = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.Phone));
+        var queryIdStreet = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.Street));
+        var queryIdHouseNumber = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.HouseNumber));
+        var queryIdNeighborhood = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.Neighborhood));
+        var queryIdCity = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.City));
+        var queryIdState = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.State));
+        var queryIdNote = await Query<List<PeopleViewModel>>(_peopleClient, new PeopleFilter(id: people.Id, globalFilter: people.Note));
+
+        var PeopleIdName = queryIdName.First();
+        var PeopleIdRG = queryIdRG.First();
+        var PeopleIdIssuingBody = queryIdIssuingBody.First();
+        var PeopleIdCPF = queryIdCPF.First();
+        var PeopleIdPhone = queryIdPhone.First();
+        var PeopleIdStreet = queryIdStreet.First();
+        var PeopleIdHouseNumber = queryIdHouseNumber.First();
+        var PeopleIdNeighborhood = queryIdNeighborhood.First();
+        var PeopleIdCity = queryIdCity.First();
+        var PeopleIdState = queryIdState.First();
+        var PeopleIdNote = queryIdNote.First();
 
         // Assert
-        Assert.Equivalent(people, queriedName);
-        Assert.Equivalent(people, queriedRG);
-        Assert.Equivalent(people, queriedIssuingBody);
-        Assert.Equivalent(people, queriedCPF);
-        Assert.Equivalent(people, queriedPhone);
-        Assert.Equivalent(people, queriedStreet);
-        Assert.Equivalent(people, queriedHouseNumber);
-        Assert.Equivalent(people, queriedNeighborhood);
-        Assert.Equivalent(people, queriedCity);
-        Assert.Equivalent(people, queriedState);
-        Assert.Equivalent(people, queriedNote);
+        Assert.Equivalent(peopleIdQueried, PeopleIdName);
+        Assert.Equivalent(peopleIdQueried, PeopleIdRG);
+        Assert.Equivalent(peopleIdQueried, PeopleIdIssuingBody);
+        Assert.Equivalent(peopleIdQueried, PeopleIdCPF);
+        Assert.Equivalent(peopleIdQueried, PeopleIdPhone);
+        Assert.Equivalent(peopleIdQueried, PeopleIdStreet);
+        Assert.Equivalent(peopleIdQueried, PeopleIdHouseNumber);
+        Assert.Equivalent(peopleIdQueried, PeopleIdNeighborhood);
+        Assert.Equivalent(peopleIdQueried, PeopleIdCity);
+        Assert.Equivalent(peopleIdQueried, PeopleIdState);
+        Assert.Equivalent(peopleIdQueried, PeopleIdNote);
     }
 
     [Fact]

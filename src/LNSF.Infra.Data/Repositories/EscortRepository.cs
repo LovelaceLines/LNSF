@@ -18,24 +18,24 @@ public class EscortRepository : BaseRepository<Escort>, IEscortRepository
         _escorts = _context.Escorts.AsNoTracking();
     }
 
-    public async Task<List<Escort>> Query (EscortFilter filter)
+    public async Task<List<Escort>> Query(EscortFilter filter)
     {
         var query = _escorts;
         var hostingsEscorts = _context.HostingsEscorts.AsNoTracking();
         var hostings = _context.Hostings.AsNoTracking();
 
-        if (filter.Id.HasValue) query = query.Where(x => x.Id == filter.Id);
-        if (filter.PeopleId.HasValue) query = query.Where(x => x.PeopleId == filter.PeopleId);
+        if (filter.Id.HasValue) query = QueryId(query, filter.Id.Value);
+        if (filter.PeopleId.HasValue) query = QueryPeopleId(query, filter.PeopleId.Value);
 
         if (filter.Active == true) query = query.Where(e =>
             hostingsEscorts.Any(he => he.EscortId == e.Id &&
-                hostings.Any(h => h.Id == he.HostingId && 
+                hostings.Any(h => h.Id == he.HostingId &&
                     h.CheckIn <= DateTime.Now && DateTime.Now <= h.CheckOut)));
         else if (filter.Active == false) query = query.Where(e =>
             !hostingsEscorts.Any(he => he.EscortId == e.Id &&
-                hostings.Any(h => h.Id == he.HostingId && 
+                hostings.Any(h => h.Id == he.HostingId &&
                     h.CheckIn <= DateTime.Now && DateTime.Now <= h.CheckOut)));
-        
+
         if (filter.IsVeteran == true) query = query.Where(e =>
             hostingsEscorts.Count(he => he.EscortId == e.Id) > 1);
         else if (filter.IsVeteran == false) query = query.Where(e =>
@@ -55,6 +55,16 @@ public class EscortRepository : BaseRepository<Escort>, IEscortRepository
 
         return escorts;
     }
+
+    public static IQueryable<Escort> QueryId(IQueryable<Escort> query, int id) =>
+        query.Where(x => x.Id == id);
+
+    public static IQueryable<Escort> QueryPeopleId(IQueryable<Escort> query, int peopleId) =>
+        query.Where(x => x.PeopleId == peopleId);
+
+    public static IQueryable<Escort> QueryActive(IQueryable<Escort> query, bool active, IQueryable<Hosting> hostings, IQueryable<HostingEscort> hostingsEscorts) =>
+        active ? query.Where(e => HostingEscortRepository.QueryActive(hostingsEscorts, active, hostings).Any(he => he.EscortId == e.Id)) :
+            query.Where(e => !HostingEscortRepository.QueryActive(hostingsEscorts, active, hostings).Any(he => he.EscortId == e.Id));
 
     public async Task<bool> ExistsByPeopleId(int peopleId) =>
         await _escorts.AnyAsync(x => x.PeopleId == peopleId);

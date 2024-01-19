@@ -10,6 +10,130 @@ namespace LNSF.Test.Apis;
 public class PatientTestApi : GlobalClientRequest
 {
     [Fact]
+    public async Task Get_ValidPatientId_Ok()
+    {
+        // Arrange - Patient
+        var patient = await GetPatient();
+
+        // Act - Patient
+        var queryId = await Query<List<PatientViewModel>>(_patientClient, new PatientFilter(id: patient.Id));
+        var patientIdQueried = queryId.FirstOrDefault();
+
+        // Assert
+        Assert.Equivalent(patient, patientIdQueried);
+    }
+
+    [Fact]
+    public async Task Get_ValidPeopleId_Ok()
+    {
+        // Arrange - Patient
+        var patient = await GetPatient();
+
+        // Act - Patient
+        var queryPeopleId = await Query<List<PatientViewModel>>(_patientClient, new PatientFilter(id: patient.Id, peopleId: patient.PeopleId));
+        var patientPeopleIdQueried = queryPeopleId.FirstOrDefault();
+
+        // Assert
+        Assert.Equivalent(patient, patientPeopleIdQueried);
+    }
+
+    [Fact]
+    public async Task Get_ValidHospitalId_Ok()
+    {
+        // Arrange - Patient
+        var patient = await GetPatient();
+
+        // Act - Patient
+        var queryHospitalId = await Query<List<PatientViewModel>>(_patientClient, new PatientFilter(id: patient.Id, hospitalId: patient.HospitalId));
+        var patientHospitalIdQueried = queryHospitalId.FirstOrDefault();
+
+        // Assert
+        Assert.Equivalent(patient, patientHospitalIdQueried);
+    }
+
+    [Fact]
+    public async Task Get_ValidSocioEconomicRecord_Ok()
+    {
+        // Arrange - Patient
+        var patient = await GetPatient();
+
+        // Act - Patient
+        var querySocioEconomicRecord = await Query<List<PatientViewModel>>(_patientClient, new PatientFilter(id: patient.Id, socioEconomicRecord: patient.SocioeconomicRecord));
+        var patientSocioEconomicRecordQueried = querySocioEconomicRecord.FirstOrDefault();
+
+        // Assert
+        Assert.Equivalent(patient, patientSocioEconomicRecordQueried);
+    }
+
+    [Fact]
+    public async Task Get_ValidTerm_Ok()
+    {
+        // Arrange - Patient
+        var patient = await GetPatient();
+
+        // Act - Patient
+        var queryTerm = await Query<List<PatientViewModel>>(_patientClient, new PatientFilter(id: patient.Id, term: patient.Term));
+        var patientTermQueried = queryTerm.FirstOrDefault();
+
+        // Assert
+        Assert.Equivalent(patient, patientTermQueried);
+    }
+
+    [Fact]
+    public async Task Get_ValidTreatmentId_Ok()
+    {
+        // Arrange - Patient
+        var patient = await GetPatient();
+
+        // Arrange - PatientTreatment
+        var patientTreatment = await GetPatientTreatment(patientId: patient.Id);
+
+        // Act - Patient
+        var queryTreatmentId = await Query<List<PatientViewModel>>(_patientClient, new PatientFilter(id: patient.Id, treatmentId: patientTreatment.TreatmentId));
+        var patientTreatmentIdQueried = queryTreatmentId.FirstOrDefault();
+
+        // Assert
+        Assert.Equivalent(patient, patientTreatmentIdQueried);
+    }
+
+    [Fact]
+    public async Task Get_ValidActive_Ok()
+    {
+        // Arrange - Patient
+        var patient = await GetPatient();
+
+        // Arrange - Hosting
+        var hosting = await GetHosting(patientId: patient.Id, checkIn: DateTime.Now.AddDays(-1), checkOut: DateTime.Now.AddDays(1));
+
+        // Act - Patient
+        var queryActive = await Query<List<PatientViewModel>>(_patientClient, new PatientFilter(id: patient.Id, active: true));
+        var patientActiveQueried = queryActive.FirstOrDefault();
+
+        // Assert
+        Assert.Equivalent(patient, patientActiveQueried);
+    }
+
+    [Fact]
+    public async Task Get_ValidIsVeteran_Ok()
+    {
+        // Arrange - Patient
+        var patient = await GetPatient();
+
+        // Arrange - Hosting
+        var hosting1 = await GetHosting(patientId: patient.Id, checkIn: DateTime.Now.AddDays(-10), checkOut: DateTime.Now.AddDays(-5));
+        var hosting2 = await GetHosting(patientId: patient.Id, checkIn: DateTime.Now.AddDays(-1), checkOut: DateTime.Now.AddDays(1));
+
+        // Act - Patient
+        var queryIsVeteran = await Query<List<PatientViewModel>>(_patientClient, new PatientFilter(id: patient.Id, isVeteran: true));
+        var patientIsVeteranQueried = queryIsVeteran.FirstOrDefault();
+
+        // Assert
+        Assert.Equivalent(patient, patientIsVeteranQueried);
+    }
+
+
+
+    [Fact]
     public async Task Post_ValidPatient_Ok()
     {
         // Arrange - People
@@ -17,7 +141,7 @@ public class PatientTestApi : GlobalClientRequest
 
         // Arrange - Hospital
         var hospital = await GetHospital();
-        
+
         // Arrange - Patient
         var patientFake = new PatientPostViewModelFake(peopleId: people.Id, hospitalId: hospital.Id).Generate();
 
@@ -124,7 +248,7 @@ public class PatientTestApi : GlobalClientRequest
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
     }
-    
+
     [Fact]
     public async Task Put_ValidPatient_Ok()
     {
@@ -151,7 +275,7 @@ public class PatientTestApi : GlobalClientRequest
         Assert.Equivalent(patientPosted, patientQueried);
     }
 
-    [Fact]	
+    [Fact]
     public async Task Put_InvalidPatientWithExistsPeopleId_NotFound()
     {
         // Arrange - Patient
@@ -159,7 +283,7 @@ public class PatientTestApi : GlobalClientRequest
         var patient2 = await GetPatient();
 
         var patientToPut = new PatientViewModelFake(patient1.Id, patient2.PeopleId, patient1.HospitalId).Generate();
-        
+
         // Arrange - Count
         var countBefore = await GetCount(_patientClient);
 

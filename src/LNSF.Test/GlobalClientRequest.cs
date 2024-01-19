@@ -308,6 +308,24 @@ public class GlobalClientRequest
         return await Put<HostingViewModel>(_hostingClient, new HostingViewModelFake(id.Value, patientId: patientId.Value, checkIn: checkIn, checkOut: checkOut).Generate());
     }
 
+    public async Task<HostingEscortViewModel> GetHostingEscort(int? hostingId = null, int? escortId = null)
+    {
+        if (!hostingId.HasValue)
+        {
+            var hosting = await GetHosting();
+            hostingId = hosting.Id;
+        }
+
+        if (!escortId.HasValue)
+        {
+            var escort = await GetEscort();
+            escortId = escort.Id;
+        }
+
+        var hostingEscortFake = new HostingEscortViewModelFake(hostingId: hostingId.Value, escortId: escortId.Value).Generate();
+        return await Post<HostingEscortViewModel>(_addEscortToHostingClient, hostingEscortFake);
+    }
+
     public async Task<HostingEscortViewModel> GetAddEscortToHosting(int? hostingId = null, int? escortId = null)
     {
         if (!hostingId.HasValue)
