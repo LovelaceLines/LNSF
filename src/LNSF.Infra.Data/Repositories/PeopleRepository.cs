@@ -1,11 +1,12 @@
-﻿using LNSF.Domain.Repositories;
-using LNSF.Domain.Filters;
+﻿using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Enums;
+using LNSF.Domain.Filters;
+using LNSF.Domain.Repositories;
 using LNSF.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using LNSF.Domain.DTOs;
+using System.Linq.Expressions;
 
 namespace LNSF.Infra.Data.Repositories;
 
@@ -13,6 +14,8 @@ public class PeopleRepository : BaseRepository<People>, IPeopleRepository
 {
     private readonly AppDbContext _context;
     private readonly IQueryable<People> _peoples;
+    private readonly IQueryable<Tour> _tours;
+    private readonly IQueryable<EmergencyContact> _emergencyContacts;
     private readonly IQueryable<Patient> _patients;
     private readonly IQueryable<Escort> _escorts;
     private readonly IQueryable<Hosting> _hostings;
@@ -22,6 +25,8 @@ public class PeopleRepository : BaseRepository<People>, IPeopleRepository
     {
         _context = context;
         _peoples = _context.Peoples.AsNoTracking();
+        _tours = _context.Tours.AsNoTracking();
+        _emergencyContacts = _context.EmergencyContacts.AsNoTracking();
         _patients = _context.Patients.AsNoTracking();
         _escorts = _context.Escorts.AsNoTracking();
         _hostings = _context.Hostings.AsNoTracking();
@@ -56,29 +61,28 @@ public class PeopleRepository : BaseRepository<People>, IPeopleRepository
         if (filter.OrderBy == OrderBy.Ascending) query = query.OrderBy(p => p.Name);
         else if (filter.OrderBy == OrderBy.Descending) query = query.OrderByDescending(p => p.Name);
 
-        var peoples = await query
+        var peoplesDTO = await query
             .Skip(filter.Page.Page * filter.Page.PageSize)
             .Take(filter.Page.PageSize)
+            .Select(Build(filter.GetTours ?? false, filter.GetEmergencyContacts ?? false, _patients, _escorts, _hostings, _hostingsEscorts, _tours, _emergencyContacts))
             .ToListAsync();
-
-        var peoplesDTO = ConvertToDTO(peoples);
 
         return peoplesDTO;
     }
 
     public static IQueryable<People> QueryGlobalFilter(IQueryable<People> peoples, string globalFilter) =>
         peoples.Where(p =>
-            p.Name.ToLower().Contains(globalFilter.ToLower()) ||
-            p.RG.Contains(globalFilter) ||
-            p.IssuingBody.ToLower().Contains(globalFilter.ToLower()) ||
-            p.CPF.Contains(globalFilter) ||
-            p.Phone.Contains(globalFilter) ||
-            p.Street.ToLower().Contains(globalFilter.ToLower()) ||
-            p.HouseNumber.ToLower().Contains(globalFilter.ToLower()) ||
-            p.Neighborhood.ToLower().Contains(globalFilter.ToLower()) ||
-            p.City.ToLower().Contains(globalFilter.ToLower()) ||
-            p.State.ToLower().Contains(globalFilter.ToLower()) ||
-            p.Note.ToLower().Contains(globalFilter.ToLower()));
+            QueryName(peoples, globalFilter).Any(qp => qp.Id == p.Id) ||
+            QueryRG(peoples, globalFilter).Any(qp => qp.Id == p.Id) ||
+            QueryIssuingBody(peoples, globalFilter).Any(qp => qp.Id == p.Id) ||
+            QueryCPF(peoples, globalFilter).Any(qp => qp.Id == p.Id) ||
+            QueryPhone(peoples, globalFilter).Any(qp => qp.Id == p.Id) ||
+            QueryStreet(peoples, globalFilter).Any(qp => qp.Id == p.Id) ||
+            QueryHouseNumber(peoples, globalFilter).Any(qp => qp.Id == p.Id) ||
+            QueryNeighborhood(peoples, globalFilter).Any(qp => qp.Id == p.Id) ||
+            QueryCity(peoples, globalFilter).Any(qp => qp.Id == p.Id) ||
+            QueryState(peoples, globalFilter).Any(qp => qp.Id == p.Id) ||
+            QueryNote(peoples, globalFilter).Any(qp => qp.Id == p.Id));
 
     public static IQueryable<People> QueryPeopleId(IQueryable<People> peoples, int id) =>
         peoples.Where(p => p.Id == id);
@@ -140,31 +144,26 @@ public class PeopleRepository : BaseRepository<People>, IPeopleRepository
         getVeteran ? peoples.Where(p => hostings.Count(h => h.Patient!.PeopleId == p.Id) + hostingsEscorts.Count(he => he.Escort!.PeopleId == p.Id) > 1) :
             peoples.Where(p => hostings.Count(h => h.Patient!.PeopleId == p.Id) + hostingsEscorts.Count(he => he.Escort!.PeopleId == p.Id) <= 1);
 
-    public bool IsVeteran(int peopleId)
-    {
-        var patientCount = _hostings.Count(h => h.Patient!.PeopleId == peopleId);
-        var escortCount = _hostingsEscorts.Count(he => he.Escort!.PeopleId == peopleId);
-        return patientCount + escortCount > 1;
-    }
-
-    public bool IsPatient(int peopleId) =>
-        _patients.Any(p => p.PeopleId == peopleId);
-
-    public bool IsEscort(int peopleId) =>
-        _escorts.Any(e => e.PeopleId == peopleId);
-
-    public List<PeopleDTO> ConvertToDTO(List<People> peoples)
-    {
-        var peoplesDTO = new List<PeopleDTO>();
-
-        peoples.ForEach(people =>
+    public static Expression<Func<People, PeopleDTO>> Build(bool getTours, bool getEmergencyContacts, IQueryable<Patient> patients, IQueryable<Escort> escorts, IQueryable<Hosting> hostings, IQueryable<HostingEscort> hostingsEscorts, IQueryable<Tour> tours, IQueryable<EmergencyContact> emergencyContacts) =>
+        p => new PeopleDTO()
         {
-            var peopleDTO = new PeopleDTO(people);
-            peopleDTO.Experience = IsVeteran(people.Id) ? "Veterano" : "Novato";
-            peopleDTO.Status = IsPatient(people.Id) ? "Paciente" : IsEscort(people.Id) ? "Acompanhante" : "Sem status";
-            peoplesDTO.Add(peopleDTO);
-        });
-
-        return peoplesDTO;
-    }
+            Id = p.Id,
+            Name = p.Name,
+            Gender = p.Gender,
+            BirthDate = p.BirthDate,
+            RG = p.RG,
+            IssuingBody = p.IssuingBody,
+            CPF = p.CPF,
+            Street = p.Street,
+            HouseNumber = p.HouseNumber,
+            Neighborhood = p.Neighborhood,
+            City = p.City,
+            State = p.State,
+            Phone = p.Phone,
+            Note = p.Note,
+            Experience = hostings.Count(h => h.Patient!.PeopleId == p.Id) + hostingsEscorts.Count(he => he.Escort!.PeopleId == p.Id) > 1 ? "Veterano" : "Novato",
+            Status = patients.Any(p => p.PeopleId == p.Id) ? "Paciente" : escorts.Any(e => e.PeopleId == p.Id) ? "Acompanhante" : "Sem status",
+            Tours = getTours ? tours.Where(t => t.PeopleId == p.Id).ToList() : null,
+            EmergencyContacts = getEmergencyContacts ? emergencyContacts.Where(ec => ec.PeopleId == p.Id).ToList() : null
+        };
 }

@@ -1,4 +1,5 @@
 using LNSF.Application.Interfaces;
+using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
 using LNSF.Domain.Filters;
@@ -22,10 +23,10 @@ public class PatientService : IPatientService
         _peopleRepository = peopleRepository;
     }
 
-    public async Task<List<Patient>> Query(PatientFilter filter) => 
+    public async Task<List<PatientDTO>> Query(PatientFilter filter) =>
         await _patientRepository.Query(filter);
 
-    public async Task<int> Count() => 
+    public async Task<int> Count() =>
         await _patientRepository.GetCount();
 
     public async Task<Patient> Create(Patient patient)
@@ -33,15 +34,15 @@ public class PatientService : IPatientService
         if (!await _peopleRepository.ExistsById(patient.PeopleId)) throw new AppException("Pessoa não encontrada", HttpStatusCode.NotFound);
         if (await _patientRepository.ExistsByPeopleId(patient.PeopleId)) throw new AppException("Pessoa já cadastrada como paciente", HttpStatusCode.Conflict);
         if (!await _hospitalRepository.ExistsById(patient.HospitalId)) throw new AppException("Hospital não encontrado", HttpStatusCode.NotFound);
-        
+
         return await _patientRepository.Add(patient);
     }
-    
+
     public async Task<Patient> Update(Patient patient)
     {
         if (!await _patientRepository.ExistsByIdAndPeopleId(patient.Id, patient.PeopleId)) throw new AppException("Paciente não encontrado", HttpStatusCode.NotFound);
         if (!await _hospitalRepository.ExistsById(patient.HospitalId)) throw new AppException("Hospital não encontrado", HttpStatusCode.NotFound);
-        
+
         return await _patientRepository.Update(patient);
     }
 

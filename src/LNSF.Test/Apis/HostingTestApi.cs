@@ -50,8 +50,6 @@ public class HostingTestApi : GlobalClientRequest
         var queryEscortId = await Query<List<HostingViewModel>>(_hostingClient, new HostingFilter(id: hosting.Id, escortId: hostingEscort.EscortId));
         var hostingEscortIdQueried = queryEscortId.First();
 
-        if (hostingEscortIdQueried.Escorts!.Count == 0) hostingEscortIdQueried.Escorts = null;
-
         // Assert
         Assert.Equivalent(hosting, hostingEscortIdQueried);
     }
@@ -93,8 +91,6 @@ public class HostingTestApi : GlobalClientRequest
         // Act - Hosting
         var queryActive = await Query<List<HostingViewModel>>(_hostingClient, new HostingFilter(id: hosting.Id, active: true));
         var hostingActiveQueried = queryActive.First();
-
-        if (hostingActiveQueried.Escorts!.Count == 0) hostingActiveQueried.Escorts = null;
 
         // Assert
         Assert.Equivalent(hosting, hostingActiveQueried);

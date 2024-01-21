@@ -14,15 +14,17 @@ public class HospitalFilter
 
     public HospitalFilter() { }
 
-    public HospitalFilter(int? id = null, 
-        string? name = null, 
+    public HospitalFilter(int? id = null,
+        string? name = null,
         string? acronym = null,
+        string? globalFilter = null,
         Pagination? page = null,
         OrderBy? orderBy = null)
     {
         Id = id;
         Name = name;
         Acronym = acronym;
+        GlobalFilter = globalFilter;
         Page = page ?? new();
         OrderBy = orderBy;
     }

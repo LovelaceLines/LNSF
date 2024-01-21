@@ -46,6 +46,11 @@ public class HostingEscortRepository : BaseRepository<HostingEscort>, IHostingEs
         return hostingEscorts;
     }
 
+    public static IQueryable<HostingEscort> QueryGlobalFilter(IQueryable<HostingEscort> query, string globalFilter, IQueryable<Escort> escorts, IQueryable<People> peoples) =>
+        query.Where(he =>
+            EscortRepository.QueryGlobalFilter(escorts, globalFilter, peoples).Any(e => e.Id == he.EscortId));
+
+
     public static IQueryable<HostingEscort> QueryHostingId(IQueryable<HostingEscort> query, int hostingId) =>
         query.Where(he => he.HostingId == hostingId);
 

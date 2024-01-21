@@ -23,6 +23,8 @@ public class PeopleFilter
     public bool? Active { get; set; }
     public bool? Veteran { get; set; }
     public string? GlobalFilter { get; set; }
+    public bool? GetTours { get; set; }
+    public bool? GetEmergencyContacts { get; set; }
 
     public Pagination Page { get; set; } = new();
     public OrderBy? OrderBy { get; set; }

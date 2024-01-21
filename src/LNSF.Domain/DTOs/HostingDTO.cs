@@ -4,5 +4,5 @@ namespace LNSF.Domain.DTOs;
 
 public class HostingDTO : Hosting
 {
-    public Escort[]? Escorts { get; set; } = null;
+    public List<Escort>? Escorts { get; set; } = null;
 }

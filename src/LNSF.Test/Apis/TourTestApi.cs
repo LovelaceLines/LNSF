@@ -9,6 +9,108 @@ namespace LNSF.Test.Apis;
 
 public class TourTestApi : GlobalClientRequest
 {
+    [Fact]
+    public async Task Get_ValidTourId_Ok()
+    {
+        // Arrange - Tour
+        var tour = await GetTour();
+
+        // Act - Tour
+        var queryId = await Query<List<TourViewModel>>(_tourClient, new TourFilter(id: tour.Id));
+        var tourQueriedId = queryId.First();
+
+        // Assert 
+        Assert.Equivalent(tour, tourQueriedId);
+    }
+
+    [Fact]
+    public async Task Get_ValidTourPeopleId_Ok()
+    {
+        // Arrange - People
+        var people = await GetPeople();
+
+        // Arrange - Tour
+        var tour = await GetTour(peopleId: people.Id);
+
+        // Act - Tour
+        var queryPeopleId = await Query<List<TourViewModel>>(_tourClient, new TourFilter(id: tour.Id, peopleId: tour.PeopleId));
+        var tourQueriedPeopleId = queryPeopleId.First();
+
+        // Assert
+        Assert.Equivalent(tour, tourQueriedPeopleId);
+    }
+
+    [Fact]
+    public async Task Get_ValidTourOutput_Ok()
+    {
+        // Arrange - Tour
+        var tour = await GetTour();
+
+        // Act - Tour
+        var queryOutput = await Query<List<TourViewModel>>(_tourClient, new TourFilter(id: tour.Id, output: tour.Output));
+        var tourQueriedOutput = queryOutput.First();
+
+        // Assert
+        Assert.Equivalent(tour, tourQueriedOutput);
+    }
+
+    [Fact]
+    public async Task Get_ValidTourNote_Ok()
+    {
+        // Arrange - Tour
+        var tour = await GetTour();
+
+        // Act - Tour
+        var queryNote = await Query<List<TourViewModel>>(_tourClient, new TourFilter(id: tour.Id, note: tour.Note));
+        var tourQueriedNote = queryNote.First();
+
+        // Assert
+        Assert.Equivalent(tour, tourQueriedNote);
+    }
+
+    [Fact]
+    public async Task Get_ValidTourInOpen_Ok()
+    {
+        // Arrange - Tour
+        var tour = await GetTour();
+
+        // Act - Tour
+        var queryInOpen = await Query<List<TourViewModel>>(_tourClient, new TourFilter(id: tour.Id, inOpen: true));
+        var tourQueriedInOpen = queryInOpen.First();
+
+        // Assert
+        Assert.Equivalent(tour, tourQueriedInOpen);
+    }
+
+    [Fact]
+    public async Task Get_ValidTourClosed_Ok()
+    {
+        // Arrange - Tour
+        var tourInOpen = await GetTour();
+        var tourClosed = await GetTour(tourInOpen.Id, tourInOpen.PeopleId);
+
+        // Act - Tour
+        var queryClosed = await Query<List<TourViewModel>>(_tourClient, new TourFilter(id: tourClosed.Id, inOpen: false));
+        var tourQueriedClosed = queryClosed.First();
+
+        // Assert
+        Assert.Equivalent(tourClosed, tourQueriedClosed);
+    }
+
+    [Fact]
+    public async Task Get_ValidTourInput_Ok()
+    {
+        // Arrange - Tour
+        var tour = await GetTour();
+
+        // Act - Tour
+        var queryInput = await Query<List<TourViewModel>>(_tourClient, new TourFilter(id: tour.Id, input: tour.Input));
+        var tourQueriedInput = queryInput.First();
+
+        // Assert
+        Assert.Equivalent(tour, tourQueriedInput);
+    }
+
     [Theory]
     [InlineData(null)]
     [InlineData("")]
@@ -56,7 +158,7 @@ public class TourTestApi : GlobalClientRequest
 
         // Act - Tour
         var exception = await Post<AppException>(_tourClient, openTour2);
-        
+
         // Act - Count
         var countAfter = await GetCount(_tourClient);
 
@@ -107,7 +209,7 @@ public class TourTestApi : GlobalClientRequest
 
         // Act - Tour
         var exception = await Put<AppException>(_putAllClient, tourToPut);
-        
+
         // Act - Count
         var countAfter = await GetCount(_tourClient);
 
@@ -125,7 +227,7 @@ public class TourTestApi : GlobalClientRequest
 
         // Arrange - Count
         var countBefore = await GetCount(_tourClient);
- 
+
         // Act - Tour
         var closeTourPuted = await Put<TourViewModel>(_putAllClient, closeTourToPutAll);
 
@@ -152,7 +254,7 @@ public class TourTestApi : GlobalClientRequest
 
         // Arrange - Count
         var countBefore = await GetCount(_tourClient);
- 
+
         // Act - Tour
         var closeTourPuted = await Put<TourViewModel>(_putAllClient, closeTourToPutAll);
 
@@ -179,9 +281,9 @@ public class TourTestApi : GlobalClientRequest
 
         // Arrange - Count
         var countBefore = await GetCount(_tourClient);
- 
+
         // Act - Tour
-        var exception = await Put<AppException>(_putAllClient, putTourFake); 
+        var exception = await Put<AppException>(_putAllClient, putTourFake);
 
         // Act - Count
         var countAfter = await GetCount(_tourClient);

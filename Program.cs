@@ -70,6 +70,7 @@ var autoMapperConfig = new MapperConfiguration(configure =>
 
     configure.CreateMap<Patient, PatientPostViewModel>().ReverseMap();
     configure.CreateMap<Patient, PatientViewModel>().ReverseMap();
+    configure.CreateMap<PatientDTO, PatientViewModel>().ReverseMap();
 
     configure.CreateMap<PatientTreatment, PatientTreatmentViewModel>().ReverseMap();
 

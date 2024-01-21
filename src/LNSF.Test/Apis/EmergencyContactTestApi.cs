@@ -10,6 +10,82 @@ namespace LNSF.Test.Apis;
 public class EmergencyContactTestApi : GlobalClientRequest
 {
     [Fact]
+    public async Task Get_ValidContactId_OK()
+    {
+        // Arrange - Contact
+        var contact = await GetEmergencyContact();
+
+        // Act - Contact
+        var queryId = await Query<List<EmergencyContactViewModel>>(_emergencyContactClient, new EmergencyContactFilter(id: contact.Id));
+        var contactQueriedId = queryId.First();
+
+        // Assert
+        Assert.Equivalent(contact, contactQueriedId);
+    }
+
+    [Fact]
+    public async Task Get_ValidContactPeopleId_OK()
+    {
+        // Arrange - People
+        var people = await GetPeople();
+
+        // Arrange - Contact
+        var contact = await GetEmergencyContact(peopleId: people.Id);
+
+        // Act - Contact
+        var queryPeopleId = await Query<List<EmergencyContactViewModel>>(_emergencyContactClient, new EmergencyContactFilter(id: contact.Id, peopleId: people.Id));
+        var contactQueriedPeopleId = queryPeopleId.First();
+
+        // Assert
+        Assert.Equivalent(contact, contactQueriedPeopleId);
+    }
+
+    [Fact]
+    public async Task Get_ValidContactName_OK()
+    {
+        // Arrange - Contact
+        var contact = await GetEmergencyContact();
+
+        // Act - Contact
+        var queryName = await Query<List<EmergencyContactViewModel>>(_emergencyContactClient, new EmergencyContactFilter(id: contact.Id, name: contact.Name));
+        var contactQueriedName = queryName.First();
+
+        // Assert
+        Assert.Equivalent(contact, contactQueriedName);
+    }
+
+    [Fact]
+    public async Task Get_ValidContactPhone_OK()
+    {
+        // Arrange - Contact
+        var contact = await GetEmergencyContact();
+
+        // Act - Contact
+        var queryPhone = await Query<List<EmergencyContactViewModel>>(_emergencyContactClient, new EmergencyContactFilter(id: contact.Id, phone: contact.Phone));
+        var contactQueriedPhone = queryPhone.First();
+
+        // Assert
+        Assert.Equivalent(contact, contactQueriedPhone);
+    }
+
+    [Fact]
+    public async Task Get_ValidContactGlobalFilter_OK()
+    {
+        // Arrange - Contact
+        var contact = await GetEmergencyContact();
+
+        // Act - Contact
+        var queryGlobalFilterName = await Query<List<EmergencyContactViewModel>>(_emergencyContactClient, new EmergencyContactFilter(id: contact.Id, globalFilter: contact.Name));
+        var contactNameQueriedGlobalFilter = queryGlobalFilterName.First();
+        var queryGlobalFilterPhone = await Query<List<EmergencyContactViewModel>>(_emergencyContactClient, new EmergencyContactFilter(id: contact.Id, globalFilter: contact.Phone));
+        var contactPhoneQueriedGlobalFilter = queryGlobalFilterPhone.First();
+
+        // Assert
+        Assert.Equivalent(contact, contactNameQueriedGlobalFilter);
+        Assert.Equivalent(contact, contactPhoneQueriedGlobalFilter);
+    }
+
+    [Fact]
     public async Task Post_ValidContact_OK()
     {
         // Arrange - People
@@ -98,10 +174,10 @@ public class EmergencyContactTestApi : GlobalClientRequest
         Assert.Equal(HttpStatusCode.BadRequest, exceptionWithoutName.StatusCode);
         Assert.Equal(HttpStatusCode.BadRequest, exceptionWithoutPhone.StatusCode);
     }
-    
+
     [Fact]
     public async Task Put_ValidContact_OK()
-    {   
+    {
         // Arrange - Contact
         var contact = await GetEmergencyContact();
         var contactToPut = new EmergencyContactViewModelFake(contact.Id, contact.PeopleId).Generate();
@@ -197,7 +273,7 @@ public class EmergencyContactTestApi : GlobalClientRequest
 
         // Arrange - Count
         var countBefore = await GetCount(_emergencyContactClient);
- 
+
         // Act - Contact
         var contactDeleted = await Delete<EmergencyContactViewModel>(_emergencyContactClient, contact.Id);
 
@@ -219,7 +295,7 @@ public class EmergencyContactTestApi : GlobalClientRequest
     {
         // Arrange - Count
         var countBefore = await GetCount(_emergencyContactClient);
- 
+
         // Act - Contact
         var exception = await Delete<AppException>(_emergencyContactClient, -1);
 

@@ -21,6 +21,8 @@ public class PeopleViewModel
 
     public string? Experience { get; set; } = null;
     public string? Status { get; set; } = null;
+    public List<TourViewModel>? Tours { get; set; } = [];
+    public List<EmergencyContactViewModel>? EmergencyContacts { get; set; } = [];
 }
 
 public class PeoplePutViewModel

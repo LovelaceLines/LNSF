@@ -23,13 +23,12 @@ public class TreatmentRepository : BaseRepository<Treatment>, ITreatmentReposito
     {
         var query = _treatments;
 
-        if (!filter.GlobalFilter.IsNullOrEmpty()) query = query.Where(t => 
-            t.Name != null && t.Name.ToLower().Contains(filter.GlobalFilter!.ToLower()));
-        
-        if (filter.Id.HasValue) query = query.Where(t => t.Id == filter.Id);
-        if (!filter.Name.IsNullOrEmpty()) query = query.Where(t => t.Name != null && t.Name.ToLower().Contains(filter.Name!.ToLower()));
-        if (filter.Type.HasValue) query = query.Where(t => t.Type == filter.Type);
-        
+        if (!filter.GlobalFilter.IsNullOrEmpty()) query = QueryGlobalFilter(query, filter.GlobalFilter!);
+
+        if (filter.Id.HasValue) query = QueryId(query, filter.Id.Value);
+        if (!filter.Name.IsNullOrEmpty()) query = QueryName(query, filter.Name!);
+        if (filter.Type.HasValue) query = QueryType(query, filter.Type.Value);
+
         if (filter.OrderBy == OrderBy.Ascending) query = query.OrderBy(t => t.Name);
         else if (filter.OrderBy == OrderBy.Descending) query = query.OrderByDescending(t => t.Name);
 
@@ -41,9 +40,21 @@ public class TreatmentRepository : BaseRepository<Treatment>, ITreatmentReposito
         return treatments;
     }
 
-    public async Task<bool> ExistsByName(string name) => 
+    public static IQueryable<Treatment> QueryGlobalFilter(IQueryable<Treatment> query, string globalFilter) =>
+        query.Where(t => QueryName(query, globalFilter).Any(q => q.Id == t.Id));
+
+    public static IQueryable<Treatment> QueryId(IQueryable<Treatment> query, int id) =>
+        query.Where(t => t.Id == id);
+
+    public static IQueryable<Treatment> QueryName(IQueryable<Treatment> query, string name) =>
+        query.Where(t => t.Name != null && t.Name.ToLower().Contains(name.ToLower()));
+
+    public static IQueryable<Treatment> QueryType(IQueryable<Treatment> query, TypeTreatment type) =>
+        query.Where(t => t.Type == type);
+
+    public async Task<bool> ExistsByName(string name) =>
         await _treatments.AnyAsync(t => t.Name == name);
 
-    public async Task<bool> ExistsByNameAndType(string name, TypeTreatment type) => 
+    public async Task<bool> ExistsByNameAndType(string name, TypeTreatment type) =>
         await _treatments.AnyAsync(t => t.Name == name && t.Type == type);
 }
