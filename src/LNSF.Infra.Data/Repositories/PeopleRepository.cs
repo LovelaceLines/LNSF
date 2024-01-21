@@ -162,7 +162,7 @@ public class PeopleRepository : BaseRepository<People>, IPeopleRepository
             Phone = p.Phone,
             Note = p.Note,
             Experience = hostings.Count(h => h.Patient!.PeopleId == p.Id) + hostingsEscorts.Count(he => he.Escort!.PeopleId == p.Id) > 1 ? "Veterano" : "Novato",
-            Status = patients.Any(p => p.PeopleId == p.Id) ? "Paciente" : escorts.Any(e => e.PeopleId == p.Id) ? "Acompanhante" : "Sem status",
+            Status = patients.Any(pa => pa.PeopleId == p.Id) ? "Paciente" : escorts.Any(e => e.PeopleId == p.Id) ? "Acompanhante" : "Sem status",
             Tours = getTours ? tours.Where(t => t.PeopleId == p.Id).ToList() : null,
             EmergencyContacts = getEmergencyContacts ? emergencyContacts.Where(ec => ec.PeopleId == p.Id).ToList() : null
         };
