@@ -127,7 +127,7 @@ $RECYCLE.BIN/
 
 _NCrunch*
 Migrations/*
-.vscode/*
+# .vscode/*
 ./appsettings.Development.json
 ./appsettings.json
 TestLog.txt
