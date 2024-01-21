@@ -223,7 +223,7 @@ export const TelaDeGerenciamentoPeople: React.FC = () => {
 
             </Box>
             <Divider />
-            <Box style={{ maxHeight: '350px', overflowY: 'auto' }}>
+            <Box >
                 <Form ref={formRef} onSubmit={(dados) => handSave(dados)}>
                     <Box margin={1} display='flex' flexDirection='column' >
                         <Grid container direction='column' padding={2} spacing={2}>
@@ -275,7 +275,7 @@ export const TelaDeGerenciamentoPeople: React.FC = () => {
                                         label="Data de aniversário"
                                         name="birthDate"
                                         disabled={isLoadind}
-                                        
+
 
                                     />
                                 </Grid>
