@@ -1,3 +1,4 @@
+import { iEmergencyContactObject, iTourObject } from ".."
 import { iOrderBy, iPage } from "../types"
 
 export interface iPeopleProvider {
@@ -49,6 +50,8 @@ export interface iPeopleObject {
     note: string,
     experience?: string,
     status?: string,
+    tours?: iTourObject[],
+    contacts?: iEmergencyContactObject[],
 }
 export interface iAddPeopleRoom {
     peopleId: number,

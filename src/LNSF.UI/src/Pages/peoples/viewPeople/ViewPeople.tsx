@@ -50,12 +50,14 @@ export const ViewPeople: React.FC = () => {
         header: 'Experiência',
         size: 50,
         enableColumnActions: false,
+        enableSorting: false,
       },
       {
         accessorKey: 'status',
         header: 'Status',
         size: 50,
         enableColumnActions: false,
+        enableSorting: false,
       },
       {
         accessorKey: 'rg',

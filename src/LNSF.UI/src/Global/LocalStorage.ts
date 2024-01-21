@@ -81,7 +81,7 @@ export class LocalStorage {
   static getColumnVisibilityTour(): { [x: string]: boolean } {
     const columnVisibilityTour = localStorage.getItem('@lnsf:columnVisibilityTour');
 
-    if (!columnVisibilityTour) return { 'people.cpf': false };
+    if (!columnVisibilityTour) return { id: false };
     return JSON.parse(columnVisibilityTour);
   }
 
@@ -92,7 +92,7 @@ export class LocalStorage {
   static getColumnVisibilityPeople(): { [x: string]: boolean } {
     const columnVisibilityPeople = localStorage.getItem('@lnsf:columnVisibilityPeople');
 
-    if (!columnVisibilityPeople) return { phone: false, gender: false, city: false, neighborhood: false, street: false, houseNumber: false};
+    if (!columnVisibilityPeople) return { id: false };
     return JSON.parse(columnVisibilityPeople);
   }
 
