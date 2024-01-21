@@ -1,250 +1,252 @@
-
-import { useContext, useMemo, useState } from 'react'
-import { useEffect } from "react"
-import { PeopleContext, RoomContext, iPeopleObject, iRemovePeopleRoom, iRoomObject } from '../../../Contexts';
-import { Box, Button, LinearProgress, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material';
-import { Environment } from '../../../environment';
-import { ButtonAction, SearchButton } from '../../../Component';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useDebounce } from '../../../Component/hooks/UseDebounce';
-import PersonIcon from '@mui/icons-material/Person';
-import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
-import AddRoundedIcon from '@mui/icons-material/AddRounded';
-import PersonOffRoundedIcon from '@mui/icons-material/PersonOffRounded';
-import { Modal, Fade } from '@mui/material';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import { useContext, useEffect, useMemo, useState } from 'react';
+import { Box, Button, Checkbox, useMediaQuery, useTheme } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import { HostingContext } from '../../../Contexts/hostingContext';
-import { iHostingObject } from '../../../Contexts/hostingContext/type';
-import { format, parseISO } from 'date-fns';
+import { iHostingFilter, iHostingObject } from '../../../Contexts/hostingContext/type';
+import { format } from 'date-fns';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import EditRoundedIcon from '@mui/icons-material/EditRounded';
+import BedIcon from '@mui/icons-material/Bed';
+import AddIcon from '@mui/icons-material/Add';
+import ContentPasteSearchIcon from '@mui/icons-material/ContentPasteSearch';
+import { MRT_ColumnDef, MRT_ColumnFiltersState, MRT_PaginationState, MRT_Row, MRT_SortingState, MRT_TableInstance, MRT_VisibilityState, MaterialReactTable, useMaterialReactTable } from 'material-react-table';
+import { LocalStorage } from '../../../Global';
+import { iOrderBy, iPage } from '../../../Contexts/types';
+import { MRT_Localization_PT_BR } from 'material-react-table/locales/pt-BR';
 
-export const OtherViewHosting: React.FC = () => {
-
-  const { viewHosting, countHosting } = useContext(HostingContext);
-  const [rows, setRows] = useState<iHostingObject[]>([]);
-  const [totalCount, setTotalCount] = useState(0);
-  const [isLoadind, setIsLoading] = useState(true);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const { debounce } = useDebounce();
+export const ViewHosting: React.FC = () => {
+  const navigate = useNavigate();
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
-  const navigate = useNavigate();
-  const [modify, setModify] = useState(false);
+  const { getHostings, getCount } = useContext(HostingContext);
+  const [count, setCount] = useState<number>();
+  const [globalFilter, setGlobalFilter] = useState<string>('');
+  const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>([]);
+  const [sortFilters, setSortFilters] = useState<MRT_SortingState>([{ id: 'id', desc: false }]);
+  const [columnVisibleState, setColumnVisibleState] = useState<MRT_VisibilityState>(LocalStorage.getColumnVisibilityHosting());
+  const [pagination, setPagination] = useState<MRT_PaginationState>({ pageIndex: 0, pageSize: LocalStorage.getPageSize() });
+  const [isFullScreen, setIsFullScreen] = useState<boolean>(false);
+  const [hostings, setHostings] = useState<iHostingObject[]>([]);
+  const [activeFilter, setActiveFilter] = useState<boolean>(true);
+  const [filters, setFilters] = useState<iHostingFilter>({
+    getPatient: true,
+    getPatientPeople: true,
+    getEscort: true,
+    getEscortPeople: true,
+    page: { page: pagination.pageIndex, pageSize: pagination.pageSize },
+    active: activeFilter,
+  });
 
-  const [idModal, setIdModal] = useState(0);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const columns = useMemo<MRT_ColumnDef<iHostingObject>[]>(
+    () => [
+      {
+        accessorKey: 'patient.people.name',
+        header: 'Paciente',
+        size: 150,
+        enableColumnActions: false,
+        enableSorting: false,
+        enableColumnFilter: false,
+      },
+      {
+        accessorKey: 'patient.people.rg',
+        header: 'RG',
+        size: 50,
+        enableColumnActions: false,
+        enableSorting: false,
+        enableColumnFilter: false,
+      },
+      {
+        accessorKey: 'patient.people.cpf',
+        header: 'CPF',
+        size: 50,
+        enableColumnActions: false,
+        enableSorting: false,
+        enableColumnFilter: false,
+      },
+      {
+        accessorKey: 'escorts.people.name',
+        header: 'Acompanhante',
+        size: 150,
+        enableColumnActions: false,
+        enableSorting: false,
+        enableColumnFilter: false,
+        Cell: ({ row }) => {
+          const escorts = row.original.escorts;
+          return !escorts ? '' : escorts.length <= 0 ? '' :
+            escorts.map(e => e.people!.name).join(', ');
+        },
+      },
+      {
+        accessorKey: 'checkIn',
+        header: 'Check-in',
+        size: 100,
+        enableColumnActions: false,
+        Cell: ({ row }) => {
+          const date = new Date(row.original.checkIn);
+          return date ? format(date, 'dd/MM/yyyy HH:mm') : '';
+        },
+      },
+      {
+        accessorKey: 'checkOut',
+        header: 'Check-out',
+        size: 100,
+        enableColumnActions: false,
+        enableSorting: false,
+        Cell: ({ row }) => {
+          const date = new Date(row.original.checkOut);
+          return date ? format(date, 'dd/MM/yyyy HH:mm') : '';
+        },
+      },
+    ],
+    [],
+  );
 
-  const busca = useMemo(() => {
-    return (searchParams.get('busca') || '');
-  }, [searchParams])
+  const fetchHostings = async () => {
+    const hostings = await getHostings(filters);
+    setHostings(hostings);
+  };
 
-  const pagina = useMemo(() => {
-    return Number(searchParams.get('pagina') || '1');
-  }, [searchParams])
+  const fetchCount = async () => {
+    const count = await getCount();
+    setCount(count);
+  };
 
   useEffect(() => {
-    setIsLoading(true);
-
-    debounce(() => {
-
-      viewHosting(pagina, busca, 'id')
-        .then((response) => {
-          if (response instanceof Error) {
-            setIsLoading(false);
-          } else {
-            setRows(response);
-            setIsLoading(false);
-          }
-        })
-        .catch((error) => {
-          setIsLoading(false);
-          console.error('Detalhes do erro:', error);
-        });
-    });
-
-  }, [busca, pagina, modify]);
-
-
-
-  useEffect(() => {
-    countHosting()
-      .then((response) => {
-        setTotalCount(response);
-      });
+    fetchCount();
   }, []);
 
+  useEffect(() => {
+    setFilters({ ...filters, globalFilter: globalFilter });
+  }, [globalFilter]);
 
-  const deletePeopleRoom = (id_: number) => {
+  useEffect(() => {
+    const updatedFilters = { ...filters };
+    const columnIds = columnFilters.map(columnFilter => columnFilter.id);
+    let value: unknown;
 
-    if (confirm('Realmente deseja remover esssa pessoa do quarto?')) {
-      console.log(id_)
-      // const data: iRemovePeopleRoom = {
-      //     peopleId: id_
-      // }
-      // setIsLoading(true);
-      // removePeopleRoom(data)
-      //     .then((response) => {
-      //         if (response instanceof Error) {
-      //             setIsLoading(false);
-      //         } else {
-      //             setModify(!modify)
-      //             setIsLoading(false);
-      //         }
-      //     })
-      //     .catch((error) => {
-      //         setIsLoading(false);
-      //         console.error('Detalhes do erro:', error);
-      //     });
-    }
-  }
+    value = columnFilters.find(cf => cf.id === 'checkIn')?.value;
+    if (columnIds.includes('checkIn') && value instanceof Date)
+      updatedFilters.checkIn = value;
+    else updatedFilters.checkIn = undefined;
 
-  const addPeopleRoom = (id_: number) => {
-    setIdModal(id_)
-    setIsModalOpen(true)
-  }
+    value = columnFilters.find(cf => cf.id === 'checkOut')?.value;
+    if (columnIds.includes('checkOut') && value instanceof Date)
+      updatedFilters.checkOut = value;
+    else updatedFilters.checkOut = undefined;
 
-  return (
-    <Box
-      display='flex'
-      flexDirection='column'
-      width='100%'
-    >
-      <Box>
-        <Toolbar sx={{ margin: 0 }}>
-          <Typography
-            variant={smDown ? "h5" : "h4"}
-            noWrap
-            component="div"
-            sx={{ flexGrow: 1, display: 'flex', alignItems: 'flex-end' }}
-          >
-            {!smDown && (<PersonIcon color='primary' sx={{ fontSize: '2.7rem', paddingRight: '10px' }} />)}
-            Pessoas
+    setFilters(updatedFilters);
+  }, [columnFilters]);
+
+  useEffect(() => {
+    const updatedFilters = { ...filters };
+    const columnIds = sortFilters.map(sort => sort.id);
+
+    const desc = sortFilters.find(cf => cf.id === 'checkIn')?.desc;
+    if (columnIds.includes('checkIn') && typeof desc === 'boolean')
+      updatedFilters.orderBy = desc ? iOrderBy.descendent : iOrderBy.ascendent;
+    else updatedFilters.orderBy = undefined;
+
+    setFilters(updatedFilters);
+  }, [sortFilters]);
+
+  useEffect(() => {
+    LocalStorage.setColumnVisibilityHosting(columnVisibleState);
+  }, [columnVisibleState]);
+
+  useEffect(() => {
+    const page: iPage = { page: pagination.pageIndex, pageSize: pagination.pageSize };
+    setFilters({ ...filters, page: page });
+
+    LocalStorage.setPageSize(page.pageSize!);
+
+    const fetchHostings = async () => setHostings(await getHostings({ ...filters, page: page }));
+    fetchHostings();
+  }, [pagination]);
+
+  useEffect(() => {
+    setFilters({ ...filters, active: activeFilter });
+  }, [activeFilter]);
+
+  const renderTopToolbar = (table: MRT_TableInstance<iHostingObject>) => (
+    <Box display='flex' flexDirection='column' gap={2} paddingRight='auto'>
+      <Typography variant={smDown ? "h6" : "h5"} display='flex' alignItems='center' gap={1} paddingRight='auto' >
+        <BedIcon fontSize={smDown ? "medium" : "large"} color='primary' />
+        Hospedagem: Check-in / Check-out
+      </Typography>
+      <Box display='flex' gap={2}>
+        <Button variant='contained' size='small' startIcon={<AddIcon />} onClick={() => navigate('/inicio/pessoas/gerenciar/cadastrar')}>
+          Novo
+        </Button>
+        <Box display='flex' alignItems='center'>
+          <Typography>
+            Ativos
           </Typography>
-
-          <SearchButton
-            textoDaBusca={busca}
-            aoMudarTextoDeBusca={texto => setSearchParams({ busca: texto, pagina: '1' }, { replace: true })}
-          />
-
-          < ButtonAction
-            mostrarBotaoNovo={true}
-            mostrarBotaoSalvar={false}
-            mostrarBotaoVoltar={false}
-
-            mostrarBotaoApagar={false}
-            aoClicarEmNovo={() => { navigate('/inicio/pessoas/gerenciar/cadastrar') }}
-          />
-
-        </Toolbar>
+          <Checkbox checked={activeFilter} onChange={(e) => setActiveFilter(e.target.checked)} />
+        </Box>
+        <Button variant='contained' size='small' startIcon={<ContentPasteSearchIcon />} onClick={fetchHostings}>
+          Buscar
+        </Button>
       </Box>
-
-      <TableContainer component={Paper} variant='outlined' >
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell sx={{ textAlign: 'left' }}>Nome</TableCell>
-              <TableCell sx={{ textAlign: 'center' }}>Chegada</TableCell>
-              <TableCell sx={{ textAlign: 'center' }}>Saída</TableCell>
-              <TableCell sx={{ textAlign: 'center' }}>Ação</TableCell>
-            </TableRow>
-          </TableHead>
-
-          <TableBody>
-            {rows.map(row => (
-              <TableRow key={row.id}>
-
-                <TableCell sx={{ textAlign: 'left' }}>
-                  {row.patientId}
-                </TableCell>
-
-                <TableCell sx={{ textAlign: 'left' }}>
-                  {format(parseISO(String(row.checkIn)), 'dd/MM/yyyy')}
-                </TableCell>
-                {/* <TableCell sx={{ textAlign: 'center' }}>{row.roomId === null ? <PersonOffRoundedIcon /> : getRoomNumber(row.roomId)}</TableCell> */}
-
-                <TableCell sx={{ textAlign: 'left' }}>
-                  {format(parseISO(String(row.checkOut)), 'dd/MM/yyyy')}
-                </TableCell>
-
-              </TableRow>
-            ))}
-          </TableBody>
-
-          {totalCount === 0 && !isLoadind && (
-            <caption>{Environment.LISTAGEM_VAZIA}</caption>
-          )}
-
-          <TableFooter>
-            {isLoadind && (
-              <TableRow>
-                <TableCell colSpan={7}>
-                  <LinearProgress />
-                </TableCell>
-              </TableRow>
-            )}
-
-          </TableFooter>
-        </Table>
-        {(totalCount > 0 && totalCount > Environment.LIMITE_DE_LINHA) && (
-          <Box
-            display='flex'
-            flexDirection='column'
-            alignItems='center'
-            justifyContent='center'
-          >
-            <TableRow >
-              <TableCell>
-                <Pagination
-                  page={pagina}
-                  count={Math.ceil(totalCount / Environment.LIMITE_DE_LINHA)}
-                  color="primary"
-                  onChange={(_, newPage) => setSearchParams({ busca, pagina: newPage.toString() })}
-                />
-              </TableCell>
-            </TableRow>
-          </Box>
-        )}
-      </TableContainer>
-
-      <Modal
-        open={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        closeAfterTransition
-        sx={
-          {
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }
-        }
-      >
-        <Fade in={isModalOpen}>
-          <Box sx={{
-            minWidth: 300,
-            maxWidth: 500,
-            bgcolor: 'background.paper',
-            p: 2,
-            borderRadius: 1.5,
-            position: 'relative',
-          }}>
-            <Box sx={{
-              display: 'flex',
-              justifyContent: 'end',
-              alignItem: 'center',
-              position: 'absolute',
-              top: 10,
-              right: 10,
-              zIndex: 1
-            }}>
-              <Button onClick={() => { setIsModalOpen(false), setModify(!modify) }}>
-                < CloseRoundedIcon sx={{ fontSize: '2rem' }} />
-              </Button>
-            </Box>
-            {/* <TelaAddRemovePeopleRoom idPeople={idModal} /> */}
-          </Box>
-        </Fade>
-      </Modal>
     </Box>
-  )
+  );
+
+  const renderActions = (row: MRT_Row<iHostingObject>) => (
+    <Box display='flex' flexDirection='row' flexWrap='nowrap'>
+      <IconButton onClick={() => navigate(`/inicio/pessoa/editar/${row.original.id}`)}>
+        <EditRoundedIcon />
+      </IconButton>
+      <IconButton onClick={() => navigate(`/inicio/pessoas/dados/${row.original.id}`)}>
+        <InfoOutlinedIcon />
+      </IconButton>
+    </Box>
+  );
+
+  const table = useMaterialReactTable<iHostingObject>({
+    columns,
+    data: hostings,
+    state: {
+      sorting: sortFilters,
+      pagination: pagination,
+      columnVisibility: columnVisibleState,
+      isFullScreen,
+    },
+
+    renderTopToolbarCustomActions: ({ table }) => renderTopToolbar(table),
+
+    enableRowActions: true,
+    renderRowActions: ({ row, cell, table }) => renderActions(row),
+
+    manualFiltering: true,
+    onGlobalFilterChange: setGlobalFilter,
+    enableGlobalFilter: false,
+    onColumnFiltersChange: setColumnFilters,
+
+    manualSorting: true,
+    onSortingChange: setSortFilters,
+
+    onColumnVisibilityChange: setColumnVisibleState,
+
+    manualPagination: true,
+    onPaginationChange: setPagination,
+    paginationDisplayMode: 'pages',
+    rowCount: count,
+
+    onIsFullScreenChange: () => setIsFullScreen(!isFullScreen),
+
+    muiTablePaperProps: ({ table }) => ({
+      style: {
+        zIndex: isFullScreen ? 10000 : undefined,
+      }
+    }),
+
+    mrtTheme: {
+      baseBackgroundColor: theme.palette.background.paper,
+    },
+
+    localization: MRT_Localization_PT_BR,
+  });
+
+  return <MaterialReactTable table={table} />
 }

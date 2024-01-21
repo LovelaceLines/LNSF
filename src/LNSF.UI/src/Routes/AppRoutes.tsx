@@ -6,8 +6,7 @@ import { ViewHospital } from '../Pages/hospital/viewHospital/ViewHospital';
 import { TelaDeGerenciamentoHospital } from '../Pages/hospital/registerHospital/TelaDeGerenciamentoHospital';
 import { TelaDeGerenciamentoTratamentos } from '../Pages/tratamentos/registerTratamentos/TelaDeGerenciamentoTratamento';
 import { ViewTratamentos } from '../Pages/tratamentos/viewTratamentos/ViewTratamentos';
-import { ViewHosting } from '../Pages/hosting/viewHosting/ViewHosting_';
-import { OtherViewHosting } from '../Pages/hosting/viewHosting/ViewHosting';
+import { ViewHosting } from '../Pages/hosting/viewHosting/ViewHosting';
 import { Footer } from '../Component/Layouts/footer/Footer';
 import { NotFound } from '../Pages/NotFound/NotFound';
 import { ProtectedRoutes } from '.';
@@ -31,12 +30,6 @@ export const AppRoutes = () => {
 
         {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
           <Route path="/inicio/hospedagens/visualizar" element={<Dashboard children={<ViewHosting />} />} />}
-
-        {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
-          <Route path="/inicio/hospedagens/gerenciar/:id" element={<Dashboard children={<OtherViewHosting />} />} />}
-
-        {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
-          <Route path="/inicio/hospedagens/gerenciar" element={<Dashboard children={<OtherViewHosting />} />} />}
 
         {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
           <Route path="/inicio/pessoas/visualizar" element={<Dashboard children={<ViewPeople />} />} />}
