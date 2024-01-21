@@ -19,7 +19,7 @@ import { HostingContext } from '../../../Contexts/hostingContext';
 import { iHostingObject } from '../../../Contexts/hostingContext/type';
 import { format, parseISO } from 'date-fns';
 
-export const ViewHosting: React.FC = () => {
+export const OtherViewHosting: React.FC = () => {
 
   const { viewHosting, countHosting } = useContext(HostingContext);
   const [rows, setRows] = useState<iHostingObject[]>([]);

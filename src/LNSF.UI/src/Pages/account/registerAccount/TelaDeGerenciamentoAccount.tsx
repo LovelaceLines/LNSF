@@ -87,7 +87,7 @@ export const TelaDeGerenciamentoAccount: React.FC = () => {
     }
 
     setIsLoading(true);
-    postUser({ userName: updatedUser.userName, email: updatedUser.email, password: savePassword.password })
+    postUser({ userName: updatedUser.userName, email: updatedUser.email, password: savePassword.password, phoneNumber: updatedUser.phoneNumber })
       .then(user => setUser(user))
       .finally(() => setIsLoading(false))
   };
@@ -104,7 +104,7 @@ export const TelaDeGerenciamentoAccount: React.FC = () => {
 
     const role = updatedUser.roles![0] ?? '';
 
-    postAddUserToRole({ userId: updatedUser.id, roleName: role })
+    postAddUserToRole({ userId: user.id, roleName: role })
       .then(user => setUser(user))
       .finally(() => setIsLoading(false))
   }

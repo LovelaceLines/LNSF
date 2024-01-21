@@ -54,7 +54,7 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
             labelOption: 'Visualizar',
           },
           {
-            pathOption: '/inicio/registrodiario/adicionar',
+            pathOption: '/inicio/registrodiario/cadastrar',
             labelOption: 'Adicionar',
           }
         ],
@@ -68,6 +68,10 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
           {
             pathOption: '/inicio/hospedagens/visualizar',
             labelOption: 'Visualizar',
+          },
+          {
+            pathOption: '/inicio/hospedagens/gerenciar/cadastrar',
+            labelOption: 'Gerenciar',
           }
         ],
       },
@@ -166,7 +170,11 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
           label: 'Usuários do sistema',
           options: [
             {
-              pathOption: '/inicio/usuarios/gerenciar',
+              pathOption: '/inicio/usuarios/visualizar',
+              labelOption: 'Visualizar',
+            },
+            {
+              pathOption: '/inicio/usuarios/gerenciar/cadastrar',
               labelOption: 'Gerenciar',
             },
           ],
@@ -209,9 +217,9 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
           position='relative'
           elevation={0}
           color='transparent'
-          sx={{ flexDirection: 'row', alignItems: 'center'}}
+          sx={{ flexDirection: 'row', alignItems: 'center' }}
         >
-          <Link component={NavLink} to='/inicio' sx={{ display:'flex', alignItems:'center' }}>
+          <Link component={NavLink} to='/inicio' sx={{ display: 'flex', alignItems: 'center' }}>
             <img src={nomelogo} style={{ height: '30px' }} />
           </Link>
         </AppBar>
@@ -242,12 +250,12 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
           >
             <Link
               underline='hover'
-              component={NavLink} 
+              component={NavLink}
               to='/sobre'>
               Sobre
             </Link>
             <Button
-              size='large' 
+              size='large'
               fullWidth
               startIcon={<Logout />}
               onClick={handleLogout}

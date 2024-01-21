@@ -34,7 +34,7 @@ export const AccountProvider = ({ children }: iUserProvider) => {
                     console.error('Error Message:', error.message);
                 }
             } else {
-                 toast.error('Ocorreu um erro desconhecido.');
+                toast.error('Ocorreu um erro desconhecido.');
                 console.error('Error Message:', error.message);
             }
             return new Error((error as { message: string }).message || 'Ops, não foi possível acessar o banco.');
@@ -70,7 +70,7 @@ export const AccountProvider = ({ children }: iUserProvider) => {
                     console.error('Error Message:', error.message);
                 }
             } else {
-                 toast.error('Ocorreu um erro desconhecido.');
+                toast.error('Ocorreu um erro desconhecido.');
                 console.error('Error Message:', error.message);
             }
             return new Error((error as { message: string }).message || 'Ops, não foi possível acessar o banco.');
@@ -106,7 +106,7 @@ export const AccountProvider = ({ children }: iUserProvider) => {
                     console.error('Error Message:', error.message);
                 }
             } else {
-                 toast.error('Ocorreu um erro desconhecido.');
+                toast.error('Ocorreu um erro desconhecido.');
                 console.error('Error Message:', error.message);
             }
             return new Error((error as { message: string }).message || 'Ops, não foi possível acessar o banco.');
@@ -142,7 +142,7 @@ export const AccountProvider = ({ children }: iUserProvider) => {
                     console.error('Error Message:', error.message);
                 }
             } else {
-                 toast.error('Ocorreu um erro desconhecido.');
+                toast.error('Ocorreu um erro desconhecido.');
                 console.error('Error Message:', error.message);
             }
             return new Error((error as { message: string }).message || 'Ops, não foi possível acessar o banco.');
@@ -179,7 +179,7 @@ export const AccountProvider = ({ children }: iUserProvider) => {
                     console.error('Error Message:', error.message);
                 }
             } else {
-                 toast.error('Ocorreu um erro desconhecido.');
+                toast.error('Ocorreu um erro desconhecido.');
                 console.error('Error Message:', error.message);
             }
             return new Error((error as { message: string }).message || 'Ops, não foi possível acessar o banco.');
@@ -191,7 +191,7 @@ export const AccountProvider = ({ children }: iUserProvider) => {
     const deleteUserRole = useCallback(async (data: idelUserRole) => {
         try {
 
-            const response = await Api.delete('/Account/remove-user-from-role', {data});
+            const response = await Api.delete('/Account/remove-user-from-role', { data });
 
             if (response.status === 200) {
                 toast.success('Usuário deletado de sua função!');
@@ -216,7 +216,7 @@ export const AccountProvider = ({ children }: iUserProvider) => {
                     console.error('Error Message:', error.message);
                 }
             } else {
-                 toast.error('Ocorreu um erro desconhecido.');
+                toast.error('Ocorreu um erro desconhecido.');
                 console.error('Error Message:', error.message);
             }
             return new Error((error as { message: string }).message || 'Ops, não foi possível acessar o banco.');
@@ -253,7 +253,7 @@ export const AccountProvider = ({ children }: iUserProvider) => {
                     console.error('Error Message:', error.message);
                 }
             } else {
-                 toast.error('Ocorreu um erro desconhecido.');
+                toast.error('Ocorreu um erro desconhecido.');
                 console.error('Error Message:', error.message);
             }
             return new Error((error as { message: string }).message || 'Ops, não foi possível acessar o banco.');
@@ -290,7 +290,7 @@ export const AccountProvider = ({ children }: iUserProvider) => {
                     console.error('Error Message:', error.message);
                 }
             } else {
-                 toast.error('Ocorreu um erro desconhecido.');
+                toast.error('Ocorreu um erro desconhecido.');
                 console.error('Error Message:', error.message);
             }
             return new Error((error as { message: string }).message || 'Ops, não foi possível acessar o banco.');
@@ -325,7 +325,7 @@ export const AccountProvider = ({ children }: iUserProvider) => {
                     console.error('Error Message:', error.message);
                 }
             } else {
-                 toast.error('Ocorreu um erro desconhecido.');
+                toast.error('Ocorreu um erro desconhecido.');
                 console.error('Error Message:', error.message);
             }
             return new Error((error as { message: string }).message || 'Ops, não foi possível acessar o banco.');
@@ -364,7 +364,7 @@ export const AccountProvider = ({ children }: iUserProvider) => {
     }, []);
 
     const postAddUserToRole = useCallback(async (data: iregisterUserRole): Promise<iUser> => {
-        const res = await Api.post<iUser>('/User', data);
+        const res = await Api.post<iUser>('/User/add-user-to-role', data);
         const user = res.data;
         return user;
     }, []);
@@ -382,7 +382,7 @@ export const AccountProvider = ({ children }: iUserProvider) => {
     }, []);
 
     const deleteRemoveUserFromRole = useCallback(async (data: idelUserRole): Promise<iUser> => {
-        const res = await Api.delete<iUser>('/Account/remove-user-from-role', {data});
+        const res = await Api.delete<iUser>('/Account/remove-user-from-role', { data });
         const user = res.data;
         return user;
     }, []);

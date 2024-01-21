@@ -16,7 +16,7 @@ import { LocalStorage } from '../../../Global';
 import { iOrderBy, iPage } from '../../../Contexts/types';
 import { MRT_Localization_PT_BR } from 'material-react-table/locales/pt-BR';
 
-export const Hosting: React.FC = () => {
+export const ViewHosting: React.FC = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -74,7 +74,7 @@ export const Hosting: React.FC = () => {
         enableColumnFilter: false,
         Cell: ({ row }) => {
           const escorts = row.original.escorts;
-          return !escorts ? '' : escorts.length <= 0 ? '' : 
+          return !escorts ? '' : escorts.length <= 0 ? '' :
             escorts.map(e => e.people!.name).join(', ');
         },
       },
@@ -120,47 +120,47 @@ export const Hosting: React.FC = () => {
   useEffect(() => {
     setFilters({ ...filters, globalFilter: globalFilter });
   }, [globalFilter]);
-  
+
   useEffect(() => {
     const updatedFilters = { ...filters };
     const columnIds = columnFilters.map(columnFilter => columnFilter.id);
     let value: unknown;
-  
+
     value = columnFilters.find(cf => cf.id === 'checkIn')?.value;
     if (columnIds.includes('checkIn') && value instanceof Date)
       updatedFilters.checkIn = value;
     else updatedFilters.checkIn = undefined;
-  
+
     value = columnFilters.find(cf => cf.id === 'checkOut')?.value;
     if (columnIds.includes('checkOut') && value instanceof Date)
       updatedFilters.checkOut = value;
     else updatedFilters.checkOut = undefined;
-  
+
     setFilters(updatedFilters);
   }, [columnFilters]);
-  
+
   useEffect(() => {
     const updatedFilters = { ...filters };
     const columnIds = sortFilters.map(sort => sort.id);
-    
+
     const desc = sortFilters.find(cf => cf.id === 'checkIn')?.desc;
     if (columnIds.includes('checkIn') && typeof desc === 'boolean')
       updatedFilters.orderBy = desc ? iOrderBy.descendent : iOrderBy.ascendent;
     else updatedFilters.orderBy = undefined;
-  
+
     setFilters(updatedFilters);
   }, [sortFilters]);
 
   useEffect(() => {
     LocalStorage.setColumnVisibilityHosting(columnVisibleState);
   }, [columnVisibleState]);
-  
+
   useEffect(() => {
     const page: iPage = { page: pagination.pageIndex, pageSize: pagination.pageSize };
     setFilters({ ...filters, page: page });
 
     LocalStorage.setPageSize(page.pageSize!);
-    
+
     const fetchHostings = async () => setHostings(await getHostings({ ...filters, page: page }));
     fetchHostings();
   }, [pagination]);
@@ -206,28 +206,28 @@ export const Hosting: React.FC = () => {
   const table = useMaterialReactTable<iHostingObject>({
     columns,
     data: hostings,
-    state: { 
-      sorting: sortFilters, 
+    state: {
+      sorting: sortFilters,
       pagination: pagination,
       columnVisibility: columnVisibleState,
       isFullScreen,
     },
-  
+
     renderTopToolbarCustomActions: ({ table }) => renderTopToolbar(table),
-  
+
     enableRowActions: true,
     renderRowActions: ({ row, cell, table }) => renderActions(row),
-  
+
     manualFiltering: true,
     onGlobalFilterChange: setGlobalFilter,
     enableGlobalFilter: false,
     onColumnFiltersChange: setColumnFilters,
-  
+
     manualSorting: true,
     onSortingChange: setSortFilters,
 
     onColumnVisibilityChange: setColumnVisibleState,
-  
+
     manualPagination: true,
     onPaginationChange: setPagination,
     paginationDisplayMode: 'pages',
@@ -235,14 +235,16 @@ export const Hosting: React.FC = () => {
 
     onIsFullScreenChange: () => setIsFullScreen(!isFullScreen),
 
-    muiTablePaperProps: ({ table }) => ({ style: {
-      zIndex: isFullScreen ? 10000 : undefined,
-    }}),
+    muiTablePaperProps: ({ table }) => ({
+      style: {
+        zIndex: isFullScreen ? 10000 : undefined,
+      }
+    }),
 
-    mrtTheme : {
+    mrtTheme: {
       baseBackgroundColor: theme.palette.background.paper,
     },
-  
+
     localization: MRT_Localization_PT_BR,
   });
 
