@@ -10,7 +10,7 @@ export const requestInterceptor = (config: InternalAxiosRequestConfig) => {
   if (paramsString.length > 0)
     config.url += `?${paramsString}`;
 
-  console.log("RequestInterceptor: ", config);
+  console.debug("RequestInterceptor: ", config);
   config.headers['Authorization'] = `Bearer ${LocalStorage.getAccessToken()}`;
   return config;  
 }

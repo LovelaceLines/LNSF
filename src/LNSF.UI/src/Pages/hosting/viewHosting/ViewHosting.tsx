@@ -220,7 +220,6 @@ export const ViewHosting: React.FC = () => {
 
     manualFiltering: true,
     onGlobalFilterChange: setGlobalFilter,
-    enableGlobalFilter: false,
     onColumnFiltersChange: setColumnFilters,
 
     manualSorting: true,

@@ -8,7 +8,7 @@ export const App = () => {
   return (
     <>
       <CssBaseline />
-      <Box 
+      <Box
         width='100vw'
         height='100vh'
         overflow='hidden'

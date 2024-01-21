@@ -1,6 +1,6 @@
 import {AxiosResponse} from "axios"
 
 export const responseInterceptor = (response: AxiosResponse) => {
-  console.log("ResponseInterceptor: ", response); 
+  console.debug("ResponseInterceptor: ", response); 
   return response;  
 }

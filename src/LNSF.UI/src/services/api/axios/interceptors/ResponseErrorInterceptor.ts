@@ -8,7 +8,7 @@ import { refreshToken } from "../../../AuthService";
 // 401 unauthorized 403 forbidden 404 not found 500 internal server error
 
 export const responseErrorInterceptor = async (error: AxiosError) => { 
-  console.log("ResponseErrorInterceptor: ", error);
+  console.debug("ResponseErrorInterceptor: ", error);
 
   // Verifica se o erro é do tipo iAppException
   if (error.response!.data instanceof Object && 'id' in error.response!.data && 'statusCode' in error.response!.data && 'message' in error.response!.data ) {
