@@ -1,4 +1,5 @@
-﻿using LNSF.Domain.Entities;
+﻿using System.Linq.Expressions;
+using LNSF.Domain.Entities;
 using LNSF.Domain.Enums;
 using LNSF.Domain.Filters;
 using LNSF.Domain.Repositories;
@@ -38,20 +39,20 @@ public class EmergencyContactRepository : BaseRepository<EmergencyContact>, IEme
         var contacts = await query
             .Skip(filter.Page.Page * filter.Page.PageSize)
             .Take(filter.Page.PageSize)
-            .Select(c => Convert(c, filter.GetPeople ?? false))
+            .Select(Build(filter.GetPeople ?? false))
             .ToListAsync();
 
         return contacts;
     }
 
-    private static EmergencyContact Convert(EmergencyContact contact, bool getPeople) =>
-        new()
+    private static Expression<Func<EmergencyContact, EmergencyContact>> Build(bool getPeople) =>
+        c => new EmergencyContact()
         {
-            Id = contact.Id,
-            Name = contact.Name,
-            Phone = contact.Phone,
-            PeopleId = contact.PeopleId,
-            People = getPeople ? contact.People : null
+            Id = c.Id,
+            Name = c.Name,
+            Phone = c.Phone,
+            PeopleId = c.PeopleId,
+            People = getPeople ? c.People : null
         };
 
     public static IQueryable<EmergencyContact> QueryGlobalFilter(IQueryable<EmergencyContact> query, string globalFilter, IQueryable<People> peoples) =>
