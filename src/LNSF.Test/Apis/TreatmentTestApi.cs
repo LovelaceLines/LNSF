@@ -28,7 +28,6 @@ public class TreatmentTestApi : GlobalClientRequest
         var query = await Query<List<TreatmentViewModel>>(_treatmentClient, new TreatmentFilter(id: treatmentPosted.Id));
         var treatmentQueried = query.FirstOrDefault();
 
-        // Assert
         Assert.Equal(countBefore + 1, countAfter);
         Assert.Equivalent(treatmentFake, treatmentPosted);
         Assert.Equivalent(treatmentPosted, treatmentQueried);
@@ -54,7 +53,6 @@ public class TreatmentTestApi : GlobalClientRequest
         var query = await Query<List<TreatmentViewModel>>(_treatmentClient, new TreatmentFilter(id: treatmentPosted.Id));
         var treatmentQueried = query.FirstOrDefault();
 
-        // Assert
         Assert.Equal(countBefore + 1, countAfter);
         Assert.Equivalent(treatmentToPost, treatmentPosted);
         Assert.Equivalent(treatmentPosted, treatmentQueried);
@@ -76,7 +74,6 @@ public class TreatmentTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_treatmentClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.Conflict, exception.StatusCode);
     }
@@ -99,7 +96,6 @@ public class TreatmentTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_treatmentClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.BadRequest, exception.StatusCode);
     }
@@ -124,7 +120,6 @@ public class TreatmentTestApi : GlobalClientRequest
         var query = await Query<List<TreatmentViewModel>>(_treatmentClient, new TreatmentFilter(id: treatmentPuted.Id));
         var treatmentQueried = query.FirstOrDefault();
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equivalent(treatmentToPut, treatmentPuted);
         Assert.Equivalent(treatmentPuted, treatmentQueried);
@@ -150,7 +145,6 @@ public class TreatmentTestApi : GlobalClientRequest
         var query = await Query<List<TreatmentViewModel>>(_treatmentClient, new TreatmentFilter(id: treatmentPuted.Id));
         var treatmentQueried = query.FirstOrDefault();
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equivalent(treatmentToPut, treatmentPuted);
         Assert.Equivalent(treatmentPuted, treatmentQueried);
@@ -176,7 +170,6 @@ public class TreatmentTestApi : GlobalClientRequest
         var query = await Query<List<TreatmentViewModel>>(_treatmentClient, new TreatmentFilter(id: treatmentToPut.Id));
         var treatmentQueried = query.FirstOrDefault();
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.Conflict, exception.StatusCode);
         Assert.Equivalent(treatment, treatmentQueried);

@@ -30,7 +30,6 @@ public class HostingTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_hostingClient);
 
-        // Assert
         Assert.Equal(countBefore + 1, countAfter);
         Assert.Equivalent(hostingFake, hostingPosted);
     }
@@ -53,7 +52,6 @@ public class HostingTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_hostingClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.BadRequest, exception.StatusCode);
     }
@@ -78,7 +76,6 @@ public class HostingTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_hostingClient);
 
-        // Assert
         Assert.Equal(countBefore + 1, countAfter);
         Assert.Equivalent(hostingWithoutConflictFake, hostingPosted);
     }
@@ -115,7 +112,6 @@ public class HostingTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_hostingClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.Conflict, exceptionBeforeCheckInAndDuringCheckOut.StatusCode);
         Assert.Equal(HttpStatusCode.Conflict, exceptionBeforeCheckInAndBeforeCheckOut.StatusCode);
@@ -143,7 +139,6 @@ public class HostingTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_hostingClient);
 
-        // Assert
         Assert.Equal(countBefore + 1, countAfter);
     }
 
@@ -169,7 +164,6 @@ public class HostingTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_hostingClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.Conflict, exception.StatusCode);
     }
@@ -190,7 +184,6 @@ public class HostingTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_hostingClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equivalent(hostingToPut, hostingPutted);
     }
@@ -228,7 +221,6 @@ public class HostingTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_hostingClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equivalent(hostingToPutWithBeforeCheckInAndDuringCheckOut, hostingPuttedWithBeforeCheckInAndDuringCheckOut);
         Assert.Equivalent(hostingToPutWithBeforeCheckInAndBeforeCheckOut, hostingPuttedWithBeforeCheckInAndBeforeCheckOut);
@@ -259,7 +251,6 @@ public class HostingTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_hostingClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
     }
@@ -280,7 +271,6 @@ public class HostingTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_hostingClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.BadRequest, exception.StatusCode);
     }
@@ -326,7 +316,6 @@ public class HostingTestApi : GlobalClientRequest
         // Act - Query
         var hostingsEscortsQueried = await Query<List<HostingEscortViewModel>>(_hostingEscortClient, new HostingEscortFilter(hostingId: hosting.Id));
 
-        // Assert
         Assert.Equal(countBefore + count, countAfter);
         Assert.Equivalent(hostingsEscortsFake, hostingsEscortsPosted);
         Assert.Equivalent(hostingsEscortsPosted, hostingsEscortsQueried);
@@ -361,7 +350,6 @@ public class HostingTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_hostingEscortClient);
 
-        // Assert
         Assert.Equal(countBefore + 1, countAfter);
         Assert.Equivalent(hostingEscortWithoutConflictFake, hostingEscortWithoutConflictPosted);
     }
@@ -411,7 +399,6 @@ public class HostingTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_hostingEscortClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.Conflict, exceptionBeforeCheckInAndDuringCheckOut.StatusCode);
         Assert.Equal(HttpStatusCode.Conflict, exceptionBeforeCheckInAndBeforeCheckOut.StatusCode);
@@ -441,7 +428,6 @@ public class HostingTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_hostingEscortClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
     }
@@ -464,7 +450,6 @@ public class HostingTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_hostingEscortClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
     }
@@ -484,7 +469,6 @@ public class HostingTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_hostingEscortClient);
 
-        // Assert
         Assert.Equal(countBefore - 1, countAfter);
         Assert.Equivalent(hostingEscort, hostingEscortDeleted);
     }
@@ -507,7 +491,6 @@ public class HostingTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_hostingEscortClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
     }
@@ -530,7 +513,6 @@ public class HostingTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_hostingEscortClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
     }

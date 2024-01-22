@@ -34,7 +34,6 @@ public class PatientTestApi : GlobalClientRequest
         var query = await Query<List<PatientViewModel>>(_patientClient, new PatientFilter(id: patientPosted.Id));
         var patientQueried = query.FirstOrDefault();
 
-        // Assert
         Assert.Equal(countBefore + 1, countAfter);
         Assert.Equivalent(patientFake, patientPosted);
         Assert.Equivalent(patientFake, patientQueried);
@@ -68,7 +67,6 @@ public class PatientTestApi : GlobalClientRequest
         var patientQueried1 = query.FirstOrDefault(x => x.Id == patientPosted1.Id);
         var patientQueried2 = query.FirstOrDefault(x => x.Id == patientPosted2.Id);
 
-        // Assert
         Assert.Equal(countBefore + 2, countAfter);
         Assert.Equivalent(patientFake1, patientPosted1);
         Assert.Equivalent(patientPosted1, patientQueried1);
@@ -97,7 +95,6 @@ public class PatientTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_patientClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.Conflict, exception.StatusCode);
     }
@@ -120,7 +117,6 @@ public class PatientTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_patientClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
     }
@@ -145,7 +141,6 @@ public class PatientTestApi : GlobalClientRequest
         var query = await Query<List<PatientViewModel>>(_patientClient, new PatientFilter(id: patientPosted.Id));
         var patientQueried = query.FirstOrDefault();
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equivalent(patientToPut, patientPosted);
         Assert.Equivalent(patientPosted, patientQueried);
@@ -169,7 +164,6 @@ public class PatientTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_patientClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
     }
@@ -216,7 +210,6 @@ public class PatientTestApi : GlobalClientRequest
         // Act - Query
         var patientTreatmentQueried = await Query<List<PatientTreatmentViewModel>>(_patientTreatmentClient, new PatientTreatmentFilter(patientId: patient.Id));
 
-        // Assert
         Assert.Equal(countBefore + count, countAfter);
         Assert.Equivalent(patientTreatmentsFake, patientTreatmentsPosted);
         Assert.Equivalent(patientTreatmentsPosted, patientTreatmentQueried);
@@ -237,7 +230,6 @@ public class PatientTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_patientTreatmentClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.Conflict, exception.StatusCode);
     }
@@ -260,7 +252,6 @@ public class PatientTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_patientTreatmentClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
     }
@@ -283,7 +274,6 @@ public class PatientTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_patientTreatmentClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
     }
@@ -303,7 +293,6 @@ public class PatientTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_patientTreatmentClient);
 
-        // Assert
         Assert.Equal(countBefore - 1, countAfter);
         Assert.Equivalent(patientTreatment, patientTreatmentDeleted);
     }
@@ -326,7 +315,6 @@ public class PatientTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_patientTreatmentClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
     }
@@ -349,7 +337,6 @@ public class PatientTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_patientTreatmentClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
     }
@@ -369,7 +356,6 @@ public class PatientTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_patientTreatmentClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
     }

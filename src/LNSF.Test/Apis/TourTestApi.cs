@@ -33,7 +33,6 @@ public class TourTestApi : GlobalClientRequest
         var query = await Query<List<TourViewModel>>(_tourClient, new TourFilter(id: tourPosted.Id));
         var tourQueried = query.FirstOrDefault();
 
-        // Assert
         Assert.Equal(countBefore + 1, countAfter);
         Assert.Equivalent(tour, tourPosted);
         Assert.Equivalent(tourPosted, tourQueried);
@@ -60,7 +59,6 @@ public class TourTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_tourClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.Conflict, exception.StatusCode);
     }
@@ -87,7 +85,6 @@ public class TourTestApi : GlobalClientRequest
         var query = await Query<List<TourViewModel>>(_tourClient, new TourFilter(id: tourPuted.Id));
         var tourQueried = query.FirstOrDefault();
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equivalent(closeTour, tourPuted);
         Assert.Equivalent(tourPuted, tourQueried);
@@ -111,7 +108,6 @@ public class TourTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_tourClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
     }
@@ -136,7 +132,6 @@ public class TourTestApi : GlobalClientRequest
         var query = await Query<List<TourViewModel>>(_tourClient, new TourFilter(id: closeTourPuted.Id));
         var closeTourQueried = query.FirstOrDefault();
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equivalent(closeTourToPutAll, closeTourPuted);
         Assert.Equivalent(closeTourPuted, closeTourQueried);
@@ -163,7 +158,6 @@ public class TourTestApi : GlobalClientRequest
         var query = await Query<List<TourViewModel>>(_tourClient, new TourFilter(id: closeTourPuted.Id));
         var closeTourQueried = query.FirstOrDefault();
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equivalent(closeTourToPutAll, closeTourPuted);
         Assert.Equivalent(closeTourPuted, closeTourQueried);
@@ -186,7 +180,6 @@ public class TourTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_tourClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.NotEmpty(exception.Message);
         Assert.Equal(HttpStatusCode.BadRequest, exception.StatusCode);

@@ -16,7 +16,6 @@ public class HospitalTestApiGet : GlobalClientRequest
         var queryId = await Query<List<HospitalViewModel>>(_hospitalClient, new HospitalFilter(id: hospital.Id));
         var hospitalIdQueried = queryId.First();
 
-        // Assert
         Assert.Equivalent(hospital.Id, hospitalIdQueried.Id);
     }
 
@@ -30,7 +29,6 @@ public class HospitalTestApiGet : GlobalClientRequest
         var queryName = await Query<List<HospitalViewModel>>(_hospitalClient, new HospitalFilter(id: hospital.Id, name: hospital.Name));
         var hospitalNameQueried = queryName.First();
 
-        // Assert
         Assert.Equivalent(hospital, hospitalNameQueried);
     }
 
@@ -44,7 +42,6 @@ public class HospitalTestApiGet : GlobalClientRequest
         var queryAcronym = await Query<List<HospitalViewModel>>(_hospitalClient, new HospitalFilter(id: hospital.Id, acronym: hospital.Acronym));
         var hospitalAcronymQueried = queryAcronym.First();
 
-        // Assert
         Assert.Equivalent(hospital, hospitalAcronymQueried);
     }
 
@@ -61,7 +58,6 @@ public class HospitalTestApiGet : GlobalClientRequest
         var queryGlobalFilterAcronym = await Query<List<HospitalViewModel>>(_hospitalClient, new HospitalFilter(id: hospital.Id, globalFilter: hospital.Acronym));
         var hospitalGlobalFilterAcronymQueried = queryGlobalFilterAcronym.First();
 
-        // Assert
         Assert.Equivalent(hospital, hospitalGlobalFilterNameQueried);
         Assert.Equivalent(hospital, hospitalGlobalFilterAcronymQueried);
     }

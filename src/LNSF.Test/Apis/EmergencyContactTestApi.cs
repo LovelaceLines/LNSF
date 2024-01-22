@@ -31,7 +31,6 @@ public class EmergencyContactTestApi : GlobalClientRequest
         var query = await Query<List<EmergencyContactViewModel>>(_emergencyContactClient, new EmergencyContactFilter(id: contactPosted.Id));
         var contactQueried = query.FirstOrDefault();
 
-        // Assert
         Assert.Equal(countBefore + 1, countAfter);
         Assert.Equivalent(contactFake, contactPosted);
         Assert.Equivalent(contactPosted, contactQueried);
@@ -62,7 +61,6 @@ public class EmergencyContactTestApi : GlobalClientRequest
         var contactQueried1 = query.FirstOrDefault(c => c.Id == contactPosted1.Id);
         var contactQueried2 = query.FirstOrDefault(c => c.Id == contactPosted2.Id);
 
-        // Assert
         Assert.Equal(countBefore + 2, countAfter);
         Assert.Equivalent(contactFake1, contactPosted1);
         Assert.Equivalent(contactFake2, contactPosted2);
@@ -92,7 +90,6 @@ public class EmergencyContactTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_emergencyContactClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.NotFound, exceptionWithInvalidPeopleId.StatusCode);
         Assert.Equal(HttpStatusCode.BadRequest, exceptionWithoutName.StatusCode);
@@ -119,7 +116,6 @@ public class EmergencyContactTestApi : GlobalClientRequest
         var query = await Query<List<EmergencyContactViewModel>>(_emergencyContactClient, new EmergencyContactFilter(id: contact.Id));
         var contactQueried = query.FirstOrDefault();
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equivalent(contactToPut, contactPuted);
         Assert.Equivalent(contactPuted, contactQueried);
@@ -150,7 +146,6 @@ public class EmergencyContactTestApi : GlobalClientRequest
         var query = await Query<List<EmergencyContactViewModel>>(_emergencyContactClient, new EmergencyContactFilter(id: contact.Id));
         var contactQueried = query.FirstOrDefault();
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.NotFound, exceptionWithInvalidPeopleId.StatusCode);
         Assert.Equal(HttpStatusCode.BadRequest, exceptionWithoutName.StatusCode);
@@ -180,7 +175,6 @@ public class EmergencyContactTestApi : GlobalClientRequest
         var query = await Query<List<EmergencyContactViewModel>>(_emergencyContactClient, new EmergencyContactFilter { Id = contact1.Id });
         var contactQueried = query.FirstOrDefault();
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
         Assert.Equivalent(contact1, contactQueried);
@@ -208,7 +202,6 @@ public class EmergencyContactTestApi : GlobalClientRequest
         var query = await Query<List<EmergencyContactViewModel>>(_emergencyContactClient, new EmergencyContactFilter(id: contact.Id));
         var contactQueried = query.FirstOrDefault();
 
-        // Assert
         Assert.Equal(countBefore - 1, countAfter);
         Assert.Equivalent(contact, contactDeleted);
         Assert.Null(contactQueried);
@@ -226,7 +219,6 @@ public class EmergencyContactTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_emergencyContactClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
     }

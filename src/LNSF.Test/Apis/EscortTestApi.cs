@@ -31,7 +31,6 @@ public class EscortTestApi : GlobalClientRequest
         var query = await Query<List<EscortViewModel>>(_escortClient, new EscortFilter(id: escortPosted.Id));
         var escortQueried = query.First();
 
-        // Assert
         Assert.Equal(countBefore + 1, countAfter);
         Assert.Equal(escortFake.PeopleId, escortPosted.PeopleId);
         Assert.Equal(escortPosted.Id, escortQueried.Id);
@@ -53,7 +52,6 @@ public class EscortTestApi : GlobalClientRequest
         // Arrange - Count
         var countAfter = await GetCount(_escortClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
     }
@@ -78,7 +76,6 @@ public class EscortTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_escortClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.Conflict, exception.StatusCode);
     }
@@ -101,7 +98,6 @@ public class EscortTestApi : GlobalClientRequest
         // Arrange - Count
         var countAfter = await GetCount(_escortClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
     }
@@ -123,7 +119,6 @@ public class EscortTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_escortClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
     }
@@ -143,7 +138,6 @@ public class EscortTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_escortClient);
 
-        // Assert
         Assert.Equal(countBefore - 1, countAfter);
         Assert.Equal(escort.Id, escortDeleted.Id);
     }
@@ -166,7 +160,6 @@ public class EscortTestApi : GlobalClientRequest
         // Arrange - Count
         var countAfter = await GetCount(_escortClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.NotFound, exception.StatusCode);
     }

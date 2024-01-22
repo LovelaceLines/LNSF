@@ -28,7 +28,6 @@ public class RoomTestApi : GlobalClientRequest
         var query = await Query<List<RoomViewModel>>(_roomClient, new RoomFilter(id: roomPosted.Id));
         var roomQueried = query.FirstOrDefault();
 
-        // Assert
         Assert.Equal(countBefore + 1, countAfter);
         Assert.Equivalent(room, roomPosted);
         Assert.Equivalent(roomPosted, roomQueried);
@@ -50,10 +49,9 @@ public class RoomTestApi : GlobalClientRequest
         var exceptionWithoutBads = await Post<AppException>(_roomClient, roomWithouBads);
         var exceptionWithNegativeStorey = await Post<AppException>(_roomClient, roomWithNegativeStorey);
 
-        // Assert - Count
+        // Act - Count
         var countAfter = await GetCount(_roomClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.BadRequest, exceptionWithoutNumber.StatusCode);
         Assert.Equal(HttpStatusCode.BadRequest, exceptionWithoutBads.StatusCode);
@@ -80,7 +78,6 @@ public class RoomTestApi : GlobalClientRequest
         var query = await Query<List<RoomViewModel>>(_roomClient, new RoomFilter(id: roomPuted.Id));
         var roomQueried = query.FirstOrDefault();
 
-        // Assert
         Assert.Equivalent(roomToPut, roomPuted);
         Assert.Equal(countBefore, countAfter);
         Assert.Equivalent(roomPuted, roomQueried);
@@ -106,7 +103,6 @@ public class RoomTestApi : GlobalClientRequest
         var query = await Query<List<RoomViewModel>>(_roomClient, new RoomFilter(id: roomPuted.Id));
         var roomQueried = query.FirstOrDefault();
 
-        // Assert
         Assert.Equivalent(roomToPut, roomPuted);
         Assert.Equal(countBefore, countAfter);
         Assert.Equivalent(roomPuted, roomQueried);
@@ -133,7 +129,6 @@ public class RoomTestApi : GlobalClientRequest
         // Arrange - Count
         var countAfter = await GetCount(_roomClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.BadRequest, exceptionWithoutNumber.StatusCode);
         Assert.Equal(HttpStatusCode.BadRequest, exceptionWithoutBads.StatusCode);

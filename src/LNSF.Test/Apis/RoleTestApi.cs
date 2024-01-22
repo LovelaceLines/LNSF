@@ -23,7 +23,6 @@ public class RoleTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_roleClient);
 
-        // Assert
         Assert.Equal(countBefore + 1, countAfter);
         Assert.Equal(role.Name, rolePosted.Name);
     }
@@ -44,7 +43,6 @@ public class RoleTestApi : GlobalClientRequest
         // Arrange - Count
         var countAfter = await GetCount(_roleClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.NotEqual(HttpStatusCode.OK, exceptionDev.StatusCode);
         Assert.NotEqual(HttpStatusCode.InternalServerError, exceptionDev.StatusCode);

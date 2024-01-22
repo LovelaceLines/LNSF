@@ -28,7 +28,6 @@ public class HospitalTestApi : GlobalClientRequest
         var query = await Query<List<HospitalViewModel>>(_hospitalClient, new HospitalFilter(id: hospitalPosted.Id));
         var hospitalQueried = query.FirstOrDefault();
 
-        // Assert
         Assert.Equal(countBefore + 1, countAfter);
         Assert.Equivalent(hospitalFake, hospitalPosted);
         Assert.Equivalent(hospitalPosted, hospitalQueried);
@@ -49,7 +48,6 @@ public class HospitalTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_hospitalClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.BadRequest, exceptionWithInvalidName.StatusCode);
     }
@@ -70,7 +68,6 @@ public class HospitalTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_hospitalClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.Conflict, exception.StatusCode);
     }
@@ -95,7 +92,6 @@ public class HospitalTestApi : GlobalClientRequest
         var query = await Query<List<HospitalViewModel>>(_hospitalClient, new HospitalFilter(id: hospitalPuted.Id));
         var hospitalQueried = query.FirstOrDefault();
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equivalent(hospitalPuted, hospitalToPut);
         Assert.Equivalent(hospitalPuted, hospitalQueried);
@@ -122,7 +118,6 @@ public class HospitalTestApi : GlobalClientRequest
         var query = await Query<List<HospitalViewModel>>(_hospitalClient, new HospitalFilter(id: hospital1.Id));
         var hospitalQueried = query.FirstOrDefault();
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.Conflict, exception.StatusCode);
         Assert.Equivalent(hospital1, hospitalQueried);

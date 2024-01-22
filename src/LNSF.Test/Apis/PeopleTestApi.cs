@@ -31,7 +31,6 @@ public class PeopleTestApi : GlobalClientRequest
         peopleQueried.Experience = null;
         peopleQueried.Status = null;
 
-        // Assert
         Assert.Equal(countBefore + 1, countAfter);
         Assert.Equivalent(peopleFake, peoplePosted);
         Assert.Equivalent(peoplePosted, peopleQueried);
@@ -64,7 +63,6 @@ public class PeopleTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_peopleClient);
 
-        // Assert
         Assert.Equal(countBefore + 2, countAfter);
         Assert.Equal(HttpStatusCode.BadRequest, exception1.StatusCode);
         Assert.Equal(HttpStatusCode.BadRequest, exception2.StatusCode);
@@ -97,7 +95,6 @@ public class PeopleTestApi : GlobalClientRequest
         // Arrange - Count
         var countAfter = await GetCount(_peopleClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.BadRequest, exceptionWithoutName.StatusCode);
         Assert.Equal(HttpStatusCode.BadRequest, exceptionAged14.StatusCode);
@@ -131,7 +128,6 @@ public class PeopleTestApi : GlobalClientRequest
         peopleQueried.Experience = null;
         peopleQueried.Status = null;
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equivalent(peopleToPut, peoplePuted);
         Assert.Equivalent(peoplePuted, peopleQueried);
@@ -164,7 +160,6 @@ public class PeopleTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_peopleClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equal(HttpStatusCode.BadRequest, exceptionWithoutName.StatusCode);
         Assert.Equal(HttpStatusCode.BadRequest, exceptionAged14.StatusCode);
@@ -206,7 +201,6 @@ public class PeopleTestApi : GlobalClientRequest
         var countPatientsAfter = await GetCount(_patientClient);
         var countHostingsAfter = await GetCount(_hostingClient);
 
-        // Assert
         Assert.Equal(countPeopleRoomsBefore + 1, countPeopleRoomsAfter);
         Assert.Equivalent(peopleRoomFake, peopleRoomPosted);
         Assert.Equal(countRoomsBefore, countRoomsAfter);
@@ -253,7 +247,6 @@ public class PeopleTestApi : GlobalClientRequest
         var countEscortsAfter = await GetCount(_escortClient);
         var countHostingsAfter = await GetCount(_hostingClient);
 
-        // Assert
         Assert.Equal(countPeopleRoomsBefore + 1, countPeopleRoomsAfter);
         Assert.Equivalent(peopleRoomFake, peopleRoomPosted);
         Assert.Equal(countRoomsBefore, countRoomsAfter);
@@ -303,7 +296,6 @@ public class PeopleTestApi : GlobalClientRequest
         var countEscortsAfter = await GetCount(_escortClient);
         var countHostingsAfter = await GetCount(_hostingClient);
 
-        // Assert
         Assert.Equal(countPeopleRoomsBefore + 2, countPeopleRoomsAfter);
         Assert.Equivalent(peopleRoomFakeWithPatient, peopleRoomPostedWithPatient);
         Assert.Equivalent(peopleRoomFakeWithEscort, peopleRoomPostedWithEscort);
@@ -348,7 +340,6 @@ public class PeopleTestApi : GlobalClientRequest
         var countPatientsAfter = await GetCount(_patientClient);
         var countHostingsAfter = await GetCount(_hostingClient);
 
-        // Assert
         Assert.Equal(countPeopleRoomsBefore + 1, countPeopleRoomsAfter);
         Assert.Equivalent(peopleRoomFake, peopleRoomPosted);
         Assert.Equal(countRoomsBefore, countRoomsAfter);
@@ -399,7 +390,6 @@ public class PeopleTestApi : GlobalClientRequest
         var countEscortsAfter = await GetCount(_escortClient);
         var countHostingsAfter = await GetCount(_hostingClient);
 
-        // Assert
         Assert.Equal(countPeopleRoomsBefore + 2, countPeopleRoomsAfter);
         Assert.Equivalent(peopleRoomFakeWithPatient, peopleRoomPostedWithPatient);
         Assert.Equivalent(peopleRoomFakeWithEscort, peopleRoomPostedWithEscort);
@@ -439,7 +429,6 @@ public class PeopleTestApi : GlobalClientRequest
         var countPeopleRoomsAfter = await GetCount(_peopleRoomClient);
         var countHostingsAfter = await GetCount(_hostingClient);
 
-        // Assert
         Assert.Equal(countRoomsBefore, countRoomsAfter);
         Assert.Equal(countPeoplesBefore, countPeoplesAfter);
         Assert.Equal(countPatientsBefore, countPatientsAfter);
@@ -477,7 +466,6 @@ public class PeopleTestApi : GlobalClientRequest
         var countPatientsAfter = await GetCount(_patientClient);
         var countHostingsAfter = await GetCount(_hostingClient);
 
-        // Assert
         Assert.Equal(countPeopleRoomsBefore, countPeopleRoomsAfter);
         Assert.Equal(countRoomsBefore, countRoomsAfter);
         Assert.Equal(countPeoplesBefore, countPeoplesAfter);
@@ -518,7 +506,6 @@ public class PeopleTestApi : GlobalClientRequest
         var countPatientsAfter = await GetCount(_patientClient);
         var countHostingsAfter = await GetCount(_hostingClient);
 
-        // Assert
         Assert.Equal(countPeopleRoomsBefore, countPeopleRoomsAfter);
         Assert.Equal(countRoomsBefore, countRoomsAfter);
         Assert.Equal(countPeoplesBefore, countPeoplesAfter);
@@ -556,7 +543,6 @@ public class PeopleTestApi : GlobalClientRequest
         var countPatientsAfter = await GetCount(_patientClient);
         var countHostingsAfter = await GetCount(_hostingClient);
 
-        // Assert
         Assert.Equal(countPeopleRoomsBefore, countPeopleRoomsAfter);
         Assert.Equal(countRoomsBefore, countRoomsAfter);
         Assert.Equal(countPeoplesBefore, countPeoplesAfter);
@@ -599,7 +585,6 @@ public class PeopleTestApi : GlobalClientRequest
         var countEscortsAfter = await GetCount(_escortClient);
         var countHostingsAfter = await GetCount(_hostingClient);
 
-        // Assert
         Assert.Equal(countPeopleRoomsBefore, countPeopleRoomsAfter);
         Assert.Equal(countRoomsBefore, countRoomsAfter);
         Assert.Equal(countPeoplesBefore, countPeoplesAfter);
@@ -641,7 +626,6 @@ public class PeopleTestApi : GlobalClientRequest
         var countHostingsAfter = await GetCount(_hostingClient);
         var countPeopleRoomsAfter = await GetCount(_peopleRoomClient);
 
-        // Assert
         Assert.Equal(countRoomsBefore, countRoomsAfter);
         Assert.Equal(countPeoplesBefore, countPeoplesAfter);
         Assert.Equal(countPatientsBefore, countPatientsAfter);
@@ -689,7 +673,6 @@ public class PeopleTestApi : GlobalClientRequest
         var countHostingsAfter = await GetCount(_hostingClient);
         var countPeopleRoomsAfter = await GetCount(_peopleRoomClient);
 
-        // Assert
         Assert.Equal(countRoomsBefore, countRoomsAfter);
         Assert.Equal(countPeoplesBefore, countPeoplesAfter);
         Assert.Equal(countPatientsBefore, countPatientsAfter);
@@ -722,7 +705,6 @@ public class PeopleTestApi : GlobalClientRequest
         var countHostingsAfter = await GetCount(_hostingClient);
         var countPeopleRoomsAfter = await GetCount(_peopleRoomClient);
 
-        // Assert
         Assert.Equal(countRoomsBefore, countRoomsAfter);
         Assert.Equal(countPeoplesBefore, countPeoplesAfter);
         Assert.Equal(countPatientsBefore, countPatientsAfter);
@@ -771,7 +753,6 @@ public class PeopleTestApi : GlobalClientRequest
         var countHostingsAfter = await GetCount(_hostingClient);
         var countPeopleRoomsAfter = await GetCount(_peopleRoomClient);
 
-        // Assert
         Assert.Equal(countRoomsBefore, countRoomsAfter);
         Assert.Equal(countPeoplesBefore, countPeoplesAfter);
         Assert.Equal(countEscortsBefore, countEscortsAfter);
@@ -805,7 +786,6 @@ public class PeopleTestApi : GlobalClientRequest
         var countHostingsAfter = await GetCount(_hostingClient);
         var countPeopleRoomsAfter = await GetCount(_peopleRoomClient);
 
-        // Assert
         Assert.Equal(countRoomsBefore, countRoomsAfter);
         Assert.Equal(countPeoplesBefore, countPeoplesAfter);
         Assert.Equal(countPatientsBefore, countPatientsAfter);

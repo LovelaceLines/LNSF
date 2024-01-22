@@ -19,7 +19,6 @@ public class AuthTestApi : GlobalClientRequest
         var login = new UserLoginViewModel { UserName = user.UserName, Password = password };
         var token = await Post<AuthenticationToken>(_loginClient, login);
 
-        // Assert
         Assert.NotNull(token);
         Assert.NotNull(token.AccessToken);
         Assert.NotNull(token.RefreshToken);
@@ -38,7 +37,6 @@ public class AuthTestApi : GlobalClientRequest
         // Act - Assert
         var exception = await Post<AppException>(_loginClient, login);
 
-        // Assert
         Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
         Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
     }
@@ -59,7 +57,6 @@ public class AuthTestApi : GlobalClientRequest
         // Act
         var refreshToken = await Get<AuthenticationToken>(_refreshTokenClient);
 
-        // Assert
         Assert.NotNull(refreshToken);
         Assert.NotEmpty(refreshToken.AccessToken);
         Assert.NotEmpty(refreshToken.RefreshToken);
@@ -76,7 +73,6 @@ public class AuthTestApi : GlobalClientRequest
         // Act - Assert
         var exception = await Get<AppException>(_refreshTokenClient);
 
-        // Assert
         Assert.Equal(HttpStatusCode.Unauthorized, exception.StatusCode);
     }
 
@@ -88,7 +84,7 @@ public class AuthTestApi : GlobalClientRequest
         var user = await GetUser(password: password, role: "Desenvolvedor");
 
         // Arrange - Login
-        var login = new UserLoginViewModel{ UserName = user.UserName, Password = password };
+        var login = new UserLoginViewModel { UserName = user.UserName, Password = password };
         var token = await Post<AuthenticationToken>(_loginClient, login);
         _acessToken = token.AccessToken;
         _refreshToken = token.RefreshToken;
@@ -96,7 +92,6 @@ public class AuthTestApi : GlobalClientRequest
         // Act
         var userGet = await Get<UserGetViewModel>(_authUserClient);
 
-        // Assert
         Assert.Equivalent(user, userGet);
     }
 
@@ -110,7 +105,6 @@ public class AuthTestApi : GlobalClientRequest
         // Act - Assert
         var exception = await Get<AppException>(_authUserClient);
 
-        // Assert
         Assert.Equal(HttpStatusCode.Unauthorized, exception.StatusCode);
     }
 }

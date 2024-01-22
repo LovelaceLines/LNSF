@@ -23,7 +23,6 @@ public class UserTestApi : GlobalClientRequest
         // Act - Count
         var countAfter = await GetCount(_userClient);
 
-        // Assert
         Assert.Equal(countBefore + 1, countAfter);
         Assert.Equal(userFake.UserName, userPosted.UserName);
         Assert.Equal(userFake.Email, userPosted.Email);
@@ -48,7 +47,6 @@ public class UserTestApi : GlobalClientRequest
         // Arrange - Count
         var countAfter = await GetCount(_userClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
         Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
@@ -71,7 +69,6 @@ public class UserTestApi : GlobalClientRequest
         // Arrange - Count
         var countAfter = await GetCount(_userClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
         Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
@@ -94,7 +91,6 @@ public class UserTestApi : GlobalClientRequest
         // Arrange - Count
         var countAfter = await GetCount(_userClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
         Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
@@ -118,7 +114,6 @@ public class UserTestApi : GlobalClientRequest
         // Arrange - Count
         var countAfter = await GetCount(_userClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.NotEqual(HttpStatusCode.OK, exceptionUserName.StatusCode);
         Assert.NotEqual(HttpStatusCode.InternalServerError, exceptionUserName.StatusCode);
@@ -144,7 +139,6 @@ public class UserTestApi : GlobalClientRequest
         // Arrange - Count
         var countAfter = await GetCount(_userClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.Equivalent(userFake, userUpdated);
     }
@@ -170,7 +164,6 @@ public class UserTestApi : GlobalClientRequest
         // Arrange - Count
         var countAfter = await GetCount(_userClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.NotEqual(HttpStatusCode.OK, exceptionUserName.StatusCode);
         Assert.NotEqual(HttpStatusCode.InternalServerError, exceptionUserName.StatusCode);
@@ -195,7 +188,6 @@ public class UserTestApi : GlobalClientRequest
         // Arrange - Count
         var countAfter = await GetCount(_userClient);
 
-        // Assert
         Assert.Equal(countBefore - 1, countAfter);
         Assert.Equivalent(user, userDeleted);
     }
@@ -216,7 +208,6 @@ public class UserTestApi : GlobalClientRequest
         // Arrange - Count
         var countAfter = await GetCount(_userRoleClient);
 
-        // Assert
         Assert.Equal(countBefore + 1, countAfter);
     }
 
@@ -236,7 +227,6 @@ public class UserTestApi : GlobalClientRequest
         // Arrange - Count
         var countAfter = await GetCount(_userRoleClient);
 
-        // Assert
         Assert.Equal(countBefore, countAfter);
         Assert.NotEqual(HttpStatusCode.OK, exception.StatusCode);
         Assert.NotEqual(HttpStatusCode.InternalServerError, exception.StatusCode);

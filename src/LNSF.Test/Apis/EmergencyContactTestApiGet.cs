@@ -16,7 +16,6 @@ public class EmergencyContactTestApiGet : GlobalClientRequest
         var queryId = await Query<List<EmergencyContactViewModel>>(_emergencyContactClient, new EmergencyContactFilter(id: contact.Id));
         var contactQueriedId = queryId.First();
 
-        // Assert
         Assert.Equivalent(contact, contactQueriedId);
     }
 
@@ -33,7 +32,6 @@ public class EmergencyContactTestApiGet : GlobalClientRequest
         var queryPeopleId = await Query<List<EmergencyContactViewModel>>(_emergencyContactClient, new EmergencyContactFilter(id: contact.Id, peopleId: people.Id));
         var contactQueriedPeopleId = queryPeopleId.First();
 
-        // Assert
         Assert.Equivalent(contact, contactQueriedPeopleId);
     }
 
@@ -47,7 +45,6 @@ public class EmergencyContactTestApiGet : GlobalClientRequest
         var queryName = await Query<List<EmergencyContactViewModel>>(_emergencyContactClient, new EmergencyContactFilter(id: contact.Id, name: contact.Name));
         var contactQueriedName = queryName.First();
 
-        // Assert
         Assert.Equivalent(contact, contactQueriedName);
     }
 
@@ -61,7 +58,6 @@ public class EmergencyContactTestApiGet : GlobalClientRequest
         var queryPhone = await Query<List<EmergencyContactViewModel>>(_emergencyContactClient, new EmergencyContactFilter(id: contact.Id, phone: contact.Phone));
         var contactQueriedPhone = queryPhone.First();
 
-        // Assert
         Assert.Equivalent(contact, contactQueriedPhone);
     }
 
@@ -78,7 +74,6 @@ public class EmergencyContactTestApiGet : GlobalClientRequest
         var queryGetPeople = await Query<List<EmergencyContactViewModel>>(_emergencyContactClient, new EmergencyContactFilter(id: contact.Id, getPeople: true));
         var contactQueriedGetPeople = queryGetPeople.First();
 
-        // Assert
         Assert.Equivalent(people, contactQueriedGetPeople.People);
     }
 
@@ -94,7 +89,6 @@ public class EmergencyContactTestApiGet : GlobalClientRequest
         var queryGlobalFilterPhone = await Query<List<EmergencyContactViewModel>>(_emergencyContactClient, new EmergencyContactFilter(id: contact.Id, globalFilter: contact.Phone));
         var contactPhoneQueriedGlobalFilter = queryGlobalFilterPhone.First();
 
-        // Assert
         Assert.Equivalent(contact, contactNameQueriedGlobalFilter);
         Assert.Equivalent(contact, contactPhoneQueriedGlobalFilter);
     }
