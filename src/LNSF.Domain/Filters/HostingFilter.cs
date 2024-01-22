@@ -25,6 +25,8 @@ public class HostingFilter
 		DateTime? checkIn = null,
 		DateTime? checkOut = null,
 		bool? active = null,
+		bool? getPatient = null,
+		bool? getEscort = null,
 		Pagination? page = null,
 		OrderBy? orderBy = null)
 	{
@@ -34,6 +36,8 @@ public class HostingFilter
 		PatientId = patientId;
 		EscortId = escortId;
 		Active = active;
+		GetPatient = getPatient;
+		GetEscort = getEscort;
 		Page = page ?? Page;
 		OrderBy = orderBy;
 	}

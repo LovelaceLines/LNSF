@@ -50,6 +50,8 @@ public class PeopleFilter
         bool? active = null,
         bool? veteran = null,
         string? globalFilter = null,
+        bool? getTours = null,
+        bool? getEmergencyContacts = null,
         Pagination? page = null,
         OrderBy? orderBy = null)
     {
@@ -72,6 +74,8 @@ public class PeopleFilter
         Active = active;
         Veteran = veteran;
         GlobalFilter = globalFilter;
+        GetTours = getTours;
+        GetEmergencyContacts = getEmergencyContacts;
         Page = page ?? new();
         OrderBy = orderBy;
     }

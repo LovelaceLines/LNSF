@@ -18,6 +18,8 @@ public class EscortFilter
         int? peopleId = null,
         bool? active = null,
         bool? isVeteran = null,
+        bool? getPeople = null,
+        string? globalFilter = null,
         Pagination? page = null,
         OrderBy? orderBy = null)
     {
@@ -25,6 +27,8 @@ public class EscortFilter
         PeopleId = peopleId;
         Active = active;
         IsVeteran = isVeteran;
+        GetPeople = getPeople;
+        GlobalFilter = globalFilter;
         Page = page ?? Page;
         OrderBy = orderBy;
     }

@@ -32,6 +32,7 @@ public class PatientFilter
         bool? isVeteran = null,
         bool? getPeople = null,
         bool? getHospital = null,
+        bool? getTreatments = null,
         Pagination? page = null,
         OrderBy? orderBy = null)
     {
@@ -45,6 +46,7 @@ public class PatientFilter
         IsVeteran = isVeteran;
         GetPeople = getPeople;
         GetHospital = getHospital;
+        GetTreatments = getTreatments;
         Page = page ?? Page;
         OrderBy = orderBy;
     }

@@ -16,7 +16,8 @@ public class EmergencyContactFilter
 
     public EmergencyContactFilter() { }
 
-    public EmergencyContactFilter(int? id = null,
+    public EmergencyContactFilter(
+        int? id = null,
         string? name = null,
         string? phone = null,
         int? peopleId = null,

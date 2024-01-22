@@ -158,7 +158,7 @@ public class UserTestApi : GlobalClientRequest
 
         // Arrange - Count
         var countBefore = await GetCount(_userClient);
-        
+
         // Act - User
         var userFakeUserName = new UserViewModelFake(id: user.Id, userName: repeatInfo.UserName).Generate();
         var exceptionUserName = await Put<AppException>(_userClient, userFakeUserName);
