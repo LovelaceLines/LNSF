@@ -1,13 +1,13 @@
-﻿namespace LNSF.Domain.Entities;
+﻿namespace LNSF.Domain.DTOs;
 
-public class AuthenticationToken
+public class AuthToken
 {
     public string AccessToken { get; set; } = "";
     public string RefreshToken { get; set; } = "";
 
-    public AuthenticationToken() { }
+    public AuthToken() { }
 
-    public AuthenticationToken(string accessToken, string refreshToken)
+    public AuthToken(string accessToken, string refreshToken)
     {
         AccessToken = accessToken;
         RefreshToken = refreshToken;

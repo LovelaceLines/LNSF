@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using LNSF.Api.ViewModels;
 using LNSF.Application.Interfaces;
-using LNSF.Domain.Entities;
+using LNSF.Domain.DTOs;
 using LNSF.Domain.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,17 +24,17 @@ public class AuthController : ControllerBase
     }
 
     /// <summary>
-    /// Authenticates a user and returns an authentication token.
+    /// Authenticates a user and returns an auth token.
     /// </summary>
     [HttpPost("login")]
-    public async Task<ActionResult<AuthenticationToken>> Login(UserLoginViewModel user) =>
+    public async Task<ActionResult<AuthToken>> Login(UserLoginViewModel user) =>
         await _service.Login(user.UserName, user.Password);
 
     /// <summary>
-    /// Refreshes an authentication token.
+    /// Refreshes an auth token.
     /// </summary>
     [HttpGet("refresh-token")]
-    public async Task<ActionResult<AuthenticationToken>> RefreshToken([FromHeader(Name = "Authorization")] string auth)
+    public async Task<ActionResult<AuthToken>> RefreshToken([FromHeader(Name = "Authorization")] string auth)
     {
         var token = ExtractTokenFromHeader(auth);
         return await _service.RefreshToken(token);

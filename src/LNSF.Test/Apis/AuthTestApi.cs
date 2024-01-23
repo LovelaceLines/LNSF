@@ -1,5 +1,5 @@
 ﻿using LNSF.Api.ViewModels;
-using LNSF.Domain.Entities;
+using LNSF.Domain.DTOs;
 using LNSF.Domain.Exceptions;
 using System.Net;
 using Xunit;
@@ -17,7 +17,7 @@ public class AuthTestApi : GlobalClientRequest
 
         // Act
         var login = new UserLoginViewModel { UserName = user.UserName, Password = password };
-        var token = await Post<AuthenticationToken>(_loginClient, login);
+        var token = await Post<AuthToken>(_loginClient, login);
 
         Assert.NotNull(token);
         Assert.NotNull(token.AccessToken);
@@ -50,12 +50,12 @@ public class AuthTestApi : GlobalClientRequest
 
         // Arrange - Login
         var login = new UserLoginViewModel { UserName = user.UserName, Password = password };
-        var token = await Post<AuthenticationToken>(_loginClient, login);
+        var token = await Post<AuthToken>(_loginClient, login);
         _acessToken = token.AccessToken;
         _refreshToken = token.RefreshToken;
 
         // Act
-        var refreshToken = await Get<AuthenticationToken>(_refreshTokenClient);
+        var refreshToken = await Get<AuthToken>(_refreshTokenClient);
 
         Assert.NotNull(refreshToken);
         Assert.NotEmpty(refreshToken.AccessToken);
@@ -85,7 +85,7 @@ public class AuthTestApi : GlobalClientRequest
 
         // Arrange - Login
         var login = new UserLoginViewModel { UserName = user.UserName, Password = password };
-        var token = await Post<AuthenticationToken>(_loginClient, login);
+        var token = await Post<AuthToken>(_loginClient, login);
         _acessToken = token.AccessToken;
         _refreshToken = token.RefreshToken;
 

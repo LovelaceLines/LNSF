@@ -78,7 +78,7 @@ public class UserTestApiGet : GlobalClientRequest
     public async Task Get_ValidGlobalFilter_Ok()
     {
         // Arrange - User
-        var user = await GetUser("Desenvolvedor");
+        var user = await GetUser(role: "Desenvolvedor");
 
         // Act - User
         var queryGlobalFilterUserName = await Query<List<UserViewModel>>(_userClient, new UserFilter(id: user.Id, globalFilter: user.UserName));
