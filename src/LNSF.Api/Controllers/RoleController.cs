@@ -2,6 +2,7 @@
 using LNSF.Api.ViewModels;
 using LNSF.Application.Interfaces;
 using LNSF.Domain.Filters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,6 +25,7 @@ public class RoleController : ControllerBase
     /// <summary>
     /// Retrieves a list of roles based on the provided filter.
     /// </summary>
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<List<RoleViewModel>>> Get([FromQuery] RoleFilter filter)
     {
@@ -34,6 +36,7 @@ public class RoleController : ControllerBase
     /// <summary>
     /// Get the count of roles.
     /// </summary>
+    [Authorize]
     [HttpGet("count")]
     public async Task<ActionResult<int>> GetCount() =>
         await _roleService.GetCount();
@@ -41,6 +44,7 @@ public class RoleController : ControllerBase
     /// <summary>
     /// Creates a new role.
     /// </summary>
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<RoleViewModel>> Post([FromBody] RolePostViewModel rolePostViewModel)
     {
@@ -52,6 +56,7 @@ public class RoleController : ControllerBase
     /// <summary>
     /// Updates a role.
     /// </summary>
+    [Authorize]
     [HttpPut]
     public async Task<ActionResult<RoleViewModel>> Put([FromBody] RoleViewModel rolePostViewModel)
     {
@@ -63,6 +68,7 @@ public class RoleController : ControllerBase
     /// <summary>
     /// Deletes a role by name.
     /// </summary>
+    [Authorize]
     [HttpDelete("{roleName}")]
     public async Task<ActionResult> Delete(string roleName) =>
         Ok(await _roleService.Delete(roleName));

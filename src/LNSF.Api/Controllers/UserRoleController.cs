@@ -1,5 +1,6 @@
 ﻿using LNSF.Application.Interfaces;
 using LNSF.Domain.Filters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,20 +12,22 @@ public class UserRoleController : ControllerBase
 {
     private readonly IUserRoleService _userRoleService;
 
-    public UserRoleController(IUserRoleService userRoleService) => 
+    public UserRoleController(IUserRoleService userRoleService) =>
         _userRoleService = userRoleService;
 
     /// <summary>
     /// Retrieves a list of UserRole based on provided filter.
     /// </summary>
+    [Authorize]
     [HttpGet]
-    public async Task<ActionResult<List<IdentityUserRole<string>>>> Query([FromQuery] UserRoleFilter filter) => 
+    public async Task<ActionResult<List<IdentityUserRole<string>>>> Query([FromQuery] UserRoleFilter filter) =>
         await _userRoleService.Query(filter);
-    
+
     /// <summary>
     /// Gets the count of UserRole.
     /// </summary>
+    [Authorize]
     [HttpGet("count")]
-    public async Task<ActionResult<int>> GetCount() => 
+    public async Task<ActionResult<int>> GetCount() =>
         Ok(await _userRoleService.GetCount());
 }

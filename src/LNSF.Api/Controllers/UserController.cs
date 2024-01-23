@@ -2,6 +2,7 @@
 using LNSF.Api.ViewModels;
 using LNSF.Application.Interfaces;
 using LNSF.Domain.Filters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,6 +24,7 @@ public class UserController : ControllerBase
     /// <summary>
     /// Retrieves a list of users based on provided filter.
     /// </summary>
+    [Authorize]
     [HttpGet]
     public async Task<List<UserGetViewModel>> Get([FromQuery] UserFilter filter)
     {
@@ -33,13 +35,15 @@ public class UserController : ControllerBase
     /// <summary>
     /// Gets the count of User.
     /// </summary>
+    [Authorize]
     [HttpGet("count")]
     public async Task<int> GetCount() =>
         await _userService.GetCount();
-    
+
     /// <summary>
     /// Creates a new user.
     /// </summary>
+    [Authorize]
     [HttpPost]
     public async Task<UserViewModel> Post(UserPostViewModel userPostViewModel)
     {
@@ -51,6 +55,7 @@ public class UserController : ControllerBase
     /// <summary>
     /// Adds a user to a role.
     /// </summary>
+    [Authorize]
     [HttpPost("add-user-to-role")]
     public async Task<UserViewModel> Post(UserRoleViewModel userRoleViewModel)
     {
@@ -61,7 +66,8 @@ public class UserController : ControllerBase
     /// <summary>
     /// Updates a user. Note: do not update the user's password.
     /// </summary>
-    [HttpPut]   
+    [Authorize]
+    [HttpPut]
     public async Task<UserViewModel> Put(UserViewModel userViewModel)
     {
         var user = _mapper.Map<IdentityUser>(userViewModel);
@@ -72,6 +78,7 @@ public class UserController : ControllerBase
     /// <summary>
     /// Updates the password of a user.
     /// </summary>
+    [Authorize]
     [HttpPut("password")]
     public async Task<UserViewModel> Put(UserPutPasswordViewModel userPutPasswordViewModel)
     {
@@ -82,6 +89,7 @@ public class UserController : ControllerBase
     /// <summary>
     /// Deletes a user by their ID.
     /// </summary>
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<UserViewModel> Delete(string id)
     {
@@ -92,6 +100,7 @@ public class UserController : ControllerBase
     /// <summary>
     /// Removes a user from a role.
     /// </summary>
+    [Authorize]
     [HttpDelete("remove-user-from-role")]
     public async Task<ActionResult<UserViewModel>> Delete(UserRoleViewModel userRoleViewModel)
     {

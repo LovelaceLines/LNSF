@@ -3,6 +3,7 @@ using LNSF.Api.ViewModels;
 using LNSF.Application.Interfaces;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -15,7 +16,7 @@ public class AuthController : ControllerBase
     private readonly IAuthTokenService _service;
     private readonly IMapper _mapper;
 
-    public AuthController(IAuthTokenService service, 
+    public AuthController(IAuthTokenService service,
         IMapper mapper)
     {
         _service = service;
@@ -26,7 +27,7 @@ public class AuthController : ControllerBase
     /// Authenticates a user and returns an authentication token.
     /// </summary>
     [HttpPost("login")]
-    public async Task<ActionResult<AuthenticationToken>> Login(UserLoginViewModel user) => 
+    public async Task<ActionResult<AuthenticationToken>> Login(UserLoginViewModel user) =>
         await _service.Login(user.UserName, user.Password);
 
     /// <summary>
@@ -42,6 +43,7 @@ public class AuthController : ControllerBase
     /// <summary>
     /// Retrieves the user information based on the provided authorization token. Note: Authorization token in the format "Bearer {token}".
     /// </summary>
+    [Authorize]
     [HttpGet("user")]
     public async Task<ActionResult<UserGetViewModel>> Get([FromHeader(Name = "Authorization")] string auth)
     {

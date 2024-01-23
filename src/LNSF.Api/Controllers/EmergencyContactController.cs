@@ -3,6 +3,7 @@ using LNSF.Api.ViewModels;
 using LNSF.Application.Interfaces;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Filters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LNSF.Api.Controllers;
@@ -14,7 +15,7 @@ public class EmergencyContactController : ControllerBase
     private readonly IEmergencyContactService _service;
     private readonly IMapper _mapper;
 
-    public EmergencyContactController(IEmergencyContactService service, 
+    public EmergencyContactController(IEmergencyContactService service,
         IMapper mapper)
     {
         _service = service;
@@ -24,6 +25,7 @@ public class EmergencyContactController : ControllerBase
     /// <summary>
     /// Retrieves a list of emergency contacts based on the provided filter.
     /// </summary>
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<List<EmergencyContactViewModel>>> Get([FromQuery] EmergencyContactFilter filter)
     {
@@ -34,15 +36,17 @@ public class EmergencyContactController : ControllerBase
     /// <summary>
     /// Gets the count of emergency contacts.
     /// </summary>
+    [Authorize]
     [HttpGet("count")]
-    public async Task<ActionResult<int>> GetCount() => 
+    public async Task<ActionResult<int>> GetCount() =>
         await _service.GetCount();
 
     /// <summary>
     /// Creates a new emergency contact to be associated with a person.
     /// </summary>
+    [Authorize]
     [HttpPost]
-    public async Task<ActionResult<EmergencyContactViewModel>> Post([FromBody]EmergencyContactPostViewModel emergencyContactPostViewModel)
+    public async Task<ActionResult<EmergencyContactViewModel>> Post([FromBody] EmergencyContactPostViewModel emergencyContactPostViewModel)
     {
         var contact = _mapper.Map<EmergencyContact>(emergencyContactPostViewModel);
         contact = await _service.Create(contact);
@@ -52,8 +56,9 @@ public class EmergencyContactController : ControllerBase
     /// <summary>
     /// Updates an existing emergency contact.
     /// </summary>
+    [Authorize]
     [HttpPut]
-    public async Task<ActionResult<EmergencyContactViewModel>> Put([FromBody]EmergencyContactViewModel emergencyContactViewModel)
+    public async Task<ActionResult<EmergencyContactViewModel>> Put([FromBody] EmergencyContactViewModel emergencyContactViewModel)
     {
         var contact = _mapper.Map<EmergencyContact>(emergencyContactViewModel);
         contact = await _service.Update(contact);
@@ -63,6 +68,7 @@ public class EmergencyContactController : ControllerBase
     /// <summary>
     /// Deletes an emergency contact by ID.
     /// </summary>
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<ActionResult<EmergencyContactViewModel>> Delete(int id)
     {

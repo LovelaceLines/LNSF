@@ -1,7 +1,7 @@
 ﻿using LNSF.Application.Interfaces;
 using LNSF.Domain.DTOs;
-using LNSF.Domain.Entities;
 using LNSF.Domain.Filters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LNSF.Api.Controllers;
@@ -22,6 +22,7 @@ public class ReportController : ControllerBase
         _peopleService = peopleService;
     }
 
+    [Authorize]
     [HttpGet("export-people")]
     public async Task<IActionResult> Get([FromQuery] PeopleFilter filter)
     {

@@ -3,6 +3,7 @@ using LNSF.Api.ViewModels;
 using LNSF.Application.Interfaces;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Filters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LNSF.Api.Controllers;
@@ -27,6 +28,7 @@ public class PatientController : ControllerBase
     /// <summary>
     /// Retrieves a list of patients based on the provided filter.
     /// </summary>
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<List<PatientViewModel>>> Get([FromQuery] PatientFilter filter)
     {
@@ -37,13 +39,15 @@ public class PatientController : ControllerBase
     /// <summary>
     /// Gets the count of patients.
     /// </summary>
+    [Authorize]
     [HttpGet("count")]
-    public async Task<ActionResult<int>> GetCount() => 
+    public async Task<ActionResult<int>> GetCount() =>
         await _patientService.Count();
 
     /// <summary>
     /// Creates a new patient.
     /// </summary>
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<PatientViewModel>> Post(PatientPostViewModel patientPostViewModel)
     {
@@ -55,6 +59,7 @@ public class PatientController : ControllerBase
     /// <summary>
     /// Adds a treatment to a patient.
     /// </summary>
+    [Authorize]
     [HttpPost("add-treatment-to-patient")]
     public async Task<ActionResult<PatientTreatmentViewModel>> AddTreatmentToPatient(PatientTreatmentViewModel patientTreatmentViewModel)
     {
@@ -66,6 +71,7 @@ public class PatientController : ControllerBase
     /// <summary>
     /// Updates a patient.
     /// </summary>
+    [Authorize]
     [HttpPut]
     public async Task<ActionResult<PatientViewModel>> Put(PatientViewModel patientViewModel)
     {
@@ -77,6 +83,7 @@ public class PatientController : ControllerBase
     /// <summary>
     /// Deletes a patient by id. Note: this action results in a cascade delete (Hosting).
     /// </summary>
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<ActionResult<PatientViewModel>> Delete(int id)
     {
@@ -87,6 +94,7 @@ public class PatientController : ControllerBase
     /// <summary>
     /// Removes a treatment from a patient.
     /// </summary>
+    [Authorize]
     [HttpDelete("remove-treatment-from-patient")]
     public async Task<ActionResult<PatientTreatmentViewModel>> RemoveTreatmentFromPatient(PatientTreatmentViewModel patientTreatmentViewModel)
     {

@@ -3,6 +3,7 @@ using LNSF.Api.ViewModels;
 using LNSF.Application.Interfaces;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Filters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LNSF.Api.Controllers;
@@ -28,6 +29,7 @@ public class HostingController : ControllerBase
     /// <summary>
     /// Retrieves a list of hostings based on the provided filter. Note: if getPeople is true, getPatient must be true.
     /// </summary>
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<List<HostingViewModel>>> Get([FromQuery] HostingFilter filter)
     {
@@ -38,13 +40,15 @@ public class HostingController : ControllerBase
     /// <summary>
     /// Gets the count of hosting.
     /// </summary>
+    [Authorize]
     [HttpGet("count")]
-    public async Task<ActionResult<int>> GetCount() => 
+    public async Task<ActionResult<int>> GetCount() =>
         await _hostingService.GetCount();
 
     /// <summary>
     /// Creates a new hosting.
     /// </summary>
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<HostingViewModel>> Post(HostingPostViewModel hostingPostViewModel)
     {
@@ -56,6 +60,7 @@ public class HostingController : ControllerBase
     /// <summary>
     /// Adds an escort to a hosting.
     /// </summary>
+    [Authorize]
     [HttpPost("add-escort-to-hosting")]
     public async Task<ActionResult<HostingEscortViewModel>> AddEscortToHosting(HostingEscortViewModel hostingEscortViewModel)
     {
@@ -68,6 +73,7 @@ public class HostingController : ControllerBase
     /// <summary>
     /// Updates a hosting. Note: the patient cannot be changed.
     /// </summary>
+    [Authorize]
     [HttpPut]
     public async Task<ActionResult<HostingViewModel>> Put(HostingViewModel hostingViewModel)
     {
@@ -79,6 +85,7 @@ public class HostingController : ControllerBase
     /// <summary>
     /// Removes an escort from a hosting.
     /// </summary>
+    [Authorize]
     [HttpDelete("remove-escort-from-hosting")]
     public async Task<ActionResult<HostingEscortViewModel>> RemoveEscortFromHosting(HostingEscortViewModel hostingEscortViewModel)
     {

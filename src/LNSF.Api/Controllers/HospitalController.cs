@@ -3,6 +3,7 @@ using LNSF.Api.ViewModels;
 using LNSF.Application.Interfaces;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Filters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LNSF.Api.Controllers;
@@ -14,7 +15,7 @@ public class HospitalController : ControllerBase
     private readonly IHospitalService _service;
     private readonly IMapper _mapper;
 
-    public HospitalController(IHospitalService service, 
+    public HospitalController(IHospitalService service,
         IMapper mapper)
     {
         _service = service;
@@ -24,8 +25,9 @@ public class HospitalController : ControllerBase
     /// <summary>
     /// Retrieves a list of hospitals based on the provided filter.
     /// </summary>
+    [Authorize]
     [HttpGet]
-    public async Task<ActionResult<List<HospitalViewModel>>> Get([FromQuery]HospitalFilter filter)
+    public async Task<ActionResult<List<HospitalViewModel>>> Get([FromQuery] HospitalFilter filter)
     {
         var hospitals = await _service.Query(filter);
         return _mapper.Map<List<HospitalViewModel>>(hospitals);
@@ -34,15 +36,17 @@ public class HospitalController : ControllerBase
     /// <summary>
     /// Gets the count of hospitals.
     /// </summary>
+    [Authorize]
     [HttpGet("count")]
-    public async Task<ActionResult<int>> GetCount() => 
+    public async Task<ActionResult<int>> GetCount() =>
         await _service.GetCount();
 
     /// <summary>
     /// Creates a new hospital.
     /// </summary>
+    [Authorize]
     [HttpPost]
-    public async Task<ActionResult<HospitalViewModel>> Post([FromBody]HospitalPostViewModel hospitalPostViewModel)
+    public async Task<ActionResult<HospitalViewModel>> Post([FromBody] HospitalPostViewModel hospitalPostViewModel)
     {
         var hospital = _mapper.Map<Hospital>(hospitalPostViewModel);
         hospital = await _service.Create(hospital);
@@ -52,8 +56,9 @@ public class HospitalController : ControllerBase
     /// <summary>
     /// Updates a hospital.
     /// </summary>
+    [Authorize]
     [HttpPut]
-    public async Task<ActionResult<HospitalViewModel>> Put([FromBody]HospitalViewModel hospitalViewModel)
+    public async Task<ActionResult<HospitalViewModel>> Put([FromBody] HospitalViewModel hospitalViewModel)
     {
         var hospital = _mapper.Map<Hospital>(hospitalViewModel);
         hospital = await _service.Update(hospital);
@@ -63,6 +68,7 @@ public class HospitalController : ControllerBase
     /// <summary>
     /// Deletes a hospital by id. Note: this action results in a cascade delete (Patient).
     /// </summary>
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<ActionResult<HospitalViewModel>> Delete(int id)
     {
