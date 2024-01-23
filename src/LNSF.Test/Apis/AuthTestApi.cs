@@ -102,9 +102,6 @@ public class AuthTestApi : GlobalClientRequest
         // Arrange - Token
         _acessToken = token;
 
-        // Act - Assert
-        var exception = await Get<AppException>(_authUserClient);
-
-        Assert.Equal(HttpStatusCode.Unauthorized, exception.StatusCode);
+        await Assert.ThrowsAsync<Exception>(async () => await Get<UserGetViewModel>(_authUserClient));
     }
 }

@@ -54,7 +54,7 @@ public class GlobalClientRequest
     public async Task<T> Query<T>(HttpClient client, dynamic filter) where T : class
     {
         var query = BuildQuery(filter);
-
+        client = AddAuthorization(client);
         var response = await client.GetAsync($"?{query}");
         return await DeserializeResponse<T>(response);
     }
@@ -80,12 +80,14 @@ public class GlobalClientRequest
 
     public virtual async Task<T> GetById<T>(HttpClient client, dynamic obj) where T : class
     {
+        client = AddAuthorization(client);
         var response = await client.GetAsync($"?Id={obj}");
         return await DeserializeResponse<T>(response);
     }
 
     public virtual async Task<int> GetCount(HttpClient client)
     {
+        client = AddAuthorization(client);
         var response = await client.GetAsync("count");
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         return await DeserializeResponse<int>(response);
@@ -100,6 +102,7 @@ public class GlobalClientRequest
 
     public virtual async Task<T> Post<T>(HttpClient client, dynamic obj) where T : class
     {
+        client = AddAuthorization(client);
         var objJson = JsonContent.Create(obj);
         var response = await client.PostAsync("", objJson);
         return await DeserializeResponse<T>(response);
@@ -107,6 +110,7 @@ public class GlobalClientRequest
 
     public virtual async Task<T> Put<T>(HttpClient client, dynamic obj) where T : class
     {
+        client = AddAuthorization(client);
         var objJson = JsonContent.Create(obj);
         var response = await client.PutAsync("", objJson);
         return await DeserializeResponse<T>(response);
@@ -114,12 +118,14 @@ public class GlobalClientRequest
 
     public async Task<T> Delete<T>(HttpClient client, dynamic id) where T : class
     {
+        client = AddAuthorization(client);
         var response = await client.DeleteAsync($"{id}");
         return await DeserializeResponse<T>(response);
     }
 
     public async Task<T> DeleteByBody<T>(HttpClient client, dynamic obj) where T : class
     {
+        client = AddAuthorization(client);
         var objJson = JsonContent.Create(obj);
         var request = new HttpRequestMessage(HttpMethod.Delete, "");
         request.Content = objJson;

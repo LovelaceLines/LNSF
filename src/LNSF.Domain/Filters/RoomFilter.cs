@@ -10,19 +10,20 @@ public class RoomFilter
     public int? Beds { get; set; }
     public int? Storey { get; set; }
     public bool? Available { get; set; }
+    public string? GlobalFilter { get; set; }
 
     public Pagination Page { get; set; } = new();
     public OrderBy? OrderBy { get; set; }
 
     public RoomFilter() { }
-    
-    public RoomFilter(int? id = null, 
-        string? number = null, 
-        bool? bathroom = null, 
-        int? beds = null, 
-        int? storey = null, 
-        bool? available = null, 
-        Pagination? page = null, 
+
+    public RoomFilter(int? id = null,
+        string? number = null,
+        bool? bathroom = null,
+        int? beds = null,
+        int? storey = null,
+        bool? available = null,
+        Pagination? page = null,
         OrderBy? orderBy = null)
     {
         Id = id;

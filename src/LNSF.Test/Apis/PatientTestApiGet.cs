@@ -1,5 +1,4 @@
 ﻿using LNSF.Api.ViewModels;
-using LNSF.Domain.Entities;
 using LNSF.Domain.Filters;
 using Xunit;
 
