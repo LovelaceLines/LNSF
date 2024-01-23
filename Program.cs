@@ -118,7 +118,7 @@ builder.Services.AddTransient<TourValidator>();
 builder.Services.AddTransient<GlobalValidator>();
 builder.Services.AddTransient<ITourService, TourService>();
 
-builder.Services.AddTransient<IRoomRepository, RoomsRepository>();
+builder.Services.AddTransient<IRoomRepository, RoomRepository>();
 builder.Services.AddTransient<RoomValidator>();
 builder.Services.AddTransient<IRoomService, RoomService>();
 
