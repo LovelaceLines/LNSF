@@ -78,7 +78,7 @@ public class GlobalClientRequest
             if (value is null) continue;
 
             var propertyName = property.Name;
-            var encodedValue = Uri.EscapeDataString(value.ToString()!);
+            var encodedValue = Uri.EscapeDataString(value is DateTime date ? date.ToString("yyyy-MM-ddTHH:mm:ss.fffffff") : value.ToString()!);
             queryParameters.Add($"{propertyName}={encodedValue}");
         }
 

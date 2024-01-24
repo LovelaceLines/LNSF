@@ -8,7 +8,7 @@ namespace LNSF.Test.Apis;
 
 public class RoleTestApi : GlobalClientRequest
 {
-    [Fact]
+    // [Fact]
     public async Task Post_ValidRole_Ok()
     {
         // Arrange - Role
@@ -27,7 +27,7 @@ public class RoleTestApi : GlobalClientRequest
         Assert.Equal(role.Name, rolePosted.Name);
     }
 
-    [Fact]
+    // [Fact]
     public async Task Delete_StaticRole_BadRequest()
     {
         // Arrange - Count

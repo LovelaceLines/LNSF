@@ -52,9 +52,9 @@ public class UserTestApiGet : GlobalClientRequest
     [Theory]
     [InlineData("Desenvolvedor")]
     [InlineData("Administrador")]
-    [InlineData("Assistente Social")]
-    [InlineData("Secretário")]
-    [InlineData("Voluntário")]
+    [InlineData("AssistenteSocial")]
+    [InlineData("Secretario")]
+    [InlineData("Voluntario")]
     public async Task Get_QueryRole_Ok(string roleName)
     {
         var user = await GetUser(role: roleName);
@@ -67,7 +67,7 @@ public class UserTestApiGet : GlobalClientRequest
     [Theory]
     [InlineData("Desenvolvedor")]
     [InlineData("Administrador")]
-    [InlineData("Assistente Social")]
+    [InlineData("AssistenteSocial")]
     [InlineData("Secretario")]
     [InlineData("Voluntario")]
     public async Task Get_QueryGlobalFilter_Ok(string roleName)

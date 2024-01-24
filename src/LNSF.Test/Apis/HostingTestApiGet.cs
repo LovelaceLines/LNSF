@@ -7,132 +7,119 @@ namespace LNSF.Test.Apis;
 public class HostingTestApiGet : GlobalClientRequest
 {
     [Fact]
-    public async Task Get_ValidHostingId_Ok()
+    public async Task Get_QueryHosting_Ok()
     {
-        // Arrange - Hosting
         var hosting = await GetHosting();
 
-        // Act - Hosting
-        var queryId = await Query<List<HostingViewModel>>(_hostingClient, new HostingFilter(id: hosting.Id));
-        var hostingIdQueried = queryId.First();
+        var hostingQueried = await QueryFirst<HostingViewModel>(_hostingClient, new HostingFilter(id: hosting.Id));
 
-        Assert.Equivalent(hosting.Id, hostingIdQueried.Id);
+        Assert.Equivalent(hosting.Id, hostingQueried.Id);
+        Assert.Equivalent(hosting.PatientId, hostingQueried.PatientId);
+        Assert.Equivalent(hosting.CheckIn, hostingQueried.CheckIn);
+        Assert.Equivalent(hosting.CheckOut, hostingQueried.CheckOut);
     }
 
     [Fact]
-    public async Task Get_ValidHostingPatientId_Ok()
+    public async Task Get_QueryHostingCheckIn_Ok()
     {
-        // Arrange - Hosting
         var hosting = await GetHosting();
 
-        // Act - Hosting
-        var queryPatientId = await Query<List<HostingViewModel>>(_hostingClient, new HostingFilter(id: hosting.Id, patientId: hosting.PatientId));
-        var hostingPatientIdQueried = queryPatientId.First();
-
-        Assert.Equivalent(hosting.PatientId, hostingPatientIdQueried.PatientId);
-    }
-
-    [Fact]
-    public async Task Get_ValidHostingEscortId_Ok()
-    {
-        // Arrange - Hosting
-        var hosting = await GetHosting();
-
-        // Arrange - HostingEscort
-        var hostingEscort = await GetAddEscortToHosting(hostingId: hosting.Id);
-
-        // Act - Hosting
-        var queryEscortId = await Query<List<HostingViewModel>>(_hostingClient, new HostingFilter(id: hosting.Id, escortId: hostingEscort.EscortId));
-        var hostingEscortIdQueried = queryEscortId.First();
-
-        Assert.Equivalent(hosting, hostingEscortIdQueried);
-    }
-
-    [Fact]
-    public async Task Get_ValidHostingCheckIn_Ok()
-    {
-        // Arrange - Hosting
-        var hosting = await GetHosting();
-
-        // Act - Hosting
-        var queryCheckIn = await Query<List<HostingViewModel>>(_hostingClient, new HostingFilter(id: hosting.Id, checkIn: hosting.CheckIn));
-        var hostingCheckInQueried = queryCheckIn.First();
+        var hostingCheckInQueried = await QueryFirst<HostingViewModel>(_hostingClient, new HostingFilter(id: hosting.Id, checkIn: hosting.CheckIn));
 
         Assert.Equivalent(hosting.CheckIn, hostingCheckInQueried.CheckIn);
     }
 
     [Fact]
-    public async Task Get_ValidHostingCheckOut_Ok()
+    public async Task Get_QueryHostingCheckOut_Ok()
     {
-        // Arrange - Hosting
         var hosting = await GetHosting();
 
-        // Act - Hosting
-        var queryCheckOut = await Query<List<HostingViewModel>>(_hostingClient, new HostingFilter(id: hosting.Id, checkOut: hosting.CheckOut!.Value.AddSeconds(1)));
-        var hostingCheckOutQueried = queryCheckOut.First();
+        var hostingCheckOutQueried = await QueryFirst<HostingViewModel>(_hostingClient, new HostingFilter(id: hosting.Id, checkOut: hosting.CheckOut));
 
         Assert.Equivalent(hosting.CheckOut, hostingCheckOutQueried.CheckOut);
     }
 
     [Fact]
-    public async Task Get_ValidHostingActive_Ok()
+    public async Task Get_QueryHostingCheckInCheckOut_Ok()
     {
-        // Arrange - Hosting
-        var hosting = await GetHosting(checkIn: DateTime.Now.AddDays(-1), checkOut: DateTime.Now.AddDays(1));
+        var hosting = await GetHosting();
 
-        // Act - Hosting
-        var queryActive = await Query<List<HostingViewModel>>(_hostingClient, new HostingFilter(id: hosting.Id, active: true));
-        var hostingActiveQueried = queryActive.First();
+        var hostingCheckInCheckOutQueried = await QueryFirst<HostingViewModel>(_hostingClient, new HostingFilter(id: hosting.Id, checkIn: hosting.CheckIn, checkOut: hosting.CheckOut));
 
-        Assert.Equivalent(hosting, hostingActiveQueried);
+        Assert.Equivalent(hosting.CheckIn, hostingCheckInCheckOutQueried.CheckIn);
+        Assert.Equivalent(hosting.CheckOut, hostingCheckInCheckOutQueried.CheckOut);
     }
 
     [Fact]
-    public async Task Get_ValidHostingGetPatient_Ok()
+    public async Task Get_QueryHostingPatientId_Ok()
     {
-        // Arrange - People
-        var people = await GetPeople();
+        var hosting = await GetHosting();
 
-        // Arrange - Patient
+        var hostingPatientIdQueried = await QueryFirst<HostingViewModel>(_hostingClient, new HostingFilter(id: hosting.Id, patientId: hosting.PatientId));
+
+        Assert.Equivalent(hosting.PatientId, hostingPatientIdQueried.PatientId);
+    }
+
+    [Fact]
+    public async Task Get_QueryHostingEscortId_Ok()
+    {
+        var escort = await GetEscort();
+        var hosting = await GetHosting();
+        var hostingEscort = await GetAddEscortToHosting(hostingId: hosting.Id, escortId: escort.Id);
+
+        var hostingEscortIdQueried = await QueryFirst<HostingViewModel>(_hostingClient, new HostingFilter(id: hosting.Id, escortId: escort.Id));
+
+        Assert.Equivalent(hosting.Id, hostingEscortIdQueried.Id);
+    }
+
+    [Fact]
+    public async Task Get_QueryHostingActive_Ok()
+    {
+        var hosting = await GetHosting(checkIn: DateTime.Now.AddDays(-1), checkOut: DateTime.Now.AddDays(1));
+
+        var hostingActiveQueried = await QueryFirst<HostingViewModel>(_hostingClient, new HostingFilter(id: hosting.Id, active: true));
+
+        Assert.Equivalent(hosting.Id, hostingActiveQueried.Id);
+    }
+
+    [Fact]
+    public async Task Get_QueryHostingInactive_Ok()
+    {
+        var hosting = await GetHosting(checkIn: DateTime.Now.AddDays(-2), checkOut: DateTime.Now.AddDays(-1));
+
+        var hostingInactiveQueried = await QueryFirst<HostingViewModel>(_hostingClient, new HostingFilter(id: hosting.Id, active: false));
+
+        Assert.Equivalent(hosting.Id, hostingInactiveQueried.Id);
+    }
+
+    [Fact]
+    public async Task Get_QueryHostingGetPatient_Ok()
+    {
+        var people = await GetPeople();
         var patient = await GetPatient(peopleId: people.Id);
         patient.People = people;
-
-        // Arrange - Hosting
         var hosting = await GetHosting(patientId: patient.Id);
 
-        // Act - Hosting
-        var queryGetPatient = await Query<List<HostingViewModel>>(_hostingClient, new HostingFilter(id: hosting.Id, getPatient: true));
-        var hostingGetPatientQueried = queryGetPatient.First();
+        var hostingGetPatientQueried = await QueryFirst<HostingViewModel>(_hostingClient, new HostingFilter(id: hosting.Id, getPatient: true));
 
         Assert.Equivalent(patient, hostingGetPatientQueried.Patient);
     }
 
     [Fact]
-    public async Task Get_ValidHostingGetEscort_Ok()
+    public async Task Get_QueryHostingGetEscort_Ok()
     {
-        // Arrange - People
         var people1 = await GetPeople();
         var people2 = await GetPeople();
-
-        // Arrange - Escort
         var escort1 = await GetEscort(peopleId: people1.Id);
         escort1.People = people1;
         var escort2 = await GetEscort(peopleId: people2.Id);
         escort2.People = people2;
-
-        var escorts = new List<EscortViewModel> { escort1, escort2 };
-
-        // Arrange - Hosting
         var hosting = await GetHosting();
-
-        // Arrange - HostingEscort
         var hostingEscort1 = await GetAddEscortToHosting(hostingId: hosting.Id, escortId: escort1.Id);
         var hostingEscort2 = await GetAddEscortToHosting(hostingId: hosting.Id, escortId: escort2.Id);
 
-        // Act - Hosting
-        var queryGetEscort = await Query<List<HostingViewModel>>(_hostingClient, new HostingFilter(id: hosting.Id, getEscort: true));
-        var hostingGetEscortQueried = queryGetEscort.First();
+        var hostingGetEscortQueried = await QueryFirst<HostingViewModel>(_hostingClient, new HostingFilter(id: hosting.Id, getEscort: true));
 
-        Assert.Equivalent(escorts, hostingGetEscortQueried.Escorts);
+        Assert.Equivalent(new List<EscortViewModel> { escort1, escort2 }, hostingGetEscortQueried.Escorts);
     }
 }
