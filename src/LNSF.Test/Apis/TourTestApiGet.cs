@@ -7,133 +7,113 @@ namespace LNSF.Test.Apis;
 public class TourTestApiGet : GlobalClientRequest
 {
     [Fact]
-    public async Task Get_ValidTourId_Ok()
+    public async Task Get_QueryTour_Ok()
     {
-        // Arrange - Tour
         var tour = await GetTour();
 
-        // Act - Tour
-        var queryId = await Query<List<TourViewModel>>(_tourClient, new TourFilter(id: tour.Id));
-        var tourQueriedId = queryId.First();
+        var tourQueried = await QueryFirst<TourViewModel>(_tourClient, new TourFilter(id: tour.Id));
 
-        Assert.Equivalent(tour, tourQueriedId);
+        Assert.Equivalent(tour.Id, tourQueried.Id);
+        Assert.Equivalent(tour.PeopleId, tourQueried.PeopleId);
+        Assert.Equivalent(tour.Input, tourQueried.Input);
+        Assert.Equivalent(tour.Output, tourQueried.Output);
+        Assert.Equivalent(tour.Note, tourQueried.Note);
     }
 
     [Fact]
-    public async Task Get_ValidTourPeopleId_Ok()
+    public async Task Get_QueryTourOutput_Ok()
     {
-        // Arrange - People
-        var people = await GetPeople();
+        var tour = await GetTour();
 
-        // Arrange - Tour
+        var tourOutputQueried = await QueryFirst<TourViewModel>(_tourClient, new TourFilter(id: tour.Id, output: tour.Output));
+
+        Assert.Equivalent(tour.Output, tourOutputQueried.Output);
+    }
+
+    [Fact]
+    public async Task Get_QueryTourInputWithOpenTour_Ok()
+    {
+        var openTour = await GetTour();
+
+        var tourInputQueried = await QueryFirst<TourViewModel>(_tourClient, new TourFilter(id: openTour.Id, input: openTour.Input));
+
+        Assert.Equivalent(openTour.Input, tourInputQueried.Input);
+    }
+
+    [Fact]
+    public async Task Get_QueryTourInputWithCloseTour_Ok()
+    {
+        var openTour = await GetTour();
+        var closeTour = await GetTour(openTour.Id, openTour.PeopleId);
+
+        var tourInputQueried = await QueryFirst<TourViewModel>(_tourClient, new TourFilter(id: closeTour.Id, input: closeTour.Input));
+
+        Assert.Equivalent(closeTour.Input, tourInputQueried.Input);
+    }
+
+    [Fact]
+    public async Task Get_QueryTourNote_Ok()
+    {
+        var tour = await GetTour();
+
+        var tourNoteQueried = await QueryFirst<TourViewModel>(_tourClient, new TourFilter(id: tour.Id, note: tour.Note));
+
+        Assert.Equivalent(tour.Note, tourNoteQueried.Note);
+    }
+
+    [Fact]
+    public async Task Get_QueryTourPeopleId_Ok()
+    {
+        var tour = await GetTour();
+
+        var tourPeopleIdQueried = await QueryFirst<TourViewModel>(_tourClient, new TourFilter(id: tour.Id, peopleId: tour.PeopleId));
+
+        Assert.Equivalent(tour.PeopleId, tourPeopleIdQueried.PeopleId);
+    }
+
+    [Fact]
+    public async Task Get_QueryTourInOpen_Ok()
+    {
+        var openTour = await GetTour();
+
+        var tourInOpenQueried = await QueryFirst<TourViewModel>(_tourClient, new TourFilter(id: openTour.Id, inOpen: true));
+
+        Assert.Equivalent(openTour.Id, tourInOpenQueried.Id);
+    }
+
+    [Fact]
+    public async Task Get_QueryTourClosed_Ok()
+    {
+        var openTour = await GetTour();
+        var tourClosed = await GetTour(openTour.Id, openTour.PeopleId);
+
+        var tourClosedQueried = await QueryFirst<TourViewModel>(_tourClient, new TourFilter(id: tourClosed.Id, inOpen: false));
+
+        Assert.Equivalent(tourClosed.Id, tourClosedQueried.Id);
+    }
+
+    [Fact]
+    public async Task Get_QueryTourGetPeople_Ok()
+    {
+        var people = await GetPeople();
         var tour = await GetTour(peopleId: people.Id);
 
-        // Act - Tour
-        var queryPeopleId = await Query<List<TourViewModel>>(_tourClient, new TourFilter(id: tour.Id, peopleId: tour.PeopleId));
-        var tourQueriedPeopleId = queryPeopleId.First();
+        var tourGetPeopleQueried = await QueryFirst<TourViewModel>(_tourClient, new TourFilter(id: tour.Id, getPeople: true));
 
-        Assert.Equivalent(tour, tourQueriedPeopleId);
+        Assert.Equivalent(people, tourGetPeopleQueried.People);
     }
 
     [Fact]
-    public async Task Get_ValidTourOutput_Ok()
+    public async Task Get_QueryTourGlobalFilter_Ok()
     {
-        // Arrange - Tour
-        var tour = await GetTour();
-
-        // Act - Tour
-        var queryOutput = await Query<List<TourViewModel>>(_tourClient, new TourFilter(id: tour.Id, output: tour.Output));
-        var tourQueriedOutput = queryOutput.First();
-
-        Assert.Equivalent(tour, tourQueriedOutput);
-    }
-
-    [Fact]
-    public async Task Get_ValidTourNote_Ok()
-    {
-        // Arrange - Tour
-        var tour = await GetTour();
-
-        // Act - Tour
-        var queryNote = await Query<List<TourViewModel>>(_tourClient, new TourFilter(id: tour.Id, note: tour.Note));
-        var tourQueriedNote = queryNote.First();
-
-        Assert.Equivalent(tour, tourQueriedNote);
-    }
-
-    [Fact]
-    public async Task Get_ValidTourInOpen_Ok()
-    {
-        // Arrange - Tour
-        var tour = await GetTour();
-
-        // Act - Tour
-        var queryInOpen = await Query<List<TourViewModel>>(_tourClient, new TourFilter(id: tour.Id, inOpen: true));
-        var tourQueriedInOpen = queryInOpen.First();
-
-        Assert.Equivalent(tour, tourQueriedInOpen);
-    }
-
-    [Fact]
-    public async Task Get_ValidTourClosed_Ok()
-    {
-        // Arrange - Tour
-        var tourInOpen = await GetTour();
-        var tourClosed = await GetTour(tourInOpen.Id, tourInOpen.PeopleId);
-
-        // Act - Tour
-        var queryClosed = await Query<List<TourViewModel>>(_tourClient, new TourFilter(id: tourClosed.Id, inOpen: false));
-        var tourQueriedClosed = queryClosed.First();
-
-        Assert.Equivalent(tourClosed, tourQueriedClosed);
-    }
-
-    [Fact]
-    public async Task Get_ValidTourInput_Ok()
-    {
-        // Arrange - Tour
-        var tour = await GetTour();
-
-        // Act - Tour
-        var queryInput = await Query<List<TourViewModel>>(_tourClient, new TourFilter(id: tour.Id, input: tour.Input));
-        var tourQueriedInput = queryInput.First();
-
-        Assert.Equivalent(tour, tourQueriedInput);
-    }
-
-    [Fact]
-    public async Task Get_ValidTourGetPeople_Ok()
-    {
-        // Arrange - People
         var people = await GetPeople();
-
-        // Arrange - Tour
         var tour = await GetTour(peopleId: people.Id);
+        var tourQueried = await QueryFirst<TourViewModel>(_tourClient, new TourFilter(id: tour.Id));
 
-        // Act - Tour
-        var queryGetPeople = await Query<List<TourViewModel>>(_tourClient, new TourFilter(id: tour.Id, getPeople: true));
-        var tourQueriedGetPeople = queryGetPeople.First();
+        var tourPeopleNameQueried = await QueryFirst<TourViewModel>(_tourClient, new TourFilter(id: tour.Id, globalFilter: people.Name));
+        var tourNoteQueried = await QueryFirst<TourViewModel>(_tourClient, new TourFilter(id: tour.Id, globalFilter: tour.Note));
 
-        Assert.Equivalent(people, tourQueriedGetPeople.People);
-    }
-
-    [Fact]
-    public async Task Get_ValidTourGlobalQuery_Ok()
-    {
-        // Arrange - People
-        var people = await GetPeople();
-
-        // Arrange - Tour
-        var tour = await GetTour(peopleId: people.Id);
-
-        // Act - Tour
-        var queryGlobalNote = await Query<List<TourViewModel>>(_tourClient, new TourFilter(id: tour.Id, globalFilter: tour.Note));
-        var queryGlobalPeopleName = await Query<List<TourViewModel>>(_tourClient, new TourFilter(id: tour.Id, globalFilter: people.Name));
-
-        var tourQueriedGlobalNote = queryGlobalNote.First();
-        var tourQueriedGlobalPeopleName = queryGlobalPeopleName.First();
-
-        Assert.Equivalent(tour, tourQueriedGlobalNote);
-        Assert.Equivalent(tour, tourQueriedGlobalPeopleName);
+        Assert.Equivalent(tourQueried, tourPeopleNameQueried);
+        Assert.Equivalent(tourQueried, tourNoteQueried);
     }
 }

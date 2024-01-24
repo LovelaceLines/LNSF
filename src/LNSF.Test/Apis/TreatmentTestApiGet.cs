@@ -7,54 +7,45 @@ namespace LNSF.Test.Apis;
 public class TreatmentTestApiGet : GlobalClientRequest
 {
     [Fact]
-    public async Task Get_ValidTreatmentId_Ok()
+    public async Task Get_QueryTreatment_Ok()
     {
-        // Arrange - Treatment
         var treatment = await GetTreatment();
 
-        // Act - Treatment
-        var queryId = await Query<List<TreatmentViewModel>>(_treatmentClient, new TreatmentFilter(id: treatment.Id));
-        var treatmentIdQueried = queryId.First();
+        var hospitalQueried = await QueryFirst<TreatmentViewModel>(_treatmentClient, new TreatmentFilter(id: treatment.Id));
 
-        Assert.Equivalent(treatment.Id, treatmentIdQueried.Id);
+        Assert.Equivalent(treatment.Id, hospitalQueried.Id);
+        Assert.Equivalent(treatment.Name, hospitalQueried.Name);
+        Assert.Equivalent(treatment.Type, hospitalQueried.Type);
     }
 
     [Fact]
-    public async Task Get_ValidTreatmentNameQuery_Ok()
+    public async Task Get_QueryTreatmentName_Ok()
     {
-        // Arrange - Treatment
         var treatment = await GetTreatment();
 
-        // Act - Treatment
-        var queryName = await Query<List<TreatmentViewModel>>(_treatmentClient, new TreatmentFilter(id: treatment.Id, name: treatment.Name));
-        var treatmentNameQueried = queryName.First();
+        var treatmentNameQueried = await QueryFirst<TreatmentViewModel>(_treatmentClient, new TreatmentFilter(id: treatment.Id, name: treatment.Name));
 
-        Assert.Equivalent(treatment, treatmentNameQueried);
+        Assert.Equivalent(treatment.Name, treatmentNameQueried.Name);
     }
 
     [Fact]
-    public async Task Get_ValidTreatmentTypeQuery_Ok()
+    public async Task Get_QueryTreatmentType_Ok()
     {
-        // Arrange - Treatment
         var treatment = await GetTreatment();
 
-        // Act - Treatment
-        var queryType = await Query<List<TreatmentViewModel>>(_treatmentClient, new TreatmentFilter(id: treatment.Id, type: treatment.Type));
-        var treatmentTypeQueried = queryType.First();
+        var treatmentTypeQueried = await QueryFirst<TreatmentViewModel>(_treatmentClient, new TreatmentFilter(id: treatment.Id, type: treatment.Type));
 
-        Assert.Equivalent(treatment, treatmentTypeQueried);
+        Assert.Equivalent(treatment.Type, treatmentTypeQueried.Type);
     }
 
     [Fact]
-    public async Task Get_ValidTreatmentGlobalQuery_Ok()
+    public async Task Get_QueryTreatmentGlobalFilter_Ok()
     {
-        // Arrange - Treatment
         var treatment = await GetTreatment();
+        var treatmentQueried = await QueryFirst<TreatmentViewModel>(_treatmentClient, new TreatmentFilter(id: treatment.Id));
 
-        // Act - Treatment
-        var queryGlobalName = await Query<List<TreatmentViewModel>>(_treatmentClient, new TreatmentFilter(id: treatment.Id, globalFilter: treatment.Name));
-        var treatmentGlobalNameQueried = queryGlobalName.First();
+        var treatmentNameQueried = await QueryFirst<TreatmentViewModel>(_treatmentClient, new TreatmentFilter(id: treatment.Id, globalFilter: treatment.Name));
 
-        Assert.Equivalent(treatment, treatmentGlobalNameQueried);
+        Assert.Equivalent(treatmentQueried, treatmentNameQueried);
     }
 }

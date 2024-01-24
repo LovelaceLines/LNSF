@@ -59,6 +59,13 @@ public class GlobalClientRequest
         return await DeserializeResponse<T>(response);
     }
 
+    public async Task<T> QueryFirst<T>(HttpClient client, dynamic filter) where T : class
+    {
+        List<T> query = await Query<List<T>>(client, filter);
+        var queryFirst = query.First();
+        return queryFirst;
+    }
+
     private string BuildQuery(object filter)
     {
         var properties = filter.GetType().GetProperties();

@@ -7,171 +7,127 @@ namespace LNSF.Test.Apis;
 public class PatientTestApiGet : GlobalClientRequest
 {
     [Fact]
-    public async Task Get_ValidPatientId_Ok()
+    public async Task Get_QueryPatient_Ok()
     {
-        // Arrange - Patient
         var patient = await GetPatient();
 
-        // Act - Patient
-        var queryId = await Query<List<PatientViewModel>>(_patientClient, new PatientFilter(id: patient.Id));
-        var patientIdQueried = queryId.First();
+        var patientQueried = await QueryFirst<PatientViewModel>(_patientClient, new PatientFilter(id: patient.Id));
 
-        Assert.Equivalent(patient, patientIdQueried);
+        Assert.Equivalent(patient.Id, patientQueried.Id);
+        Assert.Equivalent(patient.SocioeconomicRecord, patientQueried.SocioeconomicRecord);
+        Assert.Equivalent(patient.Term, patientQueried.Term);
+        Assert.Equivalent(patient.PeopleId, patientQueried.PeopleId);
+        Assert.Equivalent(patient.HospitalId, patientQueried.HospitalId);
     }
 
     [Fact]
-    public async Task Get_ValidPeopleId_Ok()
+    public async Task Get_QueryPatientSocioEconomicRecord_Ok()
     {
-        // Arrange - Patient
         var patient = await GetPatient();
 
-        // Act - Patient
-        var queryPeopleId = await Query<List<PatientViewModel>>(_patientClient, new PatientFilter(id: patient.Id, peopleId: patient.PeopleId));
-        var patientPeopleIdQueried = queryPeopleId.First();
+        var patientSocioEconomicRecordQueried = await QueryFirst<PatientViewModel>(_patientClient, new PatientFilter(id: patient.Id, socioEconomicRecord: patient.SocioeconomicRecord));
 
-        Assert.Equivalent(patient, patientPeopleIdQueried);
+        Assert.Equivalent(patient.SocioeconomicRecord, patientSocioEconomicRecordQueried.SocioeconomicRecord);
     }
 
     [Fact]
-    public async Task Get_ValidHospitalId_Ok()
+    public async Task Get_QueryPatientTerm_Ok()
     {
-        // Arrange - Patient
         var patient = await GetPatient();
 
-        // Act - Patient
-        var queryHospitalId = await Query<List<PatientViewModel>>(_patientClient, new PatientFilter(id: patient.Id, hospitalId: patient.HospitalId));
-        var patientHospitalIdQueried = queryHospitalId.First();
+        var patientTermQueried = await QueryFirst<PatientViewModel>(_patientClient, new PatientFilter(id: patient.Id, term: patient.Term));
 
-        Assert.Equivalent(patient, patientHospitalIdQueried);
+        Assert.Equivalent(patient.Term, patientTermQueried.Term);
     }
 
     [Fact]
-    public async Task Get_ValidSocioEconomicRecord_Ok()
+    public async Task Get_QueryPatientPeopleId_Ok()
     {
-        // Arrange - Patient
         var patient = await GetPatient();
 
-        // Act - Patient
-        var querySocioEconomicRecord = await Query<List<PatientViewModel>>(_patientClient, new PatientFilter(id: patient.Id, socioEconomicRecord: patient.SocioeconomicRecord));
-        var patientSocioEconomicRecordQueried = querySocioEconomicRecord.First();
+        var patientPeopleIdQueried = await QueryFirst<PatientViewModel>(_patientClient, new PatientFilter(id: patient.Id, peopleId: patient.PeopleId));
 
-        Assert.Equivalent(patient, patientSocioEconomicRecordQueried);
+        Assert.Equivalent(patient.PeopleId, patientPeopleIdQueried.PeopleId);
     }
 
     [Fact]
-    public async Task Get_ValidTerm_Ok()
+    public async Task Get_QueryPatientHospitalId_Ok()
     {
-        // Arrange - Patient
         var patient = await GetPatient();
 
-        // Act - Patient
-        var queryTerm = await Query<List<PatientViewModel>>(_patientClient, new PatientFilter(id: patient.Id, term: patient.Term));
-        var patientTermQueried = queryTerm.First();
+        var patientHospitalIdQueried = await QueryFirst<PatientViewModel>(_patientClient, new PatientFilter(id: patient.Id, hospitalId: patient.HospitalId));
 
-        Assert.Equivalent(patient, patientTermQueried);
+        Assert.Equivalent(patient.HospitalId, patientHospitalIdQueried.HospitalId);
     }
 
     [Fact]
-    public async Task Get_ValidTreatmentId_Ok()
+    public async Task Get_QueryPatientActive_Ok()
     {
-        // Arrange - Patient
         var patient = await GetPatient();
-
-        // Arrange - PatientTreatment
-        var patientTreatment = await GetPatientTreatment(patientId: patient.Id);
-
-        // Act - Patient
-        var queryTreatmentId = await Query<List<PatientViewModel>>(_patientClient, new PatientFilter(id: patient.Id, treatmentId: patientTreatment.TreatmentId));
-        var patientTreatmentIdQueried = queryTreatmentId.First();
-
-        Assert.Equivalent(patient, patientTreatmentIdQueried);
-    }
-
-    [Fact]
-    public async Task Get_ValidActive_Ok()
-    {
-        // Arrange - Patient
-        var patient = await GetPatient();
-
-        // Arrange - Hosting
         var hosting = await GetHosting(patientId: patient.Id, checkIn: DateTime.Now.AddDays(-1), checkOut: DateTime.Now.AddDays(1));
 
-        // Act - Patient
-        var queryActive = await Query<List<PatientViewModel>>(_patientClient, new PatientFilter(id: patient.Id, active: true));
-        var patientActiveQueried = queryActive.First();
+        var patientActiveQueried = await QueryFirst<PatientViewModel>(_patientClient, new PatientFilter(id: patient.Id, active: true));
 
         Assert.Equivalent(patient, patientActiveQueried);
     }
 
     [Fact]
-    public async Task Get_ValidIsVeteran_Ok()
+    public async Task Get_QueryPatientInactive_Ok()
     {
-        // Arrange - Patient
         var patient = await GetPatient();
+        var hosting = await GetHosting(patientId: patient.Id, checkIn: DateTime.Now.AddDays(-10), checkOut: DateTime.Now.AddDays(-5));
 
-        // Arrange - Hosting
+        var patientInactiveQueried = await QueryFirst<PatientViewModel>(_patientClient, new PatientFilter(id: patient.Id, active: false));
+
+        Assert.Equivalent(patient, patientInactiveQueried);
+    }
+
+    [Fact]
+    public async Task Get_QueryPatientIsVeteran_Ok()
+    {
+        var patient = await GetPatient();
         var hosting1 = await GetHosting(patientId: patient.Id, checkIn: DateTime.Now.AddDays(-10), checkOut: DateTime.Now.AddDays(-5));
         var hosting2 = await GetHosting(patientId: patient.Id, checkIn: DateTime.Now.AddDays(-1), checkOut: DateTime.Now.AddDays(1));
 
-        // Act - Patient
-        var queryIsVeteran = await Query<List<PatientViewModel>>(_patientClient, new PatientFilter(id: patient.Id, isVeteran: true));
-        var patientIsVeteranQueried = queryIsVeteran.First();
+        var patientIsVeteranQueried = await QueryFirst<PatientViewModel>(_patientClient, new PatientFilter(id: patient.Id, isVeteran: true));
 
         Assert.Equivalent(patient, patientIsVeteranQueried);
     }
 
     [Fact]
-    public async Task Get_ValidGetPeople_Ok()
+    public async Task Get_QueryPatientGetPeople_Ok()
     {
-        // Arrange - People
         var people = await GetPeople();
-
-        // Arrange - Patient
         var patient = await GetPatient(peopleId: people.Id);
 
-        // Act - Patient
-        var queryGetPeople = await Query<List<PatientViewModel>>(_patientClient, new PatientFilter(id: patient.Id, getPeople: true));
-        var patientGetPeopleQueried = queryGetPeople.First();
+        var patientGetPeopleQueried = await QueryFirst<PatientViewModel>(_patientClient, new PatientFilter(id: patient.Id, getPeople: true));
 
         Assert.Equivalent(people, patientGetPeopleQueried!.People);
     }
 
     [Fact]
-    public async Task Get_ValidGetHospital_Ok()
+    public async Task Get_QueryPatientGetHospital_Ok()
     {
-        // Arrange - Hospital
-        var hospital = await GetHospital();
 
-        // Arrange - Patient
+        var hospital = await GetHospital();
         var patient = await GetPatient(hospitalId: hospital.Id);
 
-        // Act - Patient
-        var queryGetHospital = await Query<List<PatientViewModel>>(_patientClient, new PatientFilter(id: patient.Id, getHospital: true));
-        var patientGetHospitalQueried = queryGetHospital.First();
+        var patientGetHospitalQueried = await QueryFirst<PatientViewModel>(_patientClient, new PatientFilter(id: patient.Id, getHospital: true));
 
         Assert.Equivalent(hospital, patientGetHospitalQueried!.Hospital);
     }
 
     [Fact]
-    public async Task Get_ValidGetTreatments_Ok()
+    public async Task Get_QueryPatientGetTreatments_Ok()
     {
-        // Arrange - Treatment
         var treatment1 = await GetTreatment();
         var treatment2 = await GetTreatment();
-
-        var treatments = new List<TreatmentViewModel> { treatment1, treatment2 };
-
-        // Arrange - Patient
         var patient = await GetPatient();
-
-        // Arrange - PatientTreatment
         var patientTreatment1 = await GetPatientTreatment(patientId: patient.Id, treatmentId: treatment1.Id);
         var patientTreatment2 = await GetPatientTreatment(patientId: patient.Id, treatmentId: treatment2.Id);
 
-        // Act - Patient
-        var queryGetTreatments = await Query<List<PatientViewModel>>(_patientClient, new PatientFilter(id: patient.Id, getTreatments: true));
-        var patientGetTreatmentsQueried = queryGetTreatments.First();
+        var patientGetTreatmentsQueried = await QueryFirst<PatientViewModel>(_patientClient, new PatientFilter(id: patient.Id, getTreatments: true));
 
-        Assert.Equivalent(treatments, patientGetTreatmentsQueried!.Treatments!);
+        Assert.Equivalent(new List<TreatmentViewModel> { treatment1, treatment2 }, patientGetTreatmentsQueried!.Treatments!);
     }
 }

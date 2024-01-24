@@ -7,58 +7,47 @@ namespace LNSF.Test.Apis;
 public class HospitalTestApiGet : GlobalClientRequest
 {
     [Fact]
-    public async Task Get_ValidHospitalId_Ok()
+    public async Task Get_QueryHospital_Ok()
     {
-        // Arrange - Hospital
         var hospital = await GetHospital();
 
-        // Act - Hospital
-        var queryId = await Query<List<HospitalViewModel>>(_hospitalClient, new HospitalFilter(id: hospital.Id));
-        var hospitalIdQueried = queryId.First();
+        var hospitalQueried = await QueryFirst<HospitalViewModel>(_hospitalClient, new HospitalFilter(id: hospital.Id));
 
-        Assert.Equivalent(hospital.Id, hospitalIdQueried.Id);
+        Assert.Equivalent(hospital.Id, hospitalQueried.Id);
+        Assert.Equivalent(hospital.Name, hospitalQueried.Name);
+        Assert.Equivalent(hospital.Acronym, hospitalQueried.Acronym);
     }
 
     [Fact]
-    public async Task Get_ValidHospitalName_Ok()
+    public async Task Get_QueryHospitalName_Ok()
     {
-        // Arrange - Hospital
         var hospital = await GetHospital();
 
-        // Act - Hospital
-        var queryName = await Query<List<HospitalViewModel>>(_hospitalClient, new HospitalFilter(id: hospital.Id, name: hospital.Name));
-        var hospitalNameQueried = queryName.First();
+        var hospitalNameQueried = await QueryFirst<HospitalViewModel>(_hospitalClient, new HospitalFilter(id: hospital.Id, name: hospital.Name));
 
-        Assert.Equivalent(hospital, hospitalNameQueried);
+        Assert.Equivalent(hospital.Name, hospitalNameQueried.Name);
     }
 
     [Fact]
-    public async Task Get_ValidHospitalAcronym_Ok()
+    public async Task Get_QueryHospitalAcronym_Ok()
     {
-        // Arrange - Hospital
         var hospital = await GetHospital();
 
-        // Act - Hospital
-        var queryAcronym = await Query<List<HospitalViewModel>>(_hospitalClient, new HospitalFilter(id: hospital.Id, acronym: hospital.Acronym));
-        var hospitalAcronymQueried = queryAcronym.First();
+        var hospitalAcronymQueried = await QueryFirst<HospitalViewModel>(_hospitalClient, new HospitalFilter(id: hospital.Id, acronym: hospital.Acronym));
 
-        Assert.Equivalent(hospital, hospitalAcronymQueried);
+        Assert.Equivalent(hospital.Acronym, hospitalAcronymQueried.Acronym);
     }
 
     [Fact]
-    public async Task Get_ValidHospitalGlobalFilter_Ok()
+    public async Task Get_QueryHospitalGlobalFilter_Ok()
     {
-        // Arrange - Hospital
         var hospital = await GetHospital();
+        var hospitalQueried = await QueryFirst<HospitalViewModel>(_hospitalClient, new HospitalFilter(id: hospital.Id));
 
-        // Act - Hospital
-        var queryGlobalFilterName = await Query<List<HospitalViewModel>>(_hospitalClient, new HospitalFilter(id: hospital.Id, globalFilter: hospital.Name));
-        var hospitalGlobalFilterNameQueried = queryGlobalFilterName.First();
+        var hospitalNameQueried = await QueryFirst<HospitalViewModel>(_hospitalClient, new HospitalFilter(id: hospital.Id, globalFilter: hospital.Name));
+        var hospitalAcronymQueried = await QueryFirst<HospitalViewModel>(_hospitalClient, new HospitalFilter(id: hospital.Id, globalFilter: hospital.Acronym));
 
-        var queryGlobalFilterAcronym = await Query<List<HospitalViewModel>>(_hospitalClient, new HospitalFilter(id: hospital.Id, globalFilter: hospital.Acronym));
-        var hospitalGlobalFilterAcronymQueried = queryGlobalFilterAcronym.First();
-
-        Assert.Equivalent(hospital, hospitalGlobalFilterNameQueried);
-        Assert.Equivalent(hospital, hospitalGlobalFilterAcronymQueried);
+        Assert.Equivalent(hospitalQueried, hospitalNameQueried);
+        Assert.Equivalent(hospitalQueried, hospitalAcronymQueried);
     }
 }

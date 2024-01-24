@@ -1,8 +1,5 @@
 ﻿using LNSF.Api.ViewModels;
-using LNSF.Domain.Exceptions;
 using LNSF.Domain.Filters;
-using LNSF.Test.Fakers;
-using System.Net;
 using Xunit;
 
 namespace LNSF.Test.Apis;
@@ -10,90 +7,82 @@ namespace LNSF.Test.Apis;
 public class UserTestApiGet : GlobalClientRequest
 {
     [Fact]
-    public async Task Get_ValidUserId_Ok()
+    public async Task Get_QueryUser_Ok()
     {
-        // Arrange - User
         var user = await GetUser();
 
-        // Act - User
-        var queryId = await Query<List<UserViewModel>>(_userClient, new UserFilter(id: user.Id));
-        var UserIdQueried = queryId.First();
+        var userQueried = await QueryFirst<UserViewModel>(_userClient, new UserFilter(id: user.Id));
 
-        Assert.Equivalent(user, UserIdQueried);
+        Assert.Equivalent(user.Id, userQueried.Id);
+        Assert.Equivalent(user.UserName, userQueried.UserName);
+        Assert.Equivalent(user.Email, userQueried.Email);
+        Assert.Equivalent(user.PhoneNumber, userQueried.PhoneNumber);
     }
 
     [Fact]
-    public async Task Get_ValidUserName_Ok()
+    public async Task Get_QueryUserName_Ok()
     {
-        // Arrange - User
         var user = await GetUser();
 
-        // Act - User
-        var queryUserName = await Query<List<UserViewModel>>(_userClient, new UserFilter(id: user.Id, userName: user.UserName));
-        var UserNameQueried = queryUserName.First();
+        var userNameQueried = await QueryFirst<UserViewModel>(_userClient, new UserFilter(id: user.Id, userName: user.UserName));
 
-        Assert.Equivalent(user, UserNameQueried);
+        Assert.Equivalent(user.UserName, userNameQueried.UserName);
     }
 
     [Fact]
-    public async Task Get_ValidEmail_Ok()
+    public async Task Get_QueryUserEmail_Ok()
     {
-        // Arrange - User
         var user = await GetUser();
 
-        // Act - User
-        var queryEmail = await Query<List<UserViewModel>>(_userClient, new UserFilter(id: user.Id, email: user.Email));
-        var EmailQueried = queryEmail.First();
+        var userEmailQueried = await QueryFirst<UserViewModel>(_userClient, new UserFilter(id: user.Id, email: user.Email));
 
-        Assert.Equivalent(user, EmailQueried);
+        Assert.Equivalent(user.Email, userEmailQueried.Email);
     }
 
     [Fact]
-    public async Task Get_ValidPhoneNumber_Ok()
+    public async Task Get_QueryUserPhoneNumber_Ok()
     {
-        // Arrange - User
         var user = await GetUser();
 
-        // Act - User
-        var queryPhoneNumber = await Query<List<UserViewModel>>(_userClient, new UserFilter(id: user.Id, phoneNumber: user.PhoneNumber));
-        var PhoneNumberQueried = queryPhoneNumber.First();
+        var userPhoneNumberQueried = await QueryFirst<UserViewModel>(_userClient, new UserFilter(id: user.Id, phoneNumber: user.PhoneNumber));
 
-        Assert.Equivalent(user, PhoneNumberQueried);
+        Assert.Equivalent(user.PhoneNumber, userPhoneNumberQueried.PhoneNumber);
     }
 
-    [Fact]
-    public async Task Get_ValidRole_Ok()
+    [Theory]
+    [InlineData("Desenvolvedor")]
+    [InlineData("Administrador")]
+    [InlineData("Assistente Social")]
+    [InlineData("Secretário")]
+    [InlineData("Voluntário")]
+    public async Task Get_QueryRole_Ok(string roleName)
     {
-        // Arrange - User
-        var user = await GetUser(role: "Desenvolvedor");
+        var user = await GetUser(role: roleName);
 
-        // Act - User
-        var queryRole = await Query<List<UserViewModel>>(_userClient, new UserFilter(id: user.Id, role: "Desenvolvedor"));
-        var RoleQueried = queryRole.First();
+        var userRoleQueried = await QueryFirst<UserViewModel>(_userClient, new UserFilter(id: user.Id, role: roleName));
 
-        Assert.Equivalent(user, RoleQueried);
+        Assert.Equivalent(user.Id, userRoleQueried.Id);
     }
 
-    [Fact]
-    public async Task Get_ValidGlobalFilter_Ok()
+    [Theory]
+    [InlineData("Desenvolvedor")]
+    [InlineData("Administrador")]
+    [InlineData("Assistente Social")]
+    [InlineData("Secretario")]
+    [InlineData("Voluntario")]
+    public async Task Get_QueryGlobalFilter_Ok(string roleName)
     {
-        // Arrange - User
-        var user = await GetUser(role: "Desenvolvedor");
+        var user = await GetUser(role: roleName);
+        var userQueried = await QueryFirst<UserViewModel>(_userClient, new UserFilter(id: user.Id));
 
-        // Act - User
-        var queryGlobalFilterUserName = await Query<List<UserViewModel>>(_userClient, new UserFilter(id: user.Id, globalFilter: user.UserName));
-        var queryGlobalFilterEmail = await Query<List<UserViewModel>>(_userClient, new UserFilter(id: user.Id, globalFilter: user.Email));
-        var queryGlobalFilterPhoneNumber = await Query<List<UserViewModel>>(_userClient, new UserFilter(id: user.Id, globalFilter: user.PhoneNumber));
-        var queryGlobalFilterRole = await Query<List<UserViewModel>>(_userClient, new UserFilter(id: user.Id, globalFilter: "Desenvolvedor"));
+        var userNameQueried = await QueryFirst<UserViewModel>(_userClient, new UserFilter(id: user.Id, globalFilter: user.UserName));
+        var userEmailQueried = await QueryFirst<UserViewModel>(_userClient, new UserFilter(id: user.Id, globalFilter: user.Email));
+        var userPhoneNumberQueried = await QueryFirst<UserViewModel>(_userClient, new UserFilter(id: user.Id, globalFilter: user.PhoneNumber));
+        var userRoleQueried = await QueryFirst<UserViewModel>(_userClient, new UserFilter(id: user.Id, globalFilter: roleName));
 
-        var GlobalFilterUserNameQueried = queryGlobalFilterUserName.First();
-        var GlobalFilterEmailQueried = queryGlobalFilterEmail.First();
-        var GlobalFilterPhoneNumberQueried = queryGlobalFilterPhoneNumber.First();
-        var GlobalFilterRoleQueried = queryGlobalFilterRole.First();
-
-        Assert.Equivalent(user, GlobalFilterUserNameQueried);
-        Assert.Equivalent(user, GlobalFilterEmailQueried);
-        Assert.Equivalent(user, GlobalFilterPhoneNumberQueried);
-        Assert.Equivalent(user, GlobalFilterRoleQueried);
+        Assert.Equivalent(userQueried, userNameQueried);
+        Assert.Equivalent(userQueried, userEmailQueried);
+        Assert.Equivalent(userQueried, userPhoneNumberQueried);
+        Assert.Equivalent(userQueried, userRoleQueried);
     }
 }
