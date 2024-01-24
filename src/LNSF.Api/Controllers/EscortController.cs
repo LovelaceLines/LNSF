@@ -66,14 +66,14 @@ public class EscortController : ControllerBase
         return _mapper.Map<EscortViewModel>(escort);
     }
 
-    /// <summary>
-    /// Deletes an escort by its ID.
-    /// </summary>
-    [Authorize]
-    [HttpDelete("{id}")]
-    public async Task<ActionResult<EscortViewModel>> Delete(int id)
-    {
-        var escort = await _escortService.Delete(id);
-        return _mapper.Map<EscortViewModel>(escort);
-    }
+    // /// <summary>
+    // /// Deletes an escort by its ID.
+    // /// </summary>
+    // [Authorize]
+    // [HttpDelete("{id}")]
+    // public async Task<ActionResult<EscortViewModel>> Delete(int id)
+    // {
+    //     var escort = await _escortService.Delete(id);
+    //     return _mapper.Map<EscortViewModel>(escort);
+    // }
 }
