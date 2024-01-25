@@ -8,7 +8,7 @@ public class TreatmentPostViewModelFake : Faker<TreatmentPostViewModel>
 {
     public TreatmentPostViewModelFake(string? name = null, TypeTreatment? type = null)
     {
-        RuleFor(x => x.Name, f => name ?? f.Name.JobTitle());
+        RuleFor(x => x.Name, f => name ?? f.Name.JobTitle() + f.Random.Number(max: 1000));
         RuleFor(x => x.Type, f => type ?? f.PickRandom<TypeTreatment>());
     }
 }
