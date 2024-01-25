@@ -161,7 +161,7 @@ public class PeopleRepository : BaseRepository<People>, IPeopleRepository
             State = p.State,
             Phone = p.Phone,
             Note = p.Note,
-            Experience = hostings.Count(h => h.Patient!.PeopleId == p.Id) + hostingsEscorts.Count(he => he.Escort!.PeopleId == p.Id) > 1 ? "Veterano" : "Novato",
+            Experience = hostings.Count(h => h.Patient!.PeopleId == p.Id) > 1 || hostingsEscorts.Count(he => he.Escort!.PeopleId == p.Id) > 1 ? "Veterano" : "Novato",
             Status = patients.Any(pa => pa.PeopleId == p.Id) ? "Paciente" : escorts.Any(e => e.PeopleId == p.Id) ? "Acompanhante" : "Sem status",
             Tours = getTours ? tours.Where(t => t.PeopleId == p.Id).ToList() : null,
             EmergencyContacts = getEmergencyContacts ? emergencyContacts.Where(ec => ec.PeopleId == p.Id).ToList() : null
