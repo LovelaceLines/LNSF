@@ -8,6 +8,9 @@ public class PeopleViewModel
     public string Name { get; set; } = "";
     public Gender Gender { get; set; }
     public DateTime BirthDate { get; set; }
+    public MaritalStatus MaritalStatus { get; set; }
+    public RaceColor RaceColor { get; set; }
+    public string Email { get; set; } = "";
     public string RG { get; set; } = "";
     public string IssuingBody { get; set; } = "";
     public string CPF { get; set; } = "";
@@ -31,6 +34,9 @@ public class PeoplePutViewModel
     public string Name { get; set; } = "";
     public Gender Gender { get; set; }
     public DateTime BirthDate { get; set; }
+    public MaritalStatus MaritalStatus { get; set; }
+    public RaceColor RaceColor { get; set; }
+    public string Email { get; set; } = "";
     public string RG { get; set; } = "";
     public string IssuingBody { get; set; } = "";
     public string CPF { get; set; } = "";
@@ -48,6 +54,9 @@ public class PeoplePostViewModel
     public string Name { get; set; } = "";
     public Gender Gender { get; set; }
     public DateTime BirthDate { get; set; }
+    public MaritalStatus MaritalStatus { get; set; }
+    public RaceColor RaceColor { get; set; }
+    public string Email { get; set; } = "";
     public string RG { get; set; } = "";
     public string IssuingBody { get; set; } = "";
     public string CPF { get; set; } = "";

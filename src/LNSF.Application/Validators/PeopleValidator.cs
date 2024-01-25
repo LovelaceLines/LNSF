@@ -16,6 +16,10 @@ public class PeopleValidator : AbstractValidator<People>
             .LessThanOrEqualTo(DateTime.Now.Year - 15).WithMessage(GlobalValidator.InvalidAge())
             .GreaterThanOrEqualTo(DateTime.Now.Year - 128).WithMessage(GlobalValidator.InvalidAge());
 
+        RuleFor(people => people.Email)
+            .EmailAddress().WithMessage(GlobalValidator.InvalidEmailFormat())
+            .MaximumLength(64).WithMessage(GlobalValidator.MaxLength("Email", 64));
+
         RuleFor(people => people.RG)
             .Matches(@"^\d+((.?|-?)\d+)*$").WithMessage(GlobalValidator.InvalidRGFormat());
 

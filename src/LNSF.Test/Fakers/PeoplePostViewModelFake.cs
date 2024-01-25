@@ -7,11 +7,14 @@ namespace LNSF.Test.Fakers;
 
 public class PeoplePostViewModelFake : Faker<PeoplePostViewModel>
 {
-    public PeoplePostViewModelFake(string? name = null, Gender? gender = null, DateTime? birthDate = null, string? rg = null, string? issuingBody = null, string? cpf = null, string? street = null, string? houseNumber = null, string? neighborhood = null, string? city = null, string? state = null, string? phone = null, string? note = null)
+    public PeoplePostViewModelFake(string? name = null, Gender? gender = null, DateTime? birthDate = null, MaritalStatus? maritalStatus = null, RaceColor? raceColor = null, string? email = null, string? rg = null, string? issuingBody = null, string? cpf = null, string? street = null, string? houseNumber = null, string? neighborhood = null, string? city = null, string? state = null, string? phone = null, string? note = null)
     {
         RuleFor(p => p.Name, f => name ?? f.Person.FullName);
         RuleFor(p => p.Gender, f => gender ?? f.PickRandom<Gender>());
         RuleFor(p => p.BirthDate, f => birthDate ?? f.Person.DateOfBirth);
+        RuleFor(p => p.MaritalStatus, f => maritalStatus ?? f.PickRandom<MaritalStatus>());
+        RuleFor(p => p.RaceColor, f => raceColor ?? f.PickRandom<RaceColor>());
+        RuleFor(p => p.Email, f => email ?? f.Person.Email);
         RuleFor(p => p.RG, f => rg ?? f.Random.ReplaceNumbers("##.###.###-#"));
         RuleFor(p => p.IssuingBody, f => issuingBody ?? f.Random.Replace("?????").ToUpper() + "-" + f.Random.Replace("??").ToUpper());
         RuleFor(p => p.CPF, f => cpf ?? f.Person.Cpf());
@@ -27,12 +30,15 @@ public class PeoplePostViewModelFake : Faker<PeoplePostViewModel>
 
 public class PeopleViewModelFake : Faker<PeopleViewModel>
 {
-    public PeopleViewModelFake(int id, string? name = null, Gender? gender = null, DateTime? birthDate = null, string? rg = null, string? cpf = null, string? street = null, string? houseNumber = null, string? neighborhood = null, string? city = null, string? state = null, string? phone = null, string? note = null)
+    public PeopleViewModelFake(int id, string? name = null, Gender? gender = null, DateTime? birthDate = null, MaritalStatus? maritalStatus = null, RaceColor? raceColor = null, string? email = null, string? rg = null, string? cpf = null, string? street = null, string? houseNumber = null, string? neighborhood = null, string? city = null, string? state = null, string? phone = null, string? note = null)
     {
         RuleFor(p => p.Id, f => id);
         RuleFor(p => p.Name, f => name ?? f.Person.FullName);
         RuleFor(p => p.Gender, f => gender ?? f.PickRandom<Gender>());
         RuleFor(p => p.BirthDate, f => birthDate ?? f.Person.DateOfBirth);
+        RuleFor(p => p.MaritalStatus, f => maritalStatus ?? f.PickRandom<MaritalStatus>());
+        RuleFor(p => p.RaceColor, f => raceColor ?? f.PickRandom<RaceColor>());
+        RuleFor(p => p.Email, f => email ?? f.Person.Email);
         RuleFor(p => p.RG, f => rg ?? f.Random.ReplaceNumbers("##.###.###-#"));
         RuleFor(p => p.IssuingBody, f => f.Random.Replace("?????").ToUpper() + "-" + f.Random.Replace("??").ToUpper());
         RuleFor(p => p.CPF, f => cpf ?? f.Person.Cpf());

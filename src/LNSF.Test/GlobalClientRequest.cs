@@ -16,7 +16,7 @@ namespace LNSF.Test;
 public class GlobalClientRequest
 {
     public const string BaseUrl = "http://localhost:5206/api/";
-    public string _acessToken = "";
+    public string _acessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJnZW9yZ2VkZXYiLCJyb2xlIjpbIkRlc2Vudm9sdmVkb3IiLCJBZG1pbmlzdHJhZG9yIiwiQXNzaXN0ZW50ZVNvY2lhbCJdLCJuYmYiOjE3MDYxNDI0NzcsImV4cCI6MTcwNjE0OTY3NywiaWF0IjoxNzA2MTQyNDc3LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjUyMDYiLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjUyMDYifQ.-HCJy9Xc3gnCienYj7p6gTig83s16xOFKyHMyDc9-3Y";
     public string _refreshToken = "";
     public readonly HttpClient _authClient = new() { BaseAddress = new Uri($"{BaseUrl}Auth/") };
     public readonly HttpClient _loginClient = new() { BaseAddress = new Uri($"{BaseUrl}Auth/login") };
@@ -179,8 +179,8 @@ public class GlobalClientRequest
         return await Put<RoomViewModel>(_roomClient, new RoomViewModelFake(id: id.Value, available: available, number: number, beds: beds, storey: storey).Generate());
     }
 
-    public async Task<PeopleViewModel> GetPeople(string? name = null, Gender? gender = null, DateTime? birthDate = null, string? rg = null, string? issuingBody = null, string? cpf = null, string? street = null, string? houseNumber = null, string? neighborhood = null, string? city = null, string? state = null, string? phone = null, string? note = null) =>
-        await Post<PeopleViewModel>(_peopleClient, new PeoplePostViewModelFake(name: name, gender: gender, birthDate: birthDate, rg: rg, issuingBody: issuingBody, cpf: cpf, street: street, houseNumber: houseNumber, neighborhood: neighborhood, city: city, state: state, phone: phone, note: note).Generate());
+    public async Task<PeopleViewModel> GetPeople(string? name = null, Gender? gender = null, DateTime? birthDate = null, MaritalStatus? maritalStatus = null, RaceColor? raceColor = null, string? email = null, string? rg = null, string? issuingBody = null, string? cpf = null, string? street = null, string? houseNumber = null, string? neighborhood = null, string? city = null, string? state = null, string? phone = null, string? note = null) =>
+        await Post<PeopleViewModel>(_peopleClient, new PeoplePostViewModelFake(name: name, gender: gender, birthDate: birthDate, maritalStatus: maritalStatus, raceColor: raceColor, email: email, rg: rg, issuingBody: issuingBody, cpf: cpf, street: street, houseNumber: houseNumber, neighborhood: neighborhood, city: city, state: state, phone: phone, note: note).Generate());
 
     public async Task<PeopleRoomViewModel> GetPeopleRoom(int? peopleId = null, int? roomId = null, int? hostingId = null, int? beds = null)
     {
