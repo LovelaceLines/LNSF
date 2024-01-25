@@ -29,7 +29,7 @@ public class PeopleTestApiPut : GlobalClientRequest
         var peopleToPutWithoutName = new PeopleViewModelFake(people.Id, name: "").Generate();
         var peopleToPutAged14 = new PeopleViewModelFake(people.Id, birthDate: DateTime.Now.AddYears(-14)).Generate();
         var peopleToPutAged129 = new PeopleViewModelFake(people.Id, birthDate: DateTime.Now.AddYears(-129)).Generate();
-        var peopleToPutWithInvalidRG = new PeopleViewModelFake(people.Id, rg: "123456789").Generate();
+        var peopleToPutWithInvalidRG = new PeopleViewModelFake(people.Id, rg: "123456789.").Generate();
         var peopleToPutWithInvalidCPF = new PeopleViewModelFake(people.Id, cpf: "123456789").Generate();
         var peopleToPutWithInvalidPhone = new PeopleViewModelFake(people.Id, phone: "123456789").Generate();
 

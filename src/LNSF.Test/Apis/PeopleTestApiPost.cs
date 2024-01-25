@@ -59,7 +59,7 @@ public class PeopleTestApiPost : GlobalClientRequest
         var peopleWithoutName = new PeoplePostViewModelFake(name: "").Generate();
         var peopleAged14 = new PeoplePostViewModelFake(birthDate: DateTime.Now.AddYears(-14)).Generate();
         var peopleAged129 = new PeoplePostViewModelFake(birthDate: DateTime.Now.AddYears(-129)).Generate();
-        var peopleWithInvalidRG = new PeoplePostViewModelFake(rg: "123456789").Generate();
+        var peopleWithInvalidRG = new PeoplePostViewModelFake(rg: "123456789.").Generate();
         var peopleWithInvalidCPF = new PeoplePostViewModelFake(cpf: "123456789").Generate();
         var peopleWithInvalidPhone = new PeoplePostViewModelFake(phone: "123456789").Generate();
 
