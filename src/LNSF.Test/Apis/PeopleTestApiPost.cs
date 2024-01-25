@@ -62,6 +62,7 @@ public class PeopleTestApiPost : GlobalClientRequest
         var peopleWithInvalidRG = new PeoplePostViewModelFake(rg: "123456789.").Generate();
         var peopleWithInvalidCPF = new PeoplePostViewModelFake(cpf: "123456789").Generate();
         var peopleWithInvalidPhone = new PeoplePostViewModelFake(phone: "123456789").Generate();
+        var peopleWithInvalidEmail = new PeoplePostViewModelFake(email: "email").Generate();
 
         var countBefore = await GetCount(_peopleClient);
         var exceptionWithoutName = await Post<AppException>(_peopleClient, peopleWithoutName);
@@ -70,6 +71,7 @@ public class PeopleTestApiPost : GlobalClientRequest
         var exceptionWithInvalidRG = await Post<AppException>(_peopleClient, peopleWithInvalidRG);
         var exceptionWithInvalidCPF = await Post<AppException>(_peopleClient, peopleWithInvalidCPF);
         var exceptionWithInvalidPhone = await Post<AppException>(_peopleClient, peopleWithInvalidPhone);
+        var exceptionWithInvalidEmail = await Post<AppException>(_peopleClient, peopleWithInvalidEmail);
         var countAfter = await GetCount(_peopleClient);
 
         Assert.Equal(countBefore, countAfter);
@@ -79,5 +81,6 @@ public class PeopleTestApiPost : GlobalClientRequest
         Assert.Equal(HttpStatusCode.BadRequest, exceptionWithInvalidRG.StatusCode);
         Assert.Equal(HttpStatusCode.BadRequest, exceptionWithInvalidCPF.StatusCode);
         Assert.Equal(HttpStatusCode.BadRequest, exceptionWithInvalidPhone.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, exceptionWithInvalidEmail.StatusCode);
     }
 }
