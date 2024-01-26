@@ -8,7 +8,7 @@ namespace LNSF.Infra.Data.Context;
 
 public class AppDbContext : IdentityDbContext<IdentityUser>
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) {}
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
     public DbSet<People> Peoples { get; set; }
     public DbSet<Room> Rooms { get; set; }
@@ -22,6 +22,7 @@ public class AppDbContext : IdentityDbContext<IdentityUser>
     public DbSet<Hosting> Hostings { get; set; }
     public DbSet<PatientTreatment> PatientsTreatments { get; set; }
     public DbSet<HostingEscort> HostingsEscorts { get; set; }
+    public DbSet<FamilyGroupProfile> FamilyGroupProfiles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -42,5 +43,6 @@ public class AppDbContext : IdentityDbContext<IdentityUser>
         builder.ApplyConfiguration(new RoleConfiguration());
         builder.ApplyConfiguration(new UserConfiguration());
         builder.ApplyConfiguration(new UserRoleConfiguration());
+        builder.ApplyConfiguration(new FamilyGroupProfilesConfiguration());
     }
 }

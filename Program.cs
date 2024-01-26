@@ -85,6 +85,9 @@ var autoMapperConfig = new MapperConfiguration(configure =>
     configure.CreateMap<Hosting, HostingPostViewModel>().ReverseMap();
 
     configure.CreateMap<HostingEscort, HostingEscortViewModel>().ReverseMap();
+
+    configure.CreateMap<FamilyGroupProfile, FamilyGroupProfileViewModel>().ReverseMap();
+    configure.CreateMap<FamilyGroupProfile, FamilyGroupProfilePostViewModel>().ReverseMap();
 });
 
 builder.Services.AddSingleton(autoMapperConfig.CreateMapper());
@@ -158,6 +161,10 @@ builder.Services.AddTransient<IPatientTreatmentRepository, PatientTreatmentRepos
 builder.Services.AddTransient<IPatientTreatmentService, PatientTreatmentService>();
 
 builder.Services.AddTransient<IReportService, ReportService>();
+
+builder.Services.AddTransient<IFamilyGroupProfileRepository, FamilyGroupProfileRepository>();
+builder.Services.AddTransient<IFamilyGroupProfileService, FamilyGroupProfileService>();
+builder.Services.AddTransient<FamilyGroupProfileValidator>();
 
 #endregion
 

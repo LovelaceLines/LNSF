@@ -46,6 +46,7 @@ public class GlobalClientRequest
     public readonly HttpClient _addEscortToHostingClient = new() { BaseAddress = new Uri($"{BaseUrl}Hosting/add-escort-to-hosting/") };
     public readonly HttpClient _removeEscortFromHostingClient = new() { BaseAddress = new Uri($"{BaseUrl}Hosting/remove-escort-from-hosting/") };
     public readonly HttpClient _hostingEscortClient = new() { BaseAddress = new Uri($"{BaseUrl}HostingEscort/") };
+    public readonly HttpClient _familyGroupProfileClient = new() { BaseAddress = new Uri($"{BaseUrl}FamilyGroupProfile/") };
 
     /// <summary>
     /// Executes a query using the provided HttpClient and filter, and returns the result as an instance of type T.
@@ -355,6 +356,20 @@ public class GlobalClientRequest
 
         var hostingEscortFake = new HostingEscortViewModelFake(hostingId: hostingId.Value, escortId: escortId.Value).Generate();
         return await Post<HostingEscortViewModel>(_addEscortToHostingClient, hostingEscortFake);
+    }
+
+    public async Task<FamilyGroupProfileViewModel> GetFamilyGroupProfile(int? id = null, int? patientId = null, string? name = null, string? kinship = null, int? age = null, string? profession = null, double? income = null)
+    {
+        if (!patientId.HasValue)
+        {
+            var patient = await GetPatient();
+            patientId = patient.Id;
+        }
+
+        if (!id.HasValue)
+            return await Post<FamilyGroupProfileViewModel>(_familyGroupProfileClient, new FamilyGroupProfilePostViewModelFake(patientId: patientId.Value, name: name, kinship: kinship, age: age, profession: profession, income: income).Generate());
+
+        return await Put<FamilyGroupProfileViewModel>(_familyGroupProfileClient, new FamilyGroupProfileViewModelFake(id.Value, patientId: patientId.Value, name: name, kinship: kinship, age: age, profession: profession, income: income).Generate());
     }
 
     #endregion
