@@ -155,6 +155,17 @@ export class LocalStorage {
     localStorage.setItem('@lnsf:columnVisibilityUser', JSON.stringify(columnVisibilityUser));
   }
 
+  static getColumnVisibilityFamilyGroupProfile(): { [x: string]: boolean } {
+    const columnVisibilityFamilyGroupProfile = localStorage.getItem('@lnsf:columnVisibilityFamilyGroupProfile');
+
+    if (!columnVisibilityFamilyGroupProfile) return { id: false };
+    return JSON.parse(columnVisibilityFamilyGroupProfile);
+  }
+
+  static setColumnVisibilityFamilyGroupProfile(columnVisibilityFamilyGroupProfile: { [x: string]: boolean }) {
+    localStorage.setItem('@lnsf:columnVisibilityFamilyGroupProfile', JSON.stringify(columnVisibilityFamilyGroupProfile));
+  }
+
   static clearAll() {
     localStorage.clear();
   }

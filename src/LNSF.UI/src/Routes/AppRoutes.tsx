@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { RoleContext } from '../Contexts';
 import { useContext } from 'react';
-import { ViewAccount, Dashboard, LoginPage, PersonalData, PutAllPasseio, RegisterRoom, RegisterTour, TelaDeGerenciamentoAccount, TelaDeGerenciamentoPeople, TelaDeGerenciamentoRoom, TelaRegisterUpdateContactEmergence, ViewPeople, ViewRoom, ViewTour } from '../Pages/index';
+import { ViewAccount, Dashboard, LoginPage, PersonalData, PutAllPasseio, RegisterRoom, RegisterTour, TelaDeGerenciamentoAccount, TelaDeGerenciamentoPeople, TelaDeGerenciamentoRoom, TelaRegisterUpdateContactEmergence, ViewPeople, ViewRoom, ViewTour, ViewFamilyGroupProfile } from '../Pages/index';
 import { ViewHospital } from '../Pages/hospital/viewHospital/ViewHospital';
 import { TelaDeGerenciamentoHospital } from '../Pages/hospital/registerHospital/TelaDeGerenciamentoHospital';
 import { TelaDeGerenciamentoTratamentos } from '../Pages/tratamentos/registerTratamentos/TelaDeGerenciamentoTratamento';
@@ -72,6 +72,9 @@ export const AppRoutes = () => {
 
         {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
           <Route path="/inicio/registrodiario/cadastrar" element={<Dashboard children={<RegisterTour />} />} />}
+
+        {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
+          <Route path='/inicio/registrosocioeconomico/perfildogrupofamiliar/visualizar' element={<Dashboard children={<ViewFamilyGroupProfile />} />} />}
 
         {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
           <Route path="/inicio" element={<Dashboard />} />}

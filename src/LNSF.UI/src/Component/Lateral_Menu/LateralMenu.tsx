@@ -161,6 +161,23 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
       )
     }
 
+    if (isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) {
+      menu.push(
+        {
+          index: 9,
+          icon: 'groups',
+          path: '/inicio/registrosocioeconomico',
+          label: 'Registro Socioeconômico',
+          options: [
+            {
+              pathOption: '/inicio/registrosocioeconomico/perfildogrupofamiliar/visualizar',
+              labelOption: 'Visualizar',
+            },
+          ],
+        },
+      )
+    }
+
     if (isDesenvolvedor || isAdministrador) {
       menu.push(
         {

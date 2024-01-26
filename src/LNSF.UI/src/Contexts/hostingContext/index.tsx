@@ -13,19 +13,19 @@ export const HostingProvider = ({ children }: iHostingProvider) => {
     const { getEscortById } = useContext(EscortContext);
     const { getEscortsByHostingId } = useContext(HostingEscortContext);
     const [Hosting, setHosting] = useState<iHostingObject>({} as iHostingObject)
-    
-    const viewHosting= async (page = 1, filter = '', textFilter = '') => {
+
+    const viewHosting = async (page = 1, filter = '', textFilter = '') => {
         try {
             const urlRelativa = `/Hosting?Page.Page=${page}&Page.PageSize=5&${textFilter}=${filter}`;
             const response = await Api.get(urlRelativa);
 
             if (response.status === 200) {
-                return response.data as iHostingObject[]; 
+                return response.data as iHostingObject[];
             }
         } catch (error: any) {
             if (error.response) {
                 toast.error(error.response.data.message);
-            }else {
+            } else {
                 toast.error('Ocorreu um erro ao processar a requisição.');
                 console.error('Error Message:', error.message);
             }
@@ -33,10 +33,10 @@ export const HostingProvider = ({ children }: iHostingProvider) => {
         }
         return [];
     }
-    
+
     const registerHosting = useCallback(async (data: iHostingObject) => {
         try {
-           
+
             const response = await Api.post('/Hosting', JSON.stringify(data))
 
             if (response.status === 200) {
@@ -46,7 +46,7 @@ export const HostingProvider = ({ children }: iHostingProvider) => {
         } catch (error: any) {
             if (error.response) {
                 toast.error(error.response.data.message);
-            }else {
+            } else {
                 toast.error('Ocorreu um erro ao processar a requisição.');
                 console.error('Error Message:', error.message);
             }
@@ -57,20 +57,20 @@ export const HostingProvider = ({ children }: iHostingProvider) => {
 
 
 
-    const updateHosting= useCallback(async (data: iHostingObject) => {
+    const updateHosting = useCallback(async (data: iHostingObject) => {
         try {
             const objetoJSON = JSON.stringify(data);
-           
+
             const response = await Api.put('/Hosting', objetoJSON);
 
             if (response.status === 200) {
                 toast.success('Hospedagem atualizada!');
                 return response.data as iHostingObject;
-            } 
+            }
         } catch (error: any) {
             if (error.response) {
                 toast.error(error.response.data.message);
-            }else {
+            } else {
                 toast.error('Ocorreu um erro ao processar a requisição.');
                 console.error('Error Message:', error.message);
             }
@@ -90,7 +90,7 @@ export const HostingProvider = ({ children }: iHostingProvider) => {
         } catch (error: any) {
             if (error.response) {
                 toast.error(error.response.data.message);
-            }else {
+            } else {
                 toast.error('Ocorreu um erro ao processar a requisição.');
                 console.error('Error Message:', error.message);
             }
@@ -101,7 +101,7 @@ export const HostingProvider = ({ children }: iHostingProvider) => {
 
     const registerEscortToFromHosting = useCallback(async (data: iHosting_) => {
         try {
-           
+
             const response = await Api.post('/Hosting/add-escort-to-hosting', JSON.stringify(data))
 
             if (response.status === 200) {
@@ -111,7 +111,7 @@ export const HostingProvider = ({ children }: iHostingProvider) => {
         } catch (error: any) {
             if (error.response) {
                 toast.error(error.response.data.message);
-            }else {
+            } else {
                 toast.error('Ocorreu um erro ao processar a requisição.');
                 console.error('Error Message:', error.message);
             }
@@ -122,7 +122,7 @@ export const HostingProvider = ({ children }: iHostingProvider) => {
 
     const deleteEscortHosting = useCallback(async (data: iHosting_) => {
         try {
-           
+
             const response = await Api.post('/Hosting/remove-escort-from-hosting', JSON.stringify(data))
 
             if (response.status === 200) {
@@ -132,7 +132,7 @@ export const HostingProvider = ({ children }: iHostingProvider) => {
         } catch (error: any) {
             if (error.response) {
                 toast.error(error.response.data.message);
-            }else {
+            } else {
                 toast.error('Ocorreu um erro ao processar a requisição.');
                 console.error('Error Message:', error.message);
             }
@@ -141,18 +141,18 @@ export const HostingProvider = ({ children }: iHostingProvider) => {
         return {} as iHostingObject;
     }, []);
 
-    const viewHostingEscort= async (page = 1, filter = '', textFilter = '') => {
+    const viewHostingEscort = async (page = 1, filter = '', textFilter = '') => {
         try {
             const urlRelativa = `/HostingEscort?Page.Page=${page}&Page.PageSize=5&${textFilter}=${filter}`;
             const response = await Api.get(urlRelativa);
 
             if (response.status === 200) {
-                return response.data as iHosting_[]; 
+                return response.data as iHosting_[];
             }
         } catch (error: any) {
             if (error.response) {
                 toast.error(error.response.data.message);
-            }else {
+            } else {
                 toast.error('Ocorreu um erro ao processar a requisição.');
                 console.error('Error Message:', error.message);
             }
@@ -171,7 +171,7 @@ export const HostingProvider = ({ children }: iHostingProvider) => {
         } catch (error: any) {
             if (error.response) {
                 toast.error(error.response.data.message);
-            }else {
+            } else {
                 toast.error('Ocorreu um erro ao processar a requisição.');
                 console.error('Error Message:', error.message);
             }

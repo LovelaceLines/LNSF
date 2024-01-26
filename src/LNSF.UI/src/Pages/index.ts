@@ -18,4 +18,6 @@ export * from './tour/viewTour/ViewTour'
 export * from './account/ViewAccount'
 export * from './account/registerAccount/TelaDeGerenciamentoAccount'
 
+export * from './familyGroupProfile/ViewFamilyGroupProfile'
+
 

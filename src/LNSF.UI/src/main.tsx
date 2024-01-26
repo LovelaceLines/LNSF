@@ -9,6 +9,7 @@ import { TreatmentProvider } from './Contexts/treatmentContext/index.tsx'
 import { PatientProvider } from './Contexts/patientContext/index.tsx'
 import { HostingProvider } from './Contexts/hostingContext/index.tsx'
 import { HostingEscortProvider } from './Contexts/hostingEscortContext/hostingEscortContext.tsx'
+import { FamilyGroupProfileProvider } from './Contexts/familyGroupProfileContext/index.tsx'
 
 
 
@@ -28,11 +29,13 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                           <HospitalProvider>
                             <TreatmentProvider>
                               <PatientProvider>
-                                <HostingEscortProvider>
-                                  <HostingProvider>
-                                    <App />
-                                  </HostingProvider>
-                                </HostingEscortProvider>
+                                <FamilyGroupProfileProvider>
+                                  <HostingEscortProvider>
+                                    <HostingProvider>
+                                      <App />
+                                    </HostingProvider>
+                                  </HostingEscortProvider>
+                                </FamilyGroupProfileProvider>
                               </PatientProvider>
                             </TreatmentProvider>
                           </HospitalProvider>
