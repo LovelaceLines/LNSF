@@ -26,7 +26,9 @@ export const responseErrorInterceptor = async (error: AxiosError) => {
 
   if (!!error.response && error.response.status == 401) {
     if (LocalStorage.getTryToRefreshToken()) {
-      LocalStorage.clearAll();
+      LocalStorage.clearTryToRefreshToken();
+      LocalStorage.clearTokens();
+      LocalStorage.clearUser();
       toast.error('Acesso não autorizado.');
       return;
     }

@@ -9,7 +9,6 @@ import { iOrderBy, iPage } from "../../Contexts/types";
 import { MRT_Localization_PT_BR } from "material-react-table/locales/pt-BR";
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
-import BedIcon from '@mui/icons-material/Bed';
 import AddIcon from '@mui/icons-material/Add';
 import ContentPasteSearchIcon from '@mui/icons-material/ContentPasteSearch';
 import GroupsIcon from '@mui/icons-material/Groups';

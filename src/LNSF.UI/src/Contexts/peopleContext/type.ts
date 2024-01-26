@@ -9,6 +9,7 @@ export interface iPeopleFilter {
     id?: number,
     name?: string,
     rg?: string,
+    issuingBody?: string,
     cpf?: string,
     phone?: string,
     gender?: Gender,
@@ -33,11 +34,31 @@ export enum Gender {
     female = 1,
 }
 
+export enum eMaritalStatus {
+    single,
+    married,
+    separate,
+    divorced,
+    stableUnion,
+    widower
+}
+
+export enum eRaceColor {
+    white, 
+    black, 
+    brown, 
+    yellow, 
+    indigenous
+}
+
 export interface iPeopleObject {
     id: number,
     name: string,
     gender: number,
     birthDate: Date,
+    maritalStatus: eMaritalStatus,
+    raceColor: eRaceColor,
+    email: string,
     rg: string,
     issuingBody: string,
     cpf: string,
@@ -75,7 +96,11 @@ export interface iPeopleRegister {
     name: string,
     gender: number,
     birthDate: Date,
+    maritalStatus: eMaritalStatus,
+    raceColor: eRaceColor,
+    email: string,
     rg: string,
+    issuingBody: string,
     cpf: string,
     street: string,
     houseNumber: string,

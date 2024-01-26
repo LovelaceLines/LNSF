@@ -1,6 +1,6 @@
 import { useContext, useMemo, useState } from 'react'
 import { useEffect } from "react"
-import { Gender, PeopleContext, iPeopleFilter, iPeopleObject } from '../../../Contexts';
+import { Gender, PeopleContext, eMaritalStatus, eRaceColor, iPeopleFilter, iPeopleObject } from '../../../Contexts';
 import { Box, Button, Checkbox, IconButton, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import PersonIcon from '@mui/icons-material/Person';
@@ -81,6 +81,37 @@ export const ViewPeople: React.FC = () => {
         enableSorting: false,
       },
       {
+        accessorKey: 'maritalStatus',
+        header: 'Estado Civil',
+        size: 50,
+        enableColumnActions: false,
+        enableSorting: false,
+        Cell: ({ row }) => {
+          const maritalStatus = row.original.maritalStatus;
+          return maritalStatus == eMaritalStatus.single ? 'Solteiro(a)' :
+            maritalStatus == eMaritalStatus.married ? 'Casado(a)' :
+              maritalStatus == eMaritalStatus.separate ? 'Separado(a)' :
+                maritalStatus == eMaritalStatus.divorced ? 'Divorciado(a)' :
+                  maritalStatus == eMaritalStatus.stableUnion ? 'União Estável' :
+                    maritalStatus == eMaritalStatus.widower ? 'Viúvo(a)' : '';
+        }
+      },
+      {
+        accessorKey: 'raceColor',
+        header: 'Raça/Cor',
+        size: 50,
+        enableColumnActions: false,
+        enableSorting: false,
+        Cell: ({ row }) => {
+          const raceColor = row.original.raceColor;
+          return raceColor == eRaceColor.white ? 'Branca' :
+            raceColor == eRaceColor.black ? 'Preta' :
+              raceColor == eRaceColor.brown ? 'Parda' :
+                raceColor == eRaceColor.yellow ? 'Amarela' :
+                  raceColor == eRaceColor.indigenous ? 'Indígena' : '';
+        }
+      },
+      {
         accessorKey: 'gender',
         header: 'Sexo',
         size: 50,
@@ -94,6 +125,13 @@ export const ViewPeople: React.FC = () => {
       {
         accessorKey: 'phone',
         header: 'Telefone',
+        size: 150,
+        enableColumnActions: false,
+        enableSorting: false,
+      },
+      {
+        accessorKey: 'email',
+        header: 'Email',
         size: 150,
         enableColumnActions: false,
         enableSorting: false,
@@ -192,6 +230,11 @@ export const ViewPeople: React.FC = () => {
     if (columnIds.includes('cpf') && typeof value === 'string')
       updatedFilters.cpf = value;
     else updatedFilters.cpf = undefined;
+
+    value = columnFilters.find(cf => cf.id === 'issuingBody')?.value;
+    if (columnIds.includes('issuingBody') && typeof value === 'string')
+      updatedFilters.issuingBody = value;
+    else updatedFilters.issuingBody = undefined;
 
     value = columnFilters.find(cf => cf.id === 'phone')?.value;
     if (columnIds.includes('phone') && typeof value === 'string')
