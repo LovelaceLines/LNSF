@@ -44,13 +44,8 @@ export interface iTreatment {
 // OTHER, 3
 
 export interface iTreatmentTypes {
-    treatment: iTreatment[],
-    setTreatment: React.Dispatch<React.SetStateAction<iTreatment[]>>
-    viewTreatment(page: number, filter: string, textFilter: string): Promise<iTreatment[] | Error>;
-    registerTreatment(data: iTreatmentObject): Promise<iTreatment | Error>;
-    updateTreatment(data: iTreatmentObject): Promise<iTreatmentObject | Error>;
-    countTreatment(): Promise<number>;
-    deleteTreatment(data: string): Promise<iTreatment | Error>;
+    // treatment: iTreatment[],
+    // setTreatment: React.Dispatch<React.SetStateAction<iTreatment[]>>
 
     getTreatments(filter?: iTreatmentFilter): Promise<iTreatment[]>;
     getTreatmentById(id: number): Promise<iTreatment>;

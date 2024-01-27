@@ -7,8 +7,8 @@ export interface iTourProvider {
 
 export interface iTourObject {
     id: number,
-    output: Date,
-    input: Date,
+    output: Date | string,
+    input: Date | string,
     note: string,
     peopleId: number,
     people: iPeopleObject | null,
@@ -24,7 +24,7 @@ export interface iAttObject {
 
 export interface iTourPeopleRoom {
     id: number,
-    output: Date,
+    output: Date ,
     input: Date,
     note: string,
     peopleId: number, 

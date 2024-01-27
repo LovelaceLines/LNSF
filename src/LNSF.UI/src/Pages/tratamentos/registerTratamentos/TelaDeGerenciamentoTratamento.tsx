@@ -7,11 +7,12 @@ import { iRoomRegister } from "../../../Contexts";
 import { Form } from "@unform/web";
 import { IFormErrorsCustom, TextFieldCustom, useCustomForm } from "../../../Component/forms";
 import * as yup from 'yup';
-import { iTreatmentObject } from "../../../Contexts/treatmentContext/type";
+import { iTreatment, iTreatmentObject, iTreatmentPost } from "../../../Contexts/treatmentContext/type";
 import { TreatmentContext } from "../../../Contexts/treatmentContext";
 import { TextSelectCustom } from "../../../Component/forms/TextSelectCustom";
+import { toast } from "react-toastify";
 
-const formValidateSchema: yup.Schema = yup.object().shape({
+const formValidateSchema: yup.Schema<iTreatmentPost> = yup.object().shape({
     name: yup.string().required(),
     type: yup.number().required(),
 })
@@ -23,95 +24,111 @@ export const TelaDeGerenciamentoTratamentos: React.FC = () => {
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
     const navigate = useNavigate();
     const [isLoadind, setIsLoading] = useState(false);
-    const { viewTreatment, registerTreatment, updateTreatment } = useContext(TreatmentContext);
-
+    const { getTreatments, postTreatment, putTreatment } = useContext(TreatmentContext);
+    const [treatments, setTreatments] = useState<iTreatment[]>([]);
     const { formRef, save, isSaveAndClose, saveAndClose } = useCustomForm();
+
+    const fetchTreatments = async () => {
+        const treatments = await getTreatments();
+        setTreatments(treatments);
+    };
+
+    const registerTreatments = async (data: iTreatmentPost) => {
+        try {
+            formValidateSchema
+                .validate(data, { abortEarly: false });
+            const idata: iTreatmentPost = {
+                name: data.name,
+                type: data.type,
+            };
+
+            const createdTreatments = await postTreatment(idata);
+            console.log("created", createdTreatments)
+            if (createdTreatments) {
+                toast.success('Tratamento cadastrado!');
+                navigate('/inicio/tratamentos/visualizar');
+            }
+        } catch (error) {
+            console.error(error);
+        }
+
+    };
 
     useEffect(() => {
 
         if (id !== 'cadastrar') {
             setIsLoading(true);
-
-            viewTreatment(1, id, 'id')
-                .then((response) => {
-                    if (response instanceof Error) {
-                        setIsLoading(false);
-                    } else {
-                        formRef.current?.setData(response[0]);
-                        setIsLoading(false);
-                    }
-                })
-                .catch((error) => {
-                    setIsLoading(false);
-                    console.error('Detalhes do erro:', error);
-                });
+            fetchTreatments()
+            setIsLoading(false);
         }
     }, [id])
 
+    console.log("/id", id)
+    const handSave = (dados: iTreatmentPost) => {
 
-    const handSave = (dados: iRoomRegister) => {
+        console.log("dados: ", dados)
+        registerTreatments(dados)
+        // formValidateSchema.
+        //     validate(dados, { abortEarly: false })
+        //     .then((dadosValidados) => {
+        //         setIsLoading(true)
 
-        formValidateSchema.
-            validate(dados, { abortEarly: false })
-            .then((dadosValidados) => {
-                setIsLoading(true)
+        //         if (id === 'cadastrar') {
 
-                if (id === 'cadastrar') {
+        //             const data: iTreatmentObject = {
+        //                 name: dadosValidados.name,
+        //                 type: Number(dadosValidados.type)
+        //             }
 
-                    const data: iTreatmentObject = {
-                        name: dadosValidados.name,
-                        type: Number(dadosValidados.type)
-                    }
+        //             registerTreatment(data)
+        //                 .then((response) => {
+        //                     if (response instanceof Error) {
+        //                         setIsLoading(false);
+        //                     } else {
+        //                         setIsLoading(false);
+        //                         if (isSaveAndClose()) {
+        //                             navigate('/inicio/tratamentos/visualizar')
+        //                         } else {
+        //                             navigate(`/inicio/tratamentos/gerenciar/${response.id}`)
+        //                         }
+        //                     }
+        //                 })
+        //                 .catch((error) => {
+        //                     setIsLoading(false);
+        //                     console.error('Detalhes do erro:', error);
+        //                 });
+        //         } else {
 
-                    registerTreatment(data)
-                        .then((response) => {
-                            if (response instanceof Error) {
-                                setIsLoading(false);
-                            } else {
-                                setIsLoading(false);
-                                if (isSaveAndClose()) {
-                                    navigate('/inicio/tratamentos/visualizar')
-                                } else {
-                                    navigate(`/inicio/tratamentos/gerenciar/${response.id}`)
-                                }
-                            }
-                        })
-                        .catch((error) => {
-                            setIsLoading(false);
-                            console.error('Detalhes do erro:', error);
-                        });
-                } else {
-                    
-                    const data: iTreatmentObject = {
-                        id: Number(id),
-                        name: dadosValidados.name,
-                        type: Number(dadosValidados.type)
-                    }
+        //             const data: iTreatmentObject = {
+        //                 id: Number(id),
+        //                 name: dadosValidados.name,
+        //                 type: Number(dadosValidados.type)
+        //             }
 
-                    updateTreatment(data)
-                        .then((response) => {
-                            if (response instanceof Error) {
-                                setIsLoading(false);
-                            } else {
-                                setIsLoading(false);
-                            }
-                        })
-                        .catch((error) => {
-                            setIsLoading(false);
-                            console.error('Detalhes do erro:', error);
-                        });
-                }
-            })
-            .catch((errors: yup.ValidationError) => {
-                const ValidationError: IFormErrorsCustom = {}
+        //             updateTreatment(data)
+        //                 .then((response) => {
+        //                     if (response instanceof Error) {
+        //                         setIsLoading(false);
+        //                     } else {
+        //                         setIsLoading(false);
+        //                     }
+        //                 })
+        //                 .catch((error) => {
+        //                     setIsLoading(false);
+        //                     console.error('Detalhes do erro:', error);
+        //                 });
+        //         }
+        //     })
+        //     .catch((errors: yup.ValidationError) => {
+        //         const ValidationError: IFormErrorsCustom = {}
 
-                errors.inner.forEach(error => {
-                    if (!error.path) return;
-                    ValidationError[error.path] = error.message;
-                });
-                console.log(errors.errors);
-                formRef.current?.setErrors(ValidationError)
-            })
+        //         errors.inner.forEach(error => {
+        //             if (!error.path) return;
+        //             ValidationError[error.path] = error.message;
+        //         });
+        //         console.log(errors.errors);
+        //         formRef.current?.setErrors(ValidationError)
+        //     })
     };
 
     return (
@@ -145,7 +162,9 @@ export const TelaDeGerenciamentoTratamentos: React.FC = () => {
             </Box>
             <Divider />
             <Box style={{ maxHeight: '350px', overflowY: 'auto' }}>
-                <Form ref={formRef} onSubmit={(dados) => handSave(dados)}>
+                <Form ref={formRef} onSubmit={(dados) => {handSave(dados)
+                console.log("dados: ", dados)}
+                }>
                     <Box margin={1} display='flex' flexDirection='column' >
                         <Grid container direction='column' padding={2} spacing={2}>
                             {isLoadind && (
@@ -195,7 +214,7 @@ export const TelaDeGerenciamentoTratamentos: React.FC = () => {
 
                                     />
                                 </Grid>
-                                
+
                             </Grid>
                         </Grid>
                     </Box>
