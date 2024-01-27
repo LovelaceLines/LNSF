@@ -23,6 +23,7 @@ public class AppDbContext : IdentityDbContext<IdentityUser>
     public DbSet<PatientTreatment> PatientsTreatments { get; set; }
     public DbSet<HostingEscort> HostingsEscorts { get; set; }
     public DbSet<FamilyGroupProfile> FamilyGroupProfiles { get; set; }
+    public DbSet<ServiceRecord> ServiceRecords { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -44,5 +45,6 @@ public class AppDbContext : IdentityDbContext<IdentityUser>
         builder.ApplyConfiguration(new UserConfiguration());
         builder.ApplyConfiguration(new UserRoleConfiguration());
         builder.ApplyConfiguration(new FamilyGroupProfilesConfiguration());
+        builder.ApplyConfiguration(new ServiceRecordsConfiguration());
     }
 }
