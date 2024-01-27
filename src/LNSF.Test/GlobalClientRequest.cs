@@ -47,6 +47,7 @@ public class GlobalClientRequest
     public readonly HttpClient _removeEscortFromHostingClient = new() { BaseAddress = new Uri($"{BaseUrl}Hosting/remove-escort-from-hosting/") };
     public readonly HttpClient _hostingEscortClient = new() { BaseAddress = new Uri($"{BaseUrl}HostingEscort/") };
     public readonly HttpClient _familyGroupProfileClient = new() { BaseAddress = new Uri($"{BaseUrl}FamilyGroupProfile/") };
+    public readonly HttpClient _serviceRecord = new() { BaseAddress = new Uri($"{BaseUrl}ServiceRecord/") };
 
     /// <summary>
     /// Executes a query using the provided HttpClient and filter, and returns the result as an instance of type T.
@@ -370,6 +371,20 @@ public class GlobalClientRequest
             return await Post<FamilyGroupProfileViewModel>(_familyGroupProfileClient, new FamilyGroupProfilePostViewModelFake(patientId: patientId.Value, name: name, kinship: kinship, age: age, profession: profession, income: income).Generate());
 
         return await Put<FamilyGroupProfileViewModel>(_familyGroupProfileClient, new FamilyGroupProfileViewModelFake(id.Value, patientId: patientId.Value, name: name, kinship: kinship, age: age, profession: profession, income: income).Generate());
+    }
+
+    public async Task<ServiceRecordViewModel> GetServiceRecord(int? id = null, int? patientId = null, List<SocialProgram>? socialProgram = null, string? socialProgramNote = null, DomicileType? domicileType = null, List<MaterialExternalWallsDomicile>? materialExternalWallsDomicile = null, AccessElectricalEnergy? accessElectricalEnergy = null, bool? hasWaterSupply = null, List<WayWaterSupply>? wayWaterSupply = null, SanitaryDrainage? sanitaryDrainage = null, GarbageCollection? garbageCollection = null, int? numberRooms = null, int? numberBedrooms = null, int? numberPeoplePerBedroom = null, DomicileHasAccessibility? domicileHasAccessibility = null, bool? isLocatedInRiskArea = null, bool? isLocatedInDifficultAccessArea = null, bool? isLocatedInConflictViolenceArea = null, AccessToUnit? accessToUnit = null, string? accessToUnitNote = null, string? firstAttendanceReason = null, string? demandPresented = null, string? referrals = null, string? observations = null)
+    {
+        if (!patientId.HasValue)
+        {
+            var patient = await GetPatient();
+            patientId = patient.Id;
+        }
+
+        if (!id.HasValue)
+            return await Post<ServiceRecordViewModel>(_serviceRecord, new ServiceRecordPostViewModelFake(patientId: patientId.Value, socialProgram: socialProgram, socialProgramNote: socialProgramNote, domicileType: domicileType, materialExternalWallsDomicile: materialExternalWallsDomicile, accessElectricalEnergy: accessElectricalEnergy, hasWaterSupply: hasWaterSupply, wayWaterSupply: wayWaterSupply, sanitaryDrainage: sanitaryDrainage, garbageCollection: garbageCollection, numberRooms: numberRooms, numberBedrooms: numberBedrooms, numberPeoplePerBedroom: numberPeoplePerBedroom, domicileHasAccessibility: domicileHasAccessibility, isLocatedInRiskArea: isLocatedInRiskArea, isLocatedInDifficultAccessArea: isLocatedInDifficultAccessArea, isLocatedInConflictViolenceArea: isLocatedInConflictViolenceArea, accessToUnit: accessToUnit, accessToUnitNote: accessToUnitNote, firstAttendanceReason: firstAttendanceReason, demandPresented: demandPresented, referrals: referrals, observations: observations).Generate());
+
+        return await Put<ServiceRecordViewModel>(_serviceRecord, new ServiceRecordViewModelFake(id: id.Value, patientId: patientId.Value, socialProgram: socialProgram, socialProgramNote: socialProgramNote, domicileType: domicileType, materialExternalWallsDomicile: materialExternalWallsDomicile, accessElectricalEnergy: accessElectricalEnergy, hasWaterSupply: hasWaterSupply, wayWaterSupply: wayWaterSupply, sanitaryDrainage: sanitaryDrainage, garbageCollection: garbageCollection, numberRooms: numberRooms, numberBedrooms: numberBedrooms, numberPeoplePerBedroom: numberPeoplePerBedroom, domicileHasAccessibility: domicileHasAccessibility, isLocatedInRiskArea: isLocatedInRiskArea, isLocatedInDifficultAccessArea: isLocatedInDifficultAccessArea, isLocatedInConflictViolenceArea: isLocatedInConflictViolenceArea, accessToUnit: accessToUnit, accessToUnitNote: accessToUnitNote, firstAttendanceReason: firstAttendanceReason, demandPresented: demandPresented, referrals: referrals, observations: observations).Generate());
     }
 
     #endregion
