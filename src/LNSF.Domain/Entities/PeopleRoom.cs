@@ -1,6 +1,6 @@
 ﻿namespace LNSF.Domain.Entities;
 
-public class PeopleRoom
+public class PeopleRoomHosting
 {
     public int HostingId { get; set; }
     public Hosting? Hosting { get; set; }

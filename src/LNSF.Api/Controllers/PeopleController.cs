@@ -14,15 +14,15 @@ public class PeopleController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly IPeopleService _peopleService;
-    private readonly IPeopleRoomService _peopleRoomService;
+    private readonly IPeopleRoomHostingService _peopleRoomHostingService;
 
     public PeopleController(IPeopleService peopleService,
         IMapper mapper,
-        IPeopleRoomService peopleRoomService)
+        IPeopleRoomHostingService peopleRoomHostingService)
     {
         _mapper = mapper;
         _peopleService = peopleService;
-        _peopleRoomService = peopleRoomService;
+        _peopleRoomHostingService = peopleRoomHostingService;
     }
 
     /// <summary>
@@ -73,11 +73,11 @@ public class PeopleController : ControllerBase
     /// </summary>
     [Authorize]
     [HttpPost("add-people-to-room")]
-    public async Task<ActionResult<PeopleRoomViewModel>> Post([FromBody] PeopleRoomViewModel peopleRoomViewModel)
+    public async Task<ActionResult<PeopleRoomHostingViewModel>> Post([FromBody] PeopleRoomHostingViewModel peopleRoomHostingViewModel)
     {
-        var peopleRoom = _mapper.Map<PeopleRoom>(peopleRoomViewModel);
-        peopleRoom = await _peopleRoomService.Create(peopleRoom);
-        return _mapper.Map<PeopleRoomViewModel>(peopleRoom);
+        var peopleRoomHosting = _mapper.Map<PeopleRoomHosting>(peopleRoomHostingViewModel);
+        peopleRoomHosting = await _peopleRoomHostingService.Create(peopleRoomHosting);
+        return _mapper.Map<PeopleRoomHostingViewModel>(peopleRoomHosting);
     }
 
     /// <summary>
@@ -85,10 +85,10 @@ public class PeopleController : ControllerBase
     /// </summary>
     [Authorize]
     [HttpDelete("remove-people-from-room")]
-    public async Task<ActionResult<PeopleRoomViewModel>> Delete(PeopleRoomViewModel peopleRoomViewModel)
+    public async Task<ActionResult<PeopleRoomHostingViewModel>> Delete(PeopleRoomHostingViewModel peopleRoomHostingViewModel)
     {
-        var peopleRoom = _mapper.Map<PeopleRoom>(peopleRoomViewModel);
-        peopleRoom = await _peopleRoomService.Delete(peopleRoom);
-        return _mapper.Map<PeopleRoomViewModel>(peopleRoom);
+        var peopleRoomHosting = _mapper.Map<PeopleRoomHosting>(peopleRoomHostingViewModel);
+        peopleRoomHosting = await _peopleRoomHostingService.Delete(peopleRoomHosting);
+        return _mapper.Map<PeopleRoomHostingViewModel>(peopleRoomHosting);
     }
 }

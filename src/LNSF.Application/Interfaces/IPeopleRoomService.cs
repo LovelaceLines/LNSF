@@ -3,10 +3,10 @@ using LNSF.Domain.Filters;
 
 namespace LNSF.Application.Interfaces;
 
-public interface IPeopleRoomService
+public interface IPeopleRoomHostingService
 {
-    Task<List<PeopleRoom>> Query(PeopleRoomFilter filter);
+    Task<List<PeopleRoomHosting>> Query(PeopleRoomHostingFilter filter);
     Task<int> GetCount();
-    Task<PeopleRoom> Create(PeopleRoom peopleRoom);
-    Task<PeopleRoom> Delete(PeopleRoom peopleRoom);
+    Task<PeopleRoomHosting> Create(PeopleRoomHosting peopleRoomHosting);
+    Task<PeopleRoomHosting> Delete(PeopleRoomHosting peopleRoomHosting);
 }

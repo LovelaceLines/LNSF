@@ -1,6 +1,6 @@
 ﻿namespace LNSF.Api.ViewModels;
 
-public class PeopleRoomViewModel
+public class PeopleRoomHostingViewModel
 {
     public int HostingId { get; set; }
     public HostingViewModel? Hosting { get; set; }

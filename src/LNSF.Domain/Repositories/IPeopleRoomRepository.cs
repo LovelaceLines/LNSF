@@ -3,17 +3,17 @@ using LNSF.Domain.Filters;
 
 namespace LNSF.Domain.Repositories;
 
-public interface IPeopleRoomRepository : IBaseRepository<PeopleRoom>
+public interface IPeopleRoomHostingRepository : IBaseRepository<PeopleRoomHosting>
 {
-    Task<List<PeopleRoom>> Query(PeopleRoomFilter filter);
-    Task<bool> ExistsHosting(PeopleRoom peopleRoom);
-    Task<bool> ExistsByPeopleRoom(PeopleRoom peopleRoom);
+    Task<List<PeopleRoomHosting>> Query(PeopleRoomHostingFilter filter);
+    Task<bool> ExistsHosting(PeopleRoomHosting peopleRoomHosting);
+    Task<bool> ExistsByPeopleRoomHosting(PeopleRoomHosting peopleRoomHosting);
 
     /// <summary>
-    /// Checks if a given PeopleRoom has vacancy in the corresponding room.
-    /// <param name="peopleRoom">Require that Entities Hosting, People and Room exists</param>
+    /// Checks if a given PeopleRoomHosting has vacancy in the corresponding room.
+    /// <param name="peopleRoomHosting">Require that Entities Hosting, People and Room exists</param>
     /// </summary>
     /// <returns>True if there is vacancy, false otherwise.</returns>
-    Task<bool> HaveVacancy(PeopleRoom peopleRoom);
-    Task<int> GetOccupation(PeopleRoom peopleRoom);
+    Task<bool> HaveVacancy(PeopleRoomHosting peopleRoomHosting);
+    Task<int> GetOccupation(PeopleRoomHosting peopleRoomHosting);
 }

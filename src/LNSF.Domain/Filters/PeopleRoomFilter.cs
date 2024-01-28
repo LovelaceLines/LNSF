@@ -2,7 +2,7 @@
 
 namespace LNSF.Domain.Filters;
 
-public class PeopleRoomFilter
+public class PeopleRoomHostingFilter
 {
     public int? PeopleId { get; set; }
     public int? RoomId { get; set; }
@@ -20,9 +20,9 @@ public class PeopleRoomFilter
     public Pagination Page { get; set; } = new();
     public OrderBy? OrderBy { get; set; }
 
-    public PeopleRoomFilter() { }
+    public PeopleRoomHostingFilter() { }
 
-    public PeopleRoomFilter(
+    public PeopleRoomHostingFilter(
         int? peopleId = null,
         int? roomId = null,
         int? hostingId = null,

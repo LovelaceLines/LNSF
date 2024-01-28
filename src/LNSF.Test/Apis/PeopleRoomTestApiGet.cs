@@ -4,115 +4,115 @@ using Xunit;
 
 namespace LNSF.Test.Apis;
 
-public class PeopleRoomTestApiGet : GlobalClientRequest
+public class PeopleRoomHostingTestApiGet : GlobalClientRequest
 {
     [Fact]
-    public async Task Get_PeopleRoomId_Ok()
+    public async Task Get_PeopleRoomHostingId_Ok()
     {
-        var peopleRoom = await GetPeopleRoom();
+        var prh = await GetPeopleRoomHosting();
 
-        var peopleRoomIdQueried = await QueryFirst<PeopleRoomViewModel>(_peopleRoomClient, new PeopleRoomFilter(peopleId: peopleRoom.PeopleId, roomId: peopleRoom.RoomId, hostingId: peopleRoom.HostingId));
+        var prhQueried = await QueryFirst<PeopleRoomHostingViewModel>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: prh.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId));
 
-        Assert.Equivalent(peopleRoom, peopleRoomIdQueried);
+        Assert.Equivalent(prh, prhQueried);
     }
 
     [Fact]
-    public async Task Get_PeopleRoomVacancy_Ok()
-    {
-        var room = await GetRoom(available: true);
-        var peopleRoom = await GetPeopleRoom(roomId: room.Id);
-
-        var peopleRoomVacancyQueried = await QueryFirst<PeopleRoomViewModel>(_peopleRoomClient, new PeopleRoomFilter(peopleId: peopleRoom.PeopleId, roomId: room.Id, hostingId: peopleRoom.HostingId, vacancy: room.Beds));
-
-        Assert.Equivalent(peopleRoom, peopleRoomVacancyQueried);
-    }
-
-    [Fact]
-    public async Task Get_PeopleRoomHasVacancy_Ok()
+    public async Task Get_PeopleRoomHostingVacancy_Ok()
     {
         var room = await GetRoom(available: true);
-        var peopleRoom = await GetPeopleRoom(roomId: room.Id);
+        var prh = await GetPeopleRoomHosting(roomId: room.Id);
 
-        var peopleRoomHasVacancyQueried = await QueryFirst<PeopleRoomViewModel>(_peopleRoomClient, new PeopleRoomFilter(peopleId: peopleRoom.PeopleId, roomId: room.Id, hostingId: peopleRoom.HostingId, hasVacancy: true));
+        var prhVacancyQueried = await QueryFirst<PeopleRoomHostingViewModel>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: prh.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId, vacancy: room.Beds));
 
-        Assert.Equivalent(peopleRoom, peopleRoomHasVacancyQueried);
+        Assert.Equivalent(prh, prhVacancyQueried);
     }
 
     [Fact]
-    public async Task Get_PeopleRoomAvailable_Ok()
+    public async Task Get_PeopleRoomHostingHasVacancy_Ok()
     {
         var room = await GetRoom(available: true);
-        var peopleRoom = await GetPeopleRoom(roomId: room.Id);
+        var prh = await GetPeopleRoomHosting(roomId: room.Id);
 
-        var peopleRoomAvailableQueried = await QueryFirst<PeopleRoomViewModel>(_peopleRoomClient, new PeopleRoomFilter(peopleId: peopleRoom.PeopleId, roomId: room.Id, hostingId: peopleRoom.HostingId, available: true));
+        var prhHasVacancyQueried = await QueryFirst<PeopleRoomHostingViewModel>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: prh.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId, hasVacancy: true));
 
-        Assert.Equivalent(peopleRoom, peopleRoomAvailableQueried);
+        Assert.Equivalent(prh, prhHasVacancyQueried);
     }
 
     [Fact]
-    public async Task Get_PeopleRoomCheckInAndCheckOut_Ok()
+    public async Task Get_PeopleRoomHostingAvailable_Ok()
+    {
+        var room = await GetRoom(available: true);
+        var prh = await GetPeopleRoomHosting(roomId: room.Id);
+
+        var prhAvailableQueried = await QueryFirst<PeopleRoomHostingViewModel>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: prh.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId, available: true));
+
+        Assert.Equivalent(prh, prhAvailableQueried);
+    }
+
+    [Fact]
+    public async Task Get_PeopleRoomHostingCheckInAndCheckOut_Ok()
     {
         var room = await GetRoom(beds: 2, available: true);
         var people = await GetPeople();
         var patient = await GetPatient(peopleId: people.Id);
         var hosting = await GetHosting(patientId: patient.Id);
-        var peopleRoom = await GetPeopleRoom(peopleId: people.Id, roomId: room.Id, hostingId: hosting.Id);
+        var prh = await GetPeopleRoomHosting(peopleId: people.Id, roomId: room.Id, hostingId: hosting.Id);
 
-        var peopleRoomCheckInAndCheckOutQueried = await QueryFirst<PeopleRoomViewModel>(_peopleRoomClient, new PeopleRoomFilter(peopleId: peopleRoom.PeopleId, roomId: room.Id, hostingId: peopleRoom.HostingId, checkIn: hosting.CheckIn, checkOut: hosting.CheckOut));
+        var prhCheckInAndCheckOutQueried = await QueryFirst<PeopleRoomHostingViewModel>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: prh.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId, checkIn: hosting.CheckIn, checkOut: hosting.CheckOut));
 
-        Assert.Equivalent(peopleRoom, peopleRoomCheckInAndCheckOutQueried);
+        Assert.Equivalent(prh, prhCheckInAndCheckOutQueried);
     }
 
     [Fact]
-    public async Task Get_PeopleRoomGetPeople_Ok()
+    public async Task Get_PeopleRoomHostingGetPeople_Ok()
     {
         var people = await GetPeople();
         var patient = await GetPatient(peopleId: people.Id);
         var hosting = await GetHosting(patientId: patient.Id);
-        var peopleRoom = await GetPeopleRoom(peopleId: people.Id, hostingId: hosting.Id);
+        var prh = await GetPeopleRoomHosting(peopleId: people.Id, hostingId: hosting.Id);
 
-        var peopleRoomGetPeopleQueried = await QueryFirst<PeopleRoomViewModel>(_peopleRoomClient, new PeopleRoomFilter(peopleId: peopleRoom.PeopleId, roomId: peopleRoom.RoomId, hostingId: peopleRoom.HostingId, getPeople: true));
+        var prhGetPeopleQueried = await QueryFirst<PeopleRoomHostingViewModel>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: prh.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId, getPeople: true));
 
-        Assert.Equivalent(people, peopleRoomGetPeopleQueried.People);
+        Assert.Equivalent(people, prhGetPeopleQueried.People);
     }
 
     [Fact]
-    public async Task Get_PeopleRoomGetRoom_Ok()
+    public async Task Get_PeopleRoomHostingGetRoom_Ok()
     {
         var room = await GetRoom(available: true);
-        var peopleRoom = await GetPeopleRoom(roomId: room.Id);
+        var prh = await GetPeopleRoomHosting(roomId: room.Id);
 
-        var peopleRoomRoomQueried = await QueryFirst<PeopleRoomViewModel>(_peopleRoomClient, new PeopleRoomFilter(peopleId: peopleRoom.PeopleId, roomId: peopleRoom.RoomId, hostingId: peopleRoom.HostingId, getRoom: true));
+        var prhRoomQueried = await QueryFirst<PeopleRoomHostingViewModel>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: prh.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId, getRoom: true));
 
-        Assert.Equivalent(room, peopleRoomRoomQueried.Room);
+        Assert.Equivalent(room, prhRoomQueried.Room);
     }
 
     [Fact]
-    public async Task Get_PeopleRoomGetHosting_Ok()
+    public async Task Get_PeopleRoomHostingGetHosting_Ok()
     {
         var people = await GetPeople();
         var patient = await GetPatient(peopleId: people.Id);
         var hosting = await GetHosting(patientId: patient.Id);
-        var peopleRoom = await GetPeopleRoom(peopleId: people.Id, hostingId: hosting.Id);
+        var prh = await GetPeopleRoomHosting(peopleId: people.Id, hostingId: hosting.Id);
 
-        var peopleRoomHostingQueried = await QueryFirst<PeopleRoomViewModel>(_peopleRoomClient, new PeopleRoomFilter(peopleId: peopleRoom.PeopleId, roomId: peopleRoom.RoomId, hostingId: peopleRoom.HostingId, getHosting: true));
+        var prhHostingHostingQueried = await QueryFirst<PeopleRoomHostingViewModel>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: prh.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId, getHosting: true));
 
-        Assert.Equivalent(hosting, peopleRoomHostingQueried.Hosting);
+        Assert.Equivalent(hosting, prhHostingHostingQueried.Hosting);
     }
 
     [Fact]
-    public async Task Get_PeopleRoomGlobalFilter_Ok()
+    public async Task Get_PeopleRoomHostingGlobalFilter_Ok()
     {
         var room = await GetRoom(beds: 2, available: true);
         var people = await GetPeople();
         var patient = await GetPatient(peopleId: people.Id);
         var hosting = await GetHosting(patientId: patient.Id);
-        var peopleRoom = await GetPeopleRoom(peopleId: people.Id, roomId: room.Id, hostingId: hosting.Id);
+        var prh = await GetPeopleRoomHosting(peopleId: people.Id, roomId: room.Id, hostingId: hosting.Id);
 
-        var peopleRoomGlobalFilterPeopleNameQueried = await QueryFirst<PeopleRoomViewModel>(_peopleRoomClient, new PeopleRoomFilter(peopleId: peopleRoom.PeopleId, roomId: peopleRoom.RoomId, hostingId: peopleRoom.HostingId, globalFilter: people.Name));
-        var peopleRoomGlobalFilterRoomNumberQueried = await QueryFirst<PeopleRoomViewModel>(_peopleRoomClient, new PeopleRoomFilter(peopleId: peopleRoom.PeopleId, roomId: peopleRoom.RoomId, hostingId: peopleRoom.HostingId, globalFilter: room.Number));
+        var prhGlobalFilterPeopleNameQueried = await QueryFirst<PeopleRoomHostingViewModel>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: prh.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId, globalFilter: people.Name));
+        var prhGlobalFilterRoomNumberQueried = await QueryFirst<PeopleRoomHostingViewModel>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: prh.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId, globalFilter: room.Number));
 
-        Assert.Equivalent(peopleRoom, peopleRoomGlobalFilterPeopleNameQueried);
-        Assert.Equivalent(peopleRoom, peopleRoomGlobalFilterRoomNumberQueried);
+        Assert.Equivalent(prh, prhGlobalFilterPeopleNameQueried);
+        Assert.Equivalent(prh, prhGlobalFilterRoomNumberQueried);
     }
 }

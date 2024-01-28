@@ -9,12 +9,12 @@ namespace LNSF.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class PeopleRoomController : ControllerBase
+public class PeopleRoomHostingController : ControllerBase
 {
-    private readonly IPeopleRoomService _service;
+    private readonly IPeopleRoomHostingService _service;
     private readonly IMapper _mapper;
 
-    public PeopleRoomController(IPeopleRoomService service,
+    public PeopleRoomHostingController(IPeopleRoomHostingService service,
         IMapper mapper)
     {
         _service = service;
@@ -26,10 +26,10 @@ public class PeopleRoomController : ControllerBase
     /// </summary>
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<List<PeopleRoomViewModel>>> Get([FromQuery] PeopleRoomFilter filter)
+    public async Task<ActionResult<List<PeopleRoomHostingViewModel>>> Get([FromQuery] PeopleRoomHostingFilter filter)
     {
-        var peopleRooms = await _service.Query(filter);
-        return _mapper.Map<List<PeopleRoomViewModel>>(peopleRooms);
+        var peopleRoomHostings = await _service.Query(filter);
+        return _mapper.Map<List<PeopleRoomHostingViewModel>>(peopleRoomHostings);
     }
 
     /// <summary>

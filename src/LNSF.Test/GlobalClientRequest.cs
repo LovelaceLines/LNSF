@@ -30,7 +30,7 @@ public class GlobalClientRequest
     public readonly HttpClient _peopleClient = new() { BaseAddress = new Uri($"{BaseUrl}People/") };
     public readonly HttpClient _addPeopleToRoomClient = new() { BaseAddress = new Uri($"{BaseUrl}People/add-people-to-room/") };
     public readonly HttpClient _removePeopleFromRoom = new() { BaseAddress = new Uri($"{BaseUrl}People/remove-people-from-room/") };
-    public readonly HttpClient _peopleRoomClient = new() { BaseAddress = new Uri($"{BaseUrl}PeopleRoom/") };
+    public readonly HttpClient _peopleRoomHostingClient = new() { BaseAddress = new Uri($"{BaseUrl}PeopleRoomHosting/") };
     public readonly HttpClient _roomClient = new() { BaseAddress = new Uri($"{BaseUrl}Room/") };
     public readonly HttpClient _emergencyContactClient = new() { BaseAddress = new Uri($"{BaseUrl}EmergencyContact/") };
     public readonly HttpClient _tourClient = new() { BaseAddress = new Uri($"{BaseUrl}Tour/") };
@@ -184,7 +184,7 @@ public class GlobalClientRequest
     public async Task<PeopleViewModel> GetPeople(string? name = null, Gender? gender = null, DateTime? birthDate = null, MaritalStatus? maritalStatus = null, RaceColor? raceColor = null, string? email = null, string? rg = null, string? issuingBody = null, string? cpf = null, string? street = null, string? houseNumber = null, string? neighborhood = null, string? city = null, string? state = null, string? phone = null, string? note = null) =>
         await Post<PeopleViewModel>(_peopleClient, new PeoplePostViewModelFake(name: name, gender: gender, birthDate: birthDate, maritalStatus: maritalStatus, raceColor: raceColor, email: email, rg: rg, issuingBody: issuingBody, cpf: cpf, street: street, houseNumber: houseNumber, neighborhood: neighborhood, city: city, state: state, phone: phone, note: note).Generate());
 
-    public async Task<PeopleRoomViewModel> GetPeopleRoom(int? peopleId = null, int? roomId = null, int? hostingId = null, int? beds = null)
+    public async Task<PeopleRoomHostingViewModel> GetPeopleRoomHosting(int? peopleId = null, int? roomId = null, int? hostingId = null, int? beds = null)
     {
         var patient = new PatientViewModel();
 
@@ -206,8 +206,8 @@ public class GlobalClientRequest
             hostingId = hosting.Id;
         }
 
-        var peopleRoomFake = new PeopleRoomViewModelFake(peopleId: peopleId.Value, roomId: roomId.Value, hostingId: hostingId.Value).Generate();
-        return await Post<PeopleRoomViewModel>(_addPeopleToRoomClient, peopleRoomFake);
+        var peopleRoomHostingFake = new PeopleRoomHostingViewModelFake(peopleId: peopleId.Value, roomId: roomId.Value, hostingId: hostingId.Value).Generate();
+        return await Post<PeopleRoomHostingViewModel>(_addPeopleToRoomClient, peopleRoomHostingFake);
     }
 
     public async Task<EmergencyContactViewModel> GetEmergencyContact(int? id = null, int? peopleId = null, string? name = null, string? phone = null)

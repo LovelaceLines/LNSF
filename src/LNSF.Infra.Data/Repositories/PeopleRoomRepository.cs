@@ -9,24 +9,24 @@ using System.Linq.Expressions;
 
 namespace LNSF.Infra.Data.Repositories;
 
-public class PeopleRoomRepository : BaseRepository<PeopleRoom>, IPeopleRoomRepository
+public class PeopleRoomHostingRepository : BaseRepository<PeopleRoomHosting>, IPeopleRoomHostingRepository
 {
     private readonly AppDbContext _context;
-    private readonly IQueryable<PeopleRoom> _peoplesRooms;
+    private readonly IQueryable<PeopleRoomHosting> _peoplesRooms;
     private readonly IQueryable<People> _peoples;
     private readonly IQueryable<Room> _rooms;
     private readonly IQueryable<Hosting> _hostings;
 
-    public PeopleRoomRepository(AppDbContext context) : base(context)
+    public PeopleRoomHostingRepository(AppDbContext context) : base(context)
     {
         _context = context;
-        _peoplesRooms = _context.PeoplesRooms.AsNoTracking();
+        _peoplesRooms = _context.PeoplesRoomsHostings.AsNoTracking();
         _peoples = _context.Peoples.AsNoTracking();
         _rooms = _context.Rooms.AsNoTracking();
         _hostings = _context.Hostings.AsNoTracking();
     }
 
-    public async Task<List<PeopleRoom>> Query(PeopleRoomFilter filter)
+    public async Task<List<PeopleRoomHosting>> Query(PeopleRoomHostingFilter filter)
     {
         var query = _peoplesRooms;
 
@@ -56,12 +56,12 @@ public class PeopleRoomRepository : BaseRepository<PeopleRoom>, IPeopleRoomRepos
         return peoplesRooms;
     }
 
-    private IQueryable<PeopleRoom> QueryGlobal(IQueryable<PeopleRoom> query, string globalFilter, IQueryable<People> peoples, IQueryable<Room> rooms) =>
+    private IQueryable<PeopleRoomHosting> QueryGlobal(IQueryable<PeopleRoomHosting> query, string globalFilter, IQueryable<People> peoples, IQueryable<Room> rooms) =>
         query.Where(pr => PeopleRepository.QueryGlobalFilter(peoples, globalFilter).Any(p => p.Id == pr.PeopleId) ||
             RoomRepository.QueryGlobal(rooms, globalFilter).Any(r => r.Id == pr.RoomId));
 
-    private static Expression<Func<PeopleRoom, PeopleRoom>> Build(bool getPeople, bool getRoom, bool getHosting) =>
-        pr => new PeopleRoom
+    private static Expression<Func<PeopleRoomHosting, PeopleRoomHosting>> Build(bool getPeople, bool getRoom, bool getHosting) =>
+        pr => new PeopleRoomHosting
         {
             PeopleId = pr.PeopleId,
             RoomId = pr.RoomId,
@@ -71,22 +71,22 @@ public class PeopleRoomRepository : BaseRepository<PeopleRoom>, IPeopleRoomRepos
             Hosting = getHosting == true ? pr.Hosting : null
         };
 
-    public static IQueryable<PeopleRoom> QueryPeopleId(IQueryable<PeopleRoom> query, int id, IQueryable<People> peoples) =>
+    public static IQueryable<PeopleRoomHosting> QueryPeopleId(IQueryable<PeopleRoomHosting> query, int id, IQueryable<People> peoples) =>
         query.Where(pr => PeopleRepository.QueryPeopleId(peoples, id).Any(p => p.Id == pr.PeopleId));
 
-    public static IQueryable<PeopleRoom> QueryRoomId(IQueryable<PeopleRoom> query, int id, IQueryable<Room> rooms) =>
+    public static IQueryable<PeopleRoomHosting> QueryRoomId(IQueryable<PeopleRoomHosting> query, int id, IQueryable<Room> rooms) =>
         query.Where(pr => RoomRepository.QueryRoomId(rooms, id).Any(r => r.Id == pr.RoomId));
 
-    public static IQueryable<PeopleRoom> QueryHostingId(IQueryable<PeopleRoom> query, int id, IQueryable<Hosting> hostings) =>
+    public static IQueryable<PeopleRoomHosting> QueryHostingId(IQueryable<PeopleRoomHosting> query, int id, IQueryable<Hosting> hostings) =>
         query.Where(pr => HostingRepository.QueryHostingId(hostings, id).Any(h => h.Id == pr.HostingId));
 
-    public static IQueryable<PeopleRoom> QueryCheckIn(IQueryable<PeopleRoom> query, DateTime checkIn, IQueryable<Hosting> hostings) =>
+    public static IQueryable<PeopleRoomHosting> QueryCheckIn(IQueryable<PeopleRoomHosting> query, DateTime checkIn, IQueryable<Hosting> hostings) =>
         query.Where(pr => HostingRepository.QueryCheckIn(hostings, checkIn).Any(h => h.Id == pr.HostingId));
 
-    public static IQueryable<PeopleRoom> QueryCheckOut(IQueryable<PeopleRoom> query, DateTime checkOut, IQueryable<Hosting> hostings) =>
+    public static IQueryable<PeopleRoomHosting> QueryCheckOut(IQueryable<PeopleRoomHosting> query, DateTime checkOut, IQueryable<Hosting> hostings) =>
         query.Where(pr => HostingRepository.QueryCheckOut(hostings, checkOut).Any(h => h.Id == pr.HostingId));
 
-    public static IQueryable<PeopleRoom> QueryHasVacancy(IQueryable<PeopleRoom> query, bool hasVacancy, DateTime checkIn, DateTime checkOut, IQueryable<PeopleRoom> peoplesRooms) =>
+    public static IQueryable<PeopleRoomHosting> QueryHasVacancy(IQueryable<PeopleRoomHosting> query, bool hasVacancy, DateTime checkIn, DateTime checkOut, IQueryable<PeopleRoomHosting> peoplesRooms) =>
         hasVacancy ?
             query.Where(pr => pr.Room!.Beds >
                 peoplesRooms.Count(pr2 => pr2.RoomId == pr.RoomId &&
@@ -95,29 +95,29 @@ public class PeopleRoomRepository : BaseRepository<PeopleRoom>, IPeopleRoomRepos
                 peoplesRooms.Count(pr2 => pr2.RoomId == pr.RoomId &&
                     checkIn <= pr2.Hosting!.CheckIn && pr2.Hosting.CheckOut <= checkOut));
 
-    public static IQueryable<PeopleRoom> QueryVacancy(IQueryable<PeopleRoom> query, int vacancy, DateTime checkIn, DateTime checkOut, IQueryable<PeopleRoom> peoplesRooms) =>
+    public static IQueryable<PeopleRoomHosting> QueryVacancy(IQueryable<PeopleRoomHosting> query, int vacancy, DateTime checkIn, DateTime checkOut, IQueryable<PeopleRoomHosting> peoplesRooms) =>
         query.Where(pr => pr.Room!.Beds - peoplesRooms.Count(pr2 => pr2.RoomId == pr.RoomId &&
             checkIn <= pr2.Hosting!.CheckIn && pr2.Hosting.CheckOut <= checkOut) >= vacancy);
 
-    public async Task<bool> ExistsHosting(PeopleRoom peopleRoom) =>
-        await _peoplesRooms.AnyAsync(pr => pr.PeopleId == peopleRoom.PeopleId &&
-            pr.HostingId == peopleRoom.HostingId);
+    public async Task<bool> ExistsHosting(PeopleRoomHosting peopleRoomHosting) =>
+        await _peoplesRooms.AnyAsync(pr => pr.PeopleId == peopleRoomHosting.PeopleId &&
+            pr.HostingId == peopleRoomHosting.HostingId);
 
-    public async Task<bool> ExistsByPeopleRoom(PeopleRoom peopleRoom) =>
-        await _peoplesRooms.AnyAsync(pr => pr.PeopleId == peopleRoom.PeopleId &&
-            pr.RoomId == peopleRoom.RoomId && pr.HostingId == peopleRoom.HostingId);
+    public async Task<bool> ExistsByPeopleRoomHosting(PeopleRoomHosting peopleRoomHosting) =>
+        await _peoplesRooms.AnyAsync(pr => pr.PeopleId == peopleRoomHosting.PeopleId &&
+            pr.RoomId == peopleRoomHosting.RoomId && pr.HostingId == peopleRoomHosting.HostingId);
 
-    public async Task<bool> HaveVacancy(PeopleRoom peopleRoom)
+    public async Task<bool> HaveVacancy(PeopleRoomHosting peopleRoomHosting)
     {
-        var room = await _rooms.FirstOrDefaultAsync(r => r.Id == peopleRoom.RoomId);
+        var room = await _rooms.FirstOrDefaultAsync(r => r.Id == peopleRoomHosting.RoomId);
         var beds = room!.Beds;
-        var occupation = await GetOccupation(peopleRoom);
+        var occupation = await GetOccupation(peopleRoomHosting);
 
         return beds > occupation;
     }
 
-    public async Task<int> GetOccupation(PeopleRoom peopleRoom) =>
-        await _peoplesRooms.CountAsync(pr => pr.RoomId == peopleRoom.RoomId &&
-            pr.Hosting!.CheckIn <= peopleRoom.Hosting!.CheckIn && peopleRoom.Hosting.CheckIn <= pr.Hosting.CheckOut &&
-            pr.Hosting.CheckIn <= peopleRoom.Hosting.CheckOut && peopleRoom.Hosting.CheckOut <= pr.Hosting.CheckOut);
+    public async Task<int> GetOccupation(PeopleRoomHosting peopleRoomHosting) =>
+        await _peoplesRooms.CountAsync(pr => pr.RoomId == peopleRoomHosting.RoomId &&
+            pr.Hosting!.CheckIn <= peopleRoomHosting.Hosting!.CheckIn && peopleRoomHosting.Hosting.CheckIn <= pr.Hosting.CheckOut &&
+            pr.Hosting.CheckIn <= peopleRoomHosting.Hosting.CheckOut && peopleRoomHosting.Hosting.CheckOut <= pr.Hosting.CheckOut);
 }

@@ -12,7 +12,7 @@ public class AppDbContext : IdentityDbContext<IdentityUser>
 
     public DbSet<People> Peoples { get; set; }
     public DbSet<Room> Rooms { get; set; }
-    public DbSet<PeopleRoom> PeoplesRooms { get; set; }
+    public DbSet<PeopleRoomHosting> PeoplesRoomsHostings { get; set; }
     public DbSet<Tour> Tours { get; set; }
     public DbSet<EmergencyContact> EmergencyContacts { get; set; }
     public DbSet<Hospital> Hospitals { get; set; }
@@ -31,7 +31,7 @@ public class AppDbContext : IdentityDbContext<IdentityUser>
 
         builder.ApplyConfiguration(new PeoplesConfiguration());
         builder.ApplyConfiguration(new RoomsConfiguration());
-        builder.ApplyConfiguration(new PeoplesRoomsConfiguration());
+        builder.ApplyConfiguration(new PeoplesRoomsHostingsConfiguration());
         builder.ApplyConfiguration(new ToursConfiguration());
         builder.ApplyConfiguration(new EmergencyContactsConfiguration());
         builder.ApplyConfiguration(new HospitalsConfiguration());
