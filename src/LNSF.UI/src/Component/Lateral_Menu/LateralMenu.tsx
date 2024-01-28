@@ -72,6 +72,10 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
           {
             pathOption: '/inicio/hospedagens/gerenciar/cadastrar',
             labelOption: 'Gerenciar',
+          },
+          {
+            pathOption: '/inicio/hospedagens/pessoashospedadas/visualizar',
+            labelOption: 'Pessoas Hospedadas',
           }
         ],
       },
@@ -228,6 +232,7 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
         marginBottom={1}
         display='flex'
         flexDirection='column'
+        overflow='hidden'
       >
         <AppBar
           component={Toolbar}

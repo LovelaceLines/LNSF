@@ -10,6 +10,7 @@ import { ViewHosting } from '../Pages/hosting/viewHosting/ViewHosting';
 import { Footer } from '../Component/Layouts/footer/Footer';
 import { NotFound } from '../Pages/NotFound/NotFound';
 import { ProtectedRoutes } from '.';
+import { ViewPeopleRoomHosting } from '../Pages/peopleRoomHosting/ViewPeopleRoomHosting';
 
 export const AppRoutes = () => {
   const { isAdministrador, isAssistenteSocial, isDesenvolvedor, isSecretario, isVoluntario } = useContext(RoleContext);
@@ -30,6 +31,9 @@ export const AppRoutes = () => {
 
         {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
           <Route path="/inicio/hospedagens/visualizar" element={<Dashboard children={<ViewHosting />} />} />}
+
+        {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
+          <Route path='/inicio/hospedagens/pessoashospedadas/visualizar' element={<Dashboard children={<ViewPeopleRoomHosting />} />} />}
 
         {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
           <Route path="/inicio/pessoas/visualizar" element={<Dashboard children={<ViewPeople />} />} />}

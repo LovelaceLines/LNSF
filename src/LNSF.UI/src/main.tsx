@@ -10,6 +10,7 @@ import { PatientProvider } from './Contexts/patientContext/index.tsx'
 import { HostingProvider } from './Contexts/hostingContext/index.tsx'
 import { HostingEscortProvider } from './Contexts/hostingEscortContext/hostingEscortContext.tsx'
 import { FamilyGroupProfileProvider } from './Contexts/familyGroupProfileContext/index.tsx'
+import { PeopleRoomHostingProvider } from './Contexts/peopleRoomHosting/index.tsx'
 
 
 
@@ -32,7 +33,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                                 <FamilyGroupProfileProvider>
                                   <HostingEscortProvider>
                                     <HostingProvider>
-                                      <App />
+                                      <PeopleRoomHostingProvider>
+                                        <App />
+                                      </PeopleRoomHostingProvider>
                                     </HostingProvider>
                                   </HostingEscortProvider>
                                 </FamilyGroupProfileProvider>

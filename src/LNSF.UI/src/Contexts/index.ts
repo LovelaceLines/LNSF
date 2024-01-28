@@ -22,3 +22,6 @@ export * from './accountContext/index'
 
 export * from './emergencyContact/index'
 export * from './emergencyContact/type'
+
+export * from './peopleRoomHosting/index'
+export * from './peopleRoomHosting/type'

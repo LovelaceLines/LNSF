@@ -166,6 +166,17 @@ export class LocalStorage {
     localStorage.setItem('@lnsf:columnVisibilityFamilyGroupProfile', JSON.stringify(columnVisibilityFamilyGroupProfile));
   }
 
+  static getColumnPeopleRoomHosting(): { [x: string]: boolean } {
+    const columnPeopleRoomHosting = localStorage.getItem('@lnsf:columnPeopleRoomHosting');
+
+    if (!columnPeopleRoomHosting) return { id: false };
+    return JSON.parse(columnPeopleRoomHosting);
+  }
+
+  static setColumnPeopleRoomHosting(columnPeopleRoomHosting: { [x: string]: boolean }) {
+    localStorage.setItem('@lnsf:columnPeopleRoomHosting', JSON.stringify(columnPeopleRoomHosting));
+  }
+
   static clearAll() {
     localStorage.clear();
   }
