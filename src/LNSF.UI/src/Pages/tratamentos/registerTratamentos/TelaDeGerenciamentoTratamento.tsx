@@ -30,28 +30,64 @@ export const TelaDeGerenciamentoTratamentos: React.FC = () => {
 
     const fetchTreatments = async () => {
         const treatments = await getTreatments();
+        formRef.current?.setData(treatments[0]);
         setTreatments(treatments);
     };
 
     const registerTreatments = async (data: iTreatmentPost) => {
         try {
-            formValidateSchema
-                .validate(data, { abortEarly: false });
-            const idata: iTreatmentPost = {
-                name: data.name,
-                type: data.type,
-            };
+            await formValidateSchema.validate(data, { abortEarly: false });
 
-            const createdTreatments = await postTreatment(idata);
-            console.log("created", createdTreatments)
+            const createdTreatments = await postTreatment(data);
+            console.log("created", createdTreatments);
+
             if (createdTreatments) {
                 toast.success('Tratamento cadastrado!');
                 navigate('/inicio/tratamentos/visualizar');
             }
         } catch (error) {
-            console.error(error);
-        }
+            if (error instanceof yup.ValidationError) {
+                const ValidationError: IFormErrorsCustom = {};
 
+                error.inner.forEach((error) => {
+                    if (!error.path) return;
+                    ValidationError[error.path] = error.message;
+                });
+
+                console.log(error.errors);
+                formRef.current?.setErrors(ValidationError);
+            } else {
+                console.error(error);
+            }
+        }
+    };
+
+    const updadeTreatments = async (data: iTreatment) => {
+        try {
+            await formValidateSchema.validate(data, { abortEarly: false });
+
+            const updatedTreatments = await putTreatment(data);
+            console.log("updated", updatedTreatments);
+
+            if (updatedTreatments) {
+                toast.success('Tratamento cadastrado!');
+                navigate('/inicio/tratamentos/visualizar');
+            }
+        } catch (error) {
+            if (error instanceof yup.ValidationError) {
+                const ValidationError: IFormErrorsCustom = {};
+
+                error.inner.forEach((error) => {
+                    if (!error.path) return;
+                    ValidationError[error.path] = error.message;
+                });
+
+                console.log(error.errors);
+                formRef.current?.setErrors(ValidationError);
+            } else {
+                console.error(error);
+            }
+        }
     };
 
     useEffect(() => {
@@ -65,161 +101,119 @@ export const TelaDeGerenciamentoTratamentos: React.FC = () => {
 
     console.log("/id", id)
     const handSave = (dados: iTreatmentPost) => {
+        setIsLoading(true)
 
-        console.log("dados: ", dados)
-        registerTreatments(dados)
-        // formValidateSchema.
-        //     validate(dados, { abortEarly: false })
-        //     .then((dadosValidados) => {
-        //         setIsLoading(true)
+        if (id === 'cadastrar') {
 
-        //         if (id === 'cadastrar') {
+            const data: iTreatmentPost = {
+                name: dados.name,
+                type: Number(dados.type)
+            }
 
-        //             const data: iTreatmentObject = {
-        //                 name: dadosValidados.name,
-        //                 type: Number(dadosValidados.type)
-        //             }
+            registerTreatments(data)
 
-        //             registerTreatment(data)
-        //                 .then((response) => {
-        //                     if (response instanceof Error) {
-        //                         setIsLoading(false);
-        //                     } else {
-        //                         setIsLoading(false);
-        //                         if (isSaveAndClose()) {
-        //                             navigate('/inicio/tratamentos/visualizar')
-        //                         } else {
-        //                             navigate(`/inicio/tratamentos/gerenciar/${response.id}`)
-        //                         }
-        //                     }
-        //                 })
-        //                 .catch((error) => {
-        //                     setIsLoading(false);
-        //                     console.error('Detalhes do erro:', error);
-        //                 });
-        //         } else {
+        } else {
 
-        //             const data: iTreatmentObject = {
-        //                 id: Number(id),
-        //                 name: dadosValidados.name,
-        //                 type: Number(dadosValidados.type)
-        //             }
+            const data: iTreatment = {
+                id: Number(id),
+                name: dados.name,
+                type: Number(dados.type)
+            }
+            updadeTreatments(data)
 
-        //             updateTreatment(data)
-        //                 .then((response) => {
-        //                     if (response instanceof Error) {
-        //                         setIsLoading(false);
-        //                     } else {
-        //                         setIsLoading(false);
-        //                     }
-        //                 })
-        //                 .catch((error) => {
-        //                     setIsLoading(false);
-        //                     console.error('Detalhes do erro:', error);
-        //                 });
-        //         }
-        //     })
-        //     .catch((errors: yup.ValidationError) => {
-        //         const ValidationError: IFormErrorsCustom = {}
-
-        //         errors.inner.forEach(error => {
-        //             if (!error.path) return;
-        //             ValidationError[error.path] = error.message;
-        //         });
-        //         console.log(errors.errors);
-        //         formRef.current?.setErrors(ValidationError)
-        //     })
+        }
     };
 
-    return (
-        <Box
-            display='flex'
-            flexDirection='column'
-            width='100%'
-        >
-            <Box>
-                <Toolbar sx={{ flexGrow: 1, display: 'flex', flexDirection: smDown ? 'column' : 'row', alignItems: smDown ? 'left' : 'flex-end' }}>
-                    <Typography
-                        variant={smDown ? "h5" : "h4"}
-                        noWrap
-                        component="div"
-                        sx={{ flexGrow: 1, display: 'flex', alignItems: 'flex-end' }}
-                    >
-                        {!smDown && (<VaccinesIcon color='primary' sx={{ fontSize: '2.7rem', paddingRight: '10px' }} />)}
-                        Tratamento
-                    </Typography>
+return (
+    <Box
+        display='flex'
+        flexDirection='column'
+        width='100%'
+    >
+        <Box>
+            <Toolbar sx={{ flexGrow: 1, display: 'flex', flexDirection: smDown ? 'column' : 'row', alignItems: smDown ? 'left' : 'flex-end' }}>
+                <Typography
+                    variant={smDown ? "h5" : "h4"}
+                    noWrap
+                    component="div"
+                    sx={{ flexGrow: 1, display: 'flex', alignItems: 'flex-end' }}
+                >
+                    {!smDown && (<VaccinesIcon color='primary' sx={{ fontSize: '2.7rem', paddingRight: '10px' }} />)}
+                    Tratamento
+                </Typography>
 
-                    < ButtonAction
-                        mostrarBotaoNovo={false}
-                        mostrarBotaoApagar={false}
-                        mostrarBotaoSalvar={id === 'cadastrar' ? false : true}
-                        mostrarBotaoSalvarEFechar={id !== 'cadastrar' ? false : true}
-                        aoClicarEmSalvar={id !== 'cadastrar' ? save : undefined}
-                        aoClicarEmSalvarEFechar={id === 'cadastrar' ? saveAndClose : undefined}
-                        aoClicarEmVoltar={() => { navigate('/inicio/tratamentos/visualizar') }}
-                    />
-                </Toolbar>
-            </Box>
-            <Divider />
-            <Box style={{ maxHeight: '350px', overflowY: 'auto' }}>
-                <Form ref={formRef} onSubmit={(dados) => {handSave(dados)
-                console.log("dados: ", dados)}
-                }>
-                    <Box margin={1} display='flex' flexDirection='column' >
-                        <Grid container direction='column' padding={2} spacing={2}>
-                            {isLoadind && (
-                                <Grid item>
-                                    <LinearProgress variant="indeterminate" />
-                                </Grid>
-                            )}
-                            <Grid item>
-                                <Typography variant={smDown ? "h6" : "h5"} >
-                                    {(id !== 'cadastrar') ? 'Editar este tratamento' : 'Cadastrar um novo tratamento'}
-                                    <Divider />
-                                </Typography>
-                            </Grid>
-                            <Grid container item direction='row' spacing={2}>
-                                <Grid item xs={6}>
-                                    <TextFieldCustom
-                                        fullWidth
-                                        label="Nome"
-                                        name="name"
-                                        disabled={isLoadind}
-                                    />
-                                </Grid>
-                                <Grid item xs={3}>
-                                    <TextSelectCustom
-                                        fullWidth
-                                        name="type"
-                                        menu={[
-                                            {
-                                                nome: 'Cancer',
-                                                id: '0'
-                                            },
-                                            {
-                                                nome: 'Pré-Transplante',
-                                                id: '1'
-                                            },
-                                            {
-                                                nome: 'Pós-Transplante',
-                                                id: '2'
-                                            },
-                                            {
-                                                nome: 'Outro',
-                                                id: '3'
-                                            }
-                                        ]}
-                                        disabled={isLoadind}
-                                        label="Tipo"
-
-                                    />
-                                </Grid>
-
-                            </Grid>
-                        </Grid>
-                    </Box>
-                </Form>
-            </Box>
+                < ButtonAction
+                    mostrarBotaoVoltar
+                    mostrarBotaoSalvar={id === 'cadastrar' ? false : true}
+                    mostrarBotaoSalvarEFechar={id !== 'cadastrar' ? false : true}
+                    aoClicarEmSalvar={id !== 'cadastrar' ? save : undefined}
+                    aoClicarEmSalvarEFechar={id === 'cadastrar' ? saveAndClose : undefined}
+                    aoClicarEmVoltar={() => { navigate('/inicio/tratamentos/visualizar') }}
+                />
+            </Toolbar>
         </Box>
-    )
+        <Divider />
+        <Box style={{ maxHeight: '350px', overflowY: 'auto' }}>
+            <Form ref={formRef} onSubmit={(dados) => {
+                handSave(dados)
+                console.log("dados: ", dados)
+            }
+            }>
+                <Box margin={1} display='flex' flexDirection='column' >
+                    <Grid container direction='column' padding={2} spacing={2}>
+                        {isLoadind && (
+                            <Grid item>
+                                <LinearProgress variant="indeterminate" />
+                            </Grid>
+                        )}
+                        <Grid item>
+                            <Typography variant={smDown ? "h6" : "h5"} >
+                                {(id !== 'cadastrar') ? 'Editar este tratamento' : 'Cadastrar um novo tratamento'}
+                                <Divider />
+                            </Typography>
+                        </Grid>
+                        <Grid container item direction='row' spacing={2}>
+                            <Grid item xs={6}>
+                                <TextFieldCustom
+                                    fullWidth
+                                    label="Nome"
+                                    name="name"
+                                    disabled={isLoadind}
+                                />
+                            </Grid>
+                            <Grid item xs={3}>
+                                <TextSelectCustom
+                                    fullWidth
+                                    name="type"
+                                    menu={[
+                                        {
+                                            nome: 'Cancer',
+                                            id: '0'
+                                        },
+                                        {
+                                            nome: 'Pré-Transplante',
+                                            id: '1'
+                                        },
+                                        {
+                                            nome: 'Pós-Transplante',
+                                            id: '2'
+                                        },
+                                        {
+                                            nome: 'Outro',
+                                            id: '3'
+                                        }
+                                    ]}
+                                    disabled={isLoadind}
+                                    label="Tipo"
+
+                                />
+                            </Grid>
+
+                        </Grid>
+                    </Grid>
+                </Box>
+            </Form>
+        </Box>
+    </Box>
+)
 }

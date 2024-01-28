@@ -4,7 +4,7 @@ import { PeopleContext, TourContext, iTourRegister, iTourRegisterYupSchema } fro
 import { Box, Grid, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { AutoCompletePeople, ButtonAction } from '../../../Component';
 import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
-import { TextFieldCustom, useCustomForm } from '../../../Component/forms';
+import { IFormErrorsCustom, TextFieldCustom, useCustomForm } from '../../../Component/forms';
 import * as yup from 'yup';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
@@ -24,8 +24,7 @@ export const RegisterTour: React.FC = () => {
 
     const registerTour = async (data: iTourRegisterYupSchema) => {
         try {
-            formValidateSchema
-                .validate(data, { abortEarly: false });
+            await formValidateSchema.validate(data, { abortEarly: false });
 
             const idata: iTourRegister = {
                 peopleId: data.id,
@@ -38,7 +37,19 @@ export const RegisterTour: React.FC = () => {
                 navigate('/inicio/registrodiario/visualizar')
             }
         } catch (error) {
-            console.error(error);
+            if (error instanceof yup.ValidationError) {
+                const ValidationError: IFormErrorsCustom = {};
+
+                error.inner.forEach((error) => {
+                    if (!error.path) return;
+                    ValidationError[error.path] = error.message;
+                });
+
+                console.log(error.errors);
+                formRef.current?.setErrors(ValidationError);
+            } else {
+                console.error(error);
+            }
         }
     };
 
