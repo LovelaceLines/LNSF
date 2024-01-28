@@ -1,12 +1,12 @@
-﻿using System.Net;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using LNSF.Api.ViewModels;
+﻿using LNSF.Api.ViewModels;
 using LNSF.Domain.Enums;
 using LNSF.Domain.Exceptions;
 using LNSF.Test.Fakers;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using System.Net;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using Xunit;
 
 [assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly)]
