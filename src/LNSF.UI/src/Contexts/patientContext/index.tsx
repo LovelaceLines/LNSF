@@ -2,7 +2,7 @@ import { createContext, useCallback, useState } from "react";
 import { Api } from "../../services/api/axios";
 import { toast } from "react-toastify";
 import { Environment } from "../../environment";
-import { iPatient, iPatientObject, iPatientProvider, iPatientTypes, iaddTreatmentToPatient } from "./type";
+import { iPatient, iPatientFilter, iPatientObject, iPatientProvider, iPatientTypes, iaddTreatmentToPatient } from "./type";
 
 export const PatientContext = createContext({} as iPatientTypes);
 
@@ -120,7 +120,7 @@ export const PatientProvider = ({ children }: iPatientProvider) => {
 
     const deletePatientTreatmentFromPatient = useCallback(async (data: iaddTreatmentToPatient) => {
         try {
-            const response = await Api.delete('/Patient/remove-treatment-from-patient', {data});
+            const response = await Api.delete('/Patient/remove-treatment-from-patient', { data });
 
             if (response.status === 200) {
                 return response.data as iaddTreatmentToPatient;
@@ -173,6 +173,35 @@ export const PatientProvider = ({ children }: iPatientProvider) => {
         return 0;
     };
 
+    const getPatients = useCallback(async (filter: iPatientFilter): Promise<iPatientObject[]> => {
+        const res = await Api.get<iPatientObject[]>('/Patient', { params: filter });
+        const patients = res.data;
+        return patients;
+    }, []);
+
+    const getPatientById = useCallback(async (id: number): Promise<iPatientObject> => {
+        const res = await Api.get<iPatientObject>('/Patient/', { params: { id } });
+        const patient = res.data;
+        return patient;
+    }, []);
+
+    const getCount = useCallback(async (): Promise<number> => {
+        const res = await Api.get<number>('/Patient/count');
+        const count = res.data;
+        return count;
+    }, []);
+
+    const postPatient = useCallback(async (data: iPatient): Promise<iPatientObject> => {
+        const res = await Api.post<iPatientObject>('/Patient', data);
+        const patient = res.data;
+        return patient;
+    }, []);
+
+    const putPatient = useCallback(async (data: iPatientObject): Promise<iPatientObject> => {
+        const res = await Api.put<iPatientObject>('/Patient', data);
+        const patient = res.data;
+        return patient;
+    }, []);
 
     return (
         <PatientContext.Provider
@@ -186,7 +215,13 @@ export const PatientProvider = ({ children }: iPatientProvider) => {
                 addTreatmentToPatient,
                 deletePatientTreatmentFromPatient,
                 patientTreatment,
-                patientTreatmentCount
+                patientTreatmentCount,
+
+                getPatients,
+                getPatientById,
+                getCount,
+                postPatient,
+                putPatient
             }}>
             {children}
         </PatientContext.Provider>
