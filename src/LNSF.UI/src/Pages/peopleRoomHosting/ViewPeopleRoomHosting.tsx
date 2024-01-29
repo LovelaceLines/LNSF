@@ -12,6 +12,7 @@ import { MRT_ColumnDef, MRT_ColumnFiltersState, MRT_PaginationState, MRT_Row, MR
 import { LocalStorage } from '../../Global';
 import { iOrderBy, iPage } from '../../Contexts/types';
 import { MRT_Localization_PT_BR } from 'material-react-table/locales/pt-BR';
+import { format, parseISO } from 'date-fns';
 
 export const ViewPeopleRoomHosting: React.FC = () => {
   const navigate = useNavigate();
@@ -80,7 +81,10 @@ export const ViewPeopleRoomHosting: React.FC = () => {
         header: 'Check-in',
         size: 50,
         enableColumnActions: false,
-        enableSorting: false,
+        Cell: ({ row }) => {
+          const checkIn = row.original.hosting.checkIn;
+          return format(parseISO(checkIn.toString()), 'dd/MM/yyyy HH:mm')
+        }
       },
       {
         accessorKey: 'hosting.checkOut',
@@ -88,6 +92,10 @@ export const ViewPeopleRoomHosting: React.FC = () => {
         size: 50,
         enableColumnActions: false,
         enableSorting: false,
+        Cell: ({ row }) => {
+          const checkOut = row.original.hosting.checkOut;
+          return format(parseISO(checkOut.toString()), 'dd/MM/yyyy HH:mm')
+        }
       }
     ],
     [],

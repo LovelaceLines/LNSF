@@ -44,8 +44,8 @@ public class PeopleRoomHostingRepository : BaseRepository<PeopleRoomHosting>, IP
         if (filter.Vacancy.HasValue && filter.CheckIn.HasValue && filter.CheckOut.HasValue)
             query = QueryVacancy(query, filter.Vacancy.Value, filter.CheckIn.Value, filter.CheckOut.Value, _peoplesRooms);
 
-        if (filter.OrderBy == OrderBy.Ascending) query = query.OrderBy(pr => pr.RoomId);
-        else if (filter.OrderBy == OrderBy.Descending) query = query.OrderByDescending(pr => pr.RoomId);
+        if (filter.OrderBy == OrderBy.Ascending) query = query.OrderBy(pr => pr.HostingId);
+        else if (filter.OrderBy == OrderBy.Descending) query = query.OrderByDescending(pr => pr.HostingId);
 
         var peoplesRooms = await query
             .Skip(filter.Page.Page * filter.Page.PageSize)
