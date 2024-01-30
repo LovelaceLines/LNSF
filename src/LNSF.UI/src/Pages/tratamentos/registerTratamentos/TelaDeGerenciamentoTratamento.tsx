@@ -25,13 +25,12 @@ export const TelaDeGerenciamentoTratamentos: React.FC = () => {
     const navigate = useNavigate();
     const [isLoadind, setIsLoading] = useState(false);
     const { getTreatments, postTreatment, putTreatment } = useContext(TreatmentContext);
-    const [treatments, setTreatments] = useState<iTreatment[]>([]);
     const { formRef, save, isSaveAndClose, saveAndClose } = useCustomForm();
 
     const fetchTreatments = async () => {
-        const treatments = await getTreatments();
+        const data: iTreatmentObject = { id: Number(id) }
+        const treatments = await getTreatments(data);
         formRef.current?.setData(treatments[0]);
-        setTreatments(treatments);
     };
 
     const registerTreatments = async (data: iTreatmentPost) => {
@@ -70,7 +69,7 @@ export const TelaDeGerenciamentoTratamentos: React.FC = () => {
             console.log("updated", updatedTreatments);
 
             if (updatedTreatments) {
-                toast.success('Tratamento cadastrado!');
+                toast.success('Tratamento atualizado!');
                 navigate('/inicio/tratamentos/visualizar');
             }
         } catch (error) {

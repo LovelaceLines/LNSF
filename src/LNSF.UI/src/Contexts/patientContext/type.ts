@@ -20,6 +20,7 @@ export interface iPatient {
     term: boolean,
 }
 
+
 export interface iaddTreatmentToPatient {
     patientId: number,
     treatmentId: number;

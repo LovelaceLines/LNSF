@@ -3,12 +3,12 @@ import { useNavigate, useParams } from "react-router-dom"
 import DomainIcon from '@mui/icons-material/Domain';
 import { ButtonAction } from "../../../Component";
 import { useContext, useEffect, useState, } from "react";
-import { iRoomRegister } from "../../../Contexts";
 import { Form } from "@unform/web";
 import { IFormErrorsCustom, TextFieldCustom, useCustomForm } from "../../../Component/forms";
 import * as yup from 'yup';
-import { iHospital, iHospitalObject } from "../../../Contexts/hospitalContext/type";
+import { iHospital, iHospitalFilter, iHospitalObject } from "../../../Contexts/hospitalContext/type";
 import { HospitalContext } from "../../../Contexts/hospitalContext";
+import { toast } from "react-toastify";
 
 const formValidateSchema: yup.Schema<iHospital> = yup.object().shape({
     name: yup.string().required(),
@@ -22,98 +22,179 @@ export const TelaDeGerenciamentoHospital: React.FC = () => {
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
     const navigate = useNavigate();
     const [isLoadind, setIsLoading] = useState(false);
-    const { viewHospital, registerHospital, updateHospital } = useContext(HospitalContext);
+    const { getHospitals, postHospital, putHospital } = useContext(HospitalContext);
+    const [Hospitals, setHospitals] = useState<iHospitalObject[]>([]);
 
     const { formRef, save, isSaveAndClose, saveAndClose } = useCustomForm();
+
+    console.log("id: ", id)
+
+    const fetchHospital = async () => {
+        const data: iHospitalFilter = { id: Number(id) }
+        const hospital = await getHospitals(data);
+        formRef.current?.setData(hospital[0]);
+        setHospitals(hospital);
+    };
+
+    const registerHospital = async (data: iHospital) => {
+        try {
+            await formValidateSchema.validate(data, { abortEarly: false });
+
+            const createdHospital = await postHospital(data);
+            console.log("created", createdHospital);
+
+            if (createdHospital) {
+                toast.success('Hospital cadastrado!');
+                navigate('/inicio/hospital/visualizar');
+            }
+        } catch (error) {
+            if (error instanceof yup.ValidationError) {
+                const ValidationError: IFormErrorsCustom = {};
+
+                error.inner.forEach((error) => {
+                    if (!error.path) return;
+                    ValidationError[error.path] = error.message;
+                });
+
+                console.log(error.errors);
+                formRef.current?.setErrors(ValidationError);
+            } else {
+                console.error(error);
+            }
+        }
+    };
+
+    const updadeHospital = async (data: iHospitalObject) => {
+        try {
+            await formValidateSchema.validate(data, { abortEarly: false });
+
+            const updatedHospital = await putHospital(data);
+            console.log("updated", updatedHospital);
+
+            if (updatedHospital) {
+                toast.success('Hospital atualizado!');
+                navigate('/inicio/hospital/visualizar');
+            }
+        } catch (error) {
+            if (error instanceof yup.ValidationError) {
+                const ValidationError: IFormErrorsCustom = {};
+
+                error.inner.forEach((error) => {
+                    if (!error.path) return;
+                    ValidationError[error.path] = error.message;
+                });
+
+                console.log(error.errors);
+                formRef.current?.setErrors(ValidationError);
+            } else {
+                console.error(error);
+            }
+        }
+    };
+
 
     useEffect(() => {
 
         if (id !== 'cadastrar') {
             setIsLoading(true);
-
-            viewHospital(1, id, 'id')
-                .then((response) => {
-                    if (response instanceof Error) {
-                        setIsLoading(false);
-                    } else {
-                        formRef.current?.setData(response[0]);
-                        setIsLoading(false);
-                    }
-                })
-                .catch((error) => {
-                    setIsLoading(false);
-                    console.error('Detalhes do erro:', error);
-                });
+            fetchHospital()
+            setIsLoading(false);
         }
     }, [id])
 
+    const handSave = (dados: iHospital) => {
+        setIsLoading(true)
 
-    const handSave = (dados: iRoomRegister) => {
+        if (id === 'cadastrar') {
 
-        formValidateSchema.
-            validate(dados, { abortEarly: false })
-            .then((dadosValidados) => {
-                setIsLoading(true)
+            const data: iHospital = {
+                name: dados.name,
+                acronym: dados.acronym
 
-                if (id === 'cadastrar') {
+            }
 
-                    const data: iHospital = {
-                        name: dadosValidados.name,
-                        acronym: dadosValidados.acronym
-                        
-                    }
+            registerHospital(data)
 
-                    registerHospital(data)
-                        .then((response) => {
-                            if (response instanceof Error) {
-                                setIsLoading(false);
-                            } else {
-                                setIsLoading(false);
-                                if (isSaveAndClose()) {
-                                    navigate('/inicio/hospital/visualizar')
-                                } else {
-                                    navigate(`/inicio/hospital/gerenciar/${response.id}`)
-                                }
-                            }
-                        })
-                        .catch((error) => {
-                            setIsLoading(false);
-                            console.error('Detalhes do erro:', error);
-                        });
-                } else {
-                    
-                    const data: iHospitalObject = {
-                        id: Number(id),
-                        name: dadosValidados.name,
-                        acronym: dadosValidados.acronym
-                        
-                    }
+        } else {
 
-                    updateHospital(data)
-                        .then((response) => {
-                            if (response instanceof Error) {
-                                setIsLoading(false);
-                            } else {
-                                setIsLoading(false);
-                            }
-                        })
-                        .catch((error) => {
-                            setIsLoading(false);
-                            console.error('Detalhes do erro:', error);
-                        });
-                }
-            })
-            .catch((errors: yup.ValidationError) => {
-                const ValidationError: IFormErrorsCustom = {}
+            const data: iHospitalObject = {
+                id: Number(id),
+                name: dados.name,
+                acronym: dados.acronym
 
-                errors.inner.forEach(error => {
-                    if (!error.path) return;
-                    ValidationError[error.path] = error.message;
-                });
-                console.log(errors.errors);
-                formRef.current?.setErrors(ValidationError)
-            })
+            }
+            updadeHospital(data)
+
+        }
     };
+
+
+    // const handSave = (dados: iRoomRegister) => {
+
+    //     formValidateSchema.
+    //         validate(dados, { abortEarly: false })
+    //         .then((dadosValidados) => {
+    //             setIsLoading(true)
+
+    //             if (id === 'cadastrar') {
+
+    //                 const data: iHospital = {
+    //                     name: dadosValidados.name,
+    //                     acronym: dadosValidados.acronym
+
+    //                 }
+
+    //                 registerHospital(data)
+    //                     .then((response) => {
+    //                         if (response instanceof Error) {
+    //                             setIsLoading(false);
+    //                         } else {
+    //                             setIsLoading(false);
+    //                             if (isSaveAndClose()) {
+    //                                 navigate('/inicio/hospital/visualizar')
+    //                             } else {
+    //                                 navigate(`/inicio/hospital/gerenciar/${response.id}`)
+    //                             }
+    //                         }
+    //                     })
+    //                     .catch((error) => {
+    //                         setIsLoading(false);
+    //                         console.error('Detalhes do erro:', error);
+    //                     });
+    //             } else {
+
+    //                 const data: iHospitalObject = {
+    //                     id: Number(id),
+    //                     name: dadosValidados.name,
+    //                     acronym: dadosValidados.acronym
+
+    //                 }
+
+    //                 updateHospital(data)
+    //                     .then((response) => {
+    //                         if (response instanceof Error) {
+    //                             setIsLoading(false);
+    //                         } else {
+    //                             setIsLoading(false);
+    //                         }
+    //                     })
+    //                     .catch((error) => {
+    //                         setIsLoading(false);
+    //                         console.error('Detalhes do erro:', error);
+    //                     });
+    //             }
+    //         })
+    //         .catch((errors: yup.ValidationError) => {
+    //             const ValidationError: IFormErrorsCustom = {}
+
+    //             errors.inner.forEach(error => {
+    //                 if (!error.path) return;
+    //                 ValidationError[error.path] = error.message;
+    //             });
+    //             console.log(errors.errors);
+    //             formRef.current?.setErrors(ValidationError)
+    //         })
+    // };
 
     return (
         <Box
@@ -134,8 +215,7 @@ export const TelaDeGerenciamentoHospital: React.FC = () => {
                     </Typography>
 
                     < ButtonAction
-                        mostrarBotaoNovo={false}
-                        mostrarBotaoApagar={false}
+                        mostrarBotaoVoltar
                         mostrarBotaoSalvar={id === 'cadastrar' ? false : true}
                         mostrarBotaoSalvarEFechar={id !== 'cadastrar' ? false : true}
                         aoClicarEmSalvar={id !== 'cadastrar' ? save : undefined}
@@ -178,7 +258,7 @@ export const TelaDeGerenciamentoHospital: React.FC = () => {
                                         disabled={isLoadind}
                                     />
                                 </Grid>
-                                
+
                             </Grid>
                         </Grid>
                     </Box>

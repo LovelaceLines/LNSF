@@ -2,7 +2,7 @@ import { BottomNavigation, BottomNavigationAction, Box, Button, Divider, Grid, I
 import { useNavigate, useParams } from "react-router-dom"
 import PersonIcon from '@mui/icons-material/Person';
 import { useContext, useEffect, useState, } from "react";
-import { EmergencyContactContext, PeopleContext, iEmergencyContactObject } from "../../../Contexts";
+import { EmergencyContactContext, PeopleContext, iEmergencyContactObject, iPeopleFilter } from "../../../Contexts";
 import { ButtonAction } from "../../../Component";
 import { format, isValid, parseISO } from "date-fns";
 import { Stethoscope } from "@phosphor-icons/react";
@@ -17,8 +17,8 @@ import { PatientContext } from "../../../Contexts/patientContext";
 import { AutoCompleteTreatament } from "../../../Component/autoCompletes/AutoCompleteTreatament";
 import { useCustomForm } from "../../../Component/forms";
 import { HospitalContext } from "../../../Contexts/hospitalContext";
-import { iHospitalObject } from "../../../Contexts/hospitalContext/type";
 import { TreatmentContext } from "../../../Contexts/treatmentContext";
+import { iHospitalFilter, iHospitalObject } from "../../../Contexts/hospitalContext/type";
 
 
 const formValidateSchema: yup.Schema = yup.object().shape({
@@ -32,10 +32,10 @@ export const PersonalData: React.FC = () => {
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
     const navigate = useNavigate();
     const [isLoadind, setIsLoading] = useState(false);
-    const { viewPeople, people, setPeople } = useContext(PeopleContext);
+    const { getPeoples, getPeopleById, people, setPeople } = useContext(PeopleContext);
     const { registerEscort, viewEscort } = useContext(EscortContext);
-    const { viewTreatment, treatment, setTreatment } = useContext(TreatmentContext);
-    const { hospital, setHospital, viewHospital } = useContext(HospitalContext);
+    const { getTreatmentById } = useContext(TreatmentContext);
+    const { getHospitals } = useContext(HospitalContext);
     const { viewPatient, Patient, setPatient, updatePatient, registerPatient } = useContext(PatientContext);
     const { viewEmergencyContact, emergencyContact, setEmergencyContact, deleteEmergencyContact } = useContext(EmergencyContactContext);
     const [isEscort, setIsEscort] = useState(false)
@@ -46,33 +46,37 @@ export const PersonalData: React.FC = () => {
     const [modify1, setModify1] = useState(false);
     const [modify2, setModify2] = useState(false);
     const { formRef, save } = useCustomForm();
+    const [hospital, setHospital] = useState<iHospitalObject>();
+
+
+    const fetchPeoples = async () => {
+        console.log("Peoples: ", id)
+        const filtro: iPeopleFilter = {
+            id: Number(id)
+        }
+        const Peoples = await getPeoples(filtro);
+        setPeople(Peoples[0])
+    };
 
 
     useEffect(() => {
-        setIsLoading(true);
-        viewPeople(1, id, 'id')
-            .then((response) => {
-                if (response instanceof Error) {
-                    setIsLoading(false);
-                } else {
-                    setPeople(response[0])
-                    console.log('buscando pessoas: ', response[0])
-                    setIsLoading(false);
-                }
-            })
-            .catch((error) => {
-                setIsLoading(false);
-                console.error('Detalhes do erro:', error);
-            });
+
+        if (id !== 'cadastrar') {
+            setIsLoading(true);
+            fetchPeoples()
+            setIsLoading(false);
+        }
     }, [id])
 
 
 
+
     useEffect(() => {
 
         setIsLoading(true);
-        viewPatient(1, String(people.id), 'PatientId')
-            .then((response) => {
+        viewPatient(1, String(people.id), 'PeopleId')
+        .then((response) => {
+                console.log("buscar : ", response)
                 if (response instanceof Error) {
                     setIsLoading(false);
                     setIsPatient(false)
@@ -81,40 +85,45 @@ export const PersonalData: React.FC = () => {
                     setActiveForm(false)
                     setIsEscort(false)
                     setPatient(response[0])
+                    console.log("patiente: ", response[0])
+                    // const filtro: iHospitalFilter = {
+                    //     id: Number(response[0].hospitalId)
+                    // }
 
-                    viewHospital(1, String(response[0].hospitalId), 'id')
-                        .then((responsee) => {
-                            if (responsee instanceof Error) {
-                                setIsLoading(false);
-                            } else {
-                                setHospital(responsee[0])
-                                setIsLoading(false);
-                            }
-                        })
-                        .catch((error) => {
-                            setIsLoading(false);
-                            console.error('Detalhes do erro:', error);
-                        });
+                    // getHospitals(filtro)
+                    //     .then((responsee) => {
+                    //         if (responsee instanceof Error) {
+                    //             setIsLoading(false);
+                    //         } else {
+                    //             setHospital(responsee[0])
+                    //             setIsLoading(false);
+                    //             console.log("aaaaaaaaaaaaaa", responsee[0])
+                    //         }
+                    //     })
+                    //     .catch((error) => {
+                    //         setIsLoading(false);
+                    //         console.error('Detalhes do erro:', error);
+                    //     });
 
 
-                    setTreatment([])
-                    response[0].treatmentIds.map((item) => {
-                  
-                        viewTreatment(1, String(item), 'id')
-                            .then((responsee) => {
-                                if (responsee instanceof Error) {
-                                    setIsLoading(false);
-                                } else {
-                   
-                                    setTreatment(prevTreatment => [...prevTreatment, ...responsee]);
-                                    setIsLoading(false);
-                                }
-                            })
-                            .catch((error) => {
-                                setIsLoading(false);
-                                console.error('Detalhes do erro:', error);
-                            });
-                    });
+                    // setTreatment([])
+                    // response[0].treatmentIds.map((item) => {
+
+                    //     getTreatmentById(item.)
+                    //         .then((responsee) => {
+                    //             if (responsee instanceof Error) {
+                    //                 setIsLoading(false);
+                    //             } else {
+
+                    //                 setTreatment(prevTreatment => [...prevTreatment, ...responsee]);
+                    //                 setIsLoading(false);
+                    //             }
+                    //         })
+                    //         .catch((error) => {
+                    //             setIsLoading(false);
+                    //             console.error('Detalhes do erro:', error);
+                    //         });
+                    // });
 
                 } else {
                     setHospital({} as iHospitalObject)
@@ -332,10 +341,7 @@ export const PersonalData: React.FC = () => {
                         Perfil
                     </Typography>
                     < ButtonAction
-                        mostrarBotaoNovo={false}
-                        mostrarBotaoApagar={false}
-                        mostrarBotaoSalvar={false}
-                        mostrarBotaoSalvarEFechar={false}
+                        mostrarBotaoVoltar
 
                         aoClicarEmVoltar={() => { navigate('/inicio/pessoas/visualizar') }}
                     />
@@ -443,12 +449,11 @@ export const PersonalData: React.FC = () => {
                         </Box>
 
                         < ButtonAction
-                            mostrarBotaoNovo={false}
-                            mostrarBotaoApagar={false}
+
                             mostrarBotaoSalvar={true}
-                            mostrarBotaoSalvarEFechar={false}
-                            mostrarBotaoVoltar={false}
+
                             aoClicarEmSalvar={save}
+
                         />
                     </Box>}
 
@@ -627,10 +632,10 @@ export const PersonalData: React.FC = () => {
                                     Hospital
                                 </Typography>
 
-                                {hospital.name !== undefined ? hospital.name : '-'}
+                                {hospital?.name !== undefined ? hospital.name : '-'}
                             </Grid>
 
-                            {treatment.map((treatmentItem) => (
+                            {/* {treatment.map((treatmentItem) => (
 
                                 <Grid item md={4} xs={6} key={treatmentItem.id}>
                                     <Typography
@@ -649,7 +654,7 @@ export const PersonalData: React.FC = () => {
 
 
                             ))}
-
+ */}
 
                         </Grid>
                     </Box>

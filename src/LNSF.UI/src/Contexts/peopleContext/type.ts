@@ -121,16 +121,6 @@ export interface iAddPeopleToRoom{
 export interface iPeopleTypes {
     people: iPeopleObject,
     setPeople: React.Dispatch<React.SetStateAction<iPeopleObject>>
-    viewPeople (page: number, filter: string, textFilter: string): Promise<iPeopleObject[] | Error>;
-    registerPeople(data: iPeopleRegister): Promise<iPeopleObject | Error>;
-    registerPeopleToRoom(data: iAddPeopleToRoom): Promise<iAddPeopleToRoom | Error>;
-    updatePeople(data: iPeopleObject): Promise<iPeopleObject | Error>;
-    addPeopleRoom(data: iAddPeopleRoom): Promise<iPeopleObject | Error>;
-    removePeopleRoom(data: iAddPeopleToRoom): Promise<iAddPeopleToRoom | Error>;
-    returnQuantity(): Promise<number>;
-
-    viewPeopleRoom(page: number): Promise<iAddPeopleToRoom[] | Error>;
-    returnQuantityPeople(): Promise<number>;
 
     getPeoples(filter?: iPeopleFilter): Promise<iPeopleObject[]>;
     getPeopleById(id: number): Promise<iPeopleObject>;
