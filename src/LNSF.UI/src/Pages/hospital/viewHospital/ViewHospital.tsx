@@ -117,7 +117,7 @@ export const ViewHospital: React.FC = () => {
     <Box display='flex' flexDirection='column' gap={2} paddingRight='auto'>
       <Typography variant={smDown ? "h6" : "h5"} display='flex' alignItems='center' gap={1} paddingRight='auto' >
         <DomainIcon fontSize={smDown ? "medium" : "large"} color='primary' />
-        Histórico de entrada e saída
+        Hospitais
       </Typography>
       <Box display='flex' gap={2}>
         <Button variant='contained' size='small' startIcon={<AddIcon />} onClick={() => navigate('/hospital/gerenciar/cadastrar')}>
