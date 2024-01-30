@@ -13,7 +13,7 @@ import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import { LocalStorage } from '../../../Global/LocalStorage';
 import { format, parseISO } from 'date-fns';
- 
+
 export const ViewTour: React.FC = () => {
   const navigate = useNavigate();
   const theme = useTheme();
@@ -31,7 +31,7 @@ export const ViewTour: React.FC = () => {
   const [filters, setFilters] = useState<iTourFilter>({
     page: { page: pagination.pageIndex, pageSize: pagination.pageSize },
     orderBy: iOrderBy.descendent,
-    inOpen: inOpenFilter, 
+    inOpen: inOpenFilter,
     getPeople: true
   });
 
@@ -66,7 +66,7 @@ export const ViewTour: React.FC = () => {
         Cell: ({ row }) => {
           const output = row.original.output;
           return format(parseISO(output.toString()), 'dd/MM/yyyy HH:mm')
-        } 
+        }
       },
       {
         accessorKey: 'input',
@@ -77,11 +77,11 @@ export const ViewTour: React.FC = () => {
         Cell: ({ row }) => {
           const input = row.original.input;
           return input ? format(parseISO(input.toString()), 'dd/MM/yyyy HH:mm') :
-          (
-            <Button variant='contained' fullWidth onClick={() => confirmTourReturn({id: row.original.id, peopleId: row.original.peopleId, note: row.original.note})}>
-              <CheckIcon />
-            </Button>
-          )
+            (
+              <Button variant='contained' fullWidth onClick={() => confirmTourReturn({ id: row.original.id, peopleId: row.original.peopleId, note: row.original.note })}>
+                <CheckIcon />
+              </Button>
+            )
         }
       },
       {
@@ -94,7 +94,7 @@ export const ViewTour: React.FC = () => {
     ],
     [],
   );
-   
+
   const fetchTours = async () => {
     const tours = await getTours(filters);
     setTours(tours);
@@ -118,67 +118,67 @@ export const ViewTour: React.FC = () => {
   useEffect(() => {
     setFilters({ ...filters, globalFilter: globalFilter });
   }, [globalFilter]);
- 
+
   useEffect(() => {
     const updatedFilters = { ...filters };
     const columnIds = columnFilters.map(columnFilter => columnFilter.id);
     let value: unknown;
- 
+
     value = columnFilters.find(cf => cf.id === 'people.name')?.value;
     if (columnIds.includes('people.name') && typeof value === 'string')
       updatedFilters.peopleName = value;
     else updatedFilters.peopleName = undefined;
- 
+
     value = columnFilters.find(cf => cf.id === 'people.rg')?.value;
     if (columnIds.includes('people.rg') && typeof value === 'string')
       updatedFilters.peopleRG = value;
     else updatedFilters.peopleRG = undefined;
- 
+
     value = columnFilters.find(cf => cf.id === 'people.cpf')?.value;
     if (columnIds.includes('people.cpf') && typeof value === 'string')
       updatedFilters.peopleCPF = value;
     else updatedFilters.peopleCPF = undefined;
- 
+
     value = columnFilters.find(cf => cf.id === 'output')?.value;
     if (columnIds.includes('output') && value instanceof Date)
       updatedFilters.output = value;
     else updatedFilters.output = undefined;
- 
+
     value = columnFilters.find(cf => cf.id === 'input')?.value;
     if (columnIds.includes('input') && value instanceof Date)
       updatedFilters.input = value;
     else updatedFilters.input = undefined;
- 
+
     value = columnFilters.find(cf => cf.id === 'note')?.value;
     if (columnIds.includes('note') && typeof value === 'string')
       updatedFilters.note = value;
     else updatedFilters.note = undefined;
- 
+
     setFilters(updatedFilters);
   }, [columnFilters]);
- 
+
   useEffect(() => {
     const updatedFilters = { ...filters };
     const columnIds = sortFilters.map(sort => sort.id);
-   
+
     const desc = sortFilters.find(cf => cf.id === 'output')?.desc;
     if (columnIds.includes('output') && typeof desc === 'boolean')
       updatedFilters.orderBy = desc ? iOrderBy.descendent : iOrderBy.ascendent;
     else updatedFilters.orderBy = undefined;
- 
+
     setFilters(updatedFilters);
   }, [sortFilters]);
 
   useEffect(() => {
     LocalStorage.setColumnVisibilityTour(columnVisibleState);
   }, [columnVisibleState]);
- 
+
   useEffect(() => {
     const page: iPage = { page: pagination.pageIndex, pageSize: pagination.pageSize };
     setFilters({ ...filters, page: page });
 
     LocalStorage.setPageSize(page.pageSize!);
-    
+
     const fetchTours = async () => setTours(await getTours({ ...filters, page: page }));
     fetchTours();
   }, [pagination]);
@@ -186,7 +186,7 @@ export const ViewTour: React.FC = () => {
   useEffect(() => {
     setFilters({ ...filters, inOpen: inOpenFilter });
   }, [inOpenFilter]);
- 
+
   const renderTopToolbar = (table: MRT_TableInstance<iTourObject>) => (
     <Box display='flex' flexDirection='column' gap={2} paddingRight='auto'>
       <Typography variant={smDown ? "h6" : "h5"} display='flex' alignItems='center' gap={1} paddingRight='auto' >
@@ -194,7 +194,7 @@ export const ViewTour: React.FC = () => {
         Histórico de entrada e saída
       </Typography>
       <Box display='flex' gap={2}>
-        <Button variant='contained' size='small' startIcon={<AddIcon />} onClick={() => navigate('/inicio/registrodiario/cadastrar')}>
+        <Button variant='contained' size='small' startIcon={<AddIcon />} onClick={() => navigate('/registrodiario/cadastrar')}>
           Novo
         </Button>
         <Box display='flex' alignItems='center'>
@@ -209,39 +209,39 @@ export const ViewTour: React.FC = () => {
       </Box>
     </Box>
   );
- 
+
   const renderActions = (row: MRT_Row<iTourObject>) => (
     <Box display='flex' flexDirection='row' flexWrap='nowrap'>
-      <IconButton onClick={() => navigate(`/inicio/registrodiario/${row.original.id}`)}>
+      <IconButton onClick={() => navigate(`/registrodiario/${row.original.id}`)}>
         <EditRoundedIcon />
       </IconButton>
     </Box>
   );
- 
+
   const table = useMaterialReactTable<iTourObject>({
     columns,
     data: tours,
-    state: { 
-      sorting: sortFilters, 
+    state: {
+      sorting: sortFilters,
       pagination: pagination,
       columnVisibility: columnVisibleState,
       isFullScreen,
     },
- 
+
     renderTopToolbarCustomActions: ({ table }) => renderTopToolbar(table),
- 
+
     enableRowActions: true,
     renderRowActions: ({ row, cell, table }) => renderActions(row),
- 
+
     manualFiltering: true,
     onGlobalFilterChange: setGlobalFilter,
     onColumnFiltersChange: setColumnFilters,
- 
+
     manualSorting: true,
     onSortingChange: setSortFilters,
 
     onColumnVisibilityChange: setColumnVisibleState,
- 
+
     manualPagination: true,
     onPaginationChange: setPagination,
     paginationDisplayMode: 'pages',
@@ -249,16 +249,18 @@ export const ViewTour: React.FC = () => {
 
     onIsFullScreenChange: () => setIsFullScreen(!isFullScreen),
 
-    muiTablePaperProps: ({ table }) => ({ style: {
-      zIndex: isFullScreen ? 10000 : undefined,
-    }}),
+    muiTablePaperProps: ({ table }) => ({
+      style: {
+        zIndex: isFullScreen ? 10000 : undefined,
+      }
+    }),
 
-    mrtTheme : {
+    mrtTheme: {
       baseBackgroundColor: theme.palette.background.paper,
     },
- 
+
     localization: MRT_Localization_PT_BR,
   });
- 
+
   return <MaterialReactTable table={table} />
 }

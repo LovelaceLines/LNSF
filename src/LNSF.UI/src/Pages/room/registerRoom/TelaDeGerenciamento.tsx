@@ -74,9 +74,9 @@ export const TelaDeGerenciamentoRoom: React.FC = () => {
                             } else {
                                 setIsLoading(false);
                                 if (isSaveAndClose()) {
-                                    navigate('/inicio/apartamentos/gerenciar')
+                                    navigate('/apartamentos/gerenciar')
                                 } else {
-                                    navigate(`/inicio/apartamentos/gerenciar/${response.id}`)
+                                    navigate(`/apartamentos/gerenciar/${response.id}`)
                                 }
                             }
                         })
@@ -145,7 +145,7 @@ export const TelaDeGerenciamentoRoom: React.FC = () => {
                         mostrarBotaoSalvarEFechar={id !== 'cadastrar' ? false : true}
                         aoClicarEmSalvar={id !== 'cadastrar' ? save : undefined}
                         aoClicarEmSalvarEFechar={id === 'cadastrar' ? saveAndClose : undefined}
-                        aoClicarEmVoltar={() => { navigate('/inicio/apartamentos/gerenciar') }}
+                        aoClicarEmVoltar={() => { navigate('/apartamentos/gerenciar') }}
                     />
                 </Toolbar>
             </Box>

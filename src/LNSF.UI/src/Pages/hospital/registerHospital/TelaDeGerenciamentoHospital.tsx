@@ -60,7 +60,7 @@ export const TelaDeGerenciamentoHospital: React.FC = () => {
                     const data: iHospital = {
                         name: dadosValidados.name,
                         acronym: dadosValidados.acronym
-                        
+
                     }
 
                     registerHospital(data)
@@ -70,9 +70,9 @@ export const TelaDeGerenciamentoHospital: React.FC = () => {
                             } else {
                                 setIsLoading(false);
                                 if (isSaveAndClose()) {
-                                    navigate('/inicio/hospital/visualizar')
+                                    navigate('/hospital/visualizar')
                                 } else {
-                                    navigate(`/inicio/hospital/gerenciar/${response.id}`)
+                                    navigate(`/hospital/gerenciar/${response.id}`)
                                 }
                             }
                         })
@@ -81,12 +81,12 @@ export const TelaDeGerenciamentoHospital: React.FC = () => {
                             console.error('Detalhes do erro:', error);
                         });
                 } else {
-                    
+
                     const data: iHospitalObject = {
                         id: Number(id),
                         name: dadosValidados.name,
                         acronym: dadosValidados.acronym
-                        
+
                     }
 
                     updateHospital(data)
@@ -140,7 +140,7 @@ export const TelaDeGerenciamentoHospital: React.FC = () => {
                         mostrarBotaoSalvarEFechar={id !== 'cadastrar' ? false : true}
                         aoClicarEmSalvar={id !== 'cadastrar' ? save : undefined}
                         aoClicarEmSalvarEFechar={id === 'cadastrar' ? saveAndClose : undefined}
-                        aoClicarEmVoltar={() => { navigate('/inicio/hospital/visualizar') }}
+                        aoClicarEmVoltar={() => { navigate('/hospital/visualizar') }}
                     />
                 </Toolbar>
             </Box>
@@ -178,7 +178,7 @@ export const TelaDeGerenciamentoHospital: React.FC = () => {
                                         disabled={isLoadind}
                                     />
                                 </Grid>
-                                
+
                             </Grid>
                         </Grid>
                     </Box>

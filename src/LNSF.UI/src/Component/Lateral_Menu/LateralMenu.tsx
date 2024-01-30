@@ -46,15 +46,15 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
       {
         index: 4,
         icon: 'description',
-        path: '/inicio/registrodiario',
+        path: '/registrodiario',
         label: 'Registro de saídas',
         options: [
           {
-            pathOption: '/inicio/registrodiario/visualizar',
+            pathOption: '/registrodiario/visualizar',
             labelOption: 'Visualizar',
           },
           {
-            pathOption: '/inicio/registrodiario/cadastrar',
+            pathOption: '/registrodiario/cadastrar',
             labelOption: 'Adicionar',
           }
         ],
@@ -66,7 +66,7 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
         label: 'Hospedagens',
         options: [
           {
-            pathOption: '/inicio/hospedagens/visualizar',
+            pathOption: '/hospedagens/visualizar',
             labelOption: 'Visualizar',
           },
           {
@@ -74,7 +74,7 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
             labelOption: 'Gerenciar',
           },
           {
-            pathOption: '/inicio/hospedagens/pessoashospedadas/visualizar',
+            pathOption: '/hospedagens/pessoashospedadas/visualizar',
             labelOption: 'Pessoas Hospedadas',
           }
         ],
@@ -86,7 +86,7 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
         label: 'Apartamentos',
         options: [
           {
-            pathOption: '/inicio/apartamentos/visualizar',
+            pathOption: '/apartamentos/visualizar',
             labelOption: 'Visualizar',
           }
         ],
@@ -96,7 +96,7 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
     if (isDesenvolvedor || isAdministrador || isSecretario) {
       menu[3].options.push(
         {
-          pathOption: '/inicio/apartamentos/gerenciar',
+          pathOption: '/apartamentos/gerenciar',
           labelOption: 'Gerenciar',
         },
       )
@@ -111,11 +111,11 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
           label: 'Pessoas',
           options: [
             {
-              pathOption: '/inicio/pessoas/visualizar',
+              pathOption: '/pessoas/visualizar',
               labelOption: 'Visualizar',
             },
             {
-              pathOption: '/inicio/pessoas/gerenciar/cadastrar',
+              pathOption: '/pessoas/gerenciar/cadastrar',
               labelOption: 'Gerenciar',
             }
           ],
@@ -132,11 +132,11 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
           label: 'Hospitais',
           options: [
             {
-              pathOption: '/inicio/hospital/visualizar',
+              pathOption: '/hospital/visualizar',
               labelOption: 'Visualizar',
             },
             {
-              pathOption: '/inicio/hospital/gerenciar/cadastrar',
+              pathOption: '/hospital/gerenciar/cadastrar',
               labelOption: 'Gerenciar',
             }
           ],
@@ -153,11 +153,11 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
           label: 'Tratamentos',
           options: [
             {
-              pathOption: '/inicio/tratamentos/visualizar',
+              pathOption: '/tratamentos/visualizar',
               labelOption: 'Visualizar',
             },
             {
-              pathOption: '/inicio/tratamentos/gerenciar/cadastrar',
+              pathOption: '/tratamentos/gerenciar/cadastrar',
               labelOption: 'Gerenciar',
             }
           ],
@@ -174,7 +174,7 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
           label: 'Registro Socioeconômico',
           options: [
             {
-              pathOption: '/inicio/registrosocioeconomico/perfildogrupofamiliar/visualizar',
+              pathOption: '/registrosocioeconomico/perfildogrupofamiliar/visualizar',
               labelOption: 'Visualizar',
             },
           ],
@@ -191,11 +191,11 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
           label: 'Usuários do sistema',
           options: [
             {
-              pathOption: '/inicio/usuarios/visualizar',
+              pathOption: '/usuarios/visualizar',
               labelOption: 'Visualizar',
             },
             {
-              pathOption: '/inicio/usuarios/gerenciar/cadastrar',
+              pathOption: '/usuarios/gerenciar/cadastrar',
               labelOption: 'Gerenciar',
             },
           ],

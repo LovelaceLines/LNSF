@@ -68,7 +68,7 @@ export const TelaAddRemovePeopleRoom: React.FC<iTelaAddRemovePeopleRoomProps> = 
                             setIsLoading(false);
                         } else {
                             setIsLoading(false);
-                            navigate('/inicio/pessoas/visualizar')
+                            navigate('/pessoas/visualizar')
                         }
                     })
                     .catch((error) => {
@@ -134,7 +134,7 @@ export const TelaAddRemovePeopleRoom: React.FC<iTelaAddRemovePeopleRoomProps> = 
                 </Form>
             </Box>
             <Box
-                
+
                 display='flex'
                 alignItems='center'
                 justifyContent='center'

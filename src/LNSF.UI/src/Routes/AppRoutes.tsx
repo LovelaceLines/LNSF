@@ -21,22 +21,22 @@ export const AppRoutes = () => {
 
       <Route element={<ProtectedRoutes />}>
         {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
-          <Route path="/inicio/apartamentos/visualizar" element={<Dashboard children={<ViewRoom />} />} />}
+          <Route path="/apartamentos/visualizar" element={<Dashboard children={<ViewRoom />} />} />}
 
         {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
-          <Route path="/inicio/apartamentos/gerenciar/:id" element={<Dashboard children={<TelaDeGerenciamentoRoom />} />} />}
+          <Route path="/apartamentos/gerenciar/:id" element={<Dashboard children={<TelaDeGerenciamentoRoom />} />} />}
 
         {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
-          <Route path="/inicio/apartamentos/gerenciar" element={<Dashboard children={<RegisterRoom />} />} />}
+          <Route path="/apartamentos/gerenciar" element={<Dashboard children={<RegisterRoom />} />} />}
 
         {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
-          <Route path="/inicio/hospedagens/visualizar" element={<Dashboard children={<ViewHosting />} />} />}
+          <Route path="/hospedagens/visualizar" element={<Dashboard children={<ViewHosting />} />} />}
 
         {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
-          <Route path='/inicio/hospedagens/pessoashospedadas/visualizar' element={<Dashboard children={<ViewPeopleRoomHosting />} />} />}
+          <Route path='/hospedagens/pessoashospedadas/visualizar' element={<Dashboard children={<ViewPeopleRoomHosting />} />} />}
 
         {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
-          <Route path="/inicio/pessoas/visualizar" element={<Dashboard children={<ViewPeople />} />} />}
+          <Route path="/pessoas/visualizar" element={<Dashboard children={<ViewPeople />} />} />}
 
         {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
           <Route path="/inicio/pessoas/dados/contatoEmergencia/:id" element={<Dashboard children={<TelaRegisterUpdateContactEmergence />} />} />}
@@ -45,53 +45,46 @@ export const AppRoutes = () => {
           <Route path="/inicio/pessoas/dados/:id" element={<Dashboard children={<PersonalData />} />} />}
 
         {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
-          <Route path="/inicio/pessoas/gerenciar/:id" element={<Dashboard children={<TelaDeGerenciamentoPeople />} />} />}
+          <Route path="/pessoas/gerenciar/:id" element={<Dashboard children={<TelaDeGerenciamentoPeople />} />} />}
 
         {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
-          <Route path="/inicio/usuarios/gerenciar/:id" element={<Dashboard children={<TelaDeGerenciamentoAccount />} />} />}
+          <Route path="/usuarios/gerenciar/:id" element={<Dashboard children={<TelaDeGerenciamentoAccount />} />} />}
 
         {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
-          <Route path="/inicio/usuarios/gerenciar/cadastrar" element={<Dashboard children={<TelaDeGerenciamentoAccount />} />} />}
+          <Route path="/usuarios/visualizar" element={<Dashboard children={<ViewAccount />} />} />}
 
         {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
-          <Route path="/inicio/usuarios/visualizar" element={<Dashboard children={<ViewAccount />} />} />}
+          <Route path="/hospital/visualizar" element={<Dashboard children={<ViewHospital />} />} />}
 
         {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
-          <Route path="/inicio/hospital/visualizar" element={<Dashboard children={<ViewHospital />} />} />}
+          <Route path="/hospital/gerenciar/:id" element={<Dashboard children={<TelaDeGerenciamentoHospital />} />} />}
 
         {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
-          <Route path="/inicio/hospital/gerenciar/:id" element={<Dashboard children={<TelaDeGerenciamentoHospital />} />} />}
+          <Route path="/tratamentos/visualizar" element={<Dashboard children={<ViewTratamentos />} />} />}
 
         {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
-          <Route path="/inicio/tratamentos/visualizar" element={<Dashboard children={<ViewTratamentos />} />} />}
+          <Route path="/tratamentos/gerenciar/:id" element={<Dashboard children={<TelaDeGerenciamentoTratamentos />} />} />}
 
         {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
-          <Route path="/inicio/tratamentos/gerenciar/:id" element={<Dashboard children={<TelaDeGerenciamentoTratamentos />} />} />}
+          <Route path="/registrodiario/:id" element={<Dashboard children={<PutAllPasseio />} />} />}
 
         {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
-          <Route path="/inicio/registrodiario/:id" element={<Dashboard children={<PutAllPasseio />} />} />}
+          <Route path="/registrodiario/visualizar" element={<Dashboard children={<ViewTour />} />} />}
 
         {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
-          <Route path="/inicio/registrodiario/visualizar" element={<Dashboard children={<ViewTour />} />} />}
+          <Route path="/registrodiario/cadastrar" element={<Dashboard children={<RegisterTour />} />} />}
 
         {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
-          <Route path="/inicio/registrodiario/cadastrar" element={<Dashboard children={<RegisterTour />} />} />}
+          <Route path='/registrosocioeconomico/perfildogrupofamiliar/visualizar' element={<Dashboard children={<ViewFamilyGroupProfile />} />} />}
 
-        {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
-          <Route path='/inicio/registrosocioeconomico/perfildogrupofamiliar/visualizar' element={<Dashboard children={<ViewFamilyGroupProfile />} />} />}
-
-        {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
-          <Route path="/inicio" element={<Dashboard />} />}
-
-        {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
-          <Route path="/sobre" element={<Dashboard children={<Footer />} />} />}
-
-        {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
-          <Route path='/' element={<Navigate to='/inicio' />} />}
-
-        {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
-          <Route path='*' element={<NotFound />} />}
+        <Route path="/inicio" element={<Dashboard />} />
+        <Route path="/home" element={<Dashboard />} />
+        <Route path='/' element={<Navigate to='/inicio' />} />
+        <Route path="/sobre" element={<Dashboard children={<Footer />} />} />
+        <Route path='*' element={<NotFound />} />
       </Route>
+
+      <Route path='*' element={<Navigate to='/login' />} />
     </Routes >
   );
 };

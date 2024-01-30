@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import PersonIcon from '@mui/icons-material/Person';
 import { ButtonAction } from "../../../Component";
 import { useContext, useEffect, useState, } from "react";
-import { EmergencyContactContext, iEmergencyContactObject} from "../../../Contexts";
+import { EmergencyContactContext, iEmergencyContactObject } from "../../../Contexts";
 import { Form } from "@unform/web";
 import { IFormErrorsCustom, TextFieldCustom, useCustomForm } from "../../../Component/forms";
 import * as yup from 'yup';
@@ -29,12 +29,12 @@ export const TelaRegisterUpdateContactEmergence: React.FC = () => {
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
     const navigate = useNavigate();
     const [isLoadind, setIsLoading] = useState(false);
-    const {emergencyContact, setEmergencyContact, viewEmergencyContact, registerEmergencyContact, updateEmergencyContact } = useContext(EmergencyContactContext);
+    const { emergencyContact, setEmergencyContact, viewEmergencyContact, registerEmergencyContact, updateEmergencyContact } = useContext(EmergencyContactContext);
 
     const { formRef, save, isSaveAndClose, saveAndClose } = useCustomForm();
 
     useEffect(() => {
-      
+
         if (parts[0] !== 'cadastrar') {
             setIsLoading(true);
 
@@ -78,9 +78,9 @@ export const TelaRegisterUpdateContactEmergence: React.FC = () => {
                             } else {
                                 setIsLoading(false);
                                 if (isSaveAndClose()) {
-                                    navigate('/inicio/pessoas/visualizar')
+                                    navigate('/pessoas/visualizar')
                                 } else {
-                                    navigate(`/inicio/pessoas/visualizar/${response.id}`)
+                                    navigate(`/pessoas/visualizar/${response.id}`)
                                 }
                             }
                         })
@@ -181,7 +181,7 @@ export const TelaRegisterUpdateContactEmergence: React.FC = () => {
                                         disabled={isLoadind}
                                     />
                                 </Grid>
-                        
+
                                 <Grid item xs={6}>
                                     <TextFieldCustom
                                         fullWidth

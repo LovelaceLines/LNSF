@@ -106,7 +106,7 @@ export const PutAllPasseio: React.FC = () => {
         //                     } else {
         //                         setModify(!modify)
 
-        //                         navigate(`/inicio/registrodiario/visualizar`)
+        //                         navigate(`/registrodiario/visualizar`)
         //                     }
         //                 })
         //                 .catch((error) => {
@@ -151,7 +151,7 @@ export const PutAllPasseio: React.FC = () => {
 
                         aoClicarEmSalvar={save}
 
-                        aoClicarEmVoltar={() => { navigate('/inicio/registrodiario/visualizar') }}
+                        aoClicarEmVoltar={() => { navigate('/registrodiario/visualizar') }}
                     />
                 </Toolbar>
 

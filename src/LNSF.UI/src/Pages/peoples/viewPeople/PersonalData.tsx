@@ -99,13 +99,13 @@ export const PersonalData: React.FC = () => {
 
                     setTreatment([])
                     response[0].treatmentIds.map((item) => {
-                  
+
                         viewTreatment(1, String(item), 'id')
                             .then((responsee) => {
                                 if (responsee instanceof Error) {
                                     setIsLoading(false);
                                 } else {
-                   
+
                                     setTreatment(prevTreatment => [...prevTreatment, ...responsee]);
                                     setIsLoading(false);
                                 }
@@ -337,7 +337,7 @@ export const PersonalData: React.FC = () => {
                         mostrarBotaoSalvar={false}
                         mostrarBotaoSalvarEFechar={false}
 
-                        aoClicarEmVoltar={() => { navigate('/inicio/pessoas/visualizar') }}
+                        aoClicarEmVoltar={() => { navigate('/pessoas/visualizar') }}
                     />
                 </Toolbar>
             </Box>
@@ -594,7 +594,7 @@ export const PersonalData: React.FC = () => {
                             color='primary'
                             disableElevation
                             variant='outlined'
-                            onClick={() => navigate(`/inicio/pessoas/gerenciar/${people.id}`)}
+                            onClick={() => navigate(`/pessoas/gerenciar/${people.id}`)}
                             startIcon={<Icon>edit</Icon>}
                         >
                             <Typography variant='button' whiteSpace="nowrap" textOverflow="ellipsis" overflow="hidden">
