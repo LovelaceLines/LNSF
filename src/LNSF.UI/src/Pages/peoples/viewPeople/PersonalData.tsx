@@ -343,7 +343,7 @@ export const PersonalData: React.FC = () => {
                     < ButtonAction
                         mostrarBotaoVoltar
 
-                        aoClicarEmVoltar={() => { navigate('/inicio/pessoas/visualizar') }}
+                        aoClicarEmVoltar={() => { navigate('/pessoas/visualizar') }}
                     />
                 </Toolbar>
             </Box>
@@ -599,7 +599,7 @@ export const PersonalData: React.FC = () => {
                             color='primary'
                             disableElevation
                             variant='outlined'
-                            onClick={() => navigate(`/inicio/pessoas/gerenciar/${people.id}`)}
+                            onClick={() => navigate(`/pessoas/gerenciar/${people.id}`)}
                             startIcon={<Icon>edit</Icon>}
                         >
                             <Typography variant='button' whiteSpace="nowrap" textOverflow="ellipsis" overflow="hidden">

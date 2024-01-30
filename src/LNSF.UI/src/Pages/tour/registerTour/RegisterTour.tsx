@@ -34,7 +34,7 @@ export const RegisterTour: React.FC = () => {
             const createdTuor = await postTour(idata);
             if (createdTuor) {
                 toast.success('Saída cadastrada!');
-                navigate('/inicio/registrodiario/visualizar')
+                navigate('/registrodiario/visualizar')
             }
         } catch (error) {
             if (error instanceof yup.ValidationError) {
@@ -76,7 +76,7 @@ export const RegisterTour: React.FC = () => {
                         mostrarBotaoVoltar
 
                         aoClicarEmSalvar={save}
-                        aoClicarEmVoltar={() => { navigate(`/inicio/registrodiario/visualizar`) }}
+                        aoClicarEmVoltar={() => { navigate(`/registrodiario/visualizar`) }}
                     />
                 </Toolbar>
 

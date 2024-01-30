@@ -183,7 +183,7 @@ export const ViewFamilyGroupProfile: React.FC = () => {
         Perfil do Grupo Familiar
       </Typography>
       <Box display='flex' gap={2}>
-        <Button variant='contained' size='small' startIcon={<AddIcon />} onClick={() => navigate('/inicio/pessoas/gerenciar/cadastrar')}>
+        <Button variant='contained' size='small' startIcon={<AddIcon />} onClick={() => navigate('/pessoas/gerenciar/cadastrar')}>
           Novo
         </Button>
         <Box display='flex' alignItems='center'>

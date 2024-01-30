@@ -14,12 +14,12 @@ export const BasePageLayout: React.FC<IBasePageLayoutProps> = ({ children }) => 
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
   const { isDrawerOpen, toggleDrawerOpen, } = useDrawerContext();
   const { toggleTheme } = useAppThemeContext();
-  const { getUser,  logout } = useContext(AuthContext)
+  const { getUser, logout } = useContext(AuthContext)
   const [user, setUser] = useState<iUser | null>(null);
 
   useEffect(() => {
     const fetchUser = async () => setUser(await getUser());
-    
+
     fetchUser();
   }, []);
 
@@ -55,7 +55,7 @@ export const BasePageLayout: React.FC<IBasePageLayoutProps> = ({ children }) => 
     <Box
       bgcolor={theme.palette.background.paper}
     >
-      <AppBar 
+      <AppBar
         component={Toolbar}
         position='relative'
         color='transparent'
@@ -68,14 +68,14 @@ export const BasePageLayout: React.FC<IBasePageLayoutProps> = ({ children }) => 
             onClick={toggleDrawerOpen}
             sx={{ marginLeft: 0, marginRight: 'auto', paddingLeft: 0, minWidth: 'min-content' }}
           >
-            <MenuIcon sx={{ marginLeft: 0, paddingLeft: 0 }}/>
+            <MenuIcon sx={{ marginLeft: 0, paddingLeft: 0 }} />
           </Button>
         )}
-        
+
         <Button onClick={toggleTheme}>
           <Brightness6RoundedIcon color='primary' />
         </Button>
-      
+
         {!smDown && !!user && (
           <Box display='flex' flexDirection='column' gap={1}>
             <Typography variant={mdDown ? 'body2' : 'subtitle1'}>
@@ -88,23 +88,23 @@ export const BasePageLayout: React.FC<IBasePageLayoutProps> = ({ children }) => 
           </Box>
         )}
 
-        <Box onClick={handlePopoverOpen}>
+        <Button onClick={handlePopoverOpen}>
           <Avatar src={iconelogoProvisoria} sx={{ width: 30, height: 30 }} />
-        </Box>
+        </Button>
         <Popover
           open={openPopover}
           anchorEl={popoverAnchorEl}
           onClose={handlePopoverClose}
           anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'left',
+            vertical: 'bottom',
+            horizontal: 'left',
           }}
         >
           <Box padding={2}
-            display= 'flex'
+            display='flex'
             flexDirection='column'
             alignItems='center'
-            justifyContent= 'center'
+            justifyContent='center'
           >
             <Box
               marginBottom={2}>
@@ -114,14 +114,14 @@ export const BasePageLayout: React.FC<IBasePageLayoutProps> = ({ children }) => 
               >
                 {/* {user.role.toString()} */}
                 <Typography fontSize={12}>
-                    {!!user && user.email}
+                  {!!user && user.email}
                 </Typography>
               </Typography>
             </Box>
 
             <Divider />
 
-            <Button 
+            <Button
               onClick={handleLogout}
               startIcon={<LogoutIcon color='primary' />}
             >
@@ -153,7 +153,7 @@ export const BasePageLayout: React.FC<IBasePageLayoutProps> = ({ children }) => 
 
   return (
     <Box
-      id="BasePageLayout" 
+      id="BasePageLayout"
       display='flex'
       flexDirection='column'
       gap={smDown ? 1 : 4}

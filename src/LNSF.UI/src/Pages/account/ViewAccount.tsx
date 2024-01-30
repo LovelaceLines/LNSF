@@ -84,27 +84,27 @@ export const ViewAccount: React.FC = () => {
   useEffect(() => {
     setFilters({ ...filters, globalFilter: globalFilter });
   }, [globalFilter]);
- 
+
   useEffect(() => {
     const updatedFilters = { ...filters };
     const columnIds = columnFilters.map(columnFilter => columnFilter.id);
     let value: unknown;
- 
+
     value = columnFilters.find(cf => cf.id === 'userName')?.value;
     if (columnIds.includes('userName') && typeof value === 'string')
       updatedFilters.userName = value;
     else updatedFilters.userName = undefined;
- 
+
     value = columnFilters.find(cf => cf.id === 'email')?.value;
     if (columnIds.includes('email') && typeof value === 'string')
       updatedFilters.email = value;
     else updatedFilters.email = undefined;
- 
+
     value = columnFilters.find(cf => cf.id === 'phoneNumber')?.value;
     if (columnIds.includes('phoneNumber') && typeof value === 'string')
       updatedFilters.phoneNumber = value;
     else updatedFilters.phoneNumber = undefined;
- 
+
     value = columnFilters.find(cf => cf.id === 'roles')?.value;
     if (columnIds.includes('roles') && typeof value === 'string') {
       if ('administrador'.includes(value.toLowerCase())) updatedFilters.role = RoleString.administrador;
@@ -114,32 +114,32 @@ export const ViewAccount: React.FC = () => {
       else if ('desenvolvedor'.includes(value.toLowerCase())) updatedFilters.role = RoleString.desenvolvedor;
     }
     else updatedFilters.role = undefined;
- 
+
     setFilters(updatedFilters);
   }, [columnFilters]);
- 
+
   useEffect(() => {
     const updatedFilters = { ...filters };
     const columnIds = sortFilters.map(sort => sort.id);
-   
+
     const desc = sortFilters.find(cf => cf.id === 'userName')?.desc;
     if (columnIds.includes('userName') && typeof desc === 'boolean')
       updatedFilters.orderBy = desc ? iOrderBy.descendent : iOrderBy.ascendent;
     else updatedFilters.orderBy = undefined;
- 
+
     setFilters(updatedFilters);
   }, [sortFilters]);
 
   useEffect(() => {
     LocalStorage.setColumnVisibilityUser(columnVisibleState);
   }, [columnVisibleState]);
- 
+
   useEffect(() => {
     const page: iPage = { page: pagination.pageIndex, pageSize: pagination.pageSize };
     setFilters({ ...filters, page: page });
 
     LocalStorage.setPageSize(page.pageSize!);
-    
+
     const fetchUsers = async () => setUsers(await getUsers({ ...filters, page: page }));
     fetchUsers();
   }, [pagination]);
@@ -151,7 +151,7 @@ export const ViewAccount: React.FC = () => {
         Usuários do Sistema
       </Typography>
       <Box display='flex' gap={2}>
-        <Button variant='contained' size='small' startIcon={<AddIcon />} onClick={() => navigate('/inicio/usuarios/gerenciar/cadastrar')}>
+        <Button variant='contained' size='small' startIcon={<AddIcon />} onClick={() => navigate('/usuarios/gerenciar/cadastrar')}>
           Novo
         </Button>
         <Box display='flex' alignItems='center'>
@@ -165,7 +165,7 @@ export const ViewAccount: React.FC = () => {
 
   const renderActions = (row: MRT_Row<iUser>) => (
     <Box display='flex' flexDirection='row' flexWrap='nowrap'>
-      <IconButton onClick={() => navigate(`/inicio/usuarios/gerenciar/${row.original.id}`)}>
+      <IconButton onClick={() => navigate(`/usuarios/gerenciar/${row.original.id}`)}>
         <EditRoundedIcon />
       </IconButton>
     </Box>
@@ -174,27 +174,27 @@ export const ViewAccount: React.FC = () => {
   const table = useMaterialReactTable<iUser>({
     columns,
     data: users,
-    state: { 
-      sorting: sortFilters, 
+    state: {
+      sorting: sortFilters,
       pagination: pagination,
       columnVisibility: columnVisibleState,
       isFullScreen,
     },
- 
+
     renderTopToolbarCustomActions: ({ table }) => renderTopToolbar(table),
- 
+
     enableRowActions: true,
     renderRowActions: ({ row, cell, table }) => renderActions(row),
- 
+
     manualFiltering: true,
     onGlobalFilterChange: setGlobalFilter,
     onColumnFiltersChange: setColumnFilters,
- 
+
     manualSorting: true,
     onSortingChange: setSortFilters,
 
     onColumnVisibilityChange: setColumnVisibleState,
- 
+
     manualPagination: true,
     onPaginationChange: setPagination,
     paginationDisplayMode: 'pages',
@@ -202,14 +202,16 @@ export const ViewAccount: React.FC = () => {
 
     onIsFullScreenChange: () => setIsFullScreen(!isFullScreen),
 
-    muiTablePaperProps: ({ table }) => ({ style: {
-      zIndex: isFullScreen ? 10000 : undefined,
-    }}),
+    muiTablePaperProps: ({ table }) => ({
+      style: {
+        zIndex: isFullScreen ? 10000 : undefined,
+      }
+    }),
 
-    mrtTheme : {
+    mrtTheme: {
       baseBackgroundColor: theme.palette.background.paper,
     },
- 
+
     localization: MRT_Localization_PT_BR,
   });
 

@@ -134,9 +134,9 @@ export const TelaDeGerenciamentoPeople: React.FC = () => {
                             } else {
                                 setIsLoading(false);
                                 if (isSaveAndClose()) {
-                                    navigate('/inicio/pessoas/visualizar')
+                                    navigate('/pessoas/visualizar')
                                 } else {
-                                    navigate(`/inicio/pessoas/visualizar/${response.id}`)
+                                    navigate(`/pessoas/visualizar/${response.id}`)
                                 }
                             }
                         })
@@ -216,8 +216,8 @@ export const TelaDeGerenciamentoPeople: React.FC = () => {
                         mostrarBotaoSalvarEFechar={id !== 'cadastrar' ? false : true}
                         aoClicarEmSalvar={id !== 'cadastrar' ? save : undefined}
                         aoClicarEmSalvarEFechar={id === 'cadastrar' ? saveAndClose : undefined}
-                        //aoClicarEmNovo={() => { navigate('/inicio/apartamentos/gerenciar/cadastrar') }}
-                        aoClicarEmVoltar={() => { navigate(`/inicio/pessoas/visualizar`) }}
+                        //aoClicarEmNovo={() => { navigate('/apartamentos/gerenciar/cadastrar') }}
+                        aoClicarEmVoltar={() => { navigate(`/pessoas/visualizar`) }}
                     />
                 </Toolbar>
 

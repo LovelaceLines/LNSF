@@ -12,6 +12,7 @@ import { MRT_ColumnDef, MRT_ColumnFiltersState, MRT_PaginationState, MRT_Row, MR
 import { LocalStorage } from '../../Global';
 import { iOrderBy, iPage } from '../../Contexts/types';
 import { MRT_Localization_PT_BR } from 'material-react-table/locales/pt-BR';
+import { format, parseISO } from 'date-fns';
 
 export const ViewPeopleRoomHosting: React.FC = () => {
   const navigate = useNavigate();
@@ -26,8 +27,10 @@ export const ViewPeopleRoomHosting: React.FC = () => {
   const [pagination, setPagination] = useState<MRT_PaginationState>({ pageIndex: 0, pageSize: LocalStorage.getPageSize() });
   const [isFullScreen, setIsFullScreen] = useState<boolean>(false);
   const [peoplesRoomsHostings, setPeoples] = useState<iPeopleRoomHostingObject[]>([]);
+  const [active, setActive] = useState<boolean>(true);
   const [filters, setFilters] = useState<iPeopleRoomHostingFilter>({
     page: { page: pagination.pageIndex, pageSize: pagination.pageSize },
+    active: active,
     getPeople: true,
     getRoom: true,
     getHosting: true,
@@ -80,7 +83,10 @@ export const ViewPeopleRoomHosting: React.FC = () => {
         header: 'Check-in',
         size: 50,
         enableColumnActions: false,
-        enableSorting: false,
+        Cell: ({ row }) => {
+          const checkIn = row.original.hosting.checkIn;
+          return format(parseISO(checkIn.toString()), 'dd/MM/yyyy HH:mm')
+        }
       },
       {
         accessorKey: 'hosting.checkOut',
@@ -88,6 +94,10 @@ export const ViewPeopleRoomHosting: React.FC = () => {
         size: 50,
         enableColumnActions: false,
         enableSorting: false,
+        Cell: ({ row }) => {
+          const checkOut = row.original.hosting.checkOut;
+          return format(parseISO(checkOut.toString()), 'dd/MM/yyyy HH:mm')
+        }
       }
     ],
     [],
@@ -155,6 +165,10 @@ export const ViewPeopleRoomHosting: React.FC = () => {
     fetchPeoplesRoomsHostings();
   }, [pagination]);
 
+  useEffect(() => {
+    setFilters({ ...filters, active: active });
+  }, [active]);
+
   const renderTopToolbar = (table: MRT_TableInstance<iPeopleRoomHostingObject>) => (
     <Box display='flex' flexDirection='column' gap={2} paddingRight='auto'>
       <Typography variant={smDown ? "h6" : "h5"} display='flex' alignItems='center' gap={1} paddingRight='auto' >
@@ -162,10 +176,12 @@ export const ViewPeopleRoomHosting: React.FC = () => {
         Pessoas Hospedadas
       </Typography>
       <Box display='flex' gap={2}>
-        <Button variant='contained' size='small' startIcon={<AddIcon />} onClick={() => navigate('/inicio/pessoas/gerenciar/cadastrar')}>
+        <Button variant='contained' size='small' startIcon={<AddIcon />} onClick={() => navigate('/pessoas/gerenciar/cadastrar')}>
           Novo
         </Button>
         <Box display='flex' alignItems='center'>
+          <Typography>Ativos</Typography>
+          <Checkbox checked={active} onChange={(e) => setActive(e.target.checked)} />
         </Box>
         <Button variant='contained' size='small' startIcon={<ContentPasteSearchIcon />} onClick={fetchPeoplesRoomsHostings}>
           Buscar

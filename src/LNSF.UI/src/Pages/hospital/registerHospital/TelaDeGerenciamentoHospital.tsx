@@ -220,7 +220,7 @@ export const TelaDeGerenciamentoHospital: React.FC = () => {
                         mostrarBotaoSalvarEFechar={id !== 'cadastrar' ? false : true}
                         aoClicarEmSalvar={id !== 'cadastrar' ? save : undefined}
                         aoClicarEmSalvarEFechar={id === 'cadastrar' ? saveAndClose : undefined}
-                        aoClicarEmVoltar={() => { navigate('/inicio/hospital/visualizar') }}
+                        aoClicarEmVoltar={() => { navigate('/hospital/visualizar') }}
                     />
                 </Toolbar>
             </Box>

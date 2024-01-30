@@ -10,6 +10,7 @@ export interface iPeopleRoomHostingFilter {
   available?: boolean;
   checkIn?: Date;
   checkOut?: Date;
+  active?: boolean;
   globalFilter?: string;
   getPeople?: boolean;
   getRoom?: boolean;

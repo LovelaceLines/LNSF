@@ -12,6 +12,7 @@ public class PeopleRoomHostingFilter
     public bool? Available { get; set; }
     public DateTime? CheckIn { get; set; }
     public DateTime? CheckOut { get; set; }
+    public bool? Active { get; set; }
     public bool? GetPeople { get; set; }
     public bool? GetRoom { get; set; }
     public bool? GetHosting { get; set; }
@@ -31,6 +32,7 @@ public class PeopleRoomHostingFilter
         bool? available = null,
         DateTime? checkIn = null,
         DateTime? checkOut = null,
+        bool? active = null,
         bool? getPeople = null,
         bool? getRoom = null,
         bool? getHosting = null,
@@ -46,6 +48,7 @@ public class PeopleRoomHostingFilter
         Available = available;
         CheckIn = checkIn;
         CheckOut = checkOut;
+        Active = active;
         GetPeople = getPeople;
         GetRoom = getRoom;
         GetHosting = getHosting;

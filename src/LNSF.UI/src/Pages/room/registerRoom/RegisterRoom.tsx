@@ -24,7 +24,7 @@ export const RegisterRoom: React.FC = () => {
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
     const navigate = useNavigate();
 
- 
+
     const busca = useMemo(() => {
         return (searchParams.get('busca') || '');
     }, [searchParams])
@@ -38,7 +38,7 @@ export const RegisterRoom: React.FC = () => {
         setIsLoading(true);
 
         debounce(() => {
-           
+
             viewRoom(pagina, busca, 'number')
                 .then((response) => {
                     if (response instanceof Error) {
@@ -83,7 +83,7 @@ export const RegisterRoom: React.FC = () => {
                     <SearchButton
                         textoDaBusca={busca}
                         aoMudarTextoDeBusca={texto => setSearchParams({ busca: texto, pagina: '1' }, { replace: true })}
-                    
+
                     />
 
                     < ButtonAction
@@ -92,7 +92,7 @@ export const RegisterRoom: React.FC = () => {
                         mostrarBotaoVoltar={false}
 
                         mostrarBotaoApagar={false}
-                        aoClicarEmNovo={() => { navigate('/inicio/apartamentos/gerenciar/cadastrar') }}
+                        aoClicarEmNovo={() => { navigate('/apartamentos/gerenciar/cadastrar') }}
                     />
                 </Toolbar>
             </Box>
@@ -125,7 +125,7 @@ export const RegisterRoom: React.FC = () => {
                                         color='primary'
                                         disableElevation
                                         variant='outlined'
-                                        onClick={() => navigate(`/inicio/apartamentos/gerenciar/${row.id}`)}
+                                        onClick={() => navigate(`/apartamentos/gerenciar/${row.id}`)}
                                     >
                                         <EditRoundedIcon color='primary' fontSize='small' />
                                     </Button>
