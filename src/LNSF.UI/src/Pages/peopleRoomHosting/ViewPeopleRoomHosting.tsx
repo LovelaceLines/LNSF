@@ -27,8 +27,10 @@ export const ViewPeopleRoomHosting: React.FC = () => {
   const [pagination, setPagination] = useState<MRT_PaginationState>({ pageIndex: 0, pageSize: LocalStorage.getPageSize() });
   const [isFullScreen, setIsFullScreen] = useState<boolean>(false);
   const [peoplesRoomsHostings, setPeoples] = useState<iPeopleRoomHostingObject[]>([]);
+  const [active, setActive] = useState<boolean>(true);
   const [filters, setFilters] = useState<iPeopleRoomHostingFilter>({
     page: { page: pagination.pageIndex, pageSize: pagination.pageSize },
+    active: active,
     getPeople: true,
     getRoom: true,
     getHosting: true,
@@ -163,6 +165,10 @@ export const ViewPeopleRoomHosting: React.FC = () => {
     fetchPeoplesRoomsHostings();
   }, [pagination]);
 
+  useEffect(() => {
+    setFilters({ ...filters, active: active });
+  }, [active]);
+
   const renderTopToolbar = (table: MRT_TableInstance<iPeopleRoomHostingObject>) => (
     <Box display='flex' flexDirection='column' gap={2} paddingRight='auto'>
       <Typography variant={smDown ? "h6" : "h5"} display='flex' alignItems='center' gap={1} paddingRight='auto' >
@@ -174,6 +180,8 @@ export const ViewPeopleRoomHosting: React.FC = () => {
           Novo
         </Button>
         <Box display='flex' alignItems='center'>
+          <Typography>Ativos</Typography>
+          <Checkbox checked={active} onChange={(e) => setActive(e.target.checked)} />
         </Box>
         <Button variant='contained' size='small' startIcon={<ContentPasteSearchIcon />} onClick={fetchPeoplesRoomsHostings}>
           Buscar

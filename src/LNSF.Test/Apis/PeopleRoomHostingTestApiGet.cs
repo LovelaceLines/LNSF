@@ -64,6 +64,30 @@ public class PeopleRoomHostingTestApiGet : GlobalClientRequest
     }
 
     [Fact]
+    public async Task Get_PeopleRoomHostingActive_Ok()
+    {
+        var patient = await GetPatient();
+        var hosting = await GetHosting(patientId: patient.Id, checkIn: DateTime.Now.AddDays(-1), checkOut: DateTime.Now.AddDays(1));
+        var prh = await GetPeopleRoomHosting(peopleId: patient.PeopleId, hostingId: hosting.Id);
+
+        var prhActiveQueried = await QueryFirst<PeopleRoomHostingViewModel>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: patient.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId, active: true));
+
+        Assert.Equivalent(prh, prhActiveQueried);
+    }
+
+    [Fact]
+    public async Task Get_PeopleRoomHostingNoActive_Ok()
+    {
+        var patient = await GetPatient();
+        var hosting = await GetHosting(patientId: patient.Id, checkIn: DateTime.Now.AddDays(1), checkOut: DateTime.Now.AddDays(2));
+        var prh = await GetPeopleRoomHosting(peopleId: patient.PeopleId, hostingId: hosting.Id);
+
+        var prhActiveQueried = await Query<List<PeopleRoomHostingViewModel>>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: patient.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId, active: true));
+
+        Assert.Empty(prhActiveQueried);
+    }
+
+    [Fact]
     public async Task Get_PeopleRoomHostingGetPeople_Ok()
     {
         var people = await GetPeople();
