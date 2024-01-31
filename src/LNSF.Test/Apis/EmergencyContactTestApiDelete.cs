@@ -1,6 +1,5 @@
 ﻿using LNSF.Api.ViewModels;
 using LNSF.Domain.Exceptions;
-using LNSF.Test.Fakers;
 using System.Net;
 using Xunit;
 
@@ -9,7 +8,7 @@ namespace LNSF.Test.Apis;
 public class EmergencyContactTestApiDelete : GlobalClientRequest
 {
     [Fact]
-    public async Task Delete_Contact_OK()
+    public async Task Contact_OK()
     {
         var contact = await GetEmergencyContact();
 
@@ -22,7 +21,7 @@ public class EmergencyContactTestApiDelete : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Delete_ContactNonExists_NotFound()
+    public async Task ContactNonExists_NotFound()
     {
         var countBefore = await GetCount(_emergencyContactClient);
         var exception = await Delete<AppException>(_emergencyContactClient, -1);

@@ -9,7 +9,7 @@ namespace LNSF.Test.Apis;
 public class TourTestApiPutAll : GlobalClientRequest
 {
     [Fact]
-    public async Task PutAll_ValidOpenTour_Ok()
+    public async Task ValidOpenTour_Ok()
     {
         var openTour = await GetTour();
         var closeTourFake = new TourPutViewModelFake(openTour.Id, openTour.PeopleId).Generate();
@@ -23,7 +23,7 @@ public class TourTestApiPutAll : GlobalClientRequest
     }
 
     [Fact]
-    public async Task PutAll_ValidCloseTour_Ok()
+    public async Task ValidCloseTour_Ok()
     {
         var openTour = await GetTour();
         var closeTour = await GetTour(openTour.Id, openTour.PeopleId);
@@ -38,7 +38,7 @@ public class TourTestApiPutAll : GlobalClientRequest
     }
 
     [Fact]
-    public async Task PutAll_InvalidTourWithInvalidDates_BadRequest()
+    public async Task InvalidTourWithInvalidDates_BadRequest()
     {
         var openTour = await GetTour();
         var closeTour = await GetTour(openTour.Id, openTour.PeopleId);

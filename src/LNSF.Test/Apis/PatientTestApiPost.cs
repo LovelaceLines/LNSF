@@ -9,7 +9,7 @@ namespace LNSF.Test.Apis;
 public class PatientTestApiPost : GlobalClientRequest
 {
     [Fact]
-    public async Task Post_Patient_Ok()
+    public async Task Patient_Ok()
     {
         var people = await GetPeople();
         var hospital = await GetHospital();
@@ -24,7 +24,7 @@ public class PatientTestApiPost : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Post_PatientsWithSameHospital_Ok()
+    public async Task PatientsWithSameHospital_Ok()
     {
         var hospital = await GetHospital();
         var people1 = await GetPeople();
@@ -43,7 +43,7 @@ public class PatientTestApiPost : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Post_PatientWithExistsPeopleId_Conflict()
+    public async Task PatientWithExistsPeopleId_Conflict()
     {
         var people = await GetPeople();
         var patient = await GetPatient(peopleId: people.Id);
@@ -58,7 +58,7 @@ public class PatientTestApiPost : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Post_PatientWithInvalidHospital_NotFound()
+    public async Task PatientWithInvalidHospital_NotFound()
     {
         var people = await GetPeople();
         var patientFake = new PatientPostViewModelFake(peopleId: people.Id, hospitalId: 0).Generate();

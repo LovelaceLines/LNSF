@@ -7,7 +7,7 @@ namespace LNSF.Test.Apis;
 public class PeopleTestApiGet : GlobalClientRequest
 {
     [Fact]
-    public async Task Get_QueryPeople_Ok()
+    public async Task QueryPeople_Ok()
     {
         var people = await GetPeople();
 
@@ -32,7 +32,7 @@ public class PeopleTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryPeopleName_Ok()
+    public async Task QueryPeopleName_Ok()
     {
         var people = await GetPeople();
 
@@ -42,7 +42,7 @@ public class PeopleTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryPeopleGender_Ok()
+    public async Task QueryPeopleGender_Ok()
     {
         var people = await GetPeople();
 
@@ -52,7 +52,7 @@ public class PeopleTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryPeopleBirthDate_Ok()
+    public async Task QueryPeopleBirthDate_Ok()
     {
         var people = await GetPeople();
 
@@ -63,7 +63,7 @@ public class PeopleTestApiGet : GlobalClientRequest
 
     [Theory]
     [InlineData("##.###.###-#")]
-    public async Task Get_QueryPeopleRG_Ok(string rgFormat)
+    public async Task QueryPeopleRG_Ok(string rgFormat)
     {
         var rg = new Bogus.Faker().Random.ReplaceNumbers(rgFormat);
         var people = await GetPeople(rg: rg);
@@ -74,7 +74,7 @@ public class PeopleTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryPeopleIssuingBody_Ok()
+    public async Task QueryPeopleIssuingBody_Ok()
     {
         var people = await GetPeople();
 
@@ -84,7 +84,7 @@ public class PeopleTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryPeopleCPF_Ok()
+    public async Task QueryPeopleCPF_Ok()
     {
         var people = await GetPeople();
 
@@ -94,7 +94,7 @@ public class PeopleTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryPeopleStreet_Ok()
+    public async Task QueryPeopleStreet_Ok()
     {
         var people = await GetPeople();
 
@@ -104,7 +104,7 @@ public class PeopleTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryPeopleHouseNumber_Ok()
+    public async Task QueryPeopleHouseNumber_Ok()
     {
         var people = await GetPeople();
 
@@ -114,7 +114,7 @@ public class PeopleTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryPeopleNeighborhood_Ok()
+    public async Task QueryPeopleNeighborhood_Ok()
     {
         var people = await GetPeople();
 
@@ -124,7 +124,7 @@ public class PeopleTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryPeopleCity_Ok()
+    public async Task QueryPeopleCity_Ok()
     {
         var people = await GetPeople();
 
@@ -134,7 +134,7 @@ public class PeopleTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryPeopleState_Ok()
+    public async Task QueryPeopleState_Ok()
     {
         var people = await GetPeople();
 
@@ -146,7 +146,7 @@ public class PeopleTestApiGet : GlobalClientRequest
     [Theory]
     [InlineData("(##) #####-####")]
     [InlineData("####-####")]
-    public async Task Get_QueryPeoplePhone_Ok(string phoneFormat)
+    public async Task QueryPeoplePhone_Ok(string phoneFormat)
     {
         var phone = new Bogus.DataSets.PhoneNumbers().PhoneNumber(phoneFormat);
         var people = await GetPeople(phone: phone);
@@ -157,7 +157,7 @@ public class PeopleTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryPeopleNoteQuery_Ok()
+    public async Task QueryPeopleNoteQuery_Ok()
     {
         var people = await GetPeople();
 
@@ -167,7 +167,7 @@ public class PeopleTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryPeoplePatient_Ok()
+    public async Task QueryPeoplePatient_Ok()
     {
         var people = await GetPeople();
         var patient = await GetPatient(peopleId: people.Id);
@@ -178,7 +178,7 @@ public class PeopleTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryPeopleEscort_Ok()
+    public async Task QueryPeopleEscort_Ok()
     {
         var people = await GetPeople();
         var escort = await GetEscort(peopleId: people.Id);
@@ -189,7 +189,7 @@ public class PeopleTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryPeopleActive_Ok()
+    public async Task QueryPeopleActive_Ok()
     {
         var people = await GetPeople();
         var patient = await GetPatient(peopleId: people.Id);
@@ -201,7 +201,7 @@ public class PeopleTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryPeopleNew_Ok()
+    public async Task QueryPeopleNew_Ok()
     {
         var people = await GetPeople();
         var patient = await GetPatient(peopleId: people.Id);
@@ -213,7 +213,7 @@ public class PeopleTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryPeopleVeteran_Ok()
+    public async Task QueryPeopleVeteran_Ok()
     {
         var people = await GetPeople();
         var patient = await GetPatient(peopleId: people.Id);
@@ -226,7 +226,7 @@ public class PeopleTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryPeopleGlobalFilter_Ok()
+    public async Task QueryPeopleGlobalFilter_Ok()
     {
         var people = await GetPeople();
         var peopleQueried = await QueryFirst<PeopleViewModel>(_peopleClient, new PeopleFilter(id: people.Id));
@@ -257,7 +257,7 @@ public class PeopleTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryPeopleGetTours_Ok()
+    public async Task QueryPeopleGetTours_Ok()
     {
         var people = await GetPeople();
         var openTour1 = await GetTour(peopleId: people.Id);
@@ -272,7 +272,7 @@ public class PeopleTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryPeopleGetEmergencyContacts_Ok()
+    public async Task QueryPeopleGetEmergencyContacts_Ok()
     {
         var people = await GetPeople();
         var emergencyContact1 = await GetEmergencyContact(peopleId: people.Id);

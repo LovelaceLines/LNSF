@@ -9,7 +9,7 @@ namespace LNSF.Test.Apis;
 public class PeopleTestApiPost : GlobalClientRequest
 {
     [Fact]
-    public async Task Post_People_Ok()
+    public async Task People_Ok()
     {
         var peopleFake = new PeoplePostViewModelFake().Generate();
 
@@ -24,7 +24,7 @@ public class PeopleTestApiPost : GlobalClientRequest
     [Theory]
     [InlineData("(##) #####-####")]
     [InlineData("####-####")]
-    public async Task Post_PeopleWithValidPhoneNumber_OK(string phoneNumberFormat)
+    public async Task PeopleWithValidPhoneNumber_OK(string phoneNumberFormat)
     {
         var peopleFake = new PeoplePostViewModelFake(phone: new Bogus.DataSets.PhoneNumbers().PhoneNumber(phoneNumberFormat)).Generate();
 
@@ -41,7 +41,7 @@ public class PeopleTestApiPost : GlobalClientRequest
     [InlineData("(##) ####-####")]
     [InlineData("## (##) ####-####")]
     [InlineData("## (##) # ####-####")]
-    public async Task Post_PeopleWithInvalidPhoneNumber_BadRequest(string phoneNumberFormat)
+    public async Task PeopleWithInvalidPhoneNumber_BadRequest(string phoneNumberFormat)
     {
         var peopleFake = new PeoplePostViewModelFake(phone: new Bogus.DataSets.PhoneNumbers().PhoneNumber(phoneNumberFormat)).Generate();
 
@@ -54,7 +54,7 @@ public class PeopleTestApiPost : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Post_PeopleWithInvalidProps_BadRequest()
+    public async Task PeopleWithInvalidProps_BadRequest()
     {
         var peopleWithoutName = new PeoplePostViewModelFake(name: "").Generate();
         var peopleAged14 = new PeoplePostViewModelFake(birthDate: DateTime.Now.AddYears(-14)).Generate();

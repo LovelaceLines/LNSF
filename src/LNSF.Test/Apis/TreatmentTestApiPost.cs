@@ -9,7 +9,7 @@ namespace LNSF.Test.Apis;
 public class TreatmentTestApiPost : GlobalClientRequest
 {
     [Fact]
-    public async Task Post_Treatment_Ok()
+    public async Task Treatment_Ok()
     {
         var treatmentFake = new TreatmentPostViewModelFake().Generate();
 
@@ -22,7 +22,7 @@ public class TreatmentTestApiPost : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Post_TreatmentWithRepeatedUniqueNameAndDifferentType_Ok()
+    public async Task TreatmentWithRepeatedUniqueNameAndDifferentType_Ok()
     {
         var treatment = await GetTreatment();
         var treatmentFake = new TreatmentPostViewModelFake(name: treatment.Name).Generate();
@@ -36,7 +36,7 @@ public class TreatmentTestApiPost : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Post_TreatmentWithRepeatedUniqueNameAndType_Conflict()
+    public async Task TreatmentWithRepeatedUniqueNameAndType_Conflict()
     {
         var treatment = await GetTreatment();
         var treatmentFake = new TreatmentPostViewModelFake(name: treatment.Name, type: treatment.Type).Generate();
@@ -52,7 +52,7 @@ public class TreatmentTestApiPost : GlobalClientRequest
     [Theory]
     [InlineData("ab")]
     [InlineData("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz")]
-    public async Task Post_TreatmentWithShortAndLongName_BadRequest(string name)
+    public async Task TreatmentWithShortAndLongName_BadRequest(string name)
     {
         var treatmentFake = new TreatmentPostViewModelFake(name: name).Generate();
 

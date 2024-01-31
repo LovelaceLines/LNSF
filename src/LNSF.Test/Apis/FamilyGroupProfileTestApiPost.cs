@@ -1,7 +1,7 @@
-﻿using System.Net;
-using LNSF.Api.ViewModels;
+﻿using LNSF.Api.ViewModels;
 using LNSF.Domain.Exceptions;
 using LNSF.Test.Fakers;
+using System.Net;
 using Xunit;
 
 namespace LNSF.Test.Apis;
@@ -9,7 +9,7 @@ namespace LNSF.Test.Apis;
 public class FamilyGroupProfileTestApiPost : GlobalClientRequest
 {
     [Fact]
-    public async Task Post_FamilyGroupProfile_Ok()
+    public async Task FamilyGroupProfile_Ok()
     {
         var patient = await GetPatient();
         var familyGroupProfileFake = new FamilyGroupProfilePostViewModelFake(patientId: patient.Id).Generate();
@@ -25,7 +25,7 @@ public class FamilyGroupProfileTestApiPost : GlobalClientRequest
     [Theory]
     [InlineData(0)]
     [InlineData(-1)]
-    public async Task Post_FamilyGroupProfileWithNonExistsPatientId_NotFound(int patientId)
+    public async Task FamilyGroupProfileWithNonExistsPatientId_NotFound(int patientId)
     {
         var familyGroupProfileFake = new FamilyGroupProfilePostViewModelFake(patientId: patientId).Generate();
 
@@ -38,7 +38,7 @@ public class FamilyGroupProfileTestApiPost : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Post_FamilyGroupProfilesWithSamePatientId_Ok()
+    public async Task FamilyGroupProfilesWithSamePatientId_Ok()
     {
         var patient = await GetPatient();
         var familyGroupProfileFake1 = new FamilyGroupProfilePostViewModelFake(patientId: patient.Id).Generate();

@@ -11,7 +11,7 @@ public class HostingTestApiPost : GlobalClientRequest
     [Theory]
     [InlineData(true)]
     [InlineData(false)]
-    public async Task Post_Hosting_Ok(bool hasCheckOut)
+    public async Task Hosting_Ok(bool hasCheckOut)
     {
         var patient = await GetPatient();
         var hostingFake = new HostingPostViewModelFake(patientId: patient.Id).Generate();
@@ -26,7 +26,7 @@ public class HostingTestApiPost : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Post_HostingWithCheckInGreaterThanCheckOut_BadRequest()
+    public async Task HostingWithCheckInGreaterThanCheckOut_BadRequest()
     {
         var patient = await GetPatient();
         var checkIn = new Bogus.DataSets.Date().Future();
@@ -42,7 +42,7 @@ public class HostingTestApiPost : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Post_HostingWithCloseHostingWithSomePatientId_Ok()
+    public async Task HostingWithCloseHostingWithSomePatientId_Ok()
     {
         var hosting = await GetHosting();
         var hostingFake = new HostingPostViewModelFake(patientId: hosting.PatientId, checkIn: hosting.CheckOut!.Value.AddDays(1), checkOut: hosting.CheckOut!.Value.AddDays(5)).Generate();
@@ -56,7 +56,7 @@ public class HostingTestApiPost : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Post_HostingWithOpenHostingWithSomePatientId_Conflict()
+    public async Task HostingWithOpenHostingWithSomePatientId_Conflict()
     {
         var patient = await GetPatient();
         var openHostingFake = new HostingPostViewModelFake(patientId: patient.Id).Generate();
@@ -73,7 +73,7 @@ public class HostingTestApiPost : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Post_HostingWithConflictDates_Conflict()
+    public async Task HostingWithConflictDates_Conflict()
     {
         var checkIn = new Bogus.DataSets.Date().Past().AddDays(-5);
         var checkOut = new Bogus.DataSets.Date().Future().AddDays(5);

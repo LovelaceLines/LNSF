@@ -7,7 +7,7 @@ namespace LNSF.Test.Apis;
 public class EmergencyContactTestApiGet : GlobalClientRequest
 {
     [Fact]
-    public async Task Get_QueryContact_OK()
+    public async Task QueryContact_OK()
     {
         var contact = await GetEmergencyContact();
 
@@ -20,7 +20,7 @@ public class EmergencyContactTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryContactName_OK()
+    public async Task QueryContactName_OK()
     {
         var contact = await GetEmergencyContact();
 
@@ -30,7 +30,7 @@ public class EmergencyContactTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryContactPhone_OK()
+    public async Task QueryContactPhone_OK()
     {
         var contact = await GetEmergencyContact();
 
@@ -40,7 +40,7 @@ public class EmergencyContactTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryContactPeopleId_OK()
+    public async Task QueryContactPeopleId_OK()
     {
         var contact = await GetEmergencyContact();
 
@@ -50,7 +50,7 @@ public class EmergencyContactTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryContactGetPeople_OK()
+    public async Task QueryContactGetPeople_OK()
     {
         var people = await GetPeople();
         var contact = await GetEmergencyContact(peopleId: people.Id);
@@ -61,7 +61,7 @@ public class EmergencyContactTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryContactGlobalFilter_OK()
+    public async Task QueryContactGlobalFilter_OK()
     {
         var people = await GetPeople();
         var contact = await GetEmergencyContact(peopleId: people.Id);

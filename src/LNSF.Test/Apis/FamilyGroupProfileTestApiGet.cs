@@ -7,7 +7,7 @@ namespace LNSF.Test.Apis;
 public class FamilyGroupProfileTestApiGet : GlobalClientRequest
 {
     [Fact]
-    public async Task Get_FamilyGroupProfile_Ok()
+    public async Task QueryFamilyGroupProfile_Ok()
     {
         var familyGroupProfile = await GetFamilyGroupProfile();
 
@@ -22,7 +22,7 @@ public class FamilyGroupProfileTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_FamilyGroupProfileName_Ok()
+    public async Task QueryFamilyGroupProfileName_Ok()
     {
         var familyGroupProfile = await GetFamilyGroupProfile();
 
@@ -32,7 +32,7 @@ public class FamilyGroupProfileTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_FamilyGroupProfileKinship_Ok()
+    public async Task QueryFamilyGroupProfileKinship_Ok()
     {
         var familyGroupProfile = await GetFamilyGroupProfile();
 
@@ -42,7 +42,7 @@ public class FamilyGroupProfileTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_FamilyGroupProfileAge_Ok()
+    public async Task QueryFamilyGroupProfileAge_Ok()
     {
         var familyGroupProfile = await GetFamilyGroupProfile();
 
@@ -52,7 +52,7 @@ public class FamilyGroupProfileTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_FamilyGroupProfileProfession_Ok()
+    public async Task QueryFamilyGroupProfileProfession_Ok()
     {
         var familyGroupProfile = await GetFamilyGroupProfile();
 
@@ -62,7 +62,7 @@ public class FamilyGroupProfileTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_FamilyGroupProfileIncome_Ok()
+    public async Task QueryFamilyGroupProfileIncome_Ok()
     {
         var familyGroupProfile = await GetFamilyGroupProfile();
 
@@ -72,7 +72,7 @@ public class FamilyGroupProfileTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_FamilyGroupProfileGlobalFilter_Ok()
+    public async Task QueryFamilyGroupProfileGlobalFilter_Ok()
     {
         var people = await GetPeople();
         var patient = await GetPatient(peopleId: people.Id);
@@ -91,7 +91,7 @@ public class FamilyGroupProfileTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_FamilyGroupProfileGetPatient_Ok()
+    public async Task QueryFamilyGroupProfileGetPatient_Ok()
     {
         var people = await GetPeople();
         var patient = await GetPatient(peopleId: people.Id);

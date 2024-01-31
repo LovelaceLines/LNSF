@@ -1,6 +1,6 @@
-﻿using System.Net;
-using LNSF.Api.ViewModels;
+﻿using LNSF.Api.ViewModels;
 using LNSF.Domain.Exceptions;
+using System.Net;
 using Xunit;
 
 namespace LNSF.Test.Apis;
@@ -8,7 +8,7 @@ namespace LNSF.Test.Apis;
 public class FamilyGroupProfileTestApiDelete : GlobalClientRequest
 {
     [Fact]
-    public async Task Delete_FamilyGroupProfile_Ok()
+    public async Task FamilyGroupProfile_Ok()
     {
         var familyGroupProfile = await GetFamilyGroupProfile();
 
@@ -23,7 +23,7 @@ public class FamilyGroupProfileTestApiDelete : GlobalClientRequest
     [Theory]
     [InlineData(0)]
     [InlineData(-1)]
-    public async Task Delete_FamilyGroupProfileWithNonExistsId_NotFoun(int id)
+    public async Task FamilyGroupProfileWithNonExistsId_NotFoun(int id)
     {
         var countBefore = await GetCount(_familyGroupProfileClient);
         var exception = await Delete<AppException>(_familyGroupProfileClient, id);

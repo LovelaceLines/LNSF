@@ -7,7 +7,7 @@ namespace LNSF.Test.Apis;
 public class TourTestApiGet : GlobalClientRequest
 {
     [Fact]
-    public async Task Get_QueryTour_Ok()
+    public async Task QueryTour_Ok()
     {
         var tour = await GetTour();
 
@@ -21,7 +21,7 @@ public class TourTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryTourOutput_Ok()
+    public async Task QueryTourOutput_Ok()
     {
         var tour = await GetTour();
 
@@ -31,7 +31,7 @@ public class TourTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryTourInputWithOpenTour_Ok()
+    public async Task QueryTourInputWithOpenTour_Ok()
     {
         var openTour = await GetTour();
 
@@ -41,7 +41,7 @@ public class TourTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryTourInputWithCloseTour_Ok()
+    public async Task QueryTourInputWithCloseTour_Ok()
     {
         var openTour = await GetTour();
         var closeTour = await GetTour(openTour.Id, openTour.PeopleId);
@@ -52,7 +52,7 @@ public class TourTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryTourNote_Ok()
+    public async Task QueryTourNote_Ok()
     {
         var tour = await GetTour();
 
@@ -62,7 +62,7 @@ public class TourTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryTourPeopleId_Ok()
+    public async Task QueryTourPeopleId_Ok()
     {
         var tour = await GetTour();
 
@@ -72,7 +72,7 @@ public class TourTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryTourInOpen_Ok()
+    public async Task QueryTourInOpen_Ok()
     {
         var openTour = await GetTour();
 
@@ -82,7 +82,7 @@ public class TourTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryTourClosed_Ok()
+    public async Task QueryTourClosed_Ok()
     {
         var openTour = await GetTour();
         var tourClosed = await GetTour(openTour.Id, openTour.PeopleId);
@@ -93,7 +93,7 @@ public class TourTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryTourGetPeople_Ok()
+    public async Task QueryTourGetPeople_Ok()
     {
         var people = await GetPeople();
         var tour = await GetTour(peopleId: people.Id);
@@ -104,7 +104,7 @@ public class TourTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryTourGlobalFilter_Ok()
+    public async Task QueryTourGlobalFilter_Ok()
     {
         var people = await GetPeople();
         var tour = await GetTour(peopleId: people.Id);

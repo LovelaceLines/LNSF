@@ -9,7 +9,7 @@ namespace LNSF.Test.Apis;
 public class EmergencyContactTestApiPost : GlobalClientRequest
 {
     [Fact]
-    public async Task Post_Contact_OK()
+    public async Task Contact_OK()
     {
         var people = await GetPeople();
         var contactFake = new EmergencyContactPostViewModelFake(peopleId: people.Id).Generate();
@@ -23,7 +23,7 @@ public class EmergencyContactTestApiPost : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Post_ContactsWithSamePeopleId_OK()
+    public async Task ContactsWithSamePeopleId_OK()
     {
         var people = await GetPeople();
         var contactFake1 = new EmergencyContactPostViewModelFake(peopleId: people.Id).Generate();
@@ -40,7 +40,7 @@ public class EmergencyContactTestApiPost : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Post_Contact_BadRequest()
+    public async Task Contact_BadRequest()
     {
         var people = await GetPeople();
         var contactFakeWithInvalidPeopleId = new EmergencyContactPostViewModelFake(peopleId: -1).Generate();

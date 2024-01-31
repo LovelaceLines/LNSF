@@ -11,7 +11,7 @@ public class TourTestApiPost : GlobalClientRequest
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public async Task Post_Tour_Ok(string? note)
+    public async Task Tour_Ok(string? note)
     {
         var people = await GetPeople();
         var tourFake = new TourPostViewModelFake(people.Id, note: note).Generate();
@@ -25,7 +25,7 @@ public class TourTestApiPost : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Post_TourWithPeopleHaveAnOpenTour_Conflict()
+    public async Task TourWithPeopleHaveAnOpenTour_Conflict()
     {
         var openTour = await GetTour();
         var openTourFake = new TourPostViewModelFake(openTour.PeopleId).Generate();

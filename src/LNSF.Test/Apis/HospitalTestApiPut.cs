@@ -9,7 +9,7 @@ namespace LNSF.Test.Apis;
 public class HospitalTestApiPut : GlobalClientRequest
 {
     [Fact]
-    public async Task Put_Hospital_Ok()
+    public async Task Hospital_Ok()
     {
         var hospital = await GetHospital();
         var hospitalFake = new HospitalViewModelFake(id: hospital.Id).Generate();
@@ -23,7 +23,7 @@ public class HospitalTestApiPut : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Put_HospitalInvalidRepeatedUniqueName_Conflict()
+    public async Task HospitalInvalidRepeatedUniqueName_Conflict()
     {
         var hospital1 = await GetHospital();
         var hospital2 = await GetHospital();

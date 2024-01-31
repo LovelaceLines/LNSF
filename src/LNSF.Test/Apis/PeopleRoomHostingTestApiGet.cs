@@ -7,7 +7,7 @@ namespace LNSF.Test.Apis;
 public class PeopleRoomHostingTestApiGet : GlobalClientRequest
 {
     [Fact]
-    public async Task Get_PeopleRoomHostingId_Ok()
+    public async Task QueryPeopleRoomHostingId_Ok()
     {
         var prh = await GetPeopleRoomHosting();
 
@@ -17,7 +17,7 @@ public class PeopleRoomHostingTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_PeopleRoomHostingVacancy_Ok()
+    public async Task QueryPeopleRoomHostingVacancy_Ok()
     {
         var room = await GetRoom(available: true);
         var prh = await GetPeopleRoomHosting(roomId: room.Id);
@@ -28,7 +28,7 @@ public class PeopleRoomHostingTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_PeopleRoomHostingHasVacancy_Ok()
+    public async Task QueryPeopleRoomHostingHasVacancy_Ok()
     {
         var room = await GetRoom(available: true);
         var prh = await GetPeopleRoomHosting(roomId: room.Id);
@@ -39,7 +39,7 @@ public class PeopleRoomHostingTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_PeopleRoomHostingAvailable_Ok()
+    public async Task QueryPeopleRoomHostingAvailable_Ok()
     {
         var room = await GetRoom(available: true);
         var prh = await GetPeopleRoomHosting(roomId: room.Id);
@@ -50,7 +50,7 @@ public class PeopleRoomHostingTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_PeopleRoomHostingCheckInAndCheckOut_Ok()
+    public async Task QueryPeopleRoomHostingCheckInAndCheckOut_Ok()
     {
         var room = await GetRoom(beds: 2, available: true);
         var people = await GetPeople();
@@ -64,7 +64,7 @@ public class PeopleRoomHostingTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_PeopleRoomHostingActive_Ok()
+    public async Task QueryPeopleRoomHostingActive_Ok()
     {
         var patient = await GetPatient();
         var hosting = await GetHosting(patientId: patient.Id, checkIn: DateTime.Now.AddDays(-1), checkOut: DateTime.Now.AddDays(1));
@@ -76,7 +76,7 @@ public class PeopleRoomHostingTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_PeopleRoomHostingNoActive_Ok()
+    public async Task QueryPeopleRoomHostingNoActive_Ok()
     {
         var patient = await GetPatient();
         var hosting = await GetHosting(patientId: patient.Id, checkIn: DateTime.Now.AddDays(1), checkOut: DateTime.Now.AddDays(2));
@@ -88,7 +88,7 @@ public class PeopleRoomHostingTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_PeopleRoomHostingGetPeople_Ok()
+    public async Task QueryPeopleRoomHostingGetPeople_Ok()
     {
         var people = await GetPeople();
         var patient = await GetPatient(peopleId: people.Id);
@@ -101,7 +101,7 @@ public class PeopleRoomHostingTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_PeopleRoomHostingGetRoom_Ok()
+    public async Task QueryPeopleRoomHostingGetRoom_Ok()
     {
         var room = await GetRoom(available: true);
         var prh = await GetPeopleRoomHosting(roomId: room.Id);
@@ -112,7 +112,7 @@ public class PeopleRoomHostingTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_PeopleRoomHostingGetHosting_Ok()
+    public async Task QueryPeopleRoomHostingGetHosting_Ok()
     {
         var people = await GetPeople();
         var patient = await GetPatient(peopleId: people.Id);
@@ -125,7 +125,7 @@ public class PeopleRoomHostingTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_PeopleRoomHostingGlobalFilter_Ok()
+    public async Task QueryPeopleRoomHostingGlobalFilter_Ok()
     {
         var room = await GetRoom(beds: 2, available: true);
         var people = await GetPeople();

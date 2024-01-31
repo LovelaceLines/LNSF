@@ -7,7 +7,7 @@ namespace LNSF.Test.Apis;
 public class ServiceRecordTestApiGet : GlobalClientRequest
 {
     [Fact]
-    public async Task Get_ServiceRecord_Ok()
+    public async Task QueryServiceRecord_Ok()
     {
         var serviceRecord = await GetServiceRecord();
 
@@ -17,7 +17,7 @@ public class ServiceRecordTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_ServiceRecordPatientId_Ok()
+    public async Task QueryServiceRecordPatientId_Ok()
     {
         var serviceRecord = await GetServiceRecord();
 
@@ -27,7 +27,7 @@ public class ServiceRecordTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_ServiceRecordGetPatientId_Ok()
+    public async Task QueryServiceRecordGetPatientId_Ok()
     {
         var people = await GetPeople();
         var patient = await GetPatient(peopleId: people.Id);
@@ -41,7 +41,7 @@ public class ServiceRecordTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_ServiceRecordGlobalFilter_Ok()
+    public async Task QueryServiceRecordGlobalFilter_Ok()
     {
         var people = await GetPeople();
         var patient = await GetPatient(peopleId: people.Id);

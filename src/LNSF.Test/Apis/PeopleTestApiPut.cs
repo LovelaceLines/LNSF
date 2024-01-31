@@ -9,7 +9,7 @@ namespace LNSF.Test.Apis;
 public class PeopleTestApiPut : GlobalClientRequest
 {
     [Fact]
-    public async Task Put_People_Ok()
+    public async Task People_Ok()
     {
         var people = await GetPeople();
         var peopleToPut = new PeopleViewModelFake(people.Id).Generate();
@@ -23,7 +23,7 @@ public class PeopleTestApiPut : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Put_PeopleWithInvalidProps_BadRequest()
+    public async Task PeopleWithInvalidProps_BadRequest()
     {
         var people = await GetPeople();
         var peopleToPutWithoutName = new PeopleViewModelFake(people.Id, name: "").Generate();

@@ -7,7 +7,7 @@ namespace LNSF.Test.Apis;
 public class EscortTestApiGet : GlobalClientRequest
 {
     [Fact]
-    public async Task Get_QueryEscort_Ok()
+    public async Task QueryEscort_Ok()
     {
         var escort = await GetEscort();
 
@@ -18,7 +18,7 @@ public class EscortTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryEscortPeopleId_Ok()
+    public async Task QueryEscortPeopleId_Ok()
     {
         var escort = await GetEscort();
 
@@ -28,7 +28,7 @@ public class EscortTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryEscortGetPeople()
+    public async Task QueryEscortGetPeople()
     {
         var people = await GetPeople();
         var escort = await GetEscort(peopleId: people.Id);
@@ -39,7 +39,7 @@ public class EscortTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryEscortActive_Ok()
+    public async Task QueryEscortActive_Ok()
     {
         var escort = await GetEscort();
         var hosting = await GetHosting(checkIn: DateTime.Now.AddDays(-1), checkOut: DateTime.Now.AddDays(1));
@@ -51,7 +51,7 @@ public class EscortTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryEscortInactive_Ok()
+    public async Task QueryEscortInactive_Ok()
     {
         var escort = await GetEscort();
         var hosting = await GetHosting(checkIn: DateTime.Now.AddDays(-10), checkOut: DateTime.Now.AddDays(-9));
@@ -63,7 +63,7 @@ public class EscortTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryEscortIsVeteran_Ok()
+    public async Task QueryEscortIsVeteran_Ok()
     {
         var escort = await GetEscort();
         var hosting1 = await GetHosting(checkIn: DateTime.Now.AddDays(-10), checkOut: DateTime.Now.AddDays(-9));
@@ -77,7 +77,7 @@ public class EscortTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryEscortGlobalFilter()
+    public async Task QueryEscortGlobalFilter()
     {
         var people = await GetPeople();
         var escort = await GetEscort(peopleId: people.Id);

@@ -9,7 +9,7 @@ namespace LNSF.Test.Apis;
 public class EscortTestApiPost : GlobalClientRequest
 {
     [Fact]
-    public async Task Post_ValidEscort_Ok()
+    public async Task ValidEscort_Ok()
     {
         var people = await GetPeople();
         var escortFake = new EscortPostViewModel { PeopleId = people.Id };
@@ -23,7 +23,7 @@ public class EscortTestApiPost : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Post_EscortWithNotExistsPeopleId_NotFound()
+    public async Task EscortWithNotExistsPeopleId_NotFound()
     {
         var escortFake = new EscortPostViewModelFake(peopleId: 0).Generate();
 
@@ -36,7 +36,7 @@ public class EscortTestApiPost : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Post_EscortWithUsedPeopleId_Conflict()
+    public async Task EscortWithUsedPeopleId_Conflict()
     {
         var escort = await GetEscort();
         var escortFake = new EscortPostViewModelFake(peopleId: escort.PeopleId).Generate();
