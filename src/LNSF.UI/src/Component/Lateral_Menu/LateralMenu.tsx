@@ -232,7 +232,7 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
         marginBottom={1}
         display='flex'
         flexDirection='column'
-        overflow='hidden'
+        overflow={smDown ? 'auto' : 'hidden'}
       >
         <AppBar
           component={Toolbar}
