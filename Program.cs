@@ -182,11 +182,11 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: cors["PolicyName"] ?? throw new AppException("Cors: PolicyName is null!", HttpStatusCode.InternalServerError), builder =>
     {
         builder.WithOrigins(cors["AllowedOrigins"] ?? throw new AppException("Cors: WithOrigins is null!", HttpStatusCode.InternalServerError))
-            //.WithMethods(cors["AllowedMethods"] ?? throw new AppException("Cors: WithMethods is null!"))
-            .AllowAnyMethod()
-            //.WithHeaders(cors["AllowedHeaders"] ?? throw new AppException("Cors: WithHeaders is null!"))
-            .AllowAnyHeader()
-            .DisallowCredentials();
+            .WithMethods("GET", "POST", "PUT", "DELETE")
+            // .AllowAnyMethod()
+            .WithHeaders("Authorization", "Content-Type")
+            // .AllowAnyHeader()
+            .AllowCredentials();
     });
 });
 
@@ -296,12 +296,9 @@ var helperMigration = new HelperMigration(app.Services);
 
 app.UseExceptionHandler("/api/Error");
 
-if (app.Environment.IsDevelopment() ||
-    app.Environment.IsProduction() ||
-    app.Environment.IsStaging())
+if (app.Environment.IsDevelopment())
 {
     // app.UseDeveloperExceptionPage();
-
     app.UseSwagger();
     app.UseSwaggerUI();
 }
