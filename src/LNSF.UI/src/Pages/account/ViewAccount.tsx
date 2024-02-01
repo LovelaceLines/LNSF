@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import { AccountContext, RoleString } from '../../Contexts';
 import ContentPasteSearchIcon from '@mui/icons-material/ContentPasteSearch';
+import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { iUser, iUserFilter } from '../../Contexts/accountContext/type';
@@ -17,7 +18,7 @@ export const ViewAccount: React.FC = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
-  const { getUsers, getCount } = useContext(AccountContext);
+  const { getUsers, getCount, deleteUser } = useContext(AccountContext);
   const [count, setCount] = useState<number>();
   const [globalFilter, setGlobalFilter] = useState<string>('');
   const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>([]);
@@ -167,6 +168,9 @@ export const ViewAccount: React.FC = () => {
     <Box display='flex' flexDirection='row' flexWrap='nowrap'>
       <IconButton onClick={() => navigate(`/usuarios/gerenciar/${row.original.id}`)}>
         <EditRoundedIcon />
+      </IconButton>
+      <IconButton onClick={() => deleteUser(row.original.id).then(fetchUsers)}>
+        <DeleteIcon />
       </IconButton>
     </Box>
   );
