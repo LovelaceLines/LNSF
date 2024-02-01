@@ -18,7 +18,8 @@ public class PeopleValidator : AbstractValidator<People>
 
         RuleFor(people => people.Email)
             .EmailAddress().WithMessage(GlobalValidator.InvalidEmailFormat())
-            .MaximumLength(64).WithMessage(GlobalValidator.MaxLength("Email", 64));
+            .MaximumLength(64).WithMessage(GlobalValidator.MaxLength("Email", 64))
+            .When(people => !string.IsNullOrEmpty(people.Email));
 
         RuleFor(people => people.RG)
             .Matches(@"^\d+((.?|-?)\d+)*$").WithMessage(GlobalValidator.InvalidRGFormat());

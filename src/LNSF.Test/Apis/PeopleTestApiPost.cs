@@ -36,6 +36,19 @@ public class PeopleTestApiPost : GlobalClientRequest
         Assert.Equivalent(peopleFake, peoplePosted);
     }
 
+    [Fact]
+    public async Task PeopleWithOutEmail_OK()
+    {
+        var peopleFake = new PeoplePostViewModelFake(email: "").Generate();
+
+        var countBefore = await GetCount(_peopleClient);
+        var peoplePosted = await Post<PeopleViewModel>(_peopleClient, peopleFake);
+        var countAfter = await GetCount(_peopleClient);
+
+        Assert.Equal(countBefore + 1, countAfter);
+        Assert.Equivalent(peopleFake, peoplePosted);
+    }
+
     [Theory]
     [InlineData("(##) # ####-####")]
     [InlineData("(##) ####-####")]
