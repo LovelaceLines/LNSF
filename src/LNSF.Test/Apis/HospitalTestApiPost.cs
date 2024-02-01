@@ -9,7 +9,7 @@ namespace LNSF.Test.Apis;
 public class HospitalTestApiPost : GlobalClientRequest
 {
     [Fact]
-    public async Task Post_HospitalValid_Ok()
+    public async Task HospitalValid_Ok()
     {
         var hospitalFake = new HospitalPostViewModelFake().Generate();
 
@@ -22,7 +22,7 @@ public class HospitalTestApiPost : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Post_HospitalWithInvalidName_BadRequest()
+    public async Task HospitalWithInvalidName_BadRequest()
     {
         var hospitalWithInvalidName = new HospitalPostViewModelFake(name: "hosp").Generate();
 
@@ -35,7 +35,7 @@ public class HospitalTestApiPost : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Post_HospitalWithRepeatedUniqueName_Conflict()
+    public async Task HospitalWithRepeatedUniqueName_Conflict()
     {
         var hospital = await GetHospital();
         var hospitalFake = new HospitalPostViewModelFake(name: hospital.Name).Generate();

@@ -9,7 +9,7 @@ namespace LNSF.Test.Apis;
 public class ServiceRecordTestApiPut : GlobalClientRequest
 {
     [Fact]
-    public async Task Put_ServiceRecord_Ok()
+    public async Task ServiceRecord_Ok()
     {
         var serviceRecord = await GetServiceRecord();
         var serviceRecordFake = new ServiceRecordViewModelFake(id: serviceRecord.Id, patientId: serviceRecord.PatientId).Generate();
@@ -20,7 +20,7 @@ public class ServiceRecordTestApiPut : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Post_ServiceRecordWithUsedPatientId_Conflict()
+    public async Task ServiceRecordWithUsedPatientId_Conflict()
     {
         var serviceRecord1 = await GetServiceRecord();
         var serviceRecord2 = await GetServiceRecord();

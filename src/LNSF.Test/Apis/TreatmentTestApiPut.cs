@@ -9,7 +9,7 @@ namespace LNSF.Test.Apis;
 public class TreatmentTestApiPut : GlobalClientRequest
 {
     [Fact]
-    public async Task Put_Treatment_Ok()
+    public async Task Treatment_Ok()
     {
         var treatment = await GetTreatment();
         var treatmentFake = new TreatmentViewModelFake(treatment.Id).Generate();
@@ -23,7 +23,7 @@ public class TreatmentTestApiPut : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Put_TreatmentWithRepeatedUniqueNameAndDifferentType_Ok()
+    public async Task TreatmentWithRepeatedUniqueNameAndDifferentType_Ok()
     {
         var treatment = await GetTreatment();
         var treatmentFake = new TreatmentViewModelFake(treatment.Id, name: treatment.Name).Generate();
@@ -37,7 +37,7 @@ public class TreatmentTestApiPut : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Put_TreatmentWithRepeatedUniqueNamesAndType_Conflict()
+    public async Task TreatmentWithRepeatedUniqueNamesAndType_Conflict()
     {
         var treatment1 = await GetTreatment();
         var treatment2 = await GetTreatment();

@@ -1,6 +1,5 @@
 ﻿using LNSF.Api.ViewModels;
 using LNSF.Domain.Exceptions;
-using LNSF.Test.Fakers;
 using System.Net;
 using Xunit;
 
@@ -9,7 +8,7 @@ namespace LNSF.Test.Apis;
 public class EscortTestApiDelete : GlobalClientRequest
 {
     // [Fact]
-    public async Task Delete_ValidEscort_Ok()
+    public async Task ValidEscort_Ok()
     {
         var escort = await GetEscort();
 
@@ -22,7 +21,7 @@ public class EscortTestApiDelete : GlobalClientRequest
     }
 
     // [Fact]
-    public async Task Delete_EscortWithNotExistsId_NotFound()
+    public async Task EscortWithNotExistsId_NotFound()
     {
         var countBefore = await GetCount(_escortClient);
         var exception = await Delete<AppException>(_escortClient, 0);

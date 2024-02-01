@@ -7,7 +7,7 @@ namespace LNSF.Test.Apis;
 public class TreatmentTestApiGet : GlobalClientRequest
 {
     [Fact]
-    public async Task Get_QueryTreatment_Ok()
+    public async Task QueryTreatment_Ok()
     {
         var treatment = await GetTreatment();
 
@@ -19,7 +19,7 @@ public class TreatmentTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryTreatmentName_Ok()
+    public async Task QueryTreatmentName_Ok()
     {
         var treatment = await GetTreatment();
 
@@ -29,7 +29,7 @@ public class TreatmentTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryTreatmentType_Ok()
+    public async Task QueryTreatmentType_Ok()
     {
         var treatment = await GetTreatment();
 
@@ -39,7 +39,7 @@ public class TreatmentTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryTreatmentGlobalFilter_Ok()
+    public async Task QueryTreatmentGlobalFilter_Ok()
     {
         var treatment = await GetTreatment();
         var treatmentQueried = await QueryFirst<TreatmentViewModel>(_treatmentClient, new TreatmentFilter(id: treatment.Id));

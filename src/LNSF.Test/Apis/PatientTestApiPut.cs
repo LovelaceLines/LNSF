@@ -9,7 +9,7 @@ namespace LNSF.Test.Apis;
 public class PatientTestApiPut : GlobalClientRequest
 {
     [Fact]
-    public async Task Put_ValidPatient_Ok()
+    public async Task ValidPatient_Ok()
     {
         var patient = await GetPatient();
         var patientFake = new PatientViewModelFake(patient.Id, patient.PeopleId, patient.HospitalId).Generate();
@@ -23,7 +23,7 @@ public class PatientTestApiPut : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Put_PatientWithNonExistsPeopleId_NotFound()
+    public async Task PatientWithNonExistsPeopleId_NotFound()
     {
         var patient1 = await GetPatient();
         var patient2 = await GetPatient();

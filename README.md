@@ -18,9 +18,9 @@ O React é uma biblioteca JavaScript para criar interfaces de usuário (UI) reat
 
 Bibliotecas utilizadas no desenvolvimento:
 
-| [Axios](https://www.npmjs.com/package/axios) | [ReactRouter](https://www.npmjs.com/package/react-router-dom) | [MUI](https://www.npmjs.com/package/@mui/material) | [Unform](https://www.npmjs.com/package/@unform/core) | [ESLint](https://www.npmjs.com/package/eslint)
-|:--:|:--:|:--:|:--:|:--:|
-| ![Axios](./docs/icons/axios.png) | ![ReactRouter](./docs/icons/react-router.png) | ![MUI](./docs/icons/mui.png) | ![Unform](./docs/icons/unform.png) | ![ESLint](./docs/icons/eslint.png)
+| [Axios](https://www.npmjs.com/package/axios) | [ReactRouter](https://www.npmjs.com/package/react-router-dom) | [MUI](https://www.npmjs.com/package/@mui/material) | [Unform](https://www.npmjs.com/package/@unform/core) | [ESLint](https://www.npmjs.com/package/eslint) | [Material React Table](https://material-react-table.com/) | [yup](https://www.npmjs.com/package/yup)
+|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+| ![Axios](./docs/icons/axios.png) | ![ReactRouter](./docs/icons/react-router.png) | ![MUI](./docs/icons/mui.png) | ![Unform](./docs/icons/unform.png) | ![ESLint](./docs/icons/eslint.png) | ![Material React Table](./docs/icons/material-react-table.png) | ![yup]()
 
 ## Diagramas
 
@@ -31,3 +31,27 @@ Para modelar e representar a estrutura lógica dos dados, é utilizado o **Diagr
 Por fim, o projeto esta sobre a Clean Architecture, visando testabilidade, flexíveis e separação de responsabilidades. Essa abordagem de arquitetura de software promove a separação clara e distinta das responsabilidades em diferentes camadas, permitindo que cada uma delas evolua de forma independente.
 
 ![https://drive.google.com/file/d/17xy_svjjbLNoT9HOEAuety9PCTEwO09v/view?usp=drive_web](./docs/images/Clean%20Architecture.png)
+
+## Showcase
+
+### Api
+![Api - Swagger](./docs/screenshots/Api%20-%20Swagger.png)
+
+### UI
+![UI - Login](./docs/screenshots/UI%20-%20Login.png)
+![UI - Home](./docs/screenshots/UI%20-%20Home.png)
+![UI - Form](./docs/screenshots/UI%20-%20Form.png)
+![UI - Page](./docs/screenshots/UI%20-%20Page.png)
+![UI - Table](./docs/screenshots/UI%20-%20Table.png)
+![UI - About](./docs/screenshots/UI%20-%20About.png)
+![Mobile - Form](./docs/screenshots/Mobile%20-%20Form.png)
+
+## Trello
+![Trello - 1](./docs/screenshots/Trello%20(1).png)
+![Trello - 2](./docs/screenshots/Trello%20(2).png)
+
+## Figma
+![Figma - 1](./docs/screenshots/Figma%20(1).png)
+![Figma - 2](./docs/screenshots/Figma%20(2).png)
+![Figma - 3](./docs/screenshots/Figma%20(3).png)
+![Figma - 4](./docs/screenshots/Figma%20(4).png)

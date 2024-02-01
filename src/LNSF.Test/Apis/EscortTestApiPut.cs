@@ -1,5 +1,4 @@
-﻿using LNSF.Api.ViewModels;
-using LNSF.Domain.Exceptions;
+﻿using LNSF.Domain.Exceptions;
 using LNSF.Test.Fakers;
 using System.Net;
 using Xunit;
@@ -11,7 +10,7 @@ public class EscortTestApiPut : GlobalClientRequest
     [Theory]
     [InlineData(0)]
     [InlineData(-1)]
-    public async Task Put_EscortWithOutherNonExistsPeopleId_NotFound(dynamic peopleId)
+    public async Task EscortWithOutherNonExistsPeopleId_NotFound(dynamic peopleId)
     {
         var escort = await GetEscort();
         var escortToPut = new EscortViewModelFake(id: escort.Id, peopleId: peopleId).Generate();
@@ -25,7 +24,7 @@ public class EscortTestApiPut : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Put_EscortWithUsePeopleId_NotFound()
+    public async Task EscortWithUsePeopleId_NotFound()
     {
         var escort1 = await GetEscort();
         var escort2 = await GetEscort();

@@ -7,7 +7,7 @@ namespace LNSF.Test.Apis;
 public class HostingTestApiGet : GlobalClientRequest
 {
     [Fact]
-    public async Task Get_QueryHosting_Ok()
+    public async Task QueryHosting_Ok()
     {
         var hosting = await GetHosting();
 
@@ -20,7 +20,7 @@ public class HostingTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryHostingCheckIn_Ok()
+    public async Task QueryHostingCheckIn_Ok()
     {
         var hosting = await GetHosting();
 
@@ -30,7 +30,7 @@ public class HostingTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryHostingCheckOut_Ok()
+    public async Task QueryHostingCheckOut_Ok()
     {
         var hosting = await GetHosting();
 
@@ -40,7 +40,7 @@ public class HostingTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryHostingCheckInCheckOut_Ok()
+    public async Task QueryHostingCheckInCheckOut_Ok()
     {
         var hosting = await GetHosting();
 
@@ -51,7 +51,7 @@ public class HostingTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryHostingPatientId_Ok()
+    public async Task QueryHostingPatientId_Ok()
     {
         var hosting = await GetHosting();
 
@@ -61,7 +61,7 @@ public class HostingTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryHostingEscortId_Ok()
+    public async Task QueryHostingEscortId_Ok()
     {
         var escort = await GetEscort();
         var hosting = await GetHosting();
@@ -73,7 +73,7 @@ public class HostingTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryHostingActive_Ok()
+    public async Task QueryHostingActive_Ok()
     {
         var hosting = await GetHosting(checkIn: DateTime.Now.AddDays(-1), checkOut: DateTime.Now.AddDays(1));
 
@@ -83,7 +83,7 @@ public class HostingTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryHostingInactive_Ok()
+    public async Task QueryHostingInactive_Ok()
     {
         var hosting = await GetHosting(checkIn: DateTime.Now.AddDays(-2), checkOut: DateTime.Now.AddDays(-1));
 
@@ -93,7 +93,7 @@ public class HostingTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryHostingGetPatient_Ok()
+    public async Task QueryHostingGetPatient_Ok()
     {
         var people = await GetPeople();
         var patient = await GetPatient(peopleId: people.Id);
@@ -106,7 +106,7 @@ public class HostingTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryHostingGetEscort_Ok()
+    public async Task QueryHostingGetEscort_Ok()
     {
         var people1 = await GetPeople();
         var people2 = await GetPeople();

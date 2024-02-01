@@ -7,7 +7,7 @@ namespace LNSF.Test.Apis;
 public class UserTestApiGet : GlobalClientRequest
 {
     [Fact]
-    public async Task Get_QueryUser_Ok()
+    public async Task QueryUser_Ok()
     {
         var user = await GetUser();
 
@@ -20,7 +20,7 @@ public class UserTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryUserName_Ok()
+    public async Task QueryUserName_Ok()
     {
         var user = await GetUser();
 
@@ -30,7 +30,7 @@ public class UserTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryUserEmail_Ok()
+    public async Task QueryUserEmail_Ok()
     {
         var user = await GetUser();
 
@@ -40,7 +40,7 @@ public class UserTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryUserPhoneNumber_Ok()
+    public async Task QueryUserPhoneNumber_Ok()
     {
         var user = await GetUser();
 
@@ -55,7 +55,7 @@ public class UserTestApiGet : GlobalClientRequest
     [InlineData("AssistenteSocial")]
     [InlineData("Secretario")]
     [InlineData("Voluntario")]
-    public async Task Get_QueryRole_Ok(string roleName)
+    public async Task QueryRole_Ok(string roleName)
     {
         var user = await GetUser(role: roleName);
 
@@ -70,7 +70,7 @@ public class UserTestApiGet : GlobalClientRequest
     [InlineData("AssistenteSocial")]
     [InlineData("Secretario")]
     [InlineData("Voluntario")]
-    public async Task Get_QueryGlobalFilter_Ok(string roleName)
+    public async Task QueryGlobalFilter_Ok(string roleName)
     {
         var user = await GetUser(role: roleName);
         var userQueried = await QueryFirst<UserViewModel>(_userClient, new UserFilter(id: user.Id));

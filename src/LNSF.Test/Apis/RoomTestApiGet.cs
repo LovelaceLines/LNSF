@@ -1,8 +1,5 @@
 ﻿using LNSF.Api.ViewModels;
-using LNSF.Domain.Exceptions;
 using LNSF.Domain.Filters;
-using LNSF.Test.Fakers;
-using System.Net;
 using Xunit;
 
 namespace LNSF.Test.Apis;
@@ -10,12 +7,10 @@ namespace LNSF.Test.Apis;
 public class RoomTestApiGet : GlobalClientRequest
 {
     [Fact]
-    public async Task Get_ValidRoomId_Ok()
+    public async Task QueryValidRoomId_Ok()
     {
-        // Arrange - Room
         var room = await GetRoom();
 
-        // Act - Room
         var queryId = await Query<List<RoomViewModel>>(_roomClient, new RoomFilter(id: room.Id));
         var RoomIdQueried = queryId.First();
 
@@ -23,12 +18,10 @@ public class RoomTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_ValidRoomNumber_Ok()
+    public async Task QueryValidRoomNumber_Ok()
     {
-        // Arrange - Room
         var room = await GetRoom();
 
-        // Act - Room
         var queryNumber = await Query<List<RoomViewModel>>(_roomClient, new RoomFilter(id: room.Id, number: room.Number));
         var RoomNumberQueried = queryNumber.First();
 
@@ -36,12 +29,10 @@ public class RoomTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_ValidRoomBeds_Ok()
+    public async Task QueryValidRoomBeds_Ok()
     {
-        // Arrange - Room
         var room = await GetRoom();
 
-        // Act - Room
         var queryBeds = await Query<List<RoomViewModel>>(_roomClient, new RoomFilter(id: room.Id, beds: room.Beds));
         var RoomBedsQueried = queryBeds.First();
 
@@ -49,12 +40,10 @@ public class RoomTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_ValidRoomStorey_Ok()
+    public async Task QueryValidRoomStorey_Ok()
     {
-        // Arrange - Room
         var room = await GetRoom();
 
-        // Act - Room
         var queryStorey = await Query<List<RoomViewModel>>(_roomClient, new RoomFilter(id: room.Id, storey: room.Storey));
         var RoomStoreyQueried = queryStorey.First();
 
@@ -62,12 +51,10 @@ public class RoomTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_ValidRoomAvailable_Ok()
+    public async Task QueryValidRoomAvailable_Ok()
     {
-        // Arrange - Room
         var room = await GetRoom();
 
-        // Act - Room
         var queryAvailable = await Query<List<RoomViewModel>>(_roomClient, new RoomFilter(id: room.Id, available: room.Available));
         var RoomAvailableQueried = queryAvailable.First();
 

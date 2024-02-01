@@ -9,7 +9,7 @@ namespace LNSF.Test.Apis;
 public class HostingTestApiPut : GlobalClientRequest
 {
     [Fact]
-    public async Task Put_Hosting_Ok()
+    public async Task Hosting_Ok()
     {
         var hosting = await GetHosting();
         var hostingFake = new HostingViewModelFake(id: hosting.Id, patientId: hosting.PatientId).Generate();
@@ -23,7 +23,7 @@ public class HostingTestApiPut : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Put_ValidHostingUpdateDates_Ok()
+    public async Task ValidHostingUpdateDates_Ok()
     {
         var checkIn = new Bogus.DataSets.Date().Past().AddDays(-5);
         var checkOut = new Bogus.DataSets.Date().Future().AddDays(5);
@@ -61,7 +61,7 @@ public class HostingTestApiPut : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Put_HostingWithOtherPatient_NotFound()
+    public async Task HostingWithOtherPatient_NotFound()
     {
         var patient = await GetPatient();
         var hosting = await GetHosting();
@@ -76,7 +76,7 @@ public class HostingTestApiPut : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Put_HostingWithCheckInGreaterThanCheckOut_BadRequest()
+    public async Task HostingWithCheckInGreaterThanCheckOut_BadRequest()
     {
         var hosting = await GetHosting();
         var checkIn = new Bogus.DataSets.Date().Future();

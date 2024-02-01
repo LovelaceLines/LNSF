@@ -7,7 +7,7 @@ namespace LNSF.Test.Apis;
 public class HospitalTestApiGet : GlobalClientRequest
 {
     [Fact]
-    public async Task Get_QueryHospital_Ok()
+    public async Task QueryHospital_Ok()
     {
         var hospital = await GetHospital();
 
@@ -19,7 +19,7 @@ public class HospitalTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryHospitalName_Ok()
+    public async Task QueryHospitalName_Ok()
     {
         var hospital = await GetHospital();
 
@@ -29,7 +29,7 @@ public class HospitalTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryHospitalAcronym_Ok()
+    public async Task QueryHospitalAcronym_Ok()
     {
         var hospital = await GetHospital();
 
@@ -39,7 +39,7 @@ public class HospitalTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryHospitalGlobalFilter_Ok()
+    public async Task QueryHospitalGlobalFilter_Ok()
     {
         var hospital = await GetHospital();
         var hospitalQueried = await QueryFirst<HospitalViewModel>(_hospitalClient, new HospitalFilter(id: hospital.Id));

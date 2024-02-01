@@ -11,16 +11,10 @@ public class RoleTestApi : GlobalClientRequest
     // [Fact]
     public async Task Post_ValidRole_Ok()
     {
-        // Arrange - Role
         var role = new RolePostViewModelFake().Generate();
 
-        // Arrange - Count
         var countBefore = await GetCount(_roleClient);
-
-        // Act - Role
         var rolePosted = await Post<RoleViewModel>(_roleClient, role);
-
-        // Act - Count
         var countAfter = await GetCount(_roleClient);
 
         Assert.Equal(countBefore + 1, countAfter);
@@ -30,17 +24,12 @@ public class RoleTestApi : GlobalClientRequest
     // [Fact]
     public async Task Delete_StaticRole_BadRequest()
     {
-        // Arrange - Count
         var countBefore = await GetCount(_roleClient);
-
-        // Act
         var exceptionDev = await Delete<AppException>(_roleClient, "Desenvolvedor");
         var exceptionAdmin = await Delete<AppException>(_roleClient, "Administrador");
         var exceptionAssistente = await Delete<AppException>(_roleClient, "Assistente Social");
         var exceptionSecr = await Delete<AppException>(_roleClient, "Secretário");
         var exceptionVol = await Delete<AppException>(_roleClient, "Voluntário");
-
-        // Arrange - Count
         var countAfter = await GetCount(_roleClient);
 
         Assert.Equal(countBefore, countAfter);

@@ -7,7 +7,7 @@ namespace LNSF.Test.Apis;
 public class PatientTestApiGet : GlobalClientRequest
 {
     [Fact]
-    public async Task Get_QueryPatient_Ok()
+    public async Task QueryPatient_Ok()
     {
         var patient = await GetPatient();
 
@@ -21,7 +21,7 @@ public class PatientTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryPatientSocioEconomicRecord_Ok()
+    public async Task QueryPatientSocioEconomicRecord_Ok()
     {
         var patient = await GetPatient();
 
@@ -31,7 +31,7 @@ public class PatientTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryPatientTerm_Ok()
+    public async Task QueryPatientTerm_Ok()
     {
         var patient = await GetPatient();
 
@@ -41,7 +41,7 @@ public class PatientTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryPatientPeopleId_Ok()
+    public async Task QueryPatientPeopleId_Ok()
     {
         var patient = await GetPatient();
 
@@ -51,7 +51,7 @@ public class PatientTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryPatientHospitalId_Ok()
+    public async Task QueryPatientHospitalId_Ok()
     {
         var patient = await GetPatient();
 
@@ -61,7 +61,7 @@ public class PatientTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryPatientActive_Ok()
+    public async Task QueryPatientActive_Ok()
     {
         var patient = await GetPatient();
         var hosting = await GetHosting(patientId: patient.Id, checkIn: DateTime.Now.AddDays(-1), checkOut: DateTime.Now.AddDays(1));
@@ -72,7 +72,7 @@ public class PatientTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryPatientInactive_Ok()
+    public async Task QueryPatientInactive_Ok()
     {
         var patient = await GetPatient();
         var hosting = await GetHosting(patientId: patient.Id, checkIn: DateTime.Now.AddDays(-10), checkOut: DateTime.Now.AddDays(-5));
@@ -83,7 +83,7 @@ public class PatientTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryPatientIsVeteran_Ok()
+    public async Task QueryPatientIsVeteran_Ok()
     {
         var patient = await GetPatient();
         var hosting1 = await GetHosting(patientId: patient.Id, checkIn: DateTime.Now.AddDays(-10), checkOut: DateTime.Now.AddDays(-5));
@@ -95,7 +95,7 @@ public class PatientTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryPatientGetPeople_Ok()
+    public async Task QueryPatientGetPeople_Ok()
     {
         var people = await GetPeople();
         var patient = await GetPatient(peopleId: people.Id);
@@ -106,7 +106,7 @@ public class PatientTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryPatientGetHospital_Ok()
+    public async Task QueryPatientGetHospital_Ok()
     {
 
         var hospital = await GetHospital();
@@ -118,7 +118,7 @@ public class PatientTestApiGet : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Get_QueryPatientGetTreatments_Ok()
+    public async Task QueryPatientGetTreatments_Ok()
     {
         var treatment1 = await GetTreatment();
         var treatment2 = await GetTreatment();

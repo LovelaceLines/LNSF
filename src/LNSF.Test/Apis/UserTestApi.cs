@@ -11,16 +11,10 @@ public class UserTestApi : GlobalClientRequest
     [Fact]
     public async Task Post_ValidUser_Ok()
     {
-        // Arrange - User
         var userFake = new UserPostViewModelFake().Generate();
 
-        // Arrange - Count
         var countBefore = await GetCount(_userClient);
-
-        // Act - User
         var userPosted = await Post<UserPostViewModel>(_userClient, userFake);
-
-        // Act - Count
         var countAfter = await GetCount(_userClient);
 
         Assert.Equal(countBefore + 1, countAfter);
@@ -35,16 +29,10 @@ public class UserTestApi : GlobalClientRequest
 
     public async Task Post_InvalidUserWithInvalidEmail_BadRequest(string email)
     {
-        // Arrange - User
         var userFake = new UserPostViewModelFake(email: email).Generate();
 
-        // Arrange - Count
         var countBefore = await GetCount(_userClient);
-
-        // Act - User
         var exception = await Post<AppException>(_userClient, userFake);
-
-        // Arrange - Count
         var countAfter = await GetCount(_userClient);
 
         Assert.Equal(countBefore, countAfter);
@@ -57,16 +45,10 @@ public class UserTestApi : GlobalClientRequest
     [InlineData("invalid")]
     public async Task Post_InvalidUserWithInvalidPassword_BadRequest(string password)
     {
-        // Arrange - User
         var userFake = new UserPostViewModelFake(password: password).Generate();
 
-        // Arrange - Count
         var countBefore = await GetCount(_userClient);
-
-        // Act - User
         var exception = await Post<AppException>(_userClient, userFake);
-
-        // Arrange - Count
         var countAfter = await GetCount(_userClient);
 
         Assert.Equal(countBefore, countAfter);
@@ -79,16 +61,10 @@ public class UserTestApi : GlobalClientRequest
     [InlineData("invalidinvalidinvalidinvalidinvalidinvalidinvalidinvalidinvalidinvalidinvalidinvalid")]
     public async Task Post_InvalidUserWithInvalidUserName_BadRequest(string userName)
     {
-        // Arrange - User
         var userFake = new UserPostViewModelFake(userName: userName).Generate();
 
-        // Arrange - Count
         var countBefore = await GetCount(_userClient);
-
-        // Act - User
         var exception = await Post<AppException>(_userClient, userFake);
-
-        // Arrange - Count
         var countAfter = await GetCount(_userClient);
 
         Assert.Equal(countBefore, countAfter);
@@ -99,19 +75,13 @@ public class UserTestApi : GlobalClientRequest
     [Fact]
     public async Task Post_InvalidUserWithRepeatedInfos_BadRequest()
     {
-        // Arrange - User
         var userFake = new UserPostViewModelFake().Generate();
         _ = await Post<UserPostViewModel>(_userClient, userFake);
 
-        // Arrange - Count
         var countBefore = await GetCount(_userClient);
-
-        // Act - User
         var exceptionUserName = await Post<AppException>(_userClient, new UserPostViewModelFake(userName: userFake.UserName).Generate());
         var exceptionEmail = await Post<AppException>(_userClient, new UserPostViewModelFake(email: userFake.Email).Generate());
         var exceptionPhoneNumber = await Post<AppException>(_userClient, new UserPostViewModelFake(phoneNumber: userFake.PhoneNumber).Generate());
-
-        // Arrange - Count
         var countAfter = await GetCount(_userClient);
 
         Assert.Equal(countBefore, countAfter);
@@ -126,17 +96,11 @@ public class UserTestApi : GlobalClientRequest
     [Fact]
     public async Task Put_ValidUser_Ok()
     {
-        // Arrange - User
         var user = await GetUser();
 
-        // Arrange - Count
         var countBefore = await GetCount(_userClient);
-
-        // Act - User
         var userFake = new UserViewModelFake(id: user.Id).Generate();
         var userUpdated = await Put<UserViewModel>(_userClient, userFake);
-
-        // Arrange - Count
         var countAfter = await GetCount(_userClient);
 
         Assert.Equal(countBefore, countAfter);
@@ -146,22 +110,16 @@ public class UserTestApi : GlobalClientRequest
     [Fact]
     public async void Put_InvalidUserWithRepeatInfo_BadRequest()
     {
-        // Arrange - User
         var user = await GetUser();
         var repeatInfo = await GetUser();
 
-        // Arrange - Count
         var countBefore = await GetCount(_userClient);
-
-        // Act - User
         var userFakeUserName = new UserViewModelFake(id: user.Id, userName: repeatInfo.UserName).Generate();
         var exceptionUserName = await Put<AppException>(_userClient, userFakeUserName);
         var userFakeEmail = new UserViewModelFake(id: user.Id, email: repeatInfo.Email).Generate();
         var exceptionEmail = await Put<AppException>(_userClient, userFakeEmail);
         var userFakePhoneNumber = new UserViewModelFake(id: user.Id, phoneNumber: repeatInfo.PhoneNumber).Generate();
         var exceptionPhoneNumber = await Put<AppException>(_userClient, userFakePhoneNumber);
-
-        // Arrange - Count
         var countAfter = await GetCount(_userClient);
 
         Assert.Equal(countBefore, countAfter);
@@ -176,16 +134,10 @@ public class UserTestApi : GlobalClientRequest
     [Fact]
     public async void Delete_ValidUser_Ok()
     {
-        // Arrange - User
         var user = await GetUser();
 
-        // Arrange - Count
         var countBefore = await GetCount(_userClient);
-
-        // Act - User
         var userDeleted = await Delete<UserViewModel>(_userClient, user.Id);
-
-        // Arrange - Count
         var countAfter = await GetCount(_userClient);
 
         Assert.Equal(countBefore - 1, countAfter);
@@ -195,17 +147,11 @@ public class UserTestApi : GlobalClientRequest
     [Fact]
     public async void Post_ValidAddUserToRole_Ok()
     {
-        // Arrange - User
         var user = await GetUser();
 
-        // Arrange - Count
         var countBefore = await GetCount(_userRoleClient);
-
-        // Act - User
         var userRole = new UserRoleViewModel { UserId = user.Id, RoleName = "Desenvolvedor" };
         var userRolePosted = await Post<UserViewModel>(_addUserToRoleClient, userRole);
-
-        // Arrange - Count
         var countAfter = await GetCount(_userRoleClient);
 
         Assert.Equal(countBefore + 1, countAfter);
@@ -214,17 +160,11 @@ public class UserTestApi : GlobalClientRequest
     [Fact]
     public async void Post_InvalidAddUserToRole_BadRequest()
     {
-        // Arrange - User
         var user = await GetUser();
 
-        // Arrange - Count
         var countBefore = await GetCount(_userRoleClient);
-
-        // Act - User
         var userRole = new UserRoleViewModel { UserId = user.Id, RoleName = "invalid" };
         var exception = await Post<AppException>(_addUserToRoleClient, userRole);
-
-        // Arrange - Count
         var countAfter = await GetCount(_userRoleClient);
 
         Assert.Equal(countBefore, countAfter);

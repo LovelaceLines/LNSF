@@ -1,6 +1,6 @@
-﻿using System.Net;
-using LNSF.Api.ViewModels;
+﻿using LNSF.Api.ViewModels;
 using LNSF.Domain.Exceptions;
+using System.Net;
 using Xunit;
 
 namespace LNSF.Test.Apis;
@@ -8,7 +8,7 @@ namespace LNSF.Test.Apis;
 public class ServiceRecordTestApiDelete : GlobalClientRequest
 {
     [Fact]
-    public async Task Delete_ServiceRecord_Ok()
+    public async Task ServiceRecord_Ok()
     {
         var serviceRecord = await GetServiceRecord();
 
@@ -21,7 +21,7 @@ public class ServiceRecordTestApiDelete : GlobalClientRequest
     }
 
     [Fact]
-    public async Task Delete_ServiceRecordWithNonExistsId_NotFound()
+    public async Task ServiceRecordWithNonExistsId_NotFound()
     {
         var countBefore = await GetCount(_serviceRecord);
         var exception = await Delete<AppException>(_serviceRecord, 0);
