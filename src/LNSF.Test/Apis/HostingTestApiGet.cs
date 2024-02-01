@@ -11,7 +11,7 @@ public class HostingTestApiGet : GlobalClientRequest
     {
         var hosting = await GetHosting();
 
-        var hostingQueried = await QueryFirst<HostingViewModel>(_hostingClient, new HostingFilter(id: hosting.Id));
+        var hostingQueried = await QuerySingle<HostingViewModel>(_hostingClient, new HostingFilter(id: hosting.Id));
 
         Assert.Equivalent(hosting.Id, hostingQueried.Id);
         Assert.Equivalent(hosting.PatientId, hostingQueried.PatientId);
@@ -24,7 +24,7 @@ public class HostingTestApiGet : GlobalClientRequest
     {
         var hosting = await GetHosting();
 
-        var hostingCheckInQueried = await QueryFirst<HostingViewModel>(_hostingClient, new HostingFilter(id: hosting.Id, checkIn: hosting.CheckIn));
+        var hostingCheckInQueried = await QuerySingle<HostingViewModel>(_hostingClient, new HostingFilter(id: hosting.Id, checkIn: hosting.CheckIn));
 
         Assert.Equivalent(hosting.CheckIn, hostingCheckInQueried.CheckIn);
     }
@@ -34,7 +34,7 @@ public class HostingTestApiGet : GlobalClientRequest
     {
         var hosting = await GetHosting();
 
-        var hostingCheckOutQueried = await QueryFirst<HostingViewModel>(_hostingClient, new HostingFilter(id: hosting.Id, checkOut: hosting.CheckOut));
+        var hostingCheckOutQueried = await QuerySingle<HostingViewModel>(_hostingClient, new HostingFilter(id: hosting.Id, checkOut: hosting.CheckOut));
 
         Assert.Equivalent(hosting.CheckOut, hostingCheckOutQueried.CheckOut);
     }
@@ -44,7 +44,7 @@ public class HostingTestApiGet : GlobalClientRequest
     {
         var hosting = await GetHosting();
 
-        var hostingCheckInCheckOutQueried = await QueryFirst<HostingViewModel>(_hostingClient, new HostingFilter(id: hosting.Id, checkIn: hosting.CheckIn, checkOut: hosting.CheckOut));
+        var hostingCheckInCheckOutQueried = await QuerySingle<HostingViewModel>(_hostingClient, new HostingFilter(id: hosting.Id, checkIn: hosting.CheckIn, checkOut: hosting.CheckOut));
 
         Assert.Equivalent(hosting.CheckIn, hostingCheckInCheckOutQueried.CheckIn);
         Assert.Equivalent(hosting.CheckOut, hostingCheckInCheckOutQueried.CheckOut);
@@ -55,7 +55,7 @@ public class HostingTestApiGet : GlobalClientRequest
     {
         var hosting = await GetHosting();
 
-        var hostingPatientIdQueried = await QueryFirst<HostingViewModel>(_hostingClient, new HostingFilter(id: hosting.Id, patientId: hosting.PatientId));
+        var hostingPatientIdQueried = await QuerySingle<HostingViewModel>(_hostingClient, new HostingFilter(id: hosting.Id, patientId: hosting.PatientId));
 
         Assert.Equivalent(hosting.PatientId, hostingPatientIdQueried.PatientId);
     }
@@ -67,7 +67,7 @@ public class HostingTestApiGet : GlobalClientRequest
         var hosting = await GetHosting();
         var hostingEscort = await GetAddEscortToHosting(hostingId: hosting.Id, escortId: escort.Id);
 
-        var hostingEscortIdQueried = await QueryFirst<HostingViewModel>(_hostingClient, new HostingFilter(id: hosting.Id, escortId: escort.Id));
+        var hostingEscortIdQueried = await QuerySingle<HostingViewModel>(_hostingClient, new HostingFilter(id: hosting.Id, escortId: escort.Id));
 
         Assert.Equivalent(hosting.Id, hostingEscortIdQueried.Id);
     }
@@ -77,7 +77,7 @@ public class HostingTestApiGet : GlobalClientRequest
     {
         var hosting = await GetHosting(checkIn: DateTime.Now.AddDays(-1), checkOut: DateTime.Now.AddDays(1));
 
-        var hostingActiveQueried = await QueryFirst<HostingViewModel>(_hostingClient, new HostingFilter(id: hosting.Id, active: true));
+        var hostingActiveQueried = await QuerySingle<HostingViewModel>(_hostingClient, new HostingFilter(id: hosting.Id, active: true));
 
         Assert.Equivalent(hosting.Id, hostingActiveQueried.Id);
     }
@@ -87,7 +87,7 @@ public class HostingTestApiGet : GlobalClientRequest
     {
         var hosting = await GetHosting(checkIn: DateTime.Now.AddDays(-2), checkOut: DateTime.Now.AddDays(-1));
 
-        var hostingInactiveQueried = await QueryFirst<HostingViewModel>(_hostingClient, new HostingFilter(id: hosting.Id, active: false));
+        var hostingInactiveQueried = await QuerySingle<HostingViewModel>(_hostingClient, new HostingFilter(id: hosting.Id, active: false));
 
         Assert.Equivalent(hosting.Id, hostingInactiveQueried.Id);
     }
@@ -100,7 +100,7 @@ public class HostingTestApiGet : GlobalClientRequest
         patient.People = people;
         var hosting = await GetHosting(patientId: patient.Id);
 
-        var hostingGetPatientQueried = await QueryFirst<HostingViewModel>(_hostingClient, new HostingFilter(id: hosting.Id, getPatient: true));
+        var hostingGetPatientQueried = await QuerySingle<HostingViewModel>(_hostingClient, new HostingFilter(id: hosting.Id, getPatient: true));
 
         Assert.Equivalent(patient, hostingGetPatientQueried.Patient);
     }
@@ -118,7 +118,7 @@ public class HostingTestApiGet : GlobalClientRequest
         var hostingEscort1 = await GetAddEscortToHosting(hostingId: hosting.Id, escortId: escort1.Id);
         var hostingEscort2 = await GetAddEscortToHosting(hostingId: hosting.Id, escortId: escort2.Id);
 
-        var hostingGetEscortQueried = await QueryFirst<HostingViewModel>(_hostingClient, new HostingFilter(id: hosting.Id, getEscort: true));
+        var hostingGetEscortQueried = await QuerySingle<HostingViewModel>(_hostingClient, new HostingFilter(id: hosting.Id, getEscort: true));
 
         Assert.Equivalent(new List<EscortViewModel> { escort1, escort2 }, hostingGetEscortQueried.Escorts);
     }

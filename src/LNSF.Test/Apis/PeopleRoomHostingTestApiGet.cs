@@ -11,7 +11,7 @@ public class PeopleRoomHostingTestApiGet : GlobalClientRequest
     {
         var prh = await GetPeopleRoomHosting();
 
-        var prhQueried = await QueryFirst<PeopleRoomHostingViewModel>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: prh.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId));
+        var prhQueried = await QuerySingle<PeopleRoomHostingViewModel>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: prh.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId));
 
         Assert.Equivalent(prh, prhQueried);
     }
@@ -22,7 +22,7 @@ public class PeopleRoomHostingTestApiGet : GlobalClientRequest
         var room = await GetRoom(available: true);
         var prh = await GetPeopleRoomHosting(roomId: room.Id);
 
-        var prhVacancyQueried = await QueryFirst<PeopleRoomHostingViewModel>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: prh.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId, vacancy: room.Beds));
+        var prhVacancyQueried = await QuerySingle<PeopleRoomHostingViewModel>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: prh.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId, vacancy: room.Beds));
 
         Assert.Equivalent(prh, prhVacancyQueried);
     }
@@ -33,7 +33,7 @@ public class PeopleRoomHostingTestApiGet : GlobalClientRequest
         var room = await GetRoom(available: true);
         var prh = await GetPeopleRoomHosting(roomId: room.Id);
 
-        var prhHasVacancyQueried = await QueryFirst<PeopleRoomHostingViewModel>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: prh.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId, hasVacancy: true));
+        var prhHasVacancyQueried = await QuerySingle<PeopleRoomHostingViewModel>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: prh.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId, hasVacancy: true));
 
         Assert.Equivalent(prh, prhHasVacancyQueried);
     }
@@ -44,7 +44,7 @@ public class PeopleRoomHostingTestApiGet : GlobalClientRequest
         var room = await GetRoom(available: true);
         var prh = await GetPeopleRoomHosting(roomId: room.Id);
 
-        var prhAvailableQueried = await QueryFirst<PeopleRoomHostingViewModel>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: prh.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId, available: true));
+        var prhAvailableQueried = await QuerySingle<PeopleRoomHostingViewModel>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: prh.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId, available: true));
 
         Assert.Equivalent(prh, prhAvailableQueried);
     }
@@ -58,7 +58,7 @@ public class PeopleRoomHostingTestApiGet : GlobalClientRequest
         var hosting = await GetHosting(patientId: patient.Id);
         var prh = await GetPeopleRoomHosting(peopleId: people.Id, roomId: room.Id, hostingId: hosting.Id);
 
-        var prhCheckInAndCheckOutQueried = await QueryFirst<PeopleRoomHostingViewModel>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: prh.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId, checkIn: hosting.CheckIn, checkOut: hosting.CheckOut));
+        var prhCheckInAndCheckOutQueried = await QuerySingle<PeopleRoomHostingViewModel>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: prh.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId, checkIn: hosting.CheckIn, checkOut: hosting.CheckOut));
 
         Assert.Equivalent(prh, prhCheckInAndCheckOutQueried);
     }
@@ -70,7 +70,7 @@ public class PeopleRoomHostingTestApiGet : GlobalClientRequest
         var hosting = await GetHosting(patientId: patient.Id, checkIn: DateTime.Now.AddDays(-1), checkOut: DateTime.Now.AddDays(1));
         var prh = await GetPeopleRoomHosting(peopleId: patient.PeopleId, hostingId: hosting.Id);
 
-        var prhActiveQueried = await QueryFirst<PeopleRoomHostingViewModel>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: patient.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId, active: true));
+        var prhActiveQueried = await QuerySingle<PeopleRoomHostingViewModel>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: patient.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId, active: true));
 
         Assert.Equivalent(prh, prhActiveQueried);
     }
@@ -95,7 +95,7 @@ public class PeopleRoomHostingTestApiGet : GlobalClientRequest
         var hosting = await GetHosting(patientId: patient.Id);
         var prh = await GetPeopleRoomHosting(peopleId: people.Id, hostingId: hosting.Id);
 
-        var prhGetPeopleQueried = await QueryFirst<PeopleRoomHostingViewModel>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: prh.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId, getPeople: true));
+        var prhGetPeopleQueried = await QuerySingle<PeopleRoomHostingViewModel>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: prh.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId, getPeople: true));
 
         Assert.Equivalent(people, prhGetPeopleQueried.People);
     }
@@ -106,7 +106,7 @@ public class PeopleRoomHostingTestApiGet : GlobalClientRequest
         var room = await GetRoom(available: true);
         var prh = await GetPeopleRoomHosting(roomId: room.Id);
 
-        var prhRoomQueried = await QueryFirst<PeopleRoomHostingViewModel>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: prh.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId, getRoom: true));
+        var prhRoomQueried = await QuerySingle<PeopleRoomHostingViewModel>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: prh.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId, getRoom: true));
 
         Assert.Equivalent(room, prhRoomQueried.Room);
     }
@@ -119,7 +119,7 @@ public class PeopleRoomHostingTestApiGet : GlobalClientRequest
         var hosting = await GetHosting(patientId: patient.Id);
         var prh = await GetPeopleRoomHosting(peopleId: people.Id, hostingId: hosting.Id);
 
-        var prhHostingHostingQueried = await QueryFirst<PeopleRoomHostingViewModel>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: prh.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId, getHosting: true));
+        var prhHostingHostingQueried = await QuerySingle<PeopleRoomHostingViewModel>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: prh.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId, getHosting: true));
 
         Assert.Equivalent(hosting, prhHostingHostingQueried.Hosting);
     }
@@ -133,8 +133,8 @@ public class PeopleRoomHostingTestApiGet : GlobalClientRequest
         var hosting = await GetHosting(patientId: patient.Id);
         var prh = await GetPeopleRoomHosting(peopleId: people.Id, roomId: room.Id, hostingId: hosting.Id);
 
-        var prhGlobalFilterPeopleNameQueried = await QueryFirst<PeopleRoomHostingViewModel>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: prh.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId, globalFilter: people.Name));
-        var prhGlobalFilterRoomNumberQueried = await QueryFirst<PeopleRoomHostingViewModel>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: prh.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId, globalFilter: room.Number));
+        var prhGlobalFilterPeopleNameQueried = await QuerySingle<PeopleRoomHostingViewModel>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: prh.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId, globalFilter: people.Name));
+        var prhGlobalFilterRoomNumberQueried = await QuerySingle<PeopleRoomHostingViewModel>(_peopleRoomHostingClient, new PeopleRoomHostingFilter(peopleId: prh.PeopleId, roomId: prh.RoomId, hostingId: prh.HostingId, globalFilter: room.Number));
 
         Assert.Equivalent(prh, prhGlobalFilterPeopleNameQueried);
         Assert.Equivalent(prh, prhGlobalFilterRoomNumberQueried);

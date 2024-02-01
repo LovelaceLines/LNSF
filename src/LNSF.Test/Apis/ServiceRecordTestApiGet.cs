@@ -11,7 +11,7 @@ public class ServiceRecordTestApiGet : GlobalClientRequest
     {
         var serviceRecord = await GetServiceRecord();
 
-        var serviceRecordQueried = await QueryFirst<ServiceRecordViewModel>(_serviceRecord, new ServiceRecordFilter(id: serviceRecord.Id));
+        var serviceRecordQueried = await QuerySingle<ServiceRecordViewModel>(_serviceRecord, new ServiceRecordFilter(id: serviceRecord.Id));
 
         Assert.Equivalent(serviceRecord, serviceRecordQueried);
     }
@@ -21,7 +21,7 @@ public class ServiceRecordTestApiGet : GlobalClientRequest
     {
         var serviceRecord = await GetServiceRecord();
 
-        var serviceRecordQueried = await QueryFirst<ServiceRecordViewModel>(_serviceRecord, new ServiceRecordFilter(id: serviceRecord.Id, patientId: serviceRecord.PatientId));
+        var serviceRecordQueried = await QuerySingle<ServiceRecordViewModel>(_serviceRecord, new ServiceRecordFilter(id: serviceRecord.Id, patientId: serviceRecord.PatientId));
 
         Assert.Equivalent(serviceRecord, serviceRecordQueried);
     }
@@ -35,7 +35,7 @@ public class ServiceRecordTestApiGet : GlobalClientRequest
         var serviceRecord = await GetServiceRecord(patientId: patient.Id);
         serviceRecord.Patient = patient;
 
-        var serviceRecordGetPatientQueried = await QueryFirst<ServiceRecordViewModel>(_serviceRecord, new ServiceRecordFilter(id: serviceRecord.Id, getPatient: true));
+        var serviceRecordGetPatientQueried = await QuerySingle<ServiceRecordViewModel>(_serviceRecord, new ServiceRecordFilter(id: serviceRecord.Id, getPatient: true));
 
         Assert.Equivalent(serviceRecord, serviceRecordGetPatientQueried);
     }
@@ -47,7 +47,7 @@ public class ServiceRecordTestApiGet : GlobalClientRequest
         var patient = await GetPatient(peopleId: people.Id);
         var serviceRecord = await GetServiceRecord(patientId: patient.Id);
 
-        var serviceRecordPeopleNameQueried = await QueryFirst<ServiceRecordViewModel>(_serviceRecord, new ServiceRecordFilter(id: serviceRecord.Id, globalFilter: people.Name));
+        var serviceRecordPeopleNameQueried = await QuerySingle<ServiceRecordViewModel>(_serviceRecord, new ServiceRecordFilter(id: serviceRecord.Id, globalFilter: people.Name));
 
         Assert.Equivalent(serviceRecord, serviceRecordPeopleNameQueried);
     }

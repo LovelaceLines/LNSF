@@ -11,7 +11,7 @@ public class TreatmentTestApiGet : GlobalClientRequest
     {
         var treatment = await GetTreatment();
 
-        var hospitalQueried = await QueryFirst<TreatmentViewModel>(_treatmentClient, new TreatmentFilter(id: treatment.Id));
+        var hospitalQueried = await QuerySingle<TreatmentViewModel>(_treatmentClient, new TreatmentFilter(id: treatment.Id));
 
         Assert.Equivalent(treatment.Id, hospitalQueried.Id);
         Assert.Equivalent(treatment.Name, hospitalQueried.Name);
@@ -23,7 +23,7 @@ public class TreatmentTestApiGet : GlobalClientRequest
     {
         var treatment = await GetTreatment();
 
-        var treatmentNameQueried = await QueryFirst<TreatmentViewModel>(_treatmentClient, new TreatmentFilter(id: treatment.Id, name: treatment.Name));
+        var treatmentNameQueried = await QuerySingle<TreatmentViewModel>(_treatmentClient, new TreatmentFilter(id: treatment.Id, name: treatment.Name));
 
         Assert.Equivalent(treatment.Name, treatmentNameQueried.Name);
     }
@@ -33,7 +33,7 @@ public class TreatmentTestApiGet : GlobalClientRequest
     {
         var treatment = await GetTreatment();
 
-        var treatmentTypeQueried = await QueryFirst<TreatmentViewModel>(_treatmentClient, new TreatmentFilter(id: treatment.Id, type: treatment.Type));
+        var treatmentTypeQueried = await QuerySingle<TreatmentViewModel>(_treatmentClient, new TreatmentFilter(id: treatment.Id, type: treatment.Type));
 
         Assert.Equivalent(treatment.Type, treatmentTypeQueried.Type);
     }
@@ -42,9 +42,9 @@ public class TreatmentTestApiGet : GlobalClientRequest
     public async Task QueryTreatmentGlobalFilter_Ok()
     {
         var treatment = await GetTreatment();
-        var treatmentQueried = await QueryFirst<TreatmentViewModel>(_treatmentClient, new TreatmentFilter(id: treatment.Id));
+        var treatmentQueried = await QuerySingle<TreatmentViewModel>(_treatmentClient, new TreatmentFilter(id: treatment.Id));
 
-        var treatmentNameQueried = await QueryFirst<TreatmentViewModel>(_treatmentClient, new TreatmentFilter(id: treatment.Id, globalFilter: treatment.Name));
+        var treatmentNameQueried = await QuerySingle<TreatmentViewModel>(_treatmentClient, new TreatmentFilter(id: treatment.Id, globalFilter: treatment.Name));
 
         Assert.Equivalent(treatmentQueried, treatmentNameQueried);
     }

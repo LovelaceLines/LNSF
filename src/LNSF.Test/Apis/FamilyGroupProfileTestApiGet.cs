@@ -11,7 +11,7 @@ public class FamilyGroupProfileTestApiGet : GlobalClientRequest
     {
         var familyGroupProfile = await GetFamilyGroupProfile();
 
-        var familyGroupProfileQueried = await QueryFirst<FamilyGroupProfileViewModel>(_familyGroupProfileClient, new FamilyGroupProfileFilter(id: familyGroupProfile.Id));
+        var familyGroupProfileQueried = await QuerySingle<FamilyGroupProfileViewModel>(_familyGroupProfileClient, new FamilyGroupProfileFilter(id: familyGroupProfile.Id));
 
         Assert.Equal(familyGroupProfile.Id, familyGroupProfileQueried.Id);
         Assert.Equal(familyGroupProfile.Name, familyGroupProfileQueried.Name);
@@ -26,7 +26,7 @@ public class FamilyGroupProfileTestApiGet : GlobalClientRequest
     {
         var familyGroupProfile = await GetFamilyGroupProfile();
 
-        var familyGroupProfileQueried = await QueryFirst<FamilyGroupProfileViewModel>(_familyGroupProfileClient, new FamilyGroupProfileFilter(id: familyGroupProfile.Id, name: familyGroupProfile.Name));
+        var familyGroupProfileQueried = await QuerySingle<FamilyGroupProfileViewModel>(_familyGroupProfileClient, new FamilyGroupProfileFilter(id: familyGroupProfile.Id, name: familyGroupProfile.Name));
 
         Assert.Equal(familyGroupProfile.Name, familyGroupProfileQueried.Name);
     }
@@ -36,7 +36,7 @@ public class FamilyGroupProfileTestApiGet : GlobalClientRequest
     {
         var familyGroupProfile = await GetFamilyGroupProfile();
 
-        var familyGroupProfileQueried = await QueryFirst<FamilyGroupProfileViewModel>(_familyGroupProfileClient, new FamilyGroupProfileFilter(id: familyGroupProfile.Id, kinship: familyGroupProfile.Kinship));
+        var familyGroupProfileQueried = await QuerySingle<FamilyGroupProfileViewModel>(_familyGroupProfileClient, new FamilyGroupProfileFilter(id: familyGroupProfile.Id, kinship: familyGroupProfile.Kinship));
 
         Assert.Equal(familyGroupProfile.Kinship, familyGroupProfileQueried.Kinship);
     }
@@ -46,7 +46,7 @@ public class FamilyGroupProfileTestApiGet : GlobalClientRequest
     {
         var familyGroupProfile = await GetFamilyGroupProfile();
 
-        var familyGroupProfileQueried = await QueryFirst<FamilyGroupProfileViewModel>(_familyGroupProfileClient, new FamilyGroupProfileFilter(id: familyGroupProfile.Id, age: familyGroupProfile.Age));
+        var familyGroupProfileQueried = await QuerySingle<FamilyGroupProfileViewModel>(_familyGroupProfileClient, new FamilyGroupProfileFilter(id: familyGroupProfile.Id, age: familyGroupProfile.Age));
 
         Assert.Equal(familyGroupProfile.Age, familyGroupProfileQueried.Age);
     }
@@ -56,7 +56,7 @@ public class FamilyGroupProfileTestApiGet : GlobalClientRequest
     {
         var familyGroupProfile = await GetFamilyGroupProfile();
 
-        var familyGroupProfileQueried = await QueryFirst<FamilyGroupProfileViewModel>(_familyGroupProfileClient, new FamilyGroupProfileFilter(id: familyGroupProfile.Id, profession: familyGroupProfile.Profession));
+        var familyGroupProfileQueried = await QuerySingle<FamilyGroupProfileViewModel>(_familyGroupProfileClient, new FamilyGroupProfileFilter(id: familyGroupProfile.Id, profession: familyGroupProfile.Profession));
 
         Assert.Equal(familyGroupProfile.Profession, familyGroupProfileQueried.Profession);
     }
@@ -66,7 +66,7 @@ public class FamilyGroupProfileTestApiGet : GlobalClientRequest
     {
         var familyGroupProfile = await GetFamilyGroupProfile();
 
-        var familyGroupProfileQueried = await QueryFirst<FamilyGroupProfileViewModel>(_familyGroupProfileClient, new FamilyGroupProfileFilter(id: familyGroupProfile.Id, income: familyGroupProfile.Income));
+        var familyGroupProfileQueried = await QuerySingle<FamilyGroupProfileViewModel>(_familyGroupProfileClient, new FamilyGroupProfileFilter(id: familyGroupProfile.Id, income: familyGroupProfile.Income));
 
         Assert.Equal(familyGroupProfile.Income, familyGroupProfileQueried.Income);
     }
@@ -77,12 +77,12 @@ public class FamilyGroupProfileTestApiGet : GlobalClientRequest
         var people = await GetPeople();
         var patient = await GetPatient(peopleId: people.Id);
         var familyGroupProfile = await GetFamilyGroupProfile(patientId: patient.Id);
-        var familyGroupProfileQueried = await QueryFirst<FamilyGroupProfileViewModel>(_familyGroupProfileClient, new FamilyGroupProfileFilter(id: familyGroupProfile.Id));
+        var familyGroupProfileQueried = await QuerySingle<FamilyGroupProfileViewModel>(_familyGroupProfileClient, new FamilyGroupProfileFilter(id: familyGroupProfile.Id));
 
-        var familyGroupProfileNameQueried = await QueryFirst<FamilyGroupProfileViewModel>(_familyGroupProfileClient, new FamilyGroupProfileFilter(id: familyGroupProfile.Id, globalFilter: familyGroupProfile.Name));
-        var familyGroupProfileKinshipQueried = await QueryFirst<FamilyGroupProfileViewModel>(_familyGroupProfileClient, new FamilyGroupProfileFilter(id: familyGroupProfile.Id, globalFilter: familyGroupProfile.Kinship));
-        var familyGroupProfileProfessionQueried = await QueryFirst<FamilyGroupProfileViewModel>(_familyGroupProfileClient, new FamilyGroupProfileFilter(id: familyGroupProfile.Id, globalFilter: familyGroupProfile.Profession));
-        var familyGroupProfilePatientNameQueried = await QueryFirst<FamilyGroupProfileViewModel>(_familyGroupProfileClient, new FamilyGroupProfileFilter(id: familyGroupProfile.Id, globalFilter: people.Name));
+        var familyGroupProfileNameQueried = await QuerySingle<FamilyGroupProfileViewModel>(_familyGroupProfileClient, new FamilyGroupProfileFilter(id: familyGroupProfile.Id, globalFilter: familyGroupProfile.Name));
+        var familyGroupProfileKinshipQueried = await QuerySingle<FamilyGroupProfileViewModel>(_familyGroupProfileClient, new FamilyGroupProfileFilter(id: familyGroupProfile.Id, globalFilter: familyGroupProfile.Kinship));
+        var familyGroupProfileProfessionQueried = await QuerySingle<FamilyGroupProfileViewModel>(_familyGroupProfileClient, new FamilyGroupProfileFilter(id: familyGroupProfile.Id, globalFilter: familyGroupProfile.Profession));
+        var familyGroupProfilePatientNameQueried = await QuerySingle<FamilyGroupProfileViewModel>(_familyGroupProfileClient, new FamilyGroupProfileFilter(id: familyGroupProfile.Id, globalFilter: people.Name));
 
         Assert.Equal(familyGroupProfileQueried.Id, familyGroupProfileNameQueried.Id);
         Assert.Equal(familyGroupProfileQueried.Id, familyGroupProfileKinshipQueried.Id);
@@ -99,7 +99,7 @@ public class FamilyGroupProfileTestApiGet : GlobalClientRequest
         var familyGroupProfile = await GetFamilyGroupProfile(patientId: patient.Id);
         familyGroupProfile.Patient = patient;
 
-        var familyGroupProfileGetPatientQueried = await QueryFirst<FamilyGroupProfileViewModel>(_familyGroupProfileClient, new FamilyGroupProfileFilter(id: familyGroupProfile.Id, getPatient: true));
+        var familyGroupProfileGetPatientQueried = await QuerySingle<FamilyGroupProfileViewModel>(_familyGroupProfileClient, new FamilyGroupProfileFilter(id: familyGroupProfile.Id, getPatient: true));
 
         Assert.Equivalent(familyGroupProfile, familyGroupProfileGetPatientQueried);
         Assert.Equivalent(patient, familyGroupProfileGetPatientQueried.Patient);

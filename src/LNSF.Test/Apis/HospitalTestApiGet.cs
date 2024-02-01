@@ -11,7 +11,7 @@ public class HospitalTestApiGet : GlobalClientRequest
     {
         var hospital = await GetHospital();
 
-        var hospitalQueried = await QueryFirst<HospitalViewModel>(_hospitalClient, new HospitalFilter(id: hospital.Id));
+        var hospitalQueried = await QuerySingle<HospitalViewModel>(_hospitalClient, new HospitalFilter(id: hospital.Id));
 
         Assert.Equivalent(hospital.Id, hospitalQueried.Id);
         Assert.Equivalent(hospital.Name, hospitalQueried.Name);
@@ -23,7 +23,7 @@ public class HospitalTestApiGet : GlobalClientRequest
     {
         var hospital = await GetHospital();
 
-        var hospitalNameQueried = await QueryFirst<HospitalViewModel>(_hospitalClient, new HospitalFilter(id: hospital.Id, name: hospital.Name));
+        var hospitalNameQueried = await QuerySingle<HospitalViewModel>(_hospitalClient, new HospitalFilter(id: hospital.Id, name: hospital.Name));
 
         Assert.Equivalent(hospital.Name, hospitalNameQueried.Name);
     }
@@ -33,7 +33,7 @@ public class HospitalTestApiGet : GlobalClientRequest
     {
         var hospital = await GetHospital();
 
-        var hospitalAcronymQueried = await QueryFirst<HospitalViewModel>(_hospitalClient, new HospitalFilter(id: hospital.Id, acronym: hospital.Acronym));
+        var hospitalAcronymQueried = await QuerySingle<HospitalViewModel>(_hospitalClient, new HospitalFilter(id: hospital.Id, acronym: hospital.Acronym));
 
         Assert.Equivalent(hospital.Acronym, hospitalAcronymQueried.Acronym);
     }
@@ -42,10 +42,10 @@ public class HospitalTestApiGet : GlobalClientRequest
     public async Task QueryHospitalGlobalFilter_Ok()
     {
         var hospital = await GetHospital();
-        var hospitalQueried = await QueryFirst<HospitalViewModel>(_hospitalClient, new HospitalFilter(id: hospital.Id));
+        var hospitalQueried = await QuerySingle<HospitalViewModel>(_hospitalClient, new HospitalFilter(id: hospital.Id));
 
-        var hospitalNameQueried = await QueryFirst<HospitalViewModel>(_hospitalClient, new HospitalFilter(id: hospital.Id, globalFilter: hospital.Name));
-        var hospitalAcronymQueried = await QueryFirst<HospitalViewModel>(_hospitalClient, new HospitalFilter(id: hospital.Id, globalFilter: hospital.Acronym));
+        var hospitalNameQueried = await QuerySingle<HospitalViewModel>(_hospitalClient, new HospitalFilter(id: hospital.Id, globalFilter: hospital.Name));
+        var hospitalAcronymQueried = await QuerySingle<HospitalViewModel>(_hospitalClient, new HospitalFilter(id: hospital.Id, globalFilter: hospital.Acronym));
 
         Assert.Equivalent(hospitalQueried, hospitalNameQueried);
         Assert.Equivalent(hospitalQueried, hospitalAcronymQueried);

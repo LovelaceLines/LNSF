@@ -11,7 +11,7 @@ public class EscortTestApiGet : GlobalClientRequest
     {
         var escort = await GetEscort();
 
-        var escortQueried = await QueryFirst<EscortViewModel>(_escortClient, new EscortFilter(id: escort.Id));
+        var escortQueried = await QuerySingle<EscortViewModel>(_escortClient, new EscortFilter(id: escort.Id));
 
         Assert.Equivalent(escort.Id, escortQueried.Id);
         Assert.Equivalent(escort.PeopleId, escortQueried.PeopleId);
@@ -22,7 +22,7 @@ public class EscortTestApiGet : GlobalClientRequest
     {
         var escort = await GetEscort();
 
-        var escortPeopleIdQueried = await QueryFirst<EscortViewModel>(_escortClient, new EscortFilter(id: escort.Id, peopleId: escort.PeopleId));
+        var escortPeopleIdQueried = await QuerySingle<EscortViewModel>(_escortClient, new EscortFilter(id: escort.Id, peopleId: escort.PeopleId));
 
         Assert.Equivalent(escort.PeopleId, escortPeopleIdQueried.PeopleId);
     }
@@ -33,7 +33,7 @@ public class EscortTestApiGet : GlobalClientRequest
         var people = await GetPeople();
         var escort = await GetEscort(peopleId: people.Id);
 
-        var escortGetPeopleQueried = await QueryFirst<EscortViewModel>(_escortClient, new EscortFilter(id: escort.Id, getPeople: true));
+        var escortGetPeopleQueried = await QuerySingle<EscortViewModel>(_escortClient, new EscortFilter(id: escort.Id, getPeople: true));
 
         Assert.Equivalent(people, escortGetPeopleQueried.People);
     }
@@ -45,7 +45,7 @@ public class EscortTestApiGet : GlobalClientRequest
         var hosting = await GetHosting(checkIn: DateTime.Now.AddDays(-1), checkOut: DateTime.Now.AddDays(1));
         var escortHosting = await GetHostingEscort(hostingId: hosting.Id, escortId: escort.Id);
 
-        var escortActiveQueried = await QueryFirst<EscortViewModel>(_escortClient, new EscortFilter(id: escort.Id, active: true));
+        var escortActiveQueried = await QuerySingle<EscortViewModel>(_escortClient, new EscortFilter(id: escort.Id, active: true));
 
         Assert.Equivalent(escort, escortActiveQueried);
     }
@@ -57,7 +57,7 @@ public class EscortTestApiGet : GlobalClientRequest
         var hosting = await GetHosting(checkIn: DateTime.Now.AddDays(-10), checkOut: DateTime.Now.AddDays(-9));
         var escortHosting = await GetHostingEscort(hostingId: hosting.Id, escortId: escort.Id);
 
-        var escortInactiveQueried = await QueryFirst<EscortViewModel>(_escortClient, new EscortFilter(id: escort.Id, active: false));
+        var escortInactiveQueried = await QuerySingle<EscortViewModel>(_escortClient, new EscortFilter(id: escort.Id, active: false));
 
         Assert.Equivalent(escort, escortInactiveQueried);
     }
@@ -71,7 +71,7 @@ public class EscortTestApiGet : GlobalClientRequest
         var hosting2 = await GetHosting(checkIn: DateTime.Now.AddDays(-1), checkOut: DateTime.Now.AddDays(1));
         var escortHosting2 = await GetHostingEscort(hostingId: hosting2.Id, escortId: escort.Id);
 
-        var escortIsVeteranQueried = await QueryFirst<EscortViewModel>(_escortClient, new EscortFilter(id: escort.Id, isVeteran: true));
+        var escortIsVeteranQueried = await QuerySingle<EscortViewModel>(_escortClient, new EscortFilter(id: escort.Id, isVeteran: true));
 
         Assert.Equivalent(escort, escortIsVeteranQueried);
     }
@@ -82,7 +82,7 @@ public class EscortTestApiGet : GlobalClientRequest
         var people = await GetPeople();
         var escort = await GetEscort(peopleId: people.Id);
 
-        var escortPeopleNameQueried = await QueryFirst<EscortViewModel>(_escortClient, new EscortFilter(id: escort.Id, globalFilter: people.Name));
+        var escortPeopleNameQueried = await QuerySingle<EscortViewModel>(_escortClient, new EscortFilter(id: escort.Id, globalFilter: people.Name));
 
         Assert.Equivalent(escort, escortPeopleNameQueried);
     }

@@ -11,7 +11,7 @@ public class UserTestApiGet : GlobalClientRequest
     {
         var user = await GetUser();
 
-        var userQueried = await QueryFirst<UserViewModel>(_userClient, new UserFilter(id: user.Id));
+        var userQueried = await QuerySingle<UserViewModel>(_userClient, new UserFilter(id: user.Id));
 
         Assert.Equivalent(user.Id, userQueried.Id);
         Assert.Equivalent(user.UserName, userQueried.UserName);
@@ -24,7 +24,7 @@ public class UserTestApiGet : GlobalClientRequest
     {
         var user = await GetUser();
 
-        var userNameQueried = await QueryFirst<UserViewModel>(_userClient, new UserFilter(id: user.Id, userName: user.UserName));
+        var userNameQueried = await QuerySingle<UserViewModel>(_userClient, new UserFilter(id: user.Id, userName: user.UserName));
 
         Assert.Equivalent(user.UserName, userNameQueried.UserName);
     }
@@ -34,7 +34,7 @@ public class UserTestApiGet : GlobalClientRequest
     {
         var user = await GetUser();
 
-        var userEmailQueried = await QueryFirst<UserViewModel>(_userClient, new UserFilter(id: user.Id, email: user.Email));
+        var userEmailQueried = await QuerySingle<UserViewModel>(_userClient, new UserFilter(id: user.Id, email: user.Email));
 
         Assert.Equivalent(user.Email, userEmailQueried.Email);
     }
@@ -44,7 +44,7 @@ public class UserTestApiGet : GlobalClientRequest
     {
         var user = await GetUser();
 
-        var userPhoneNumberQueried = await QueryFirst<UserViewModel>(_userClient, new UserFilter(id: user.Id, phoneNumber: user.PhoneNumber));
+        var userPhoneNumberQueried = await QuerySingle<UserViewModel>(_userClient, new UserFilter(id: user.Id, phoneNumber: user.PhoneNumber));
 
         Assert.Equivalent(user.PhoneNumber, userPhoneNumberQueried.PhoneNumber);
     }
@@ -59,7 +59,7 @@ public class UserTestApiGet : GlobalClientRequest
     {
         var user = await GetUser(role: roleName);
 
-        var userRoleQueried = await QueryFirst<UserViewModel>(_userClient, new UserFilter(id: user.Id, role: roleName));
+        var userRoleQueried = await QuerySingle<UserViewModel>(_userClient, new UserFilter(id: user.Id, role: roleName));
 
         Assert.Equivalent(user.Id, userRoleQueried.Id);
     }
@@ -73,12 +73,12 @@ public class UserTestApiGet : GlobalClientRequest
     public async Task QueryGlobalFilter_Ok(string roleName)
     {
         var user = await GetUser(role: roleName);
-        var userQueried = await QueryFirst<UserViewModel>(_userClient, new UserFilter(id: user.Id));
+        var userQueried = await QuerySingle<UserViewModel>(_userClient, new UserFilter(id: user.Id));
 
-        var userNameQueried = await QueryFirst<UserViewModel>(_userClient, new UserFilter(id: user.Id, globalFilter: user.UserName));
-        var userEmailQueried = await QueryFirst<UserViewModel>(_userClient, new UserFilter(id: user.Id, globalFilter: user.Email));
-        var userPhoneNumberQueried = await QueryFirst<UserViewModel>(_userClient, new UserFilter(id: user.Id, globalFilter: user.PhoneNumber));
-        var userRoleQueried = await QueryFirst<UserViewModel>(_userClient, new UserFilter(id: user.Id, globalFilter: roleName));
+        var userNameQueried = await QuerySingle<UserViewModel>(_userClient, new UserFilter(id: user.Id, globalFilter: user.UserName));
+        var userEmailQueried = await QuerySingle<UserViewModel>(_userClient, new UserFilter(id: user.Id, globalFilter: user.Email));
+        var userPhoneNumberQueried = await QuerySingle<UserViewModel>(_userClient, new UserFilter(id: user.Id, globalFilter: user.PhoneNumber));
+        var userRoleQueried = await QuerySingle<UserViewModel>(_userClient, new UserFilter(id: user.Id, globalFilter: roleName));
 
         Assert.Equivalent(userQueried, userNameQueried);
         Assert.Equivalent(userQueried, userEmailQueried);

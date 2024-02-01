@@ -61,11 +61,18 @@ public class GlobalClientRequest
         return await DeserializeResponse<T>(response);
     }
 
-    public async Task<T> QueryFirst<T>(HttpClient client, dynamic filter) where T : class
+
+    /// <summary>
+    /// Executes a query using the provided HttpClient and filter, and returns a single result of type T.
+    /// </summary>
+    /// <returns>A single result of type T.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when the query returns no results.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when the query returns more than one result.</exception>
+    public async Task<T> QuerySingle<T>(HttpClient client, dynamic filter) where T : class
     {
         List<T> query = await Query<List<T>>(client, filter);
-        var queryFirst = query.First();
-        return queryFirst;
+        var querySingle = query.Single();
+        return querySingle;
     }
 
     private string BuildQuery(object filter)

@@ -11,7 +11,7 @@ public class PatientTestApiGet : GlobalClientRequest
     {
         var patient = await GetPatient();
 
-        var patientQueried = await QueryFirst<PatientViewModel>(_patientClient, new PatientFilter(id: patient.Id));
+        var patientQueried = await QuerySingle<PatientViewModel>(_patientClient, new PatientFilter(id: patient.Id));
 
         Assert.Equivalent(patient.Id, patientQueried.Id);
         Assert.Equivalent(patient.SocioeconomicRecord, patientQueried.SocioeconomicRecord);
@@ -25,7 +25,7 @@ public class PatientTestApiGet : GlobalClientRequest
     {
         var patient = await GetPatient();
 
-        var patientSocioEconomicRecordQueried = await QueryFirst<PatientViewModel>(_patientClient, new PatientFilter(id: patient.Id, socioEconomicRecord: patient.SocioeconomicRecord));
+        var patientSocioEconomicRecordQueried = await QuerySingle<PatientViewModel>(_patientClient, new PatientFilter(id: patient.Id, socioEconomicRecord: patient.SocioeconomicRecord));
 
         Assert.Equivalent(patient.SocioeconomicRecord, patientSocioEconomicRecordQueried.SocioeconomicRecord);
     }
@@ -35,7 +35,7 @@ public class PatientTestApiGet : GlobalClientRequest
     {
         var patient = await GetPatient();
 
-        var patientTermQueried = await QueryFirst<PatientViewModel>(_patientClient, new PatientFilter(id: patient.Id, term: patient.Term));
+        var patientTermQueried = await QuerySingle<PatientViewModel>(_patientClient, new PatientFilter(id: patient.Id, term: patient.Term));
 
         Assert.Equivalent(patient.Term, patientTermQueried.Term);
     }
@@ -45,7 +45,7 @@ public class PatientTestApiGet : GlobalClientRequest
     {
         var patient = await GetPatient();
 
-        var patientPeopleIdQueried = await QueryFirst<PatientViewModel>(_patientClient, new PatientFilter(id: patient.Id, peopleId: patient.PeopleId));
+        var patientPeopleIdQueried = await QuerySingle<PatientViewModel>(_patientClient, new PatientFilter(id: patient.Id, peopleId: patient.PeopleId));
 
         Assert.Equivalent(patient.PeopleId, patientPeopleIdQueried.PeopleId);
     }
@@ -55,7 +55,7 @@ public class PatientTestApiGet : GlobalClientRequest
     {
         var patient = await GetPatient();
 
-        var patientHospitalIdQueried = await QueryFirst<PatientViewModel>(_patientClient, new PatientFilter(id: patient.Id, hospitalId: patient.HospitalId));
+        var patientHospitalIdQueried = await QuerySingle<PatientViewModel>(_patientClient, new PatientFilter(id: patient.Id, hospitalId: patient.HospitalId));
 
         Assert.Equivalent(patient.HospitalId, patientHospitalIdQueried.HospitalId);
     }
@@ -66,7 +66,7 @@ public class PatientTestApiGet : GlobalClientRequest
         var patient = await GetPatient();
         var hosting = await GetHosting(patientId: patient.Id, checkIn: DateTime.Now.AddDays(-1), checkOut: DateTime.Now.AddDays(1));
 
-        var patientActiveQueried = await QueryFirst<PatientViewModel>(_patientClient, new PatientFilter(id: patient.Id, active: true));
+        var patientActiveQueried = await QuerySingle<PatientViewModel>(_patientClient, new PatientFilter(id: patient.Id, active: true));
 
         Assert.Equivalent(patient, patientActiveQueried);
     }
@@ -77,7 +77,7 @@ public class PatientTestApiGet : GlobalClientRequest
         var patient = await GetPatient();
         var hosting = await GetHosting(patientId: patient.Id, checkIn: DateTime.Now.AddDays(-10), checkOut: DateTime.Now.AddDays(-5));
 
-        var patientInactiveQueried = await QueryFirst<PatientViewModel>(_patientClient, new PatientFilter(id: patient.Id, active: false));
+        var patientInactiveQueried = await QuerySingle<PatientViewModel>(_patientClient, new PatientFilter(id: patient.Id, active: false));
 
         Assert.Equivalent(patient, patientInactiveQueried);
     }
@@ -89,7 +89,7 @@ public class PatientTestApiGet : GlobalClientRequest
         var hosting1 = await GetHosting(patientId: patient.Id, checkIn: DateTime.Now.AddDays(-10), checkOut: DateTime.Now.AddDays(-5));
         var hosting2 = await GetHosting(patientId: patient.Id, checkIn: DateTime.Now.AddDays(-1), checkOut: DateTime.Now.AddDays(1));
 
-        var patientIsVeteranQueried = await QueryFirst<PatientViewModel>(_patientClient, new PatientFilter(id: patient.Id, isVeteran: true));
+        var patientIsVeteranQueried = await QuerySingle<PatientViewModel>(_patientClient, new PatientFilter(id: patient.Id, isVeteran: true));
 
         Assert.Equivalent(patient, patientIsVeteranQueried);
     }
@@ -100,7 +100,7 @@ public class PatientTestApiGet : GlobalClientRequest
         var people = await GetPeople();
         var patient = await GetPatient(peopleId: people.Id);
 
-        var patientGetPeopleQueried = await QueryFirst<PatientViewModel>(_patientClient, new PatientFilter(id: patient.Id, getPeople: true));
+        var patientGetPeopleQueried = await QuerySingle<PatientViewModel>(_patientClient, new PatientFilter(id: patient.Id, getPeople: true));
 
         Assert.Equivalent(people, patientGetPeopleQueried!.People);
     }
@@ -112,7 +112,7 @@ public class PatientTestApiGet : GlobalClientRequest
         var hospital = await GetHospital();
         var patient = await GetPatient(hospitalId: hospital.Id);
 
-        var patientGetHospitalQueried = await QueryFirst<PatientViewModel>(_patientClient, new PatientFilter(id: patient.Id, getHospital: true));
+        var patientGetHospitalQueried = await QuerySingle<PatientViewModel>(_patientClient, new PatientFilter(id: patient.Id, getHospital: true));
 
         Assert.Equivalent(hospital, patientGetHospitalQueried!.Hospital);
     }
@@ -126,7 +126,7 @@ public class PatientTestApiGet : GlobalClientRequest
         var patientTreatment1 = await GetPatientTreatment(patientId: patient.Id, treatmentId: treatment1.Id);
         var patientTreatment2 = await GetPatientTreatment(patientId: patient.Id, treatmentId: treatment2.Id);
 
-        var patientGetTreatmentsQueried = await QueryFirst<PatientViewModel>(_patientClient, new PatientFilter(id: patient.Id, getTreatments: true));
+        var patientGetTreatmentsQueried = await QuerySingle<PatientViewModel>(_patientClient, new PatientFilter(id: patient.Id, getTreatments: true));
 
         Assert.Equivalent(new List<TreatmentViewModel> { treatment1, treatment2 }, patientGetTreatmentsQueried!.Treatments!);
     }

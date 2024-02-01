@@ -11,7 +11,7 @@ public class TourTestApiGet : GlobalClientRequest
     {
         var tour = await GetTour();
 
-        var tourQueried = await QueryFirst<TourViewModel>(_tourClient, new TourFilter(id: tour.Id));
+        var tourQueried = await QuerySingle<TourViewModel>(_tourClient, new TourFilter(id: tour.Id));
 
         Assert.Equivalent(tour.Id, tourQueried.Id);
         Assert.Equivalent(tour.PeopleId, tourQueried.PeopleId);
@@ -25,7 +25,7 @@ public class TourTestApiGet : GlobalClientRequest
     {
         var tour = await GetTour();
 
-        var tourOutputQueried = await QueryFirst<TourViewModel>(_tourClient, new TourFilter(id: tour.Id, output: tour.Output));
+        var tourOutputQueried = await QuerySingle<TourViewModel>(_tourClient, new TourFilter(id: tour.Id, output: tour.Output));
 
         Assert.Equivalent(tour.Output, tourOutputQueried.Output);
     }
@@ -35,7 +35,7 @@ public class TourTestApiGet : GlobalClientRequest
     {
         var openTour = await GetTour();
 
-        var tourInputQueried = await QueryFirst<TourViewModel>(_tourClient, new TourFilter(id: openTour.Id, input: openTour.Input));
+        var tourInputQueried = await QuerySingle<TourViewModel>(_tourClient, new TourFilter(id: openTour.Id, input: openTour.Input));
 
         Assert.Equivalent(openTour.Input, tourInputQueried.Input);
     }
@@ -46,7 +46,7 @@ public class TourTestApiGet : GlobalClientRequest
         var openTour = await GetTour();
         var closeTour = await GetTour(openTour.Id, openTour.PeopleId);
 
-        var tourInputQueried = await QueryFirst<TourViewModel>(_tourClient, new TourFilter(id: closeTour.Id, input: closeTour.Input));
+        var tourInputQueried = await QuerySingle<TourViewModel>(_tourClient, new TourFilter(id: closeTour.Id, input: closeTour.Input));
 
         Assert.Equivalent(closeTour.Input, tourInputQueried.Input);
     }
@@ -56,7 +56,7 @@ public class TourTestApiGet : GlobalClientRequest
     {
         var tour = await GetTour();
 
-        var tourNoteQueried = await QueryFirst<TourViewModel>(_tourClient, new TourFilter(id: tour.Id, note: tour.Note));
+        var tourNoteQueried = await QuerySingle<TourViewModel>(_tourClient, new TourFilter(id: tour.Id, note: tour.Note));
 
         Assert.Equivalent(tour.Note, tourNoteQueried.Note);
     }
@@ -66,7 +66,7 @@ public class TourTestApiGet : GlobalClientRequest
     {
         var tour = await GetTour();
 
-        var tourPeopleIdQueried = await QueryFirst<TourViewModel>(_tourClient, new TourFilter(id: tour.Id, peopleId: tour.PeopleId));
+        var tourPeopleIdQueried = await QuerySingle<TourViewModel>(_tourClient, new TourFilter(id: tour.Id, peopleId: tour.PeopleId));
 
         Assert.Equivalent(tour.PeopleId, tourPeopleIdQueried.PeopleId);
     }
@@ -76,7 +76,7 @@ public class TourTestApiGet : GlobalClientRequest
     {
         var openTour = await GetTour();
 
-        var tourInOpenQueried = await QueryFirst<TourViewModel>(_tourClient, new TourFilter(id: openTour.Id, inOpen: true));
+        var tourInOpenQueried = await QuerySingle<TourViewModel>(_tourClient, new TourFilter(id: openTour.Id, inOpen: true));
 
         Assert.Equivalent(openTour.Id, tourInOpenQueried.Id);
     }
@@ -87,7 +87,7 @@ public class TourTestApiGet : GlobalClientRequest
         var openTour = await GetTour();
         var tourClosed = await GetTour(openTour.Id, openTour.PeopleId);
 
-        var tourClosedQueried = await QueryFirst<TourViewModel>(_tourClient, new TourFilter(id: tourClosed.Id, inOpen: false));
+        var tourClosedQueried = await QuerySingle<TourViewModel>(_tourClient, new TourFilter(id: tourClosed.Id, inOpen: false));
 
         Assert.Equivalent(tourClosed.Id, tourClosedQueried.Id);
     }
@@ -98,7 +98,7 @@ public class TourTestApiGet : GlobalClientRequest
         var people = await GetPeople();
         var tour = await GetTour(peopleId: people.Id);
 
-        var tourGetPeopleQueried = await QueryFirst<TourViewModel>(_tourClient, new TourFilter(id: tour.Id, getPeople: true));
+        var tourGetPeopleQueried = await QuerySingle<TourViewModel>(_tourClient, new TourFilter(id: tour.Id, getPeople: true));
 
         Assert.Equivalent(people, tourGetPeopleQueried.People);
     }
@@ -108,10 +108,10 @@ public class TourTestApiGet : GlobalClientRequest
     {
         var people = await GetPeople();
         var tour = await GetTour(peopleId: people.Id);
-        var tourQueried = await QueryFirst<TourViewModel>(_tourClient, new TourFilter(id: tour.Id));
+        var tourQueried = await QuerySingle<TourViewModel>(_tourClient, new TourFilter(id: tour.Id));
 
-        var tourPeopleNameQueried = await QueryFirst<TourViewModel>(_tourClient, new TourFilter(id: tour.Id, globalFilter: people.Name));
-        var tourNoteQueried = await QueryFirst<TourViewModel>(_tourClient, new TourFilter(id: tour.Id, globalFilter: tour.Note));
+        var tourPeopleNameQueried = await QuerySingle<TourViewModel>(_tourClient, new TourFilter(id: tour.Id, globalFilter: people.Name));
+        var tourNoteQueried = await QuerySingle<TourViewModel>(_tourClient, new TourFilter(id: tour.Id, globalFilter: tour.Note));
 
         Assert.Equivalent(tourQueried, tourPeopleNameQueried);
         Assert.Equivalent(tourQueried, tourNoteQueried);
