@@ -45,7 +45,7 @@ export const TelaDeGerenciamentoHospital: React.FC = () => {
 
             if (createdHospital) {
                 toast.success('Hospital cadastrado!');
-                navigate('/inicio/hospital/visualizar');
+                navigate('/hospital/visualizar');
             }
         } catch (error) {
             if (error instanceof yup.ValidationError) {
@@ -73,7 +73,7 @@ export const TelaDeGerenciamentoHospital: React.FC = () => {
 
             if (updatedHospital) {
                 toast.success('Hospital atualizado!');
-                navigate('/inicio/hospital/visualizar');
+                navigate('/hospital/visualizar');
             }
         } catch (error) {
             if (error instanceof yup.ValidationError) {

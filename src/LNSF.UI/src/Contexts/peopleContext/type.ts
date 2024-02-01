@@ -112,6 +112,8 @@ export interface iPeopleRegister {
 }
 
 
+
+
 export interface iAddPeopleToRoom{
     hostingId: number,
     peopleId: number,

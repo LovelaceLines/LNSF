@@ -62,7 +62,7 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
       {
         index: 8,
         icon: 'bed',
-        path: '/inicio/hospedagem',
+        path: '/hospedagem',
         label: 'Hospedagens',
         options: [
           {
@@ -70,7 +70,7 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
             labelOption: 'Visualizar',
           },
           {
-            pathOption: '/inicio/hospedagens/gerenciar/cadastrar',
+            pathOption: '/hospedagens/gerenciar/cadastrar',
             labelOption: 'Gerenciar',
           },
           {
@@ -82,7 +82,7 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
       {
         index: 2,
         icon: 'apartment',
-        path: '/inicio/apartamento',
+        path: '/Apartamentos',
         label: 'Apartamentos',
         options: [
           {
@@ -107,7 +107,7 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
         {
           index: 3,
           icon: 'people',
-          path: '/inicio/pessoas',
+          path: '/pessoas',
           label: 'Pessoas',
           options: [
             {
@@ -128,7 +128,7 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
         {
           index: 5,
           icon: 'domain',
-          path: '/inicio/hospital',
+          path: '/hospital',
           label: 'Hospitais',
           options: [
             {
@@ -149,7 +149,7 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
         {
           index: 6,
           icon: 'vaccines',
-          path: '/inicio/tratamentos',
+          path: '/tratamentos',
           label: 'Tratamentos',
           options: [
             {
@@ -170,7 +170,7 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
         {
           index: 9,
           icon: 'groups',
-          path: '/inicio/registrosocioeconomico',
+          path: '/registrosocioeconomico',
           label: 'Registro Socioeconômico',
           options: [
             {
@@ -187,7 +187,7 @@ export const LateralMenu: React.FC<ILateralMenuProps> = ({ children }) => {
         {
           index: 7,
           icon: 'settings',
-          path: '/inicio/usuarios',
+          path: '/usuarios',
           label: 'Usuários do sistema',
           options: [
             {

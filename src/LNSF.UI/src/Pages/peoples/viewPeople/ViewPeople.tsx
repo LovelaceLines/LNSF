@@ -330,7 +330,7 @@ export const ViewPeople: React.FC = () => {
         Pessoas
       </Typography>
       <Box display='flex' gap={2}>
-        <Button variant='contained' size='small' startIcon={<AddIcon />} onClick={() => navigate('/pessoas/gerenciar/cadastrar')}>
+        <Button variant='contained' size='small' startIcon={<AddIcon />} onClick={() => navigate('/pessoas/editar/cadastrar')}>
           Novo
         </Button>
         <Box display='flex' alignItems='center'>
@@ -356,10 +356,10 @@ export const ViewPeople: React.FC = () => {
 
   const renderActions = (row: MRT_Row<iPeopleObject>) => (
     <Box display='flex' flexDirection='row' flexWrap='nowrap'>
-      <IconButton onClick={() => navigate(`/inicio/pessoa/editar/${row.original.id}`)}>
+      <IconButton onClick={() => navigate(`/pessoas/editar/${row.original.id}`)}>
         <EditRoundedIcon />
       </IconButton>
-      <IconButton onClick={() => navigate(`/inicio/pessoas/dados/${row.original.id}`)}>
+      <IconButton onClick={() => navigate(`/pessoas/dados/${row.original.id}`)}>
         <InfoOutlinedIcon />
       </IconButton>
     </Box>

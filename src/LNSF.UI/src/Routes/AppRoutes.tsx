@@ -39,13 +39,13 @@ export const AppRoutes = () => {
           <Route path="/pessoas/visualizar" element={<Dashboard children={<ViewPeople />} />} />}
 
         {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
-          <Route path="/inicio/pessoas/dados/contatoEmergencia/:id" element={<Dashboard children={<TelaRegisterUpdateContactEmergence />} />} />}
+          <Route path="/pessoas/dados/contatoEmergencia/:id" element={<Dashboard children={<TelaRegisterUpdateContactEmergence />} />} />}
 
         {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
-          <Route path="/inicio/pessoas/dados/:id" element={<Dashboard children={<PersonalData />} />} />}
+          <Route path="/pessoas/dados/:id" element={<Dashboard children={<PersonalData />} />} />}
 
         {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
-          <Route path="/pessoas/gerenciar/:id" element={<Dashboard children={<TelaDeGerenciamentoPeople />} />} />}
+          <Route path="/pessoas/editar/:id" element={<Dashboard children={<TelaDeGerenciamentoPeople />} />} />}
 
         {(isDesenvolvedor || isAdministrador || isSecretario || isAssistenteSocial || isVoluntario) &&
           <Route path="/usuarios/gerenciar/:id" element={<Dashboard children={<TelaDeGerenciamentoAccount />} />} />}

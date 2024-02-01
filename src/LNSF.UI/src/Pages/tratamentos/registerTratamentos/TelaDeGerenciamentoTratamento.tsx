@@ -69,7 +69,7 @@ export const TelaDeGerenciamentoTratamentos: React.FC = () => {
             console.log("updated", updatedTreatments);
 
             if (updatedTreatments) {
-                toast.success('Tratamento cadastrado!');
+                toast.success('Tratamento atualizado!');
                 navigate('/tratamentos/visualizar');
             }
         } catch (error) {
