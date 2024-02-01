@@ -75,7 +75,7 @@ export const PersonalData: React.FC = () => {
 
         setIsLoading(true);
         viewPatient(1, String(people.id), 'PeopleId')
-        .then((response) => {
+            .then((response) => {
                 console.log("buscar : ", response)
                 if (response instanceof Error) {
                     setIsLoading(false);
@@ -723,7 +723,7 @@ export const PersonalData: React.FC = () => {
                                 color='primary'
                                 disableElevation
                                 variant='outlined'
-                                onClick={() => navigate(`/inicio/pessoas/dados/contatoEmergencia/${emergencyContact !== undefined ? emergencyContact.id : 'cadastrar=' + people.id}`)}
+                                onClick={() => navigate(`/pessoas/dados/contatoEmergencia/${emergencyContact !== undefined ? emergencyContact.id : 'cadastrar=' + people.id}`)}
                                 startIcon={<Icon>edit</Icon>}
                             >
                                 <Typography variant='button' whiteSpace="nowrap" textOverflow="ellipsis" overflow="hidden">

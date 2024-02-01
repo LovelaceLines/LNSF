@@ -151,7 +151,7 @@ export const TelaRegisterUpdateContactEmergence: React.FC = () => {
                         mostrarBotaoSalvarEFechar={parts[0] !== 'cadastrar' ? false : true}
                         aoClicarEmSalvar={parts[0] !== 'cadastrar' ? save : undefined}
                         aoClicarEmSalvarEFechar={parts[0] === 'cadastrar' ? saveAndClose : undefined}
-                        aoClicarEmVoltar={() => { navigate(`/inicio/pessoas/dados/${parts[0] === 'cadastrar' ? parts[1] : emergencyContact.peopleId}`) }}
+                        aoClicarEmVoltar={() => { navigate(`/pessoas/dados/${parts[0] === 'cadastrar' ? parts[1] : emergencyContact.peopleId}`) }}
                     />
                 </Toolbar>
 

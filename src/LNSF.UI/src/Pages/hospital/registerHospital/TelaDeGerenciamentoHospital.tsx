@@ -151,9 +151,9 @@ export const TelaDeGerenciamentoHospital: React.FC = () => {
     //                         } else {
     //                             setIsLoading(false);
     //                             if (isSaveAndClose()) {
-    //                                 navigate('/inicio/hospital/visualizar')
+    //                                 navigate('/hospital/visualizar')
     //                             } else {
-    //                                 navigate(`/inicio/hospital/gerenciar/${response.id}`)
+    //                                 navigate(`/hospital/gerenciar/${response.id}`)
     //                             }
     //                         }
     //                     })

@@ -198,10 +198,10 @@ export const ViewFamilyGroupProfile: React.FC = () => {
 
   const renderActions = (row: MRT_Row<iFamilyGroupProfileObject>) => (
     <Box display='flex' flexDirection='row' flexWrap='nowrap'>
-      <IconButton onClick={() => navigate(`/inicio/pessoa/editar/${row.original.id}`)}>
+      <IconButton onClick={() => navigate(`/pessoa/editar/${row.original.id}`)}>
         <EditRoundedIcon />
       </IconButton>
-      <IconButton onClick={() => navigate(`/inicio/pessoas/dados/${row.original.id}`)}>
+      <IconButton onClick={() => navigate(`/pessoas/dados/${row.original.id}`)}>
         <InfoOutlinedIcon />
       </IconButton>
     </Box>

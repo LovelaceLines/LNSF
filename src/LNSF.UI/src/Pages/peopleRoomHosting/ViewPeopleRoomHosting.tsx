@@ -192,10 +192,10 @@ export const ViewPeopleRoomHosting: React.FC = () => {
 
   const renderActions = (row: MRT_Row<iPeopleRoomHostingObject>) => (
     <Box display='flex' flexDirection='row' flexWrap='nowrap'>
-      <IconButton onClick={() => navigate(`/inicio/pessoa/editar/${row.original.peopleId}`)}>
+      <IconButton onClick={() => navigate(`/pessoa/editar/${row.original.peopleId}`)}>
         <EditRoundedIcon />
       </IconButton>
-      <IconButton onClick={() => navigate(`/inicio/pessoas/dados/${row.original.peopleId}`)}>
+      <IconButton onClick={() => navigate(`/pessoas/dados/${row.original.peopleId}`)}>
         <InfoOutlinedIcon />
       </IconButton>
     </Box>
