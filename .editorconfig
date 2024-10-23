@@ -1,0 +1,14 @@
+[*]
+indent_style = tab
+indent_size = 4
+trim_trailing_whitespace = true
+insert_final_newline = true
+insert_final_newline = true
+
+[*.cs]
+
+# CS8765: A nulidade do tipo de parâmetro não corresponde ao membro substituído (possivelmente devido a atributos de nulidade).
+dotnet_diagnostic.CS8765.severity = silent
+
+# CS9107: O parâmetro é capturado no estado do tipo delimitador e seu valor também é passado para o construtor base. O valor também pode ser capturado pela classe base.
+dotnet_diagnostic.CS9107.severity = silent

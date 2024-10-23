@@ -1,0 +1,10 @@
+{
+    "conventionalCommits.scopes": [
+        "project",
+        "ui",
+        "api",
+        "database"
+    ],
+    "editor.formatOnSave": true,
+    "editor.fontSize": 18
+}
