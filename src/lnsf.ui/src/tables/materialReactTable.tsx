@@ -22,9 +22,10 @@ import { Add, Check, ClearAll, Delete, Edit, FileDownload, Share } from "@mui/ic
 import { Box, Button, IconButton, Tooltip } from "@mui/material";
 import { Dispatch, SetStateAction, useCallback } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import { DownloadExportDisplay } from "./components/download-export-display/downloadExportDisplay";
-import { useSnackbar, useModal } from "@/contexts";
+import { useModal } from "@/contexts";
 import { useDebounced } from "@/hooks";
 import { colors, useThemeContext } from "@/theme";
 
@@ -52,7 +53,6 @@ interface Props<TData extends MRT_RowData> extends MRT_TableOptions<TData> {
 }
 
 export const useMaterialReactTable = <TData extends MRT_RowData>({ columns, data, ...props }: Props<TData>) => {
-	const { Snackbar } = useSnackbar();
 	const { isOpen: isOpenModal, handleModalOpen } = useModal("download-export-display");
 	const { themeName } = useThemeContext();
 
@@ -61,7 +61,7 @@ export const useMaterialReactTable = <TData extends MRT_RowData>({ columns, data
 
 		if (navigator.clipboard) {
 			navigator.clipboard.writeText(url);
-			Snackbar("Erro ao copiar link.");
+			toast.error("Erro ao copiar link.");
 			return;
 		}
 
@@ -75,9 +75,9 @@ export const useMaterialReactTable = <TData extends MRT_RowData>({ columns, data
 
 		try {
 			document.execCommand("copy");
-			Snackbar("Link copiado para a área de transferência.");
+			toast.info("Link copiado para a área de transferência.");
 		} catch {
-			Snackbar("Erro ao copiar link.");
+			toast.error("Erro ao copiar link.");
 		}
 	}, []);
 
@@ -91,14 +91,14 @@ export const useMaterialReactTable = <TData extends MRT_RowData>({ columns, data
 		if (!props.state?.rowSelection || !props.setRowSelection) return;
 
 		if (!Object.keys(props.state?.rowSelection).length) {
-			Snackbar("Selecione um registro para deletar.");
+			toast.warning("Selecione um registro para deletar.");
 			return;
 		}
 
 		const id = parseInt(Object.keys(props.state?.rowSelection)[0] ?? 0);
 		props.setRowSelection({});
 		props.handleDelete && props.handleDelete(id);
-		Snackbar("Registro deletado! Atualize a página para ver as alterações.");
+		toast.info("Registro deletado! Atualize a página para ver as alterações.");
 	}, [props.state?.rowSelection]);
 
 	const renderTopToolbarCustomActions = ({ table }: { table: MRT_TableInstance<TData> }) => (

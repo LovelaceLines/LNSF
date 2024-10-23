@@ -1,7 +1,8 @@
 import { createBrowserRouter, Navigate, RouteObject } from "react-router-dom";
 
+import { AuthWrapper } from "@/auth-wrapper";
 import { MainLayout, LoginLayout } from "@/layouts";
-import { IdentityPage, SingInPage, SingUpPage } from "@/pages/(login)";
+import { SingInPage } from "@/pages/(login)";
 import { Loading } from "@/components";
 import { PeopleFormPage, PeopleTablePage } from "@/pages/people";
 import { TourDailyLogPage, TourTablePage } from "@/pages/tour";
@@ -19,26 +20,22 @@ const LoginRouters: RouteObject = {
 	children: [
 		{
 			path: "/",
-			element: <Navigate to="/signin" replace />,
+			element: <Navigate to="/login" replace />,
 		},
 		{
-			path: "signin",
+			path: "login",
 			element: <SingInPage />,
-		},
-		{
-			path: "signup",
-			element: <SingUpPage />,
-		},
-		{
-			path: "identity",
-			element: <IdentityPage />,
 		},
 	],
 };
 
 const MainRouters: RouteObject = {
 	path: "/app",
-	element: <MainLayout />,
+	element: (
+		<AuthWrapper>
+			<MainLayout />
+		</AuthWrapper>
+	),
 	loader: () => <Loading />,
 	children: [
 		{

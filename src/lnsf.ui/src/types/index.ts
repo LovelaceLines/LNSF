@@ -17,4 +17,4 @@ export type { tour, tourFilter } from "./tour";
 export type { treatment } from "./treatment";
 export { typeTreatment } from "./treatment.d";
 export { getTypeTreatment } from "./treatment.d";
-export type { role, roleFilter, user, userFilter, userRole } from "./user";
+export type { defaultRole, role, roleFilter, user, userFilter, userRole } from "./user";

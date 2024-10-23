@@ -1,4 +1,3 @@
-import { error } from "@/types";
 import { AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 

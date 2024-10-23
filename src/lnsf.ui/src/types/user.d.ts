@@ -18,9 +18,11 @@ export type userFilter = baseFilter & {
 	phoneNumber?: string;
 };
 
+export type defaultRole = "Desenvolvedor" | "Administrador" | "Assistente Social" | "Secretário" | "Voluntário";
+
 export type role = {
 	id?: number;
-	name: string;
+	name: defaultRole | string;
 };
 
 export type roleFilter = baseFilter & {
