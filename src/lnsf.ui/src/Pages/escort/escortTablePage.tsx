@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import { Link } from "react-router-dom";
 
 import { useMaterialReactTable } from "@/tables";
-import { MRTInputNumber } from "@/tables/components";
+import { MRTInputNumber, MRTLaunchLink } from "@/tables/components";
 import { CopyButton } from "@/tables/util";
 import { escort } from "@/types";
 import { useEscortTablePage } from "./useEscortTablePage";
@@ -34,16 +34,7 @@ export const EscortTablePage = () => {
 			{
 				accessorKey: "peopleId",
 				header: "Id Pessoa",
-				Cell: ({ row }) => (
-					<Box display="flex" alignItems="center" gap={1}>
-						{row.original.peopleId}
-						<Link to={`/app/pessoas/${row.original.peopleId}`}>
-							<IconButton size="small">
-								<Launch />
-							</IconButton>
-						</Link>
-					</Box>
-				),
+				Cell: ({ row }) => <MRTLaunchLink label={row.original.peopleId} to={`/app/pessoas/${row.original.peopleId}`} />,
 			},
 			{
 				accessorKey: "people.name",

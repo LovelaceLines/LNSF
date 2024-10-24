@@ -1,18 +1,22 @@
 import { MRT_ColumnDef } from "material-react-table";
-import { Launch } from "@mui/icons-material";
-import { Button } from "@mui/material";
+import { InfoOutlined, Launch } from "@mui/icons-material";
+import { Button, IconButton, Tooltip } from "@mui/material";
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 
-import { useMaterialReactTable, dateOnlyToStr } from "@/tables";
-import { MRTInputNumber } from "@/tables/components";
+import { Checkbox } from "@/components";
+import { useMaterialReactTable } from "@/tables";
+import { MRTInputDateOnly, MRTInputNumber } from "@/tables/components";
 import { CopyButton } from "@/tables/util";
-import { formatGender, formatMaritalStatus, formatRaceColor, people } from "@/types";
+import { formatGender, formatMaritalStatus, formatRaceColor, getGender, getMaritalStatus, getRaceColor, people } from "@/types";
 import { usePeopleTablePage } from "./usePeopleTablePage";
+import { dateOnlyToStr } from "@/utils";
 
 export const PeopleTablePage = () => {
 	const {
 		peoples,
+		register,
+		watch,
 		rowCount,
 		state: { columnFilters, sorting, pagination, globalFilter, rowSelection },
 		setColumnFilters,
@@ -60,6 +64,16 @@ export const PeopleTablePage = () => {
 			{
 				accessorKey: "experience",
 				header: "Experiência",
+				enableSorting: false,
+				enableColumnFilter: false,
+				size: 100,
+			},
+			{
+				accessorKey: "status",
+				header: "Status",
+				enableSorting: false,
+				enableColumnFilter: false,
+				size: 100,
 			},
 			{
 				accessorKey: "note",
@@ -71,30 +85,37 @@ export const PeopleTablePage = () => {
 				enableClickToCopy: true,
 				muiCopyButtonProps: CopyButton,
 				Cell: ({ row }) =>
-					`${row.original.street}, ${row.original.houseNumber}, ${row.original.neighborhood}, ${row.original.city} - ${row.original.state}`,
+					`${row.original.street}, ${row.original.houseNumber} - ${row.original.neighborhood}, ${row.original.city} - ${row.original.state}`,
 			},
 			{
 				accessorKey: "birthDate",
 				header: "Data de Nascimento",
-				size: 100,
-				Cell: ({ row }) => dateOnlyToStr(row.original.birthDate),
+				filterVariant: "date",
+				Filter: ({ column }) => <MRTInputDateOnly column={column} />,
+				Cell: ({ row }) => dateOnlyToStr(row.original.birthDate, "ptBr"),
 			},
 			{
 				accessorKey: "gender",
 				header: "Sexo",
 				size: 100,
+				filterVariant: "select",
+				filterSelectOptions: getGender().map((g) => ({ value: g.id, label: g.value })),
 				Cell: ({ row }) => formatGender(row.original.gender),
 			},
 			{
 				accessorKey: "maritalStatus",
 				header: "Estado Civil",
 				size: 100,
+				filterVariant: "select",
+				filterSelectOptions: getMaritalStatus().map((m) => ({ value: m.id, label: m.value })),
 				Cell: ({ row }) => formatMaritalStatus(row.original.maritalStatus),
 			},
 			{
 				accessorKey: "raceColor",
 				header: "Raça",
 				size: 100,
+				filterVariant: "select",
+				filterSelectOptions: getRaceColor().map((r) => ({ value: r.id, label: r.value })),
 				Cell: ({ row }) => formatRaceColor(row.original.raceColor),
 			},
 		],
@@ -131,6 +152,14 @@ export const PeopleTablePage = () => {
 				toCreate: true,
 				toEdit: true,
 
+				renderTopToolbarFilterActions: () => (
+					<>
+						<Checkbox label="Ativos" checked={watch("isActive")} register={register("isActive")} />
+						<Checkbox label="Somente Pacientes" checked={watch("isPatient")} register={register("isPatient")} />
+						<Checkbox label="Somente Acompanhantes" checked={watch("isEscort")} register={register("isEscort")} />
+					</>
+				),
+
 				renderTopToolbarExtraCustomActions: () => (
 					<>
 						<Link to={`/app/pessoas/pacientes`}>
@@ -143,6 +172,16 @@ export const PeopleTablePage = () => {
 								Acompanhantes
 							</Button>
 						</Link>
+					</>
+				),
+
+				renderToolbarExtraInternalActions: () => (
+					<>
+						<Tooltip title="◦ Status 'Paciente' pode sobrepor o status 'Acompanhante'">
+							<IconButton size="medium" aria-label="teste">
+								<InfoOutlined />
+							</IconButton>
+						</Tooltip>
 					</>
 				),
 			})}

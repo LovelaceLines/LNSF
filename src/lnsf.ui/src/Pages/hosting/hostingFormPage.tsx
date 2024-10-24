@@ -2,7 +2,7 @@ import { Button, Divider, Grid2 as Grid, IconButton, TextField } from "@mui/mate
 
 import { useHostingFormPage } from "./useHostingFormPage";
 import { DateField, SelectField } from "@/components";
-import { formatDate } from "@/utils";
+import { dateOnlyToStr } from "@/utils";
 import { Add, Delete } from "@mui/icons-material";
 import { PeopleRoomHostingFormPage } from "./peopleRoomHostingFormPage";
 
@@ -58,7 +58,7 @@ export const HostingFormPage = () => {
 			<Grid size={{ xs: 6, sm: 6, md: 3 }}>
 				<DateField
 					label="Check-in"
-					value={formatDate(getValues("checkIn"))}
+					value={dateOnlyToStr(getValues("checkIn"))}
 					register={register("checkIn")}
 					error={!!errors.checkIn}
 					helperText={errors.checkIn?.message}
@@ -67,7 +67,7 @@ export const HostingFormPage = () => {
 			<Grid size={{ xs: 6, sm: 6, md: 3 }}>
 				<DateField
 					label="Check-out"
-					value={formatDate(getValues("checkOut"))}
+					value={dateOnlyToStr(getValues("checkOut"))}
 					register={register("checkOut")}
 					error={!!errors.checkOut}
 					helperText={errors.checkOut?.message}
@@ -87,10 +87,10 @@ export const HostingFormPage = () => {
 						<Grid size={{ xs: 4, sm: 2, md: 1 }}>
 							<TextField label="Id Acompanhante" value={escort.id} fullWidth />
 						</Grid>
-						<Grid size={{ xs: 8, sm: 8.5, md: 4 }}>
+						<Grid size={{ xs: 8, sm: 7, md: 4 }}>
 							<TextField label="Nome Acompanhante" value={escort.people?.name} fullWidth />
 						</Grid>
-						<Grid size={{ xs: 12, sm: 2, md: 1 }}>
+						<Grid size={{ xs: 12, sm: 3, md: 1 }}>
 							<IconButton
 								type="submit"
 								color="primary"
@@ -107,10 +107,10 @@ export const HostingFormPage = () => {
 				</>
 			))}
 			<Grid container spacing={2} size={{ xs: 12 }}>
-				<Grid size={{ xs: 8, sm: 2, md: 1 }}>
+				<Grid size={{ xs: 4, sm: 2, md: 1 }}>
 					<TextField label="Id Acompanhante" value={escort?.id ?? ""} fullWidth />
 				</Grid>
-				<Grid size={{ xs: 12, sm: 8.5, md: 4 }}>
+				<Grid size={{ xs: 8, sm: 7, md: 4 }}>
 					<SelectField
 						label="Nome Acompanhante"
 						options={escorts}
@@ -121,7 +121,7 @@ export const HostingFormPage = () => {
 						onClick={(value) => setEscort(escorts.find((e) => e.id === value))}
 					/>
 				</Grid>
-				<Grid size={{ xs: 12, sm: 2, md: 1 }}>
+				<Grid size={{ xs: 12, sm: 3, md: 1 }}>
 					<IconButton type="submit" color="primary" size="large" onClick={() => addEscortToHosting(Number(id), escort!.id!)}>
 						<Add />
 					</IconButton>
@@ -133,7 +133,7 @@ export const HostingFormPage = () => {
 			<Grid size={{ xs: 12 }}>
 				<Divider>Apartamento</Divider>
 			</Grid>
-			<Grid size={{ xs: 12, sm: 2, md: 1 }}>
+			<Grid size={{ xs: 4, sm: 2, md: 1 }}>
 				<TextField
 					label="Id Apartamento"
 					value={room?.id ?? ""}
@@ -141,7 +141,7 @@ export const HostingFormPage = () => {
 					onChange={(e) => setRoom(rooms.find((r) => r.id === Number(e.target.value)))}
 				/>
 			</Grid>
-			<Grid size={{ xs: 12, sm: 8.5, md: 4 }}>
+			<Grid size={{ xs: 8, sm: 7, md: 4 }}>
 				<SelectField
 					label="Apartamento"
 					options={rooms}

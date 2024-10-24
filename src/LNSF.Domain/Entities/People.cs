@@ -7,7 +7,7 @@ public class People
 	public int Id { get; set; }
 	public required string Name { get; set; }
 	public Gender Gender { get; set; }
-	public DateTime BirthDate { get; set; }
+	public DateOnly BirthDate { get; set; }
 	public MaritalStatus MaritalStatus { get; set; }
 	public RaceColor RaceColor { get; set; }
 	public string? Email { get; set; }

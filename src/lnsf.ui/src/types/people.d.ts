@@ -36,13 +36,17 @@ export type peopleFilter = baseFilter & {
 	cpf?: string;
 	phone?: string;
 	gender?: gender;
-	birthDate?: Date;
+	birthDate?: string;
 	street?: string;
 	houseNumber?: string;
 	neighborhood?: string;
 	city?: string;
 	state?: string;
 	note?: string;
+	isActive?: boolean;
+	isEscort?: boolean;
+	isPatient?: boolean;
+	isVeteran?: boolean;
 };
 
 export type peopleRoomHosting = {
@@ -69,12 +73,6 @@ export enum gender {
 	other = 2,
 }
 
-export const getGender = (): { id: string; value: string }[] => [
-	{ id: gender.male.toString(), value: "Masculino" },
-	{ id: gender.female.toString(), value: "Feminino" },
-	{ id: gender.other.toString(), value: "Outro" },
-];
-
 export enum raceColor {
 	white,
 	black,
@@ -84,15 +82,6 @@ export enum raceColor {
 	ignored,
 }
 
-export const getRaceColor = (): { id: string; value: string }[] => [
-	{ id: raceColor.white.toString(), value: "Branco" },
-	{ id: raceColor.black.toString(), value: "Preto" },
-	{ id: raceColor.brown.toString(), value: "Pardo" },
-	{ id: raceColor.yellow.toString(), value: "Amarelo" },
-	{ id: raceColor.indigenous.toString(), value: "Indígena" },
-	{ id: raceColor.ignored.toString(), value: "Não declarado" },
-];
-
 export enum maritalStatus {
 	single,
 	married,
@@ -101,12 +90,3 @@ export enum maritalStatus {
 	stableUnion,
 	widower,
 }
-
-export const getMaritalStatus = (): { id: string; value: string }[] => [
-	{ id: maritalStatus.single.toString(), value: "Solteiro(a)" },
-	{ id: maritalStatus.married.toString(), value: "Casado(a)" },
-	{ id: maritalStatus.separate.toString(), value: "Separado(a)" },
-	{ id: maritalStatus.divorced.toString(), value: "Divorciado(a)" },
-	{ id: maritalStatus.stableUnion.toString(), value: "União Estável" },
-	{ id: maritalStatus.widower.toString(), value: "Viúvo(a)" },
-];

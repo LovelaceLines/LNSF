@@ -5,7 +5,7 @@ import { EmergencyContactFormPage } from "@/pages/emergencyContact";
 import { getGender, getMaritalStatus, getRaceColor, tour } from "@/types";
 import { usePeopleFormPage } from "./usePeopleFormPage";
 import { TourFormPage } from "@/pages/tour";
-import { formatDate } from "@/utils";
+import { dateOnlyToStr } from "@/utils";
 
 export const PeopleFormPage = () => {
 	const { id, register, handleSubmit, errors, watch, getValues, setValue, handleSave } = usePeopleFormPage();
@@ -56,7 +56,7 @@ export const PeopleFormPage = () => {
 				<Grid size={{ xs: 12, sm: 4 }}>
 					<DateField
 						label="Data de Nascimento"
-						value={formatDate(watch("birthDate"))}
+						value={dateOnlyToStr(watch("birthDate"))}
 						register={register("birthDate")}
 						error={!!errors.birthDate}
 						helperText={errors.birthDate?.message}
@@ -130,9 +130,10 @@ export const PeopleFormPage = () => {
 				</Grid>
 				<Grid size={{ xs: 12, sm: 12 }}>
 					<TextField
+						type=""
 						label="Observação"
-						multiline
-						maxRows={4}
+						// multiline // TODO - Fix - Bug nos campos de texto
+						// rows={4} // TODO - Fix - Bug nos campos de texto
 						{...register("note")}
 						error={!!errors.note}
 						helperText={errors.note?.message}

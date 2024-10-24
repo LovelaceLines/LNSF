@@ -3,6 +3,11 @@ import { toast } from "react-toastify";
 
 export const useResponse = (response: AxiosResponse<any, any>) => {
 	console.debug("API/UI Response:", response);
+
+	if (response.config.method === "post" || response.config.method === "put" || response.config.method === "delete") {
+		toast.success(response.data.message ?? "Operação realizada com sucesso");
+	}
+
 	return response;
 };
 

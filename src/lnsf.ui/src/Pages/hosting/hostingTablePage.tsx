@@ -1,13 +1,14 @@
 import { MRT_ColumnDef } from "material-react-table";
+import { Box, IconButton } from "@mui/material";
+import { Launch } from "@mui/icons-material";
 import { useMemo } from "react";
+import { Link } from "react-router-dom";
 
-import { dateOnlyToStr, useMaterialReactTable } from "@/tables";
-import { MRTInputNumber } from "@/tables/components";
+import { useMaterialReactTable } from "@/tables";
+import { MRTInputNumber, MRTLaunchLink } from "@/tables/components";
 import { hosting } from "@/types";
 import { useHostingTablePage } from "./useHostingTablePage";
-import { Box, IconButton } from "@mui/material";
-import { Link } from "react-router-dom";
-import { Launch } from "@mui/icons-material";
+import { dateOnlyToStr } from "@/utils";
 
 export const HostingTablePage = () => {
 	const {
@@ -34,16 +35,7 @@ export const HostingTablePage = () => {
 				accessorKey: "patientId",
 				header: "Id Paciente",
 				Filter: ({ column }) => <MRTInputNumber column={column} />,
-				Cell: ({ row }) => (
-					<Box display="flex" alignItems="center" gap={1}>
-						{row.original.patientId}
-						<Link to={`/app/pessoas/pacientes/${row.original.patientId}`}>
-							<IconButton size="small">
-								<Launch />
-							</IconButton>
-						</Link>
-					</Box>
-				),
+				Cell: ({ row }) => <MRTLaunchLink label={row.original.patientId} to={`/app/pessoas/pacientes/${row.original.patientId}`} />,
 			},
 			{
 				accessorKey: "patient.people.name",
@@ -63,12 +55,12 @@ export const HostingTablePage = () => {
 			{
 				accessorKey: "checkIn",
 				header: "Check In",
-				Cell: ({ row }) => dateOnlyToStr(row.original.checkIn),
+				Cell: ({ row }) => dateOnlyToStr(row.original.checkIn, "ptBr"),
 			},
 			{
 				accessorKey: "checkOut",
 				header: "Check Out",
-				Cell: ({ row }) => dateOnlyToStr(row.original.checkOut),
+				Cell: ({ row }) => dateOnlyToStr(row.original.checkOut, "ptBr"),
 			},
 		],
 		[]

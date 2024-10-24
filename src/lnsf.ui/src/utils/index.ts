@@ -1,3 +1,3 @@
 export { includes } from "./arrayUtil";
 export { toValue } from "./form";
-export { formatCurrency, formatDate, formatDateTime, formatPercent } from "./format";
+export { dateOnlyToStr, dateTimeToStr, formatCurrency, formatPercent } from "./format";

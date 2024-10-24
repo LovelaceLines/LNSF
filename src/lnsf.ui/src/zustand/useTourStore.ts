@@ -27,7 +27,9 @@ export const useTourStore = create<state>((set) => ({
 	},
 
 	getOpenTours: async (): Promise<tour[]> => {
-		const res = await Axios.get<queryResult<tour>>("/Tour", { params: { open: true, page: 1, perPage: 99 } as baseFilter });
+		const res = await Axios.get<queryResult<tour>>("/Tour", {
+			params: { isOpen: true, sort: "output", page: 1, perPage: 9999 } as tourFilter,
+		});
 		set({ openTours: res.data.items });
 		return res.data.items;
 	},

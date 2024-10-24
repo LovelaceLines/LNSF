@@ -50,6 +50,8 @@ interface Props<TData extends MRT_RowData> extends MRT_TableOptions<TData> {
 	handleDelete?: (id: number) => void;
 	handleSelect?: (ids: TData[]) => void;
 	renderTopToolbarExtraCustomActions?: () => JSX.Element;
+	renderTopToolbarFilterActions?: () => JSX.Element;
+	renderToolbarExtraInternalActions?: () => JSX.Element;
 }
 
 export const useMaterialReactTable = <TData extends MRT_RowData>({ columns, data, ...props }: Props<TData>) => {
@@ -102,48 +104,54 @@ export const useMaterialReactTable = <TData extends MRT_RowData>({ columns, data
 	}, [props.state?.rowSelection]);
 
 	const renderTopToolbarCustomActions = ({ table }: { table: MRT_TableInstance<TData> }) => (
-		<Box display="flex" alignItems="center" gap={1}>
-			{props.onSubmit && (
-				<Button key="run" variant="contained" size="small" onClick={props.onSubmit}>
-					Executar
-				</Button>
-			)}
-			{props.toCreate && (
-				<Link to={props.toCreate === true ? "add" : props.toCreate}>
-					<Button key="create" variant="outlined" size="small" endIcon={<Add />}>
-						Criar
+		<Box display="flex" flexDirection="column" gap={1}>
+			<Box display="flex" alignItems="center" gap={1}>
+				{props.renderTopToolbarFilterActions && props.renderTopToolbarFilterActions()}
+			</Box>
+			<Box display="flex" alignItems="center" gap={1}>
+				{props.onSubmit && (
+					<Button key="run" variant="contained" size="small" onClick={props.onSubmit}>
+						Executar
 					</Button>
-				</Link>
-			)}
-			{props.toEdit && (
-				<Link to={`${props.toEdit === true ? "" : props.toEdit + "/"}${Object.keys(props.state?.rowSelection ?? {})[0] ?? ""}`}>
-					<Button key="edit" variant="outlined" size="small" endIcon={<Edit />}>
-						Editar
+				)}
+				{props.toCreate && (
+					<Link to={props.toCreate === true ? "add" : props.toCreate}>
+						<Button key="create" variant="outlined" size="small" endIcon={<Add />}>
+							Criar
+						</Button>
+					</Link>
+				)}
+				{props.toEdit && (
+					<Link to={`${props.toEdit === true ? "" : props.toEdit + "/"}${Object.keys(props.state?.rowSelection ?? {})[0] ?? ""}`}>
+						<Button key="edit" variant="outlined" size="small" endIcon={<Edit />}>
+							Editar
+						</Button>
+					</Link>
+				)}
+				{props.handleDelete && (
+					<Button key="delete" variant="outlined" size="small" endIcon={<Delete />} onClick={handleDelete}>
+						Deletar
 					</Button>
-				</Link>
-			)}
-			{props.handleDelete && (
-				<Button key="delete" variant="outlined" size="small" endIcon={<Delete />} onClick={handleDelete}>
-					Deletar
-				</Button>
-			)}
-			{props.handleSelect && (
-				<Button
-					key="select"
-					variant="outlined"
-					size="small"
-					endIcon={<Check />}
-					onClick={() => props.handleSelect && props.handleSelect(table.getSelectedRowModel().rows.map((r) => r.original))}
-				>
-					Selecionar
-				</Button>
-			)}
-			{props.renderTopToolbarExtraCustomActions && props.renderTopToolbarExtraCustomActions()}
+				)}
+				{props.handleSelect && (
+					<Button
+						key="select"
+						variant="outlined"
+						size="small"
+						endIcon={<Check />}
+						onClick={() => props.handleSelect && props.handleSelect(table.getSelectedRowModel().rows.map((r) => r.original))}
+					>
+						Selecionar
+					</Button>
+				)}
+				{props.renderTopToolbarExtraCustomActions && props.renderTopToolbarExtraCustomActions()}
+			</Box>
 		</Box>
 	);
 
 	const renderToolbarInternalActions = ({ table }: { table: MRT_TableInstance<TData> }) => [
 		<MRT_ToggleGlobalFilterButton key="globalFilter" table={table} />,
+		props.renderToolbarExtraInternalActions && props.renderToolbarExtraInternalActions(),
 		<Tooltip key="share" title="Compartilhar">
 			<IconButton size="medium" aria-label="teste" onClick={handleShare}>
 				<Share />
@@ -212,7 +220,6 @@ export const useMaterialReactTable = <TData extends MRT_RowData>({ columns, data
 		layoutMode: "grid",
 		enableColumnResizing: props.enableColumnResizing ?? true,
 		positionToolbarAlertBanner: "none",
-		enableClickToCopy: true,
 
 		rowCount: props.rowCount ?? data.length ?? undefined,
 

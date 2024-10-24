@@ -12,4 +12,6 @@ public class TourFilter : BaseFilter
 	[ToLowerContainsComparison]
 	public string? Note { get; set; }
 	public int? PeopleId { get; set; }
+	public bool? IsClose { get; set; }
+	public bool? IsOpen { get; set; }
 }

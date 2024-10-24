@@ -17,11 +17,11 @@ export const useTreatmentFormPage = () => {
 		watch,
 		setValue,
 	} = useForm<treatment>({
-		values: { id: 0, name: "nome", type: typeTreatment.pretransplant } as treatment,
+		values: { id: 0, name: "nome", type: typeTreatment.pretransplant },
 	});
 
 	useEffect(() => {
-		if (id) getTreatment(id).then((data) => toValue(data, setValue));
+		if (id) getTreatment(Number(id)).then((data) => toValue(data, setValue));
 	}, [id]);
 
 	const handleSave = (data: treatment) => {

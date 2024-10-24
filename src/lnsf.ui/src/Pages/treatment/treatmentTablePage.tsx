@@ -3,7 +3,7 @@ import { useMemo } from "react";
 
 import { useMaterialReactTable } from "@/tables";
 import { MRTInputNumber } from "@/tables/components";
-import { formatTypeTreatment, treatment } from "@/types";
+import { formatTypeTreatment, getTypeTreatment, treatment } from "@/types";
 import { useTreatmentTablePage } from "./useTreatmentTablePage";
 
 export const TreatmentTablePage = () => {
@@ -35,6 +35,8 @@ export const TreatmentTablePage = () => {
 			{
 				accessorKey: "type",
 				header: "Tipo",
+				filterVariant: "select",
+				filterSelectOptions: getTypeTreatment().map((t) => ({ value: t.id, label: t.value })),
 				Cell: ({ row }) => formatTypeTreatment(row.original.type),
 			},
 		],

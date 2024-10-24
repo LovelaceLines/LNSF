@@ -11,7 +11,7 @@ namespace LNSF.Api.Controllers;
 public class EscortController(IEscortRepository repository, IEscortService service) : ControllerBase
 {
 	[HttpGet]
-	public async Task<ActionResult<QueryResult<Escort>>> Get([FromQuery] BaseFilter filter) =>
+	public async Task<ActionResult<QueryResult<Escort>>> Get([FromQuery] EscortFilter filter) =>
 		Ok(await repository.Query(filter));
 
 	[HttpPost]

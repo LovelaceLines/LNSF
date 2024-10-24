@@ -1,37 +1,36 @@
-import { Divider, Grid2 as Grid, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Divider, Grid2 as Grid, TextField, Typography } from "@mui/material";
 
 import { SelectField } from "@/components";
 import { TourFormPage } from "./tourFormPage";
-import { people, tour } from "@/types";
-import { usePeopleStore, useTourStore } from "@/zustand";
-
-// TODO - Fix - Datas não estão sendo exibidas corretamente mas estão sendo salvas corretamente
+import { tour } from "@/types";
+import { useTourDailyLogPage } from "./useTourDailyLogPage";
 
 export const TourDailyLogPage = () => {
-	const { getOpenTours, openTours } = useTourStore();
-	const [people, setPeople] = useState<people>();
-	const { getPeoples, peoples } = usePeopleStore();
-
-	useEffect(() => {
-		getOpenTours();
-		getPeoples({ isGuest: true, page: 1, pageSize: 999 });
-	}, []);
-
-	const handleSelect = (id: number) => setPeople(peoples.find((p) => p.id === id));
+	const { people, setPeople, peoples, openTours, handleSelect } = useTourDailyLogPage();
 
 	return (
 		<Grid container spacing={2}>
-			<Grid size={{ xs: 12 }}>
-				<SelectField
-					label="Buscar Pessoa"
-					labelId="id"
-					labelKey="name"
-					onClick={handleSelect}
-					options={peoples}
-					valueKey="id"
-					key="select-peoples"
-				/>
+			<Grid container size={{ xs: 12 }}>
+				<Grid size={{ xs: 4, sm: 1.5, md: 1 }}>
+					<TextField
+						label="Id Pessoa"
+						defaultValue={0}
+						value={people?.id}
+						fullWidth
+						onChange={(e) => setPeople(peoples.find((p) => p.id === Number(e.target.value)))}
+					/>
+				</Grid>
+				<Grid size="grow" wrap="nowrap">
+					<SelectField
+						label="Buscar Pessoa"
+						options={peoples}
+						valueKey="id"
+						labelId="id"
+						labelKey="name"
+						defaultValue={String(people?.id)}
+						onClick={handleSelect}
+					/>
+				</Grid>
 			</Grid>
 			{people && (
 				<>

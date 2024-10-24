@@ -12,6 +12,13 @@ public class TourRepository(AppDbContext context) : BaseRepository<Tour>(context
 	public async Task<QueryResult<Tour>> Query(TourFilter filter)
 	{
 		var query = context.Tours.ApplyFilterWithoutPagination(filter);
+
+		if (filter.IsClose == true)
+			query = query.Where(x => x.Input != null);
+
+		if (filter.IsOpen == true)
+			query = query.Where(x => x.Input == null);
+
 		query = query.Include(x => x.People);
 		var items = await query.ToPaged(filter.Page, filter.PerPage).ToListAsync();
 		var totalCount = await query.CountAsync();

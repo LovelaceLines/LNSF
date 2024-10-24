@@ -1,14 +1,13 @@
 import { MRT_ColumnDef } from "material-react-table";
-import { Launch } from "@mui/icons-material";
-import { Box, IconButton } from "@mui/material";
 import { useMemo } from "react";
-import { Link } from "react-router-dom";
 
-import { useMaterialReactTable, dateTimeToStr } from "@/tables";
-import { MRTInputNumber } from "@/tables/components";
+import { Checkbox } from "@/components";
+import { useMaterialReactTable } from "@/tables";
+import { MRTInputDateTime, MRTInputNumber, MRTLaunchLink } from "@/tables/components";
 import { CopyButton } from "@/tables/util";
 import { tour } from "@/types";
 import { useTourTablePage } from "./useTourTablePage";
+import { dateTimeToStr } from "@/utils";
 
 export const TourTablePage = () => {
 	const {
@@ -20,8 +19,12 @@ export const TourTablePage = () => {
 		setRowSelection,
 		setPagination,
 		setSorting,
+		register,
+		watch,
 		onSubmit,
 	} = useTourTablePage();
+
+	console.debug(columnFilters);
 
 	const columns = useMemo<MRT_ColumnDef<tour>[]>(
 		() => [
@@ -31,42 +34,40 @@ export const TourTablePage = () => {
 				size: 75,
 				Filter: ({ column }) => <MRTInputNumber column={column} />,
 			},
+			// TODO - Fix - Tornar menos especifico, filtra apenas se a data for exatamete a do banco
 			{
 				accessorKey: "output",
 				header: "Data de Saída",
 				size: 150,
-				Cell: ({ row }) => dateTimeToStr(row.original.output),
+				filterVariant: "datetime",
+				Filter: ({ column }) => <MRTInputDateTime column={column} />,
+				Cell: ({ row }) => dateTimeToStr(row.original.output, "ptBr"),
 			},
 			{
 				accessorKey: "input",
 				header: "Data de Entrada",
-				size: 150,
-				Cell: ({ row }) => dateTimeToStr(row.original.input),
+				filterVariant: "datetime-range",
+				Cell: ({ row }) => dateTimeToStr(row.original.input, "ptBr"),
 			},
 			{
 				accessorKey: "people.id",
 				header: "Id Pessoa",
 				size: 75,
 				Filter: ({ column }) => <MRTInputNumber column={column} />,
-				Cell: ({ row }) => (
-					<Box display="flex" alignItems="center" gap={1}>
-						{row.original.people.id}
-						<Link to={`/app/pessoas/${row.original.people.id}`}>
-							<IconButton>
-								<Launch />
-							</IconButton>
-						</Link>
-					</Box>
-				),
+				Cell: ({ row }) => <MRTLaunchLink label={row.original.people.id} to={`/app/pessoas/${row.original.people.id}`} />,
 			},
 			{
 				accessorKey: "people.name",
 				header: "Nome",
+				enableSorting: false,
+				enableColumnFilter: false,
 			},
 			{
 				accessorKey: "people.rg",
 				header: "RG",
 				size: 150,
+				enableSorting: false,
+				enableColumnFilter: false,
 				enableClickToCopy: true,
 				muiCopyButtonProps: CopyButton,
 			},
@@ -74,6 +75,8 @@ export const TourTablePage = () => {
 				accessorKey: "people.cpf",
 				header: "CPF",
 				size: 150,
+				enableSorting: false,
+				enableColumnFilter: false,
 				enableClickToCopy: true,
 				muiCopyButtonProps: CopyButton,
 			},
@@ -105,6 +108,18 @@ export const TourTablePage = () => {
 				},
 
 				onSubmit,
+
+				enableRowSelection: true,
+
+				toCreate: true,
+				toEdit: true,
+
+				renderTopToolbarFilterActions: () => (
+					<>
+						<Checkbox label="Saída e entrada" checked={watch("isClose")} register={register("isClose")} />
+						<Checkbox label="Apenas saída" checked={watch("isOpen")} register={register("isOpen")} />
+					</>
+				),
 			})}
 		</>
 	);

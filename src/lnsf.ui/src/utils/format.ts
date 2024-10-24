@@ -6,32 +6,32 @@ export const formatPercent = (value: number) => {
 	return new Intl.NumberFormat("pt-BR", { style: "percent", minimumFractionDigits: 2 }).format(value);
 };
 
-export const formatDate = (value?: string | Date) => {
-	if (!value) return undefined;
+export const dateOnlyToStr = (value?: string | Date, format: "ISO" | "ptBr" = "ISO"): string => {
+	if (!value) return "";
 
-	if (value instanceof Date) return value.toISOString().split("T")[0];
+	const d = typeof value === "string" ? new Date(value) : value;
 
-	const regexDotNet = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}(\.\d{0,7})?$/;
-	if (regexDotNet.test(value)) {
-		return value.split(" ")[0];
-	}
+	const day = String(d.getUTCDate()).padStart(2, "0");
+	const month = String(d.getUTCMonth() + 1).padStart(2, "0");
+	const year = d.getUTCFullYear();
 
-	const date = new Date(value);
-
-	return date.toISOString().split("T")[0];
+	return format === "ISO" ? `${year}-${month}-${day}` : `${day}/${month}/${year}`;
 };
 
-export const formatDateTime = (value?: string | Date) => {
-	if (!value) return undefined;
+export const dateTimeToStr = (value?: string | Date, format: "ISO" | "ptBr" = "ISO") => {
+	if (!value) return "";
 
-	if (value instanceof Date) return value.toISOString().split(".")[0];
+	const d = typeof value === "string" ? new Date(value) : value;
 
-	const regexDotNet = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}(\.\d{0,7})?$/;
-	if (regexDotNet.test(value)) {
-		value = value.split(".")[0];
-		return value.replace(" ", "T");
-	}
+	const day = String(d.getUTCDate()).padStart(2, "0");
+	const month = String(d.getUTCMonth() + 1).padStart(2, "0");
+	const year = d.getUTCFullYear();
 
-	const date = new Date(value);
-	return date.toISOString().split(".")[0].replace(" ", "T");
+	const hours = String(d.getHours()).padStart(2, "0");
+	const minutes = String(d.getUTCMinutes()).padStart(2, "0");
+	const seconds = String(d.getUTCSeconds()).padStart(2, "0");
+
+	return format === "ISO"
+		? `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`
+		: `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 };

@@ -5,7 +5,7 @@ const envSchema = z.object({
   IS_PRODUCTION: z.boolean().default(import.meta.env.VITE_APP_NODE_ENV === "production"),
   IS_DEVELOPMENT: z.boolean().default(import.meta.env.VITE_APP_NODE_ENV === "development"),
   IS_STAGING: z.boolean().default(import.meta.env.VITE_APP_NODE_ENV === "staging"),
-  APP_URL: z.string().url().default(import.meta.env.VITE_APP_API_URL!),
+  APP_URL: z.string().url().default(import.meta.env.VITE_APP_APP_URL!),
   API_URL: z.string().url().default(import.meta.env.VITE_APP_API_URL!),
 });
 

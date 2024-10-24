@@ -5,6 +5,8 @@ import { useMaterialReactTable } from "@/tables";
 import { MRTInputNumber } from "@/tables/components";
 import { room } from "@/types";
 import { useRoomTablePage } from "./useRoomTablePage";
+import { IconButton, Tooltip } from "@mui/material";
+import { InfoOutlined } from "@mui/icons-material";
 
 export const RoomTablePage = () => {
 	const {
@@ -34,19 +36,31 @@ export const RoomTablePage = () => {
 			{
 				accessorKey: "bathroom",
 				header: "Banheiro",
+				filterVariant: "select",
+				filterSelectOptions: [
+					{ value: "true", label: "Sim" },
+					{ value: "false", label: "Não" },
+				],
 				Cell: ({ row }) => (row.original.bathroom ? "Sim" : "Não"),
 			},
 			{
 				accessorKey: "beds",
 				header: "Camas",
+				Filter: ({ column }) => <MRTInputNumber column={column} />,
 			},
 			{
 				accessorKey: "storey",
 				header: "Andar",
+				Filter: ({ column }) => <MRTInputNumber column={column} />,
 			},
 			{
 				accessorKey: "available",
 				header: "Disponibilidade",
+				filterVariant: "select",
+				filterSelectOptions: [
+					{ value: "true", label: "Sim" },
+					{ value: "false", label: "Não" },
+				],
 				Cell: ({ row }) => (row.original.available ? "Sim" : "Não"),
 			},
 		],
@@ -82,6 +96,16 @@ export const RoomTablePage = () => {
 
 				toCreate: true,
 				toEdit: true,
+
+				renderToolbarExtraInternalActions: () => (
+					<>
+						<Tooltip title="◦ Disponibilidade refere-se as condições do apartamento para ser alugado.">
+							<IconButton size="medium" aria-label="teste">
+								<InfoOutlined />
+							</IconButton>
+						</Tooltip>
+					</>
+				),
 			})}
 		</>
 	);

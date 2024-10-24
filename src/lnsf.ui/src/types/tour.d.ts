@@ -14,8 +14,8 @@ export type tourFilter = baseFilter & {
 	id?: number;
 	output?: Date;
 	input?: Date;
-	open?: boolean;
-	close?: boolean;
 	note?: string;
 	peopleId?: number;
+	isOpen?: boolean;
+	isClose?: boolean;
 };

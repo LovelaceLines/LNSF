@@ -101,6 +101,7 @@ namespace LNSF.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Acronym")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -200,7 +201,7 @@ namespace LNSF.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("BirthDate")
+                    b.Property<DateOnly>("BirthDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("CPF")
@@ -212,7 +213,6 @@ namespace LNSF.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Gender")
@@ -238,11 +238,9 @@ namespace LNSF.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Note")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("RG")
@@ -331,47 +329,47 @@ namespace LNSF.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "6522011d-5ec3-47d2-9a47-a491c216c760",
-                            CreatedAt = new DateTime(2024, 9, 25, 17, 41, 42, 393, DateTimeKind.Local).AddTicks(4242),
+                            ConcurrencyStamp = "63dc6a45-87b3-4da2-80a3-bf935ad184cd",
+                            CreatedAt = new DateTime(2024, 10, 23, 20, 23, 21, 909, DateTimeKind.Local).AddTicks(6903),
                             Name = "Desenvolvedor",
                             NormalizedName = "DESENVOLVEDOR",
-                            UpdatedAt = new DateTime(2024, 9, 25, 17, 41, 42, 393, DateTimeKind.Local).AddTicks(4252)
+                            UpdatedAt = new DateTime(2024, 10, 23, 20, 23, 21, 909, DateTimeKind.Local).AddTicks(6919)
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "1cb664de-82c4-424d-9b86-ac60afb0f8ca",
-                            CreatedAt = new DateTime(2024, 9, 25, 17, 41, 42, 393, DateTimeKind.Local).AddTicks(4259),
+                            ConcurrencyStamp = "ae07ab74-ea5e-4b1c-b914-453b3618834c",
+                            CreatedAt = new DateTime(2024, 10, 23, 20, 23, 21, 909, DateTimeKind.Local).AddTicks(6929),
                             Name = "Administrador",
                             NormalizedName = "ADMINISTRADOR",
-                            UpdatedAt = new DateTime(2024, 9, 25, 17, 41, 42, 393, DateTimeKind.Local).AddTicks(4260)
+                            UpdatedAt = new DateTime(2024, 10, 23, 20, 23, 21, 909, DateTimeKind.Local).AddTicks(6929)
                         },
                         new
                         {
                             Id = 3,
-                            ConcurrencyStamp = "92a4f40c-58cc-47cb-824f-545debe3bf45",
-                            CreatedAt = new DateTime(2024, 9, 25, 17, 41, 42, 393, DateTimeKind.Local).AddTicks(4263),
+                            ConcurrencyStamp = "b439e8bf-feae-46bc-a6f1-fe62cc7813ef",
+                            CreatedAt = new DateTime(2024, 10, 23, 20, 23, 21, 909, DateTimeKind.Local).AddTicks(6945),
                             Name = "AssistenteSocial",
                             NormalizedName = "ASSISTENTESOCIAL",
-                            UpdatedAt = new DateTime(2024, 9, 25, 17, 41, 42, 393, DateTimeKind.Local).AddTicks(4264)
+                            UpdatedAt = new DateTime(2024, 10, 23, 20, 23, 21, 909, DateTimeKind.Local).AddTicks(6946)
                         },
                         new
                         {
                             Id = 4,
-                            ConcurrencyStamp = "95647dfb-d399-4518-9d5f-e973ad5e4235",
-                            CreatedAt = new DateTime(2024, 9, 25, 17, 41, 42, 393, DateTimeKind.Local).AddTicks(4275),
+                            ConcurrencyStamp = "868ab74e-2408-4947-acc0-e8b804e69614",
+                            CreatedAt = new DateTime(2024, 10, 23, 20, 23, 21, 909, DateTimeKind.Local).AddTicks(6950),
                             Name = "Secretario",
                             NormalizedName = "SECRETARIO",
-                            UpdatedAt = new DateTime(2024, 9, 25, 17, 41, 42, 393, DateTimeKind.Local).AddTicks(4275)
+                            UpdatedAt = new DateTime(2024, 10, 23, 20, 23, 21, 909, DateTimeKind.Local).AddTicks(6951)
                         },
                         new
                         {
                             Id = 5,
-                            ConcurrencyStamp = "4f2221d1-842d-4f34-89f0-5b931063c35a",
-                            CreatedAt = new DateTime(2024, 9, 25, 17, 41, 42, 393, DateTimeKind.Local).AddTicks(4279),
+                            ConcurrencyStamp = "ad291550-69cd-4ef8-b05b-83f162a2df15",
+                            CreatedAt = new DateTime(2024, 10, 23, 20, 23, 21, 909, DateTimeKind.Local).AddTicks(6962),
                             Name = "Voluntario",
                             NormalizedName = "VOLUNTARIO",
-                            UpdatedAt = new DateTime(2024, 9, 25, 17, 41, 42, 393, DateTimeKind.Local).AddTicks(4279)
+                            UpdatedAt = new DateTime(2024, 10, 23, 20, 23, 21, 909, DateTimeKind.Local).AddTicks(6962)
                         });
                 });
 
@@ -542,6 +540,32 @@ namespace LNSF.Migrations
                         .IsUnique();
 
                     b.ToTable("Treatments");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Cancer",
+                            Type = 0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Pré-transplante",
+                            Type = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Pós-transplante",
+                            Type = 2
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Outro",
+                            Type = 3
+                        });
                 });
 
             modelBuilder.Entity("LNSF.Domain.Entities.User", b =>
@@ -629,60 +653,60 @@ namespace LNSF.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3a23acb2-2147-48d6-92ff-01529cefd7eb",
-                            CreatedAt = new DateTime(2024, 9, 25, 17, 41, 42, 456, DateTimeKind.Local).AddTicks(254),
+                            ConcurrencyStamp = "e37acf6b-2983-4c47-8738-8cc4d551150d",
+                            CreatedAt = new DateTime(2024, 10, 23, 20, 23, 21, 992, DateTimeKind.Local).AddTicks(8345),
                             Email = "georgemaiaf@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             Name = "George Maia",
                             NormalizedEmail = "GEORGEMAIAF@GMAIL.COM",
                             NormalizedUserName = "GEORGEDEV",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBROhYe4MY3Ew1eEbMBO0kuCci59WfQoQq1wS5P7nZqkiQUb80sPBzmyVNJOvF/9CA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMK//XvhzUabJihkZ2fkll+gfDQIxKGpkBNxKUZ6V+n6ZT0o1US3ccpm62fk4axZqw==",
                             PhoneNumber = "(55) 88 9 9246-5315",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "7655f6d1-7290-4ba3-80da-c1995269c185",
+                            SecurityStamp = "a8432e0f-513b-43b9-addc-5e29f4455632",
                             TwoFactorEnabled = false,
-                            UpdatedAt = new DateTime(2024, 9, 25, 17, 41, 42, 456, DateTimeKind.Local).AddTicks(266),
+                            UpdatedAt = new DateTime(2024, 10, 23, 20, 23, 21, 992, DateTimeKind.Local).AddTicks(8361),
                             UserName = "georgedev"
                         },
                         new
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3616b666-d81e-49c3-a51c-1e50feca265d",
-                            CreatedAt = new DateTime(2024, 9, 25, 17, 41, 42, 518, DateTimeKind.Local).AddTicks(6081),
+                            ConcurrencyStamp = "0caca49b-097a-4fc8-8a68-db7a0e0feec5",
+                            CreatedAt = new DateTime(2024, 10, 23, 20, 23, 22, 117, DateTimeKind.Local).AddTicks(6976),
                             Email = "lnsf@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             Name = "Lar Nossa Senhora de Fátima",
                             NormalizedEmail = "LNSF@GMAIL.COM",
                             NormalizedUserName = "LNSF",
-                            PasswordHash = "AQAAAAIAAYagAAAAEP/cAZhzM2684lDhPty+Wcbig4Yrml9cWcPDSfQRthaKDaSBstSswi7DImGVEyrUzQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEVe71TDW1Hff+ZYGd4RttZACfvuNVktEoGNG3dkeY1m/0sbK/VCUViqu8a8uyKShw==",
                             PhoneNumber = "(11) 11 1 1111-1111",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b9d8514f-9ae1-4653-a83f-710e52fb9f67",
+                            SecurityStamp = "d90050a1-0240-48d9-9fd3-fbfacaa3c41f",
                             TwoFactorEnabled = false,
-                            UpdatedAt = new DateTime(2024, 9, 25, 17, 41, 42, 518, DateTimeKind.Local).AddTicks(6092),
+                            UpdatedAt = new DateTime(2024, 10, 23, 20, 23, 22, 117, DateTimeKind.Local).AddTicks(7000),
                             UserName = "lnsf"
                         },
                         new
                         {
                             Id = 3,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "66e8d602-456b-423e-bedb-6617af708f5c",
-                            CreatedAt = new DateTime(2024, 9, 25, 17, 41, 42, 580, DateTimeKind.Local).AddTicks(5985),
+                            ConcurrencyStamp = "de7f031e-b134-4e34-82a4-6c2fcd534ca7",
+                            CreatedAt = new DateTime(2024, 10, 23, 20, 23, 22, 209, DateTimeKind.Local).AddTicks(5876),
                             Email = "lnsf2@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             Name = "Lar Nossa Senhora de Fátima 2",
                             NormalizedEmail = "LNSF2@GMAIL.COM",
                             NormalizedUserName = "LNSF2",
-                            PasswordHash = "AQAAAAIAAYagAAAAENm5a0IPL6vISpeka14c2napJoNwQ4Z53IjfUWnx6tHS3chT4a9+2RGFo8+igc80lA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJdv6443OJMDNlDfiu4ToTL/TQzr1MWVdsn71KbiGgE2sn4w07buDHQQKfJaGo5YNA==",
                             PhoneNumber = "(22) 22 2 2222-2222",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "f561f3d9-7474-472f-be99-0b0a2a0bd8e5",
+                            SecurityStamp = "8a8bcd0e-1398-48fb-ac82-2c2792bdd4a8",
                             TwoFactorEnabled = false,
-                            UpdatedAt = new DateTime(2024, 9, 25, 17, 41, 42, 580, DateTimeKind.Local).AddTicks(5998),
+                            UpdatedAt = new DateTime(2024, 10, 23, 20, 23, 22, 209, DateTimeKind.Local).AddTicks(5895),
                             UserName = "lnsf2"
                         });
                 });
@@ -714,36 +738,36 @@ namespace LNSF.Migrations
                         {
                             UserId = 1,
                             RoleId = 1,
-                            CreatedAt = new DateTime(2024, 9, 25, 17, 41, 42, 582, DateTimeKind.Local).AddTicks(8202),
-                            UpdatedAt = new DateTime(2024, 9, 25, 17, 41, 42, 582, DateTimeKind.Local).AddTicks(8212)
+                            CreatedAt = new DateTime(2024, 10, 23, 20, 23, 22, 212, DateTimeKind.Local).AddTicks(8998),
+                            UpdatedAt = new DateTime(2024, 10, 23, 20, 23, 22, 212, DateTimeKind.Local).AddTicks(9018)
                         },
                         new
                         {
                             UserId = 1,
                             RoleId = 2,
-                            CreatedAt = new DateTime(2024, 9, 25, 17, 41, 42, 582, DateTimeKind.Local).AddTicks(8217),
-                            UpdatedAt = new DateTime(2024, 9, 25, 17, 41, 42, 582, DateTimeKind.Local).AddTicks(8218)
+                            CreatedAt = new DateTime(2024, 10, 23, 20, 23, 22, 212, DateTimeKind.Local).AddTicks(9032),
+                            UpdatedAt = new DateTime(2024, 10, 23, 20, 23, 22, 212, DateTimeKind.Local).AddTicks(9033)
                         },
                         new
                         {
                             UserId = 1,
                             RoleId = 3,
-                            CreatedAt = new DateTime(2024, 9, 25, 17, 41, 42, 582, DateTimeKind.Local).AddTicks(8219),
-                            UpdatedAt = new DateTime(2024, 9, 25, 17, 41, 42, 582, DateTimeKind.Local).AddTicks(8220)
+                            CreatedAt = new DateTime(2024, 10, 23, 20, 23, 22, 212, DateTimeKind.Local).AddTicks(9034),
+                            UpdatedAt = new DateTime(2024, 10, 23, 20, 23, 22, 212, DateTimeKind.Local).AddTicks(9034)
                         },
                         new
                         {
                             UserId = 2,
                             RoleId = 2,
-                            CreatedAt = new DateTime(2024, 9, 25, 17, 41, 42, 582, DateTimeKind.Local).AddTicks(8221),
-                            UpdatedAt = new DateTime(2024, 9, 25, 17, 41, 42, 582, DateTimeKind.Local).AddTicks(8221)
+                            CreatedAt = new DateTime(2024, 10, 23, 20, 23, 22, 212, DateTimeKind.Local).AddTicks(9036),
+                            UpdatedAt = new DateTime(2024, 10, 23, 20, 23, 22, 212, DateTimeKind.Local).AddTicks(9036)
                         },
                         new
                         {
                             UserId = 3,
                             RoleId = 5,
-                            CreatedAt = new DateTime(2024, 9, 25, 17, 41, 42, 582, DateTimeKind.Local).AddTicks(8222),
-                            UpdatedAt = new DateTime(2024, 9, 25, 17, 41, 42, 582, DateTimeKind.Local).AddTicks(8223)
+                            CreatedAt = new DateTime(2024, 10, 23, 20, 23, 22, 212, DateTimeKind.Local).AddTicks(9037),
+                            UpdatedAt = new DateTime(2024, 10, 23, 20, 23, 22, 212, DateTimeKind.Local).AddTicks(9038)
                         });
                 });
 

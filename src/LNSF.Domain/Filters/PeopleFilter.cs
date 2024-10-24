@@ -11,6 +11,9 @@ public class PeopleFilter : BaseFilter
 	public string? Name { get; set; }
 
 	[ToLowerContainsComparison]
+	public string? Email { get; set; }
+
+	[ToLowerContainsComparison]
 	public string? RG { get; set; }
 
 	[ToLowerContainsComparison]
@@ -22,7 +25,9 @@ public class PeopleFilter : BaseFilter
 	[ToLowerContainsComparison]
 	public string? Phone { get; set; }
 	public Gender? Gender { get; set; }
-	public DateTime? BirthDate { get; set; }
+	public MaritalStatus? MaritalStatus { get; set; }
+	public RaceColor? RaceColor { get; set; }
+	public DateOnly? BirthDate { get; set; }
 
 	[ToLowerContainsComparison]
 	public string? Street { get; set; }

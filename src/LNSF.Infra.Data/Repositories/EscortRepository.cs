@@ -9,7 +9,7 @@ namespace LNSF.Infra.Data.Repositories;
 
 public class EscortRepository(AppDbContext context) : BaseRepository<Escort>(context), IEscortRepository
 {
-	public async Task<QueryResult<Escort>> Query(BaseFilter filter)
+	public async Task<QueryResult<Escort>> Query(EscortFilter filter)
 	{
 		var query = context.Escorts.ApplyFilterWithoutPagination(filter);
 		query = query.Include(e => e.People);

@@ -33,9 +33,9 @@ export const useHostingFormPage = () => {
 	const { getPeopleRoomHostingByHostingId } = usePeopleRoomHostingStore();
 
 	useEffect(() => {
-		getPatients({ page: 1, perPage: 999, sort: "people.name" });
-		getEscorts({ page: 1, perPage: 999, sort: "people.name" });
-		getRooms({ page: 1, perPage: 999, sort: "number" });
+		getPatients({ page: 1, perPage: 9999, sort: "people.name" });
+		getEscorts({ page: 1, perPage: 9999, sort: "people.name" });
+		getRooms({ page: 1, perPage: 9999, sort: "number" });
 	}, []);
 
 	useEffect(() => {

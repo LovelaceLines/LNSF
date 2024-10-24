@@ -24,8 +24,8 @@ public class PeopleTestApi : GlobalClientRequest
 	{
 		var people = await GetPeople();
 		var peopleWithoutNameFake = new PeopleFake(name: "").Generate();
-		var peopleAged14Fake = new PeopleFake(birthDate: DateTime.Now.AddYears(-14)).Generate();
-		var peopleAged129Fake = new PeopleFake(birthDate: DateTime.Now.AddYears(-129)).Generate();
+		var peopleAged14Fake = new PeopleFake(birthDate: DateOnly.FromDateTime(DateTime.Now.AddYears(-14))).Generate();
+		var peopleAged129Fake = new PeopleFake(birthDate: DateOnly.FromDateTime(DateTime.Now.AddYears(-129))).Generate();
 		var peopleWithInvalidRGFake = new PeopleFake(rg: people.RG).Generate();
 		var peopleWithInvalidCPFFake = new PeopleFake(cpf: people.CPF).Generate();
 		var peopleWithInvalidPhoneFake = new PeopleFake(phone: people.Phone).Generate();
@@ -65,8 +65,8 @@ public class PeopleTestApi : GlobalClientRequest
 		var people1 = await GetPeople();
 		var people2 = await GetPeople();
 		var peopleWithoutName = new PeopleFake(people1.Id, name: "").Generate();
-		var peopleAged14 = new PeopleFake(people1.Id, birthDate: DateTime.Now.AddYears(-14)).Generate();
-		var peopleAged129 = new PeopleFake(people1.Id, birthDate: DateTime.Now.AddYears(-129)).Generate();
+		var peopleAged14 = new PeopleFake(people1.Id, birthDate: DateOnly.FromDateTime(DateTime.Now.AddYears(-14))).Generate();
+		var peopleAged129 = new PeopleFake(people1.Id, birthDate: DateOnly.FromDateTime(DateTime.Now.AddYears(-129))).Generate();
 		var peopleWithInvalidRG = new PeopleFake(people1.Id, rg: people2.RG).Generate();
 		var peopleWithInvalidCPF = new PeopleFake(people1.Id, cpf: people2.CPF).Generate();
 		var peopleWithInvalidPhone = new PeopleFake(people1.Id, phone: people2.Phone).Generate();

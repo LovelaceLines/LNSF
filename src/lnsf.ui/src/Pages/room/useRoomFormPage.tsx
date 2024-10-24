@@ -17,7 +17,7 @@ export const useRoomFormPage = () => {
 		watch,
 		setValue,
 	} = useForm<room>({
-		values: { id: 0, beds: 1, number: "1", storey: 1, bathroom: true, available: true } as room,
+		values: { id: 0, beds: 0, number: "0", storey: 0, bathroom: false, available: false },
 	});
 
 	useEffect(() => {

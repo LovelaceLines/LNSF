@@ -18,7 +18,7 @@ export const TreatmentFormPage = () => {
 			<Grid size={{ xs: 8, sm: 7.5, md: 8.5 }}>
 				<TextField label="Nome" {...register("name")} error={!!errors.name} helperText={errors.name?.message} fullWidth />
 			</Grid>
-			<Grid size={{ xs: 6, sm: 3, md: 2 }}>
+			<Grid size={{ xs: 12, sm: 3, md: 2 }}>
 				<SelectField
 					label="Tipo"
 					labelId="id"

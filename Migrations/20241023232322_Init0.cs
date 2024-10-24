@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LNSF.Migrations
 {
     /// <inheritdoc />
-    public partial class Init1 : Migration
+    public partial class Init0 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,7 +20,7 @@ namespace LNSF.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Acronym = table.Column<string>(type: "TEXT", nullable: true)
+                    Acronym = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -35,10 +35,10 @@ namespace LNSF.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Gender = table.Column<int>(type: "INTEGER", nullable: false),
-                    BirthDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    BirthDate = table.Column<DateOnly>(type: "TEXT", nullable: false),
                     MaritalStatus = table.Column<int>(type: "INTEGER", nullable: false),
                     RaceColor = table.Column<int>(type: "INTEGER", nullable: false),
-                    Email = table.Column<string>(type: "TEXT", nullable: false),
+                    Email = table.Column<string>(type: "TEXT", nullable: true),
                     RG = table.Column<string>(type: "TEXT", nullable: false),
                     IssuingBody = table.Column<string>(type: "TEXT", nullable: false),
                     CPF = table.Column<string>(type: "TEXT", nullable: false),
@@ -47,8 +47,8 @@ namespace LNSF.Migrations
                     Neighborhood = table.Column<string>(type: "TEXT", nullable: false),
                     City = table.Column<string>(type: "TEXT", nullable: false),
                     State = table.Column<string>(type: "TEXT", nullable: false),
-                    Phone = table.Column<string>(type: "TEXT", nullable: false),
-                    Note = table.Column<string>(type: "TEXT", nullable: false)
+                    Phone = table.Column<string>(type: "TEXT", nullable: true),
+                    Note = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -500,11 +500,22 @@ namespace LNSF.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "CreatedAt", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { 1, "6522011d-5ec3-47d2-9a47-a491c216c760", new DateTime(2024, 9, 25, 17, 41, 42, 393, DateTimeKind.Local).AddTicks(4242), "Desenvolvedor", "DESENVOLVEDOR" },
-                    { 2, "1cb664de-82c4-424d-9b86-ac60afb0f8ca", new DateTime(2024, 9, 25, 17, 41, 42, 393, DateTimeKind.Local).AddTicks(4259), "Administrador", "ADMINISTRADOR" },
-                    { 3, "92a4f40c-58cc-47cb-824f-545debe3bf45", new DateTime(2024, 9, 25, 17, 41, 42, 393, DateTimeKind.Local).AddTicks(4263), "AssistenteSocial", "ASSISTENTESOCIAL" },
-                    { 4, "95647dfb-d399-4518-9d5f-e973ad5e4235", new DateTime(2024, 9, 25, 17, 41, 42, 393, DateTimeKind.Local).AddTicks(4275), "Secretario", "SECRETARIO" },
-                    { 5, "4f2221d1-842d-4f34-89f0-5b931063c35a", new DateTime(2024, 9, 25, 17, 41, 42, 393, DateTimeKind.Local).AddTicks(4279), "Voluntario", "VOLUNTARIO" }
+                    { 1, "63dc6a45-87b3-4da2-80a3-bf935ad184cd", new DateTime(2024, 10, 23, 20, 23, 21, 909, DateTimeKind.Local).AddTicks(6903), "Desenvolvedor", "DESENVOLVEDOR" },
+                    { 2, "ae07ab74-ea5e-4b1c-b914-453b3618834c", new DateTime(2024, 10, 23, 20, 23, 21, 909, DateTimeKind.Local).AddTicks(6929), "Administrador", "ADMINISTRADOR" },
+                    { 3, "b439e8bf-feae-46bc-a6f1-fe62cc7813ef", new DateTime(2024, 10, 23, 20, 23, 21, 909, DateTimeKind.Local).AddTicks(6945), "AssistenteSocial", "ASSISTENTESOCIAL" },
+                    { 4, "868ab74e-2408-4947-acc0-e8b804e69614", new DateTime(2024, 10, 23, 20, 23, 21, 909, DateTimeKind.Local).AddTicks(6950), "Secretario", "SECRETARIO" },
+                    { 5, "ad291550-69cd-4ef8-b05b-83f162a2df15", new DateTime(2024, 10, 23, 20, 23, 21, 909, DateTimeKind.Local).AddTicks(6962), "Voluntario", "VOLUNTARIO" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Treatments",
+                columns: new[] { "Id", "Name", "Type" },
+                values: new object[,]
+                {
+                    { 1, "Cancer", 0 },
+                    { 2, "Pré-transplante", 1 },
+                    { 3, "Pós-transplante", 2 },
+                    { 4, "Outro", 3 }
                 });
 
             migrationBuilder.InsertData(
@@ -512,9 +523,9 @@ namespace LNSF.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedAt", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { 1, 0, "3a23acb2-2147-48d6-92ff-01529cefd7eb", new DateTime(2024, 9, 25, 17, 41, 42, 456, DateTimeKind.Local).AddTicks(254), "georgemaiaf@gmail.com", false, false, null, "George Maia", "GEORGEMAIAF@GMAIL.COM", "GEORGEDEV", "AQAAAAIAAYagAAAAEBROhYe4MY3Ew1eEbMBO0kuCci59WfQoQq1wS5P7nZqkiQUb80sPBzmyVNJOvF/9CA==", "(55) 88 9 9246-5315", false, "7655f6d1-7290-4ba3-80da-c1995269c185", false, "georgedev" },
-                    { 2, 0, "3616b666-d81e-49c3-a51c-1e50feca265d", new DateTime(2024, 9, 25, 17, 41, 42, 518, DateTimeKind.Local).AddTicks(6081), "lnsf@gmail.com", false, false, null, "Lar Nossa Senhora de Fátima", "LNSF@GMAIL.COM", "LNSF", "AQAAAAIAAYagAAAAEP/cAZhzM2684lDhPty+Wcbig4Yrml9cWcPDSfQRthaKDaSBstSswi7DImGVEyrUzQ==", "(11) 11 1 1111-1111", false, "b9d8514f-9ae1-4653-a83f-710e52fb9f67", false, "lnsf" },
-                    { 3, 0, "66e8d602-456b-423e-bedb-6617af708f5c", new DateTime(2024, 9, 25, 17, 41, 42, 580, DateTimeKind.Local).AddTicks(5985), "lnsf2@gmail.com", false, false, null, "Lar Nossa Senhora de Fátima 2", "LNSF2@GMAIL.COM", "LNSF2", "AQAAAAIAAYagAAAAENm5a0IPL6vISpeka14c2napJoNwQ4Z53IjfUWnx6tHS3chT4a9+2RGFo8+igc80lA==", "(22) 22 2 2222-2222", false, "f561f3d9-7474-472f-be99-0b0a2a0bd8e5", false, "lnsf2" }
+                    { 1, 0, "e37acf6b-2983-4c47-8738-8cc4d551150d", new DateTime(2024, 10, 23, 20, 23, 21, 992, DateTimeKind.Local).AddTicks(8345), "georgemaiaf@gmail.com", false, false, null, "George Maia", "GEORGEMAIAF@GMAIL.COM", "GEORGEDEV", "AQAAAAIAAYagAAAAEMK//XvhzUabJihkZ2fkll+gfDQIxKGpkBNxKUZ6V+n6ZT0o1US3ccpm62fk4axZqw==", "(55) 88 9 9246-5315", false, "a8432e0f-513b-43b9-addc-5e29f4455632", false, "georgedev" },
+                    { 2, 0, "0caca49b-097a-4fc8-8a68-db7a0e0feec5", new DateTime(2024, 10, 23, 20, 23, 22, 117, DateTimeKind.Local).AddTicks(6976), "lnsf@gmail.com", false, false, null, "Lar Nossa Senhora de Fátima", "LNSF@GMAIL.COM", "LNSF", "AQAAAAIAAYagAAAAEEVe71TDW1Hff+ZYGd4RttZACfvuNVktEoGNG3dkeY1m/0sbK/VCUViqu8a8uyKShw==", "(11) 11 1 1111-1111", false, "d90050a1-0240-48d9-9fd3-fbfacaa3c41f", false, "lnsf" },
+                    { 3, 0, "de7f031e-b134-4e34-82a4-6c2fcd534ca7", new DateTime(2024, 10, 23, 20, 23, 22, 209, DateTimeKind.Local).AddTicks(5876), "lnsf2@gmail.com", false, false, null, "Lar Nossa Senhora de Fátima 2", "LNSF2@GMAIL.COM", "LNSF2", "AQAAAAIAAYagAAAAEJdv6443OJMDNlDfiu4ToTL/TQzr1MWVdsn71KbiGgE2sn4w07buDHQQKfJaGo5YNA==", "(22) 22 2 2222-2222", false, "8a8bcd0e-1398-48fb-ac82-2c2792bdd4a8", false, "lnsf2" }
                 });
 
             migrationBuilder.InsertData(
@@ -522,11 +533,11 @@ namespace LNSF.Migrations
                 columns: new[] { "RoleId", "UserId", "CreatedAt" },
                 values: new object[,]
                 {
-                    { 1, 1, new DateTime(2024, 9, 25, 17, 41, 42, 582, DateTimeKind.Local).AddTicks(8202) },
-                    { 2, 1, new DateTime(2024, 9, 25, 17, 41, 42, 582, DateTimeKind.Local).AddTicks(8217) },
-                    { 3, 1, new DateTime(2024, 9, 25, 17, 41, 42, 582, DateTimeKind.Local).AddTicks(8219) },
-                    { 2, 2, new DateTime(2024, 9, 25, 17, 41, 42, 582, DateTimeKind.Local).AddTicks(8221) },
-                    { 5, 3, new DateTime(2024, 9, 25, 17, 41, 42, 582, DateTimeKind.Local).AddTicks(8222) }
+                    { 1, 1, new DateTime(2024, 10, 23, 20, 23, 22, 212, DateTimeKind.Local).AddTicks(8998) },
+                    { 2, 1, new DateTime(2024, 10, 23, 20, 23, 22, 212, DateTimeKind.Local).AddTicks(9032) },
+                    { 3, 1, new DateTime(2024, 10, 23, 20, 23, 22, 212, DateTimeKind.Local).AddTicks(9034) },
+                    { 2, 2, new DateTime(2024, 10, 23, 20, 23, 22, 212, DateTimeKind.Local).AddTicks(9036) },
+                    { 5, 3, new DateTime(2024, 10, 23, 20, 23, 22, 212, DateTimeKind.Local).AddTicks(9037) }
                 });
 
             migrationBuilder.CreateIndex(

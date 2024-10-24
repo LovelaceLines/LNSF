@@ -7,12 +7,12 @@ namespace LNSF.Test.Fakers;
 
 public class PeopleFake : Faker<People>
 {
-	public PeopleFake(int? id = null, string? name = null, Gender? gender = null, DateTime? birthDate = null, MaritalStatus? maritalStatus = null, RaceColor? raceColor = null, string? email = null, string? rg = null, string? cpf = null, string? street = null, string? houseNumber = null, string? neighborhood = null, string? city = null, string? state = null, string? phone = null, string? note = null)
+	public PeopleFake(int? id = null, string? name = null, Gender? gender = null, DateOnly? birthDate = null, MaritalStatus? maritalStatus = null, RaceColor? raceColor = null, string? email = null, string? rg = null, string? cpf = null, string? street = null, string? houseNumber = null, string? neighborhood = null, string? city = null, string? state = null, string? phone = null, string? note = null)
 	{
 		RuleFor(p => p.Id, f => id ?? 0);
 		RuleFor(p => p.Name, f => name ?? f.Person.FullName);
 		RuleFor(p => p.Gender, f => gender ?? f.PickRandom<Gender>());
-		RuleFor(p => p.BirthDate, f => birthDate ?? f.Person.DateOfBirth);
+		RuleFor(p => p.BirthDate, f => birthDate ?? DateOnly.FromDateTime(f.Person.DateOfBirth));
 		RuleFor(p => p.MaritalStatus, f => maritalStatus ?? f.PickRandom<MaritalStatus>());
 		RuleFor(p => p.RaceColor, f => raceColor ?? f.PickRandom<RaceColor>());
 		RuleFor(p => p.Email, f => email ?? f.Person.Email);
