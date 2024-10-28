@@ -66,7 +66,12 @@ public class RoomTestApi : GlobalClientRequest
 
 		var roomPuted = await PutFromBody<Room>(_roomClient, roomToPut);
 
-		Assert.Equivalent(roomToPut, roomPuted);
+		Assert.Equal(roomToPut.Id, roomPuted.Id);
+		Assert.Equal(roomToPut.Number, roomPuted.Number);
+		Assert.Equal(roomToPut.Bathroom, roomPuted.Bathroom);
+		Assert.Equal(roomToPut.Beds, roomPuted.Beds);
+		Assert.Equal(roomToPut.Storey, roomPuted.Storey);
+		Assert.Equal(roomToPut.Available, roomPuted.Available);
 	}
 
 	[Fact]
@@ -77,7 +82,12 @@ public class RoomTestApi : GlobalClientRequest
 
 		var roomPuted = await PutFromBody<Room>(_roomClient, roomToPut);
 
-		Assert.Equivalent(roomToPut, roomPuted);
+		Assert.Equal(roomToPut.Id, roomPuted.Id);
+		Assert.Equal(roomToPut.Number, roomPuted.Number);
+		Assert.Equal(roomToPut.Bathroom, roomPuted.Bathroom);
+		Assert.Equal(roomToPut.Beds, roomPuted.Beds);
+		Assert.Equal(roomToPut.Storey, roomPuted.Storey);
+		Assert.Equal(roomToPut.Available, roomPuted.Available);
 	}
 
 	[Fact]

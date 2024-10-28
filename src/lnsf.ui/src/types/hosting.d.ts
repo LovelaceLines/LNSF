@@ -4,7 +4,7 @@ import { patient } from "./patient";
 
 export type hosting = {
 	id?: number;
-	checkIn: Date;
+	checkIn?: Date;
 	checkOut?: Date;
 	patientId: number;
 	patient?: patient;

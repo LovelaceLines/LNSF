@@ -1,6 +1,6 @@
 ﻿namespace LNSF.Domain.Entities;
 
-public class HostingEscort
+public class HostingEscort : BaseEntity
 {
     public int HostingId { get; set; }
     public Hosting? Hosting { get; set; }

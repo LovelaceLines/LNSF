@@ -46,11 +46,11 @@ public class UserController(IUserRepository repository,
 	public async Task<ActionResult<User>> Delete(int id) =>
 		Ok(await service.Delete(id));
 
-	[HttpPost("add-to-role")]
-	public async Task<ActionResult<bool>> AddToRole([FromBody] UserRoleIM model) =>
+	[HttpPost("add-user-to-role")]
+	public async Task<ActionResult<UserRole>> AddToRole([FromBody] UserRoleIM model) =>
 		Ok(await userRoleService.AddToRole(model.UserId, model.RoleId));
 
-	[HttpDelete("remove-from-role")]
-	public async Task<ActionResult<bool>> RemoveFromRole([FromBody] UserRoleIM model) =>
+	[HttpDelete("remove-user-from-role")]
+	public async Task<ActionResult<UserRole>> RemoveFromRole([FromBody] UserRoleIM model) =>
 		Ok(await userRoleService.RemoveFromRole(model.UserId, model.RoleId));
 }

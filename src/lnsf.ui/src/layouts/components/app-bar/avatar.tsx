@@ -1,7 +1,7 @@
 import { Avatar as AvatarMUI, IconButton, Link } from "@mui/material";
 
 import { colors, useThemeContext } from "@/theme";
-import { useAuthStore } from "@/zustand/useAuthStore";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export const Avatar = () => {
 	const { user } = useAuthStore();

@@ -9,15 +9,19 @@ export const TourDailyLogPage = () => {
 	const { people, setPeople, peoples, openTours, handleSelect } = useTourDailyLogPage();
 
 	return (
-		<Grid container spacing={2}>
-			<Grid container size={{ xs: 12 }}>
-				<Grid size={{ xs: 4, sm: 1.5, md: 1 }}>
+		<Grid container direction="column" spacing={2}>
+			<Grid size={{ xs: 12 }}>
+				<Divider>Registro Diário</Divider>
+			</Grid>
+			<Grid container size={{ xs: 12, md: 6 }}>
+				<Grid size={{ xs: 4, md: 2 }}>
 					<TextField
 						label="Id Pessoa"
+						type="number"
 						defaultValue={0}
 						value={people?.id}
 						fullWidth
-						onChange={(e) => setPeople(peoples.find((p) => p.id === Number(e.target.value)))}
+						onChange={(e) => setPeople(peoples.find((p) => p.id === +e.target.value))}
 					/>
 				</Grid>
 				<Grid size="grow" wrap="nowrap">

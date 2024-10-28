@@ -70,7 +70,10 @@ public class EmergencyContactTestApi : GlobalClientRequest
 
 		var contactPuted = await PutFromBody<EmergencyContact>(_emergencyContactClient, fake);
 
-		Assert.Equivalent(fake, contactPuted);
+		Assert.Equal(fake.Id, contactPuted.Id);
+		Assert.Equal(fake.Name, contactPuted.Name);
+		Assert.Equal(fake.Phone, contactPuted.Phone);
+		Assert.Equal(fake.PeopleId, contactPuted.PeopleId);
 	}
 
 	[Fact]

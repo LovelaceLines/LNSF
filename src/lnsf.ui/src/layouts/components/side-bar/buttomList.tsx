@@ -4,7 +4,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import { useSideBar } from "@/contexts";
-import { useAuthStore } from "@/zustand/useAuthStore";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export interface ISideBarProps {
 	text: string;

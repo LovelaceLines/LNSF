@@ -1,14 +1,15 @@
 using LNSF.Domain.Entities;
 using LNSF.Domain.Enums;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace LNSF.Infra.Data.Configurations;
 
-public class TreatmentsConfiguration : IEntityTypeConfiguration<Treatment>
+public class TreatmentsConfiguration : BaseConfiguration<Treatment>
 {
-	public void Configure(EntityTypeBuilder<Treatment> builder)
+	public override void Configure(EntityTypeBuilder<Treatment> builder)
 	{
+		base.Configure(builder);
+
 		builder.HasKey(t => t.Id);
 
 		builder.Property(t => t.Id)

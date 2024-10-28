@@ -8,6 +8,9 @@ using LNSF.Application.Services;
 using LNSF.Domain.Repositories;
 using LNSF.Infra.Data.Repositories;
 using LNSF.Application.Validators;
+using LNSF.Infra.Data.Configurations;
+using LNSF.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace LNSF.Infra.IOC;
 
@@ -18,6 +21,8 @@ public static class DependencyInjectionSetup
 		services.AddSingleton(configuration);
 
 		services.AddTransient<IAuthService, AuthService>();
+
+		services.AddTransient<IChainRepository, ChainRepository>();
 
 		services.AddTransient<IEmergencyContactRepository, EmergencyContactRepository>();
 		services.AddTransient<IEmergencyContactService, EmergencyContactService>();
@@ -82,6 +87,8 @@ public static class DependencyInjectionSetup
 		services.AddTransient<IUserRoleService, UserRoleService>();
 
 		services.AddTransient<AuthAndUserExtractionFilter>();
+		// BaseConfiguration
+		services.AddTransient<IEntityTypeConfiguration<EmergencyContact>, EmergencyContactsConfiguration>();
 		services.AddTransient<GlobalValidator>();
 
 		return services;

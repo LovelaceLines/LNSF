@@ -2,7 +2,7 @@
 
 namespace LNSF.Domain.Entities;
 
-public class ServiceRecord
+public class ServiceRecord : BaseEntity
 {
     public int Id { get; set; }
     public int PatientId { get; set; }

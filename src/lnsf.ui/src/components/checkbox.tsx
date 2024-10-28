@@ -1,7 +1,11 @@
-import { CheckboxProps as CheckboxPropsMUI, SxProps, Theme } from "@mui/material";
-
+import {
+	Checkbox as CheckboxMUI,
+	CheckboxProps as CheckboxPropsMUI,
+	FormControlLabel,
+	SxProps,
+	Theme,
+} from "@mui/material";
 import { UseFormRegisterReturn } from "react-hook-form";
-import { Checkbox as CheckboxMUI, FormControlLabel } from "@mui/material";
 
 export interface CheckboxProps extends CheckboxPropsMUI {
 	label: string;
@@ -10,5 +14,11 @@ export interface CheckboxProps extends CheckboxPropsMUI {
 }
 
 export const Checkbox = ({ label, register, sxFormControl, ...rest }: CheckboxProps): JSX.Element => {
-	return <FormControlLabel control={<CheckboxMUI {...register} {...rest} />} label={label} sx={sxFormControl} />;
+	return (
+		<FormControlLabel
+			control={<CheckboxMUI {...register} {...rest} />}
+			label={label}
+			sx={sxFormControl}
+		/>
+	);
 };

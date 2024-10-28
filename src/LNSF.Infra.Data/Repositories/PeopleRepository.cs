@@ -18,14 +18,24 @@ public class PeopleRepository(AppDbContext context,
 	{
 		var query = context.Peoples.ApplyFilterWithoutPagination(filter);
 
-		if (filter.IsPatient == true)
-			query = query.Where(p => context.Patients.Any(pt => pt.PeopleId == p.Id));
+		if (filter.IsPatient.HasValue)
+			query = query.Where(p => context.Patients.Any(pt => pt.PeopleId == p.Id) == filter.IsPatient);
 
-		if (filter.IsEscort == true)
-			query = query.Where(p => context.Escorts.Any(e => e.PeopleId == p.Id));
+		if (filter.IsEscort.HasValue)
+			query = query.Where(p => context.Escorts.Any(e => e.PeopleId == p.Id) == filter.IsEscort);
 
-		if (filter.IsActive == true)
-			query = query.Where(p => context.PeoplesRoomsHostings.Any(prh => prh.PeopleId == p.Id && prh.Hosting!.CheckIn <= DateTime.Now && prh.Hosting.CheckOut >= DateTime.Now));
+		if (filter.IsActive.HasValue)
+			query = query.Where(p => context.PeoplesRoomsHostings.Any(prh => prh.PeopleId == p.Id &&
+				prh.Hosting!.CheckIn <= DateTime.Now &&
+					(DateTime.Now <= prh.Hosting.CheckOut || prh.Hosting.CheckOut == null)
+				) == filter.IsActive);
+
+		if (filter.WillHosted == true)
+			query = query.Where(p => context.Hostings.Any(h => h.CheckIn >= DateTime.Now &&
+				(context.Patients.Any(pt => pt.PeopleId == p.Id && pt.Id == h.PatientId) ||
+					context.HostingsEscorts.Any(he => he.HostingId == h.Id &&
+						context.Escorts.Any(e => e.PeopleId == p.Id && e.Id == he.EscortId))
+				)));
 
 		var items = await query.ToPaged(filter.Page, filter.PerPage).ToListAsync();
 		var totalCount = await query.CountAsync();

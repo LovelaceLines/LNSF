@@ -7,7 +7,7 @@ export type tour = {
 	input?: string;
 	note: string;
 	peopleId: number;
-	people: people;
+	people?: people;
 };
 
 export type tourFilter = baseFilter & {

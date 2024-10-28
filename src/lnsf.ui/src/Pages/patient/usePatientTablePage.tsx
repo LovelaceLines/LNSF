@@ -1,5 +1,5 @@
 import { getFilteredObject, useTable } from "@/tables";
-import { usePatientStore } from "@/zustand";
+import { usePatientStore } from "@/store";
 
 export const usePatientTablePage = () => {
 	const { getPatients, patients, queryResult } = usePatientStore();

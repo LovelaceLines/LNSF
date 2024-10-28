@@ -1,6 +1,6 @@
 ﻿namespace LNSF.Domain.Entities;
 
-public class Tour
+public class Tour : BaseEntity
 {
 	public int Id { get; set; }
 	public DateTime Output { get; set; }

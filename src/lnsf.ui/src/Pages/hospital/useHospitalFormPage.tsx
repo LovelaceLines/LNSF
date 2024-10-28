@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 
 import { hospital } from "@/types";
-import { useHospitalStore } from "@/zustand";
+import { useHospitalStore } from "@/store";
 import { toValue } from "@/utils";
 
 export const useHospitalFormPage = () => {

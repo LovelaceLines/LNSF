@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 
 import { room } from "@/types";
-import { useRoomStore } from "@/zustand";
+import { useRoomStore } from "@/store";
 import { toValue } from "@/utils";
 
 export const useRoomFormPage = () => {

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useEffect } from "react";
 import { login } from "@/types";
-import { useAuthStore } from "@/zustand/useAuthStore";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export const SingInPage = () => {
 	const { user, loginUser } = useAuthStore();

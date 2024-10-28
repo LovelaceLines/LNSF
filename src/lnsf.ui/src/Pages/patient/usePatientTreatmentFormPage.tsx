@@ -1,28 +1,21 @@
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import { patientTreatment } from "@/types";
-import { usePatientStore, useTreatmentStore } from "@/zustand";
+import { useTreatmentStore } from "@/store";
 
 export const usePatientTreatmentFormPage = ({ patientTreatment }: { patientTreatment: patientTreatment }) => {
-	const { addTreatmentToPatient, removeTreatmentFromPatient } = usePatientStore();
-	const { register, getValues, watch, setValue } = useForm<patientTreatment>({
+	const { control, getValues, setValue, register, watch } = useForm<patientTreatment>({
 		values: patientTreatment,
 	});
 
-	const { treatments, getTreatments } = useTreatmentStore();
-
-	useEffect(() => {
-		getTreatments({ sort: "name", page: 1, perPage: 1000 });
-	}, []);
+	const { treatments } = useTreatmentStore();
 
 	return {
 		treatments,
-		addTreatmentToPatient,
-		removeTreatmentFromPatient,
-		register,
+		control,
 		getValues,
-		watch,
 		setValue,
+		register,
+		watch,
 	};
 };

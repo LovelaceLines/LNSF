@@ -1,11 +1,11 @@
 ﻿namespace LNSF.Domain.Entities;
 
-public class Room
+public class Room : BaseEntity
 {
     public int Id { get; set; }
     public required string Number { get; set; }
-    public bool Bathroom { get; set; } 
-    public int Beds { get; set; } 
+    public bool Bathroom { get; set; }
+    public int Beds { get; set; }
     public int Storey { get; set; }
     public bool Available { get; set; }
 }

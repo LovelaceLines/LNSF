@@ -2,14 +2,14 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 
-import { people } from "@/types";
-import { usePeopleStore } from "@/zustand";
+import { gender, maritalStatus, people, raceColor } from "@/types";
+import { usePeopleStore } from "@/store";
 import { toValue } from "@/utils";
 
 export const usePeopleFormPage = () => {
-	const { getPeople, postPeople, putPeople } = usePeopleStore();
 	const { id } = useParams<{ id: string | undefined }>();
 	const {
+		control,
 		register,
 		handleSubmit,
 		formState: { errors },
@@ -33,26 +33,34 @@ export const usePeopleFormPage = () => {
 			note: "",
 			experience: "",
 			status: "",
+			birthDate: "",
+			emergencyContacts: [],
+			gender: gender.other,
+			maritalStatus: maritalStatus.single,
+			raceColor: raceColor.brown,
+			tours: [],
 		},
 	});
 
 	useEffect(() => {
 		if (id) getPeople(id).then((data) => toValue(data, setValue));
-	}, []);
+	}, [id]);
 
-	const handleSave = (data: people) => {
-		if (!id) postPeople(data);
-		else putPeople(data);
-	};
+	const { getPeople, postPeople, putPeople } = usePeopleStore();
+
+	const handleSave = (data: people) =>
+		getValues("id")
+			? postPeople(data).then((p) => toValue(p, setValue))
+			: putPeople(data).then((p) => toValue(p, setValue));
 
 	return {
-		id,
-		register,
-		handleSubmit,
+		handleSave,
 		errors,
+		control,
 		getValues,
+		handleSubmit,
+		register,
 		setValue,
 		watch,
-		handleSave,
 	};
 };

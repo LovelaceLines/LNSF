@@ -47,6 +47,7 @@ export type peopleFilter = baseFilter & {
 	isEscort?: boolean;
 	isPatient?: boolean;
 	isVeteran?: boolean;
+	willHosted?: boolean;
 };
 
 export type peopleRoomHosting = {

@@ -1,5 +1,5 @@
 import { getFilteredObject, useTable } from "@/tables";
-import { useHostingStore } from "@/zustand";
+import { useHostingStore } from "@/store";
 
 export const useHostingTablePage = () => {
 	const { getHostings, hostings, queryResult } = useHostingStore();

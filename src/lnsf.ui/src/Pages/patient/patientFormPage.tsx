@@ -3,10 +3,20 @@ import { Button, Divider, Grid2 as Grid, TextField } from "@mui/material";
 import { Checkbox, SelectField } from "@/components";
 import { usePatientFormPage } from "./usePatientFormPage";
 import { PatientTreatmentFormPage } from "./patientTreatmentFormPage";
-import { patientTreatment } from "@/types";
 
 export const PatientFormPage = () => {
-	const { id, peoples, hospitals, register, handleSubmit, errors, watch, getValues, setValue, handleSave } = usePatientFormPage();
+	const {
+		addTreatmentToPatient,
+		removeTreatmentFromPatient,
+		peoples,
+		hospitals,
+		handleSave,
+		errors,
+		handleSubmit,
+		register,
+		setValue,
+		watch,
+	} = usePatientFormPage();
 
 	return (
 		<>
@@ -17,7 +27,8 @@ export const PatientFormPage = () => {
 				<Grid size={{ xs: 12, sm: 1.5, md: 1 }}>
 					<TextField
 						label="Id"
-						disabled={!id}
+						type="number"
+						disabled={!watch("id")}
 						{...register("id")}
 						error={!!errors.id}
 						helperText={errors.id?.message}
@@ -27,9 +38,11 @@ export const PatientFormPage = () => {
 				<Grid size={{ xs: 12, sm: 2, md: 1.5 }}>
 					<TextField
 						label="Id Pessoa"
+						type="number"
 						{...register("peopleId")}
 						error={!!errors.peopleId}
 						helperText={errors.peopleId?.message}
+						onChange={(e) => setValue("peopleId", Number(e.target.value))}
 						fullWidth
 					/>
 				</Grid>
@@ -40,16 +53,18 @@ export const PatientFormPage = () => {
 						labelKey="name"
 						options={peoples}
 						valueKey="id"
-						defaultValue={String(getValues("peopleId"))}
+						defaultValue={String(watch("peopleId"))}
 						onClick={(value) => setValue("peopleId", value)}
 					/>
 				</Grid>
 				<Grid size={{ xs: 12, sm: 2, md: 1.5 }}>
 					<TextField
 						label="Id Hospital"
+						type="number"
 						{...register("hospitalId")}
 						error={!!errors.hospitalId}
 						helperText={errors.hospitalId?.message}
+						onChange={(e) => setValue("hospitalId", Number(e.target.value))}
 						fullWidth
 					/>
 				</Grid>
@@ -60,7 +75,7 @@ export const PatientFormPage = () => {
 						labelKey="name"
 						options={hospitals}
 						valueKey="id"
-						defaultValue={String(getValues("hospitalId"))}
+						defaultValue={String(watch("hospitalId"))}
 						onClick={(value) => setValue("hospitalId", value)}
 					/>
 				</Grid>
@@ -74,21 +89,29 @@ export const PatientFormPage = () => {
 				</Grid>
 				<Grid size={{ xs: 12 }}>
 					<Button type="submit" variant="contained" fullWidth>
-						{id ? "Atualizar" : "Cadastrar"}
+						{watch("id") ? "Atualizar" : "Cadastrar"}
 					</Button>
 				</Grid>
 			</Grid>
-			<Grid container spacing={2} mt={2}>
+			<Grid container direction="column" spacing={2} mt={2}>
 				<Grid size={{ xs: 12 }}>
 					<Divider>Tratamentos do Paciente</Divider>
 				</Grid>
-				{getValues("treatments")?.map((treatment, index: number) => (
-					<Grid size={{ xs: 12 }} key={index}>
-						<PatientTreatmentFormPage patientTreatment={{ patientId: Number(id), treatmentId: treatment.id! }} />
+				{watch("treatments", [])?.map((treatment, index: number) => (
+					<Grid size={{ xs: 6 }} key={index}>
+						<PatientTreatmentFormPage
+							patientTreatment={{ patientId: Number(watch("id")), treatmentId: treatment.id! }}
+							mode="delete"
+							onSave={removeTreatmentFromPatient}
+						/>
 					</Grid>
 				))}
-				<Grid size={{ xs: 12 }}>
-					<PatientTreatmentFormPage patientTreatment={{ patientId: Number(id), treatmentId: 0 }} />
+				<Grid size={{ xs: 6 }}>
+					<PatientTreatmentFormPage
+						patientTreatment={{ patientId: Number(watch("id")), treatmentId: 0 }}
+						mode="add"
+						onSave={addTreatmentToPatient}
+					/>
 				</Grid>
 			</Grid>
 		</>

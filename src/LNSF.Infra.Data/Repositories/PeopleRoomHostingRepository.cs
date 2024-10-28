@@ -30,8 +30,8 @@ public class PeopleRoomHostingRepository(AppDbContext context) : BaseRepository<
 
 	public async Task<bool> HaveVacancy(PeopleRoomHosting peopleRoomHosting)
 	{
-		var room = await rooms.FirstOrDefaultAsync(r => r.Id == peopleRoomHosting.RoomId);
-		var beds = room!.Beds;
+		var room = await rooms.FirstAsync(r => r.Id == peopleRoomHosting.RoomId);
+		var beds = room.Beds;
 		var occupation = await GetOccupation(peopleRoomHosting);
 
 		return beds > occupation;

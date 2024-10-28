@@ -1,13 +1,14 @@
 ﻿using LNSF.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace LNSF.Infra.Data.Configurations;
 
-public class ServiceRecordsConfiguration : IEntityTypeConfiguration<ServiceRecord>
+public class ServiceRecordsConfiguration : BaseConfiguration<ServiceRecord>
 {
-    public void Configure(EntityTypeBuilder<ServiceRecord> builder)
+    public override void Configure(EntityTypeBuilder<ServiceRecord> builder)
     {
+        base.Configure(builder);
+
         builder.HasKey(s => s.Id);
 
         builder.Property(s => s.Id)

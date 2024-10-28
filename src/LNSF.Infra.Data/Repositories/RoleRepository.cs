@@ -28,11 +28,11 @@ public class RoleRepository(AppDbContext context, RoleManager<Role> roleManager)
 
 	public async Task<Role> GetById(int id) =>
 		await context.Roles.AsNoTracking().FirstOrDefaultAsync(r => r.Id == id) ??
-			throw new AppException("Perfil não encontrado!", HttpStatusCode.NotFound);
+			throw new AppException("Permissão não encontrada!", HttpStatusCode.NotFound);
 
 	public async Task<Role> GetByName(string name) =>
 		await context.Roles.AsNoTracking().FirstOrDefaultAsync(r => r.Name == name) ??
-			throw new AppException("Perfil não encontrado!", HttpStatusCode.NotFound);
+			throw new AppException("Permissão não encontrada!", HttpStatusCode.NotFound);
 
 	public async Task<List<Role>> GetByUser(int userId) =>
 		await context.Roles.AsNoTracking()
@@ -46,7 +46,7 @@ public class RoleRepository(AppDbContext context, RoleManager<Role> roleManager)
 	//     var result = await roleManager.CreateAsync(role);
 
 	//     return result.Succeeded ? role :
-	//         throw new AppException("Não foi possível criar o perfil!", HttpStatusCode.BadRequest);
+	//         throw new AppException("Não foi possível criar a permissão!", HttpStatusCode.BadRequest);
 	// }
 
 	public async new Task<Role> Update(Role role)
@@ -54,7 +54,7 @@ public class RoleRepository(AppDbContext context, RoleManager<Role> roleManager)
 		var result = await roleManager.UpdateAsync(role);
 
 		return result.Succeeded ? role :
-			throw new AppException("Não foi possível atualizar o perfil!", HttpStatusCode.BadRequest);
+			throw new AppException("Não foi possível atualizar a permissão!", HttpStatusCode.BadRequest);
 	}
 
 	public async new Task<Role> Remove(Role role)
@@ -62,6 +62,6 @@ public class RoleRepository(AppDbContext context, RoleManager<Role> roleManager)
 		var result = await roleManager.DeleteAsync(role);
 
 		return result.Succeeded ? role :
-			throw new AppException("Não foi possível remover o perfil!", HttpStatusCode.BadRequest);
+			throw new AppException("Não foi possível remover a permissão!", HttpStatusCode.BadRequest);
 	}
 }

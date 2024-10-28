@@ -1,34 +1,41 @@
 import { useForm } from "react-hook-form";
 
 import { emergencyContact } from "@/types";
-import { useEmergencyContactStore } from "@/zustand";
+import { useEmergencyContactStore } from "@/store";
+import { toValue } from "@/utils";
 
-export const useEmergencyContactFormPage = ({ emergencyContact }: { emergencyContact?: emergencyContact }) => {
-	const { deleteEmergencyContact: handleDelete, postEmergencyContact, putEmergencyContact } = useEmergencyContactStore();
+export const useEmergencyContactFormPage = ({
+	emergencyContact,
+}: {
+	emergencyContact?: emergencyContact;
+}) => {
 	const {
-		register,
-		handleSubmit,
+		control,
 		formState: { errors },
 		getValues,
-		watch,
+		handleSubmit,
+		register,
 		setValue,
+		watch,
 	} = useForm<emergencyContact>({
-		values: emergencyContact,
+		values: { id: 0, peopleId: 0, name: "", phone: "", ...emergencyContact },
 	});
 
-	const handleSave = (data: emergencyContact) => {
-		if (!data.id) postEmergencyContact(data);
-		else putEmergencyContact(data);
-	};
+	const { deleteEmergencyContact, postEmergencyContact, putEmergencyContact } = useEmergencyContactStore();
+
+	const handleSave = (data: emergencyContact) =>
+		!data.id
+			? postEmergencyContact(data).then((ec) => toValue(ec, setValue))
+			: putEmergencyContact(data).then((ec) => toValue(ec, setValue));
 
 	return {
-		register,
-		handleSubmit,
+		handleSave,
+		deleteEmergencyContact,
+		control,
 		errors,
 		getValues,
-		setValue,
+		handleSubmit,
+		register,
 		watch,
-		handleSave,
-		handleDelete,
 	};
 };

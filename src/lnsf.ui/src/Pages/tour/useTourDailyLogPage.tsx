@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { people } from "@/types";
-import { usePeopleStore, useTourStore } from "@/zustand";
+import { usePeopleStore, useTourStore } from "@/store";
 
 export const useTourDailyLogPage = () => {
 	const { getOpenTours, openTours } = useTourStore();

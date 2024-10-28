@@ -20,8 +20,10 @@ public class HostingEscortTestApi : GlobalClientRequest
 		var hostingEscortPosted1 = await PostFromBody<HostingEscort>(_addEscortToHostingClient, hostingEscort1);
 		var hostingEscortPosted2 = await PostFromBody<HostingEscort>(_addEscortToHostingClient, hostingEscort2);
 
-		Assert.Equivalent(hostingEscort1, hostingEscortPosted1);
-		Assert.Equivalent(hostingEscort2, hostingEscortPosted2);
+		Assert.Equal(hostingEscort1.HostingId, hostingEscortPosted1.HostingId);
+		Assert.Equal(hostingEscort1.EscortId, hostingEscortPosted1.EscortId);
+		Assert.Equal(hostingEscort2.HostingId, hostingEscortPosted2.HostingId);
+		Assert.Equal(hostingEscort2.EscortId, hostingEscortPosted2.EscortId);
 	}
 
 	[Fact]
@@ -37,7 +39,8 @@ public class HostingEscortTestApi : GlobalClientRequest
 
 		var hostingEscortWithoutConflictPosted = await PostFromBody<HostingEscort>(_addEscortToHostingClient, hostingEscortFake);
 
-		Assert.Equivalent(hostingEscortFake, hostingEscortWithoutConflictPosted);
+		Assert.Equal(hostingEscortFake.HostingId, hostingEscortWithoutConflictPosted.HostingId);
+		Assert.Equal(hostingEscortFake.EscortId, hostingEscortWithoutConflictPosted.EscortId);
 	}
 
 	[Fact]

@@ -9,10 +9,12 @@ import { TourDailyLogPage, TourTablePage } from "@/pages/tour";
 import { RoomFormPage, RoomTablePage } from "@/pages/room";
 import { HospitalFormPage, HospitalTablePage } from "@/pages/hospital";
 import { TreatmentFormPage, TreatmentTablePage } from "@/pages/treatment";
-import { HostingFormPage, HostingTablePage } from "@/pages/hosting";
-import { PatientFormPage, PatientTablePage } from "@/Pages/patient";
-import { EscortFormPage, EscortTablePage } from "@/Pages/escort";
-import { NotFoundPage } from "@/Pages";
+import { HostingFormPage, HostingTablePage, PeopleRoomHostingTablePage } from "@/pages/hosting";
+import { PatientFormPage, PatientTablePage } from "@/pages/patient";
+import { EscortFormPage, EscortTablePage } from "@/pages/escort";
+import { CurrentUserFormPage, UserFormPage, UserTablePage } from "@/pages/user";
+import { ChainDashboardPage } from "@/pages/chain";
+import { NotFoundPage } from "@/pages";
 
 const LoginRouters: RouteObject = {
 	path: "/",
@@ -38,6 +40,10 @@ const MainRouters: RouteObject = {
 	),
 	loader: () => <Loading />,
 	children: [
+		{
+			path: "",
+			element: <ChainDashboardPage />,
+		},
 		{
 			path: "registro-diario",
 			element: <TourDailyLogPage />,
@@ -119,16 +125,36 @@ const MainRouters: RouteObject = {
 			element: <TreatmentFormPage />,
 		},
 		{
-			path: "hospedagens",
+			path: "reservas",
 			element: <HostingTablePage />,
 		},
 		{
-			path: "hospedagens/add",
+			path: "reservas/add",
 			element: <HostingFormPage />,
 		},
 		{
-			path: "hospedagens/:id",
+			path: "reservas/:id",
 			element: <HostingFormPage />,
+		},
+		{
+			path: "Hospedagens",
+			element: <PeopleRoomHostingTablePage />,
+		},
+		{
+			path: "usuarios",
+			element: <UserTablePage />,
+		},
+		{
+			path: "usuarios/add",
+			element: <UserFormPage />,
+		},
+		{
+			path: "usuarios/:id",
+			element: <UserFormPage />,
+		},
+		{
+			path: "minha-conta",
+			element: <CurrentUserFormPage />,
 		},
 		{
 			path: "configuracoes",

@@ -10,6 +10,11 @@ export type user = {
 	roles: role[];
 };
 
+export type password = {
+	oldPassword: string;
+	newPassword: string;
+};
+
 export type userFilter = baseFilter & {
 	id?: number;
 	name?: string;

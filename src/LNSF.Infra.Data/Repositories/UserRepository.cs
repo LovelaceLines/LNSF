@@ -8,6 +8,7 @@ using LNSF.Domain.Repositories;
 using LNSF.Infra.Data.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using System.Net;
 
 namespace LNSF.Infra.Data.Repositories;
@@ -19,6 +20,14 @@ public class UserRepository(AppDbContext context,
 	public async Task<QueryResult<UserDTO>> Query(UserFilter filter)
 	{
 		var query = context.Users.ApplyFilterWithoutPagination(filter);
+
+		if (filter.Roles != null)
+			query = query
+				.Join(context.UserRoles, u => u.Id, ur => ur.UserId, (u, ur) => new { u, ur })
+				.Join(context.Roles, ur => ur.ur.RoleId, r => r.Id, (ur, r) => new { ur.u, r })
+				.Where(ur => ur.r.Name.ToLower().Contains(filter.Roles.ToLower()))
+				.Select(ur => ur.u);
+
 		var items = await query.ToPaged(filter.Page, filter.PerPage).ToListAsync();
 		var totalCount = await query.CountAsync();
 

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { getAllRoles } from "@/globalSettings";
 import { defaultRole, jwtPayload } from "@/types";
 import { includes } from "@/utils";
-import { useAuthStore } from "./zustand/useAuthStore";
+import { useAuthStore } from "./store/useAuthStore";
 
 export const AuthWrapper = ({
 	children,

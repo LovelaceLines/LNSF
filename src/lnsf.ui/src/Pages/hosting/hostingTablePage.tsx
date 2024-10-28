@@ -1,8 +1,6 @@
 import { MRT_ColumnDef } from "material-react-table";
-import { Box, IconButton } from "@mui/material";
-import { Launch } from "@mui/icons-material";
+import { Box } from "@mui/material";
 import { useMemo } from "react";
-import { Link } from "react-router-dom";
 
 import { useMaterialReactTable } from "@/tables";
 import { MRTInputNumber, MRTLaunchLink } from "@/tables/components";
@@ -45,12 +43,20 @@ export const HostingTablePage = () => {
 				accessorKey: "escorts.id",
 				header: "Id Acompanhante",
 				Filter: ({ column }) => <MRTInputNumber column={column} />,
-				Cell: ({ row }) => row.original.escorts.map((e) => e.id).join(", "),
+				Cell: ({ row }) => (
+					<Box display="flex" gap={1}>
+						{row.original.escorts?.map((e) => (
+							<>
+								<MRTLaunchLink label={e.id} to={`/app/pessoas/acompanhantes/${e.id}`} />
+							</>
+						))}
+					</Box>
+				),
 			},
 			{
 				accessorKey: "escorts.people.name",
 				header: "Nome Acompanhante",
-				Cell: ({ row }) => row.original.escorts.map((e) => e.people?.name).join(", "),
+				Cell: ({ row }) => row.original.escorts?.map((e) => e.people?.name).join(", "),
 			},
 			{
 				accessorKey: "checkIn",
@@ -71,7 +77,7 @@ export const HostingTablePage = () => {
 			{useMaterialReactTable({
 				columns,
 				data: hostings,
-				title: "Hospedagens",
+				title: "Reservas",
 
 				setGlobalFilter,
 				setColumnFilters,

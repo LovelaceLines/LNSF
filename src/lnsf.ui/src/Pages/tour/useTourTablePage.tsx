@@ -1,6 +1,6 @@
 import { getFilteredObject, useTable } from "@/tables";
 import { tourFilter } from "@/types";
-import { useTourStore } from "@/zustand";
+import { useTourStore } from "@/store";
 import { useForm } from "react-hook-form";
 
 export const useTourTablePage = () => {

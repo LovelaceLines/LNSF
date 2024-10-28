@@ -24,26 +24,26 @@ public class RoleService(IRoleRepository repository,
 		var validationResult = validator.Validate(role);
 		if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
-		if (await repository.ExistsByName(role.Name)) throw new AppException("Perfil já existe!", HttpStatusCode.Conflict);
+		if (await repository.ExistsByName(role.Name)) throw new AppException("Permissão já existe!", HttpStatusCode.Conflict);
 
 		return await repository.Add(role);
 	}
 
 	public async Task<Role> Update(Role newRole)
 	{
-		if (newRole.Name == "Desenvolvedor") throw new AppException("Perfil Desenvolvedor não pode ser removido!", HttpStatusCode.BadRequest);
-		if (newRole.Name == "Administrador") throw new AppException("Perfil Administrador não pode ser removido!", HttpStatusCode.BadRequest);
-		if (newRole.Name == "Assistente Social") throw new AppException("Perfil Assistente Social não pode ser removido!", HttpStatusCode.BadRequest);
-		if (newRole.Name == "Secretário") throw new AppException("Perfil Secretário não pode ser removido!", HttpStatusCode.BadRequest);
-		if (newRole.Name == "Voluntário") throw new AppException("Perfil Voluntário não pode ser removido!", HttpStatusCode.BadRequest);
+		if (newRole.Name == "Desenvolvedor") throw new AppException("Permissão Desenvolvedor não pode ser removido!", HttpStatusCode.BadRequest);
+		if (newRole.Name == "Administrador") throw new AppException("Permissão Administrador não pode ser removido!", HttpStatusCode.BadRequest);
+		if (newRole.Name == "Assistente Social") throw new AppException("Permissão Assistente Social não pode ser removido!", HttpStatusCode.BadRequest);
+		if (newRole.Name == "Secretário") throw new AppException("Permissão Secretário não pode ser removido!", HttpStatusCode.BadRequest);
+		if (newRole.Name == "Voluntário") throw new AppException("Permissão Voluntário não pode ser removido!", HttpStatusCode.BadRequest);
 
 		var validationResult = validator.Validate(newRole);
 		if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
-		if (!await repository.ExistsById(newRole.Id)) throw new AppException("Perfil não encontrado!", HttpStatusCode.NotFound);
+		if (!await repository.ExistsById(newRole.Id)) throw new AppException("Permissão não encontrada!", HttpStatusCode.NotFound);
 		var oldRole = await repository.GetById(newRole.Id);
 
-		if (oldRole.Name != newRole.Name && await repository.ExistsByName(newRole.Name)) throw new AppException("Perfil já existe!", HttpStatusCode.Conflict);
+		if (oldRole.Name != newRole.Name && await repository.ExistsByName(newRole.Name)) throw new AppException("Permissão já existe!", HttpStatusCode.Conflict);
 
 		oldRole.Name = newRole.Name;
 
@@ -52,14 +52,14 @@ public class RoleService(IRoleRepository repository,
 
 	public async Task<Role> Delete(int id)
 	{
-		if (!await repository.ExistsById(id)) throw new AppException("Perfil não encontrado!", HttpStatusCode.NotFound);
+		if (!await repository.ExistsById(id)) throw new AppException("Permissão não encontrada!", HttpStatusCode.NotFound);
 		var role = await repository.GetById(id);
 
-		if (role.Name == "Desenvolvedor") throw new AppException("Perfil Desenvolvedor não pode ser removido!", HttpStatusCode.BadRequest);
-		if (role.Name == "Administrador") throw new AppException("Perfil Administrador não pode ser removido!", HttpStatusCode.BadRequest);
-		if (role.Name == "Assistente Social") throw new AppException("Perfil Assistente Social não pode ser removido!", HttpStatusCode.BadRequest);
-		if (role.Name == "Secretário") throw new AppException("Perfil Secretário não pode ser removido!", HttpStatusCode.BadRequest);
-		if (role.Name == "Voluntário") throw new AppException("Perfil Voluntário não pode ser removido!", HttpStatusCode.BadRequest);
+		if (role.Name == "Desenvolvedor") throw new AppException("Permissão Desenvolvedor não pode ser removido!", HttpStatusCode.BadRequest);
+		if (role.Name == "Administrador") throw new AppException("Permissão Administrador não pode ser removido!", HttpStatusCode.BadRequest);
+		if (role.Name == "Assistente Social") throw new AppException("Permissão Assistente Social não pode ser removido!", HttpStatusCode.BadRequest);
+		if (role.Name == "Secretário") throw new AppException("Permissão Secretário não pode ser removido!", HttpStatusCode.BadRequest);
+		if (role.Name == "Voluntário") throw new AppException("Permissão Voluntário não pode ser removido!", HttpStatusCode.BadRequest);
 
 		return await repository.Remove(role);
 	}

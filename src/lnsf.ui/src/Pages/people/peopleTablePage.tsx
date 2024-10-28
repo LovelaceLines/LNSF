@@ -1,6 +1,6 @@
 import { MRT_ColumnDef } from "material-react-table";
-import { InfoOutlined, Launch } from "@mui/icons-material";
-import { Button, IconButton, Tooltip } from "@mui/material";
+import { Check, InfoOutlined, Launch } from "@mui/icons-material";
+import { Button, IconButton, Switch, ToggleButton, Tooltip } from "@mui/material";
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 
@@ -8,7 +8,15 @@ import { Checkbox } from "@/components";
 import { useMaterialReactTable } from "@/tables";
 import { MRTInputDateOnly, MRTInputNumber } from "@/tables/components";
 import { CopyButton } from "@/tables/util";
-import { formatGender, formatMaritalStatus, formatRaceColor, getGender, getMaritalStatus, getRaceColor, people } from "@/types";
+import {
+	formatGender,
+	formatMaritalStatus,
+	formatRaceColor,
+	getGender,
+	getMaritalStatus,
+	getRaceColor,
+	people,
+} from "@/types";
 import { usePeopleTablePage } from "./usePeopleTablePage";
 import { dateOnlyToStr } from "@/utils";
 
@@ -18,6 +26,7 @@ export const PeopleTablePage = () => {
 		register,
 		watch,
 		rowCount,
+		setValue,
 		state: { columnFilters, sorting, pagination, globalFilter, rowSelection },
 		setColumnFilters,
 		setGlobalFilter,
@@ -154,9 +163,26 @@ export const PeopleTablePage = () => {
 
 				renderTopToolbarFilterActions: () => (
 					<>
-						<Checkbox label="Ativos" checked={watch("isActive")} register={register("isActive")} />
-						<Checkbox label="Somente Pacientes" checked={watch("isPatient")} register={register("isPatient")} />
-						<Checkbox label="Somente Acompanhantes" checked={watch("isEscort")} register={register("isEscort")} />
+						<Checkbox
+							label="Ativos"
+							checked={watch("isActive")}
+							register={register("isActive")}
+						/>
+						<Checkbox
+							label="Somente Pacientes"
+							checked={watch("isPatient")}
+							register={register("isPatient")}
+						/>
+						<Checkbox
+							label="Somente Acompanhantes"
+							checked={watch("isEscort")}
+							register={register("isEscort")}
+						/>
+						<Checkbox
+							label="Para Chegar"
+							checked={watch("willHosted")}
+							register={register("willHosted")}
+						/>
 					</>
 				),
 

@@ -1,13 +1,14 @@
 ﻿using LNSF.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace LNSF.Infra.Data.Configurations;
 
-public class PeoplesRoomsHostingsConfiguration : IEntityTypeConfiguration<PeopleRoomHosting>
+public class PeoplesRoomsHostingsConfiguration : BaseConfiguration<PeopleRoomHosting>
 {
-    public void Configure(EntityTypeBuilder<PeopleRoomHosting> builder)
+    public override void Configure(EntityTypeBuilder<PeopleRoomHosting> builder)
     {
+        base.Configure(builder);
+
         builder.HasKey(pr => new { pr.RoomId, pr.PeopleId, pr.HostingId });
 
         builder.HasOne(pr => pr.People)

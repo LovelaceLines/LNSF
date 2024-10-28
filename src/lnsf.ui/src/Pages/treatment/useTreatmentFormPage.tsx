@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 
 import { treatment, typeTreatment } from "@/types";
-import { useTreatmentStore } from "@/zustand";
+import { useTreatmentStore } from "@/store";
 import { toValue } from "@/utils";
 
 export const useTreatmentFormPage = () => {

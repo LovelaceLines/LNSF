@@ -1,13 +1,14 @@
 using LNSF.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace LNSF.Infra.Data.Configurations;
 
-public class EscortsConfiguration : IEntityTypeConfiguration<Escort>
+public class EscortsConfiguration : BaseConfiguration<Escort>
 {
-    public void Configure(EntityTypeBuilder<Escort> builder)
+    public override void Configure(EntityTypeBuilder<Escort> builder)
     {
+        base.Configure(builder);
+
         builder.HasKey(e => e.Id);
 
         builder.Property(e => e.Id)
@@ -16,7 +17,7 @@ public class EscortsConfiguration : IEntityTypeConfiguration<Escort>
         builder.HasOne(e => e.People)
             .WithOne()
             .HasForeignKey<Escort>(e => e.PeopleId);
-        
+
         builder.Property(e => e.PeopleId)
             .IsUnicode();
     }

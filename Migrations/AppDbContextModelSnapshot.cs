@@ -23,6 +23,12 @@ namespace LNSF.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -33,6 +39,12 @@ namespace LNSF.Migrations
                     b.Property<string>("Phone")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -48,8 +60,20 @@ namespace LNSF.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("PeopleId")
                         .IsUnicode(true)
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("UpdatedBy")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -67,6 +91,12 @@ namespace LNSF.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Age")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("CreatedBy")
                         .HasColumnType("INTEGER");
 
                     b.Property<double>("Income")
@@ -87,6 +117,12 @@ namespace LNSF.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PatientId");
@@ -104,10 +140,22 @@ namespace LNSF.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .IsUnicode(true)
                         .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -126,7 +174,19 @@ namespace LNSF.Migrations
                     b.Property<DateTime?>("CheckOut")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("PatientId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("UpdatedBy")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -144,6 +204,18 @@ namespace LNSF.Migrations
                     b.Property<int>("EscortId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("HostingId", "EscortId");
 
                     b.HasIndex("EscortId");
@@ -157,6 +229,12 @@ namespace LNSF.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("HospitalId")
                         .HasColumnType("INTEGER");
 
@@ -168,6 +246,12 @@ namespace LNSF.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("Term")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("UpdatedBy")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -186,6 +270,18 @@ namespace LNSF.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("TreatmentId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("UpdatedBy")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("PatientId", "TreatmentId");
@@ -211,6 +307,12 @@ namespace LNSF.Migrations
                     b.Property<string>("City")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Email")
                         .HasColumnType("TEXT");
@@ -258,6 +360,12 @@ namespace LNSF.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CPF")
@@ -278,6 +386,18 @@ namespace LNSF.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("HostingId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("UpdatedBy")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("RoomId", "PeopleId", "HostingId");
@@ -329,47 +449,47 @@ namespace LNSF.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "63dc6a45-87b3-4da2-80a3-bf935ad184cd",
-                            CreatedAt = new DateTime(2024, 10, 23, 20, 23, 21, 909, DateTimeKind.Local).AddTicks(6903),
+                            ConcurrencyStamp = "b8f34316-3e7b-4c6f-be2c-04076fbb436f",
+                            CreatedAt = new DateTime(2024, 10, 25, 22, 37, 32, 838, DateTimeKind.Local).AddTicks(4614),
                             Name = "Desenvolvedor",
                             NormalizedName = "DESENVOLVEDOR",
-                            UpdatedAt = new DateTime(2024, 10, 23, 20, 23, 21, 909, DateTimeKind.Local).AddTicks(6919)
+                            UpdatedAt = new DateTime(2024, 10, 25, 22, 37, 32, 838, DateTimeKind.Local).AddTicks(4626)
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "ae07ab74-ea5e-4b1c-b914-453b3618834c",
-                            CreatedAt = new DateTime(2024, 10, 23, 20, 23, 21, 909, DateTimeKind.Local).AddTicks(6929),
+                            ConcurrencyStamp = "ffe83f1c-43bd-4539-871d-4460985c67d5",
+                            CreatedAt = new DateTime(2024, 10, 25, 22, 37, 32, 838, DateTimeKind.Local).AddTicks(4647),
                             Name = "Administrador",
                             NormalizedName = "ADMINISTRADOR",
-                            UpdatedAt = new DateTime(2024, 10, 23, 20, 23, 21, 909, DateTimeKind.Local).AddTicks(6929)
+                            UpdatedAt = new DateTime(2024, 10, 25, 22, 37, 32, 838, DateTimeKind.Local).AddTicks(4647)
                         },
                         new
                         {
                             Id = 3,
-                            ConcurrencyStamp = "b439e8bf-feae-46bc-a6f1-fe62cc7813ef",
-                            CreatedAt = new DateTime(2024, 10, 23, 20, 23, 21, 909, DateTimeKind.Local).AddTicks(6945),
-                            Name = "AssistenteSocial",
+                            ConcurrencyStamp = "884a444b-bb71-474f-9faa-ef2e932736a9",
+                            CreatedAt = new DateTime(2024, 10, 25, 22, 37, 32, 838, DateTimeKind.Local).AddTicks(4652),
+                            Name = "Assistente Social",
                             NormalizedName = "ASSISTENTESOCIAL",
-                            UpdatedAt = new DateTime(2024, 10, 23, 20, 23, 21, 909, DateTimeKind.Local).AddTicks(6946)
+                            UpdatedAt = new DateTime(2024, 10, 25, 22, 37, 32, 838, DateTimeKind.Local).AddTicks(4653)
                         },
                         new
                         {
                             Id = 4,
-                            ConcurrencyStamp = "868ab74e-2408-4947-acc0-e8b804e69614",
-                            CreatedAt = new DateTime(2024, 10, 23, 20, 23, 21, 909, DateTimeKind.Local).AddTicks(6950),
+                            ConcurrencyStamp = "2aa9813e-5ce0-4557-ae35-5e33b012736e",
+                            CreatedAt = new DateTime(2024, 10, 25, 22, 37, 32, 838, DateTimeKind.Local).AddTicks(4657),
                             Name = "Secretario",
                             NormalizedName = "SECRETARIO",
-                            UpdatedAt = new DateTime(2024, 10, 23, 20, 23, 21, 909, DateTimeKind.Local).AddTicks(6951)
+                            UpdatedAt = new DateTime(2024, 10, 25, 22, 37, 32, 838, DateTimeKind.Local).AddTicks(4657)
                         },
                         new
                         {
                             Id = 5,
-                            ConcurrencyStamp = "ad291550-69cd-4ef8-b05b-83f162a2df15",
-                            CreatedAt = new DateTime(2024, 10, 23, 20, 23, 21, 909, DateTimeKind.Local).AddTicks(6962),
+                            ConcurrencyStamp = "99247015-08fe-4d37-9336-5b012dca3868",
+                            CreatedAt = new DateTime(2024, 10, 25, 22, 37, 32, 838, DateTimeKind.Local).AddTicks(4661),
                             Name = "Voluntario",
                             NormalizedName = "VOLUNTARIO",
-                            UpdatedAt = new DateTime(2024, 10, 23, 20, 23, 21, 909, DateTimeKind.Local).AddTicks(6962)
+                            UpdatedAt = new DateTime(2024, 10, 25, 22, 37, 32, 838, DateTimeKind.Local).AddTicks(4662)
                         });
                 });
 
@@ -388,11 +508,23 @@ namespace LNSF.Migrations
                     b.Property<int>("Beds")
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Number")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Storey")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("UpdatedBy")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -418,6 +550,12 @@ namespace LNSF.Migrations
                     b.Property<string>("AccessToUnitNote")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("DemandPresented")
                         .IsRequired()
@@ -483,6 +621,12 @@ namespace LNSF.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("WayWaterSupply")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -501,6 +645,12 @@ namespace LNSF.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime?>("Input")
                         .HasColumnType("TEXT");
 
@@ -512,6 +662,12 @@ namespace LNSF.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<int>("PeopleId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("UpdatedBy")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -527,11 +683,23 @@ namespace LNSF.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("CreatedBy")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("UpdatedBy")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -653,60 +821,60 @@ namespace LNSF.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e37acf6b-2983-4c47-8738-8cc4d551150d",
-                            CreatedAt = new DateTime(2024, 10, 23, 20, 23, 21, 992, DateTimeKind.Local).AddTicks(8345),
+                            ConcurrencyStamp = "5c867732-05d9-409f-a8c6-aa52751af27a",
+                            CreatedAt = new DateTime(2024, 10, 25, 22, 37, 32, 917, DateTimeKind.Local).AddTicks(8858),
                             Email = "georgemaiaf@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             Name = "George Maia",
                             NormalizedEmail = "GEORGEMAIAF@GMAIL.COM",
                             NormalizedUserName = "GEORGEDEV",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMK//XvhzUabJihkZ2fkll+gfDQIxKGpkBNxKUZ6V+n6ZT0o1US3ccpm62fk4axZqw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAG7GIsR6npXBdUoPXNgFJW1CuXYResjUJYghBr4kT3C46Q3NXX9ZDkbU7+DspVx+A==",
                             PhoneNumber = "(55) 88 9 9246-5315",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a8432e0f-513b-43b9-addc-5e29f4455632",
+                            SecurityStamp = "d871d24b-1370-47cb-9e31-8572057c7167",
                             TwoFactorEnabled = false,
-                            UpdatedAt = new DateTime(2024, 10, 23, 20, 23, 21, 992, DateTimeKind.Local).AddTicks(8361),
+                            UpdatedAt = new DateTime(2024, 10, 25, 22, 37, 32, 917, DateTimeKind.Local).AddTicks(8873),
                             UserName = "georgedev"
                         },
                         new
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0caca49b-097a-4fc8-8a68-db7a0e0feec5",
-                            CreatedAt = new DateTime(2024, 10, 23, 20, 23, 22, 117, DateTimeKind.Local).AddTicks(6976),
+                            ConcurrencyStamp = "9fc7d275-9ef7-4e91-80bc-5ada6b5047c0",
+                            CreatedAt = new DateTime(2024, 10, 25, 22, 37, 33, 37, DateTimeKind.Local).AddTicks(3069),
                             Email = "lnsf@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             Name = "Lar Nossa Senhora de Fátima",
                             NormalizedEmail = "LNSF@GMAIL.COM",
                             NormalizedUserName = "LNSF",
-                            PasswordHash = "AQAAAAIAAYagAAAAEEVe71TDW1Hff+ZYGd4RttZACfvuNVktEoGNG3dkeY1m/0sbK/VCUViqu8a8uyKShw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIEbng/PsETcVKfmd2kRo0aLcoCvRA266ChjHVCNIq9qgMQtpTLpEJyPmEJ42aJNSg==",
                             PhoneNumber = "(11) 11 1 1111-1111",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d90050a1-0240-48d9-9fd3-fbfacaa3c41f",
+                            SecurityStamp = "46e3f719-8977-433f-b655-ec2a9b578f79",
                             TwoFactorEnabled = false,
-                            UpdatedAt = new DateTime(2024, 10, 23, 20, 23, 22, 117, DateTimeKind.Local).AddTicks(7000),
+                            UpdatedAt = new DateTime(2024, 10, 25, 22, 37, 33, 37, DateTimeKind.Local).AddTicks(3082),
                             UserName = "lnsf"
                         },
                         new
                         {
                             Id = 3,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "de7f031e-b134-4e34-82a4-6c2fcd534ca7",
-                            CreatedAt = new DateTime(2024, 10, 23, 20, 23, 22, 209, DateTimeKind.Local).AddTicks(5876),
+                            ConcurrencyStamp = "ce125269-a95c-4989-825b-9e689e46cffe",
+                            CreatedAt = new DateTime(2024, 10, 25, 22, 37, 33, 126, DateTimeKind.Local).AddTicks(6919),
                             Email = "lnsf2@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             Name = "Lar Nossa Senhora de Fátima 2",
                             NormalizedEmail = "LNSF2@GMAIL.COM",
                             NormalizedUserName = "LNSF2",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJdv6443OJMDNlDfiu4ToTL/TQzr1MWVdsn71KbiGgE2sn4w07buDHQQKfJaGo5YNA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGNvjE2qeGOGEITzELqQqPymQm61CbXLMeE2rSnXCbeJxS8FX/29q8IgzKDuKcDe0A==",
                             PhoneNumber = "(22) 22 2 2222-2222",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "8a8bcd0e-1398-48fb-ac82-2c2792bdd4a8",
+                            SecurityStamp = "537f23f2-cb63-482a-bed0-eed59458d4bf",
                             TwoFactorEnabled = false,
-                            UpdatedAt = new DateTime(2024, 10, 23, 20, 23, 22, 209, DateTimeKind.Local).AddTicks(5895),
+                            UpdatedAt = new DateTime(2024, 10, 25, 22, 37, 33, 126, DateTimeKind.Local).AddTicks(6940),
                             UserName = "lnsf2"
                         });
                 });
@@ -738,36 +906,36 @@ namespace LNSF.Migrations
                         {
                             UserId = 1,
                             RoleId = 1,
-                            CreatedAt = new DateTime(2024, 10, 23, 20, 23, 22, 212, DateTimeKind.Local).AddTicks(8998),
-                            UpdatedAt = new DateTime(2024, 10, 23, 20, 23, 22, 212, DateTimeKind.Local).AddTicks(9018)
+                            CreatedAt = new DateTime(2024, 10, 25, 22, 37, 33, 129, DateTimeKind.Local).AddTicks(1735),
+                            UpdatedAt = new DateTime(2024, 10, 25, 22, 37, 33, 129, DateTimeKind.Local).AddTicks(1748)
                         },
                         new
                         {
                             UserId = 1,
                             RoleId = 2,
-                            CreatedAt = new DateTime(2024, 10, 23, 20, 23, 22, 212, DateTimeKind.Local).AddTicks(9032),
-                            UpdatedAt = new DateTime(2024, 10, 23, 20, 23, 22, 212, DateTimeKind.Local).AddTicks(9033)
+                            CreatedAt = new DateTime(2024, 10, 25, 22, 37, 33, 129, DateTimeKind.Local).AddTicks(1756),
+                            UpdatedAt = new DateTime(2024, 10, 25, 22, 37, 33, 129, DateTimeKind.Local).AddTicks(1757)
                         },
                         new
                         {
                             UserId = 1,
                             RoleId = 3,
-                            CreatedAt = new DateTime(2024, 10, 23, 20, 23, 22, 212, DateTimeKind.Local).AddTicks(9034),
-                            UpdatedAt = new DateTime(2024, 10, 23, 20, 23, 22, 212, DateTimeKind.Local).AddTicks(9034)
+                            CreatedAt = new DateTime(2024, 10, 25, 22, 37, 33, 129, DateTimeKind.Local).AddTicks(1758),
+                            UpdatedAt = new DateTime(2024, 10, 25, 22, 37, 33, 129, DateTimeKind.Local).AddTicks(1759)
                         },
                         new
                         {
                             UserId = 2,
                             RoleId = 2,
-                            CreatedAt = new DateTime(2024, 10, 23, 20, 23, 22, 212, DateTimeKind.Local).AddTicks(9036),
-                            UpdatedAt = new DateTime(2024, 10, 23, 20, 23, 22, 212, DateTimeKind.Local).AddTicks(9036)
+                            CreatedAt = new DateTime(2024, 10, 25, 22, 37, 33, 129, DateTimeKind.Local).AddTicks(1760),
+                            UpdatedAt = new DateTime(2024, 10, 25, 22, 37, 33, 129, DateTimeKind.Local).AddTicks(1761)
                         },
                         new
                         {
                             UserId = 3,
                             RoleId = 5,
-                            CreatedAt = new DateTime(2024, 10, 23, 20, 23, 22, 212, DateTimeKind.Local).AddTicks(9037),
-                            UpdatedAt = new DateTime(2024, 10, 23, 20, 23, 22, 212, DateTimeKind.Local).AddTicks(9038)
+                            CreatedAt = new DateTime(2024, 10, 25, 22, 37, 33, 129, DateTimeKind.Local).AddTicks(1762),
+                            UpdatedAt = new DateTime(2024, 10, 25, 22, 37, 33, 129, DateTimeKind.Local).AddTicks(1763)
                         });
                 });
 

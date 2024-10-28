@@ -46,7 +46,7 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
 			new Role
 			{
 				Id = 3,
-				Name = "AssistenteSocial",
+				Name = "Assistente Social",
 				NormalizedName = "ASSISTENTESOCIAL",
 				ConcurrencyStamp = Guid.NewGuid().ToString(),
 				CreatedAt = DateTime.Now,

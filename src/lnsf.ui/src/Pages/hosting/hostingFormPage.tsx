@@ -1,14 +1,14 @@
 import { Button, Divider, Grid2 as Grid, IconButton, TextField } from "@mui/material";
+import { Add, Delete } from "@mui/icons-material";
 
 import { useHostingFormPage } from "./useHostingFormPage";
 import { DateField, SelectField } from "@/components";
 import { dateOnlyToStr } from "@/utils";
-import { Add, Delete } from "@mui/icons-material";
 import { PeopleRoomHostingFormPage } from "./peopleRoomHostingFormPage";
 
 export const HostingFormPage = () => {
 	const {
-		id,
+		prh,
 		patients,
 		escorts,
 		escort,
@@ -28,159 +28,188 @@ export const HostingFormPage = () => {
 	} = useHostingFormPage();
 
 	return (
-		<Grid container spacing={2} component="form" onSubmit={handleSubmit(handleSave)}>
-			<Grid size={{ xs: 12 }}>
-				<Divider>Dados da Hospedagem</Divider>
-			</Grid>
-			<Grid size={{ xs: 4, sm: 1.5, md: 1 }}>
-				<TextField label="Id" disabled={!id} {...register("id")} error={!!errors.id} helperText={errors.id?.message} fullWidth />
-			</Grid>
-			<Grid size={{ xs: 8, sm: 2, md: 1 }}>
-				<TextField
-					label="Id Paciente"
-					{...register("patientId")}
-					error={!!errors.patientId}
-					helperText={errors.patientId?.message}
-					fullWidth
-				/>
-			</Grid>
-			<Grid size={{ xs: 12, sm: 8.5, md: 4 }}>
-				<SelectField
-					label="Nome Paciente"
-					options={patients}
-					valueKey="id"
-					labelId="id"
-					labelKey="people.name"
-					defaultValue={String(getValues("patientId"))}
-					onClick={(value) => setValue("patientId", value)}
-				/>
-			</Grid>
-			<Grid size={{ xs: 6, sm: 6, md: 3 }}>
-				<DateField
-					label="Check-in"
-					value={dateOnlyToStr(getValues("checkIn"))}
-					register={register("checkIn")}
-					error={!!errors.checkIn}
-					helperText={errors.checkIn?.message}
-				/>
-			</Grid>
-			<Grid size={{ xs: 6, sm: 6, md: 3 }}>
-				<DateField
-					label="Check-out"
-					value={dateOnlyToStr(getValues("checkOut"))}
-					register={register("checkOut")}
-					error={!!errors.checkOut}
-					helperText={errors.checkOut?.message}
-				/>
-			</Grid>
-			<Grid size={{ xs: 12 }}>
-				<Button type="submit" variant="contained" color="primary" fullWidth>
-					Salvar
-				</Button>
-			</Grid>
-			<Grid size={{ xs: 12 }}>
-				<Divider>Acompanhantes</Divider>
-			</Grid>
-			{watch("escorts", []).map((escort, index) => (
-				<>
-					<Grid container spacing={2} size={{ xs: 12 }} key={index}>
-						<Grid size={{ xs: 4, sm: 2, md: 1 }}>
-							<TextField label="Id Acompanhante" value={escort.id} fullWidth />
-						</Grid>
-						<Grid size={{ xs: 8, sm: 7, md: 4 }}>
-							<TextField label="Nome Acompanhante" value={escort.people?.name} fullWidth />
-						</Grid>
-						<Grid size={{ xs: 12, sm: 3, md: 1 }}>
-							<IconButton
-								type="submit"
-								color="primary"
-								size="large"
-								onClick={() => addEscortToHosting(Number(id), escort.id!)}
-							>
-								<Add />
-							</IconButton>
-							<IconButton color="primary" size="large" onClick={() => removeEscortFromHosting(Number(id), escort.id!)}>
-								<Delete />
-							</IconButton>
-						</Grid>
-					</Grid>
-				</>
-			))}
-			<Grid container spacing={2} size={{ xs: 12 }}>
-				<Grid size={{ xs: 4, sm: 2, md: 1 }}>
-					<TextField label="Id Acompanhante" value={escort?.id ?? ""} fullWidth />
+		<>
+			<Grid container spacing={2} component="form" onSubmit={handleSubmit(handleSave)}>
+				<Grid size={{ xs: 12 }}>
+					<Divider>Dados da Reserva</Divider>
 				</Grid>
-				<Grid size={{ xs: 8, sm: 7, md: 4 }}>
+				<Grid size={{ xs: 2, sm: 1.5, md: 1 }}>
+					<TextField
+						label="Id"
+						disabled
+						{...register("id")}
+						error={!!errors.id}
+						helperText={errors.id?.message}
+						fullWidth
+					/>
+				</Grid>
+				<Grid size={{ xs: 2, sm: 2, md: 1 }}>
+					<TextField
+						label="Id Paciente"
+						type="number"
+						{...register("patientId")}
+						error={!!errors.patientId}
+						helperText={errors.patientId?.message}
+						onChange={(e) => setValue("patientId", +e.target.value)}
+						fullWidth
+					/>
+				</Grid>
+				<Grid size={{ xs: 8, sm: 8.5, md: 4 }}>
 					<SelectField
-						label="Nome Acompanhante"
-						options={escorts}
+						label="Nome Paciente"
+						options={patients}
 						valueKey="id"
 						labelId="id"
 						labelKey="people.name"
-						defaultValue={String(escort?.id)}
-						onClick={(value) => setEscort(escorts.find((e) => e.id === value))}
+						defaultValue={String(watch("patientId"))}
+						onClick={(value) => setValue("patientId", value)}
 					/>
 				</Grid>
-				<Grid size={{ xs: 12, sm: 3, md: 1 }}>
-					<IconButton type="submit" color="primary" size="large" onClick={() => addEscortToHosting(Number(id), escort!.id!)}>
-						<Add />
-					</IconButton>
-					<IconButton color="primary" size="large" onClick={() => removeEscortFromHosting(Number(id), escort!.id!)}>
-						<Delete />
-					</IconButton>
+				<Grid size={{ xs: 6, sm: 6, md: 3 }}>
+					<DateField
+						label="Check-in"
+						value={dateOnlyToStr(watch("checkIn"))}
+						register={register("checkIn")}
+						error={!!errors.checkIn}
+						helperText={errors.checkIn?.message}
+					/>
+				</Grid>
+				<Grid size={{ xs: 6, sm: 6, md: 3 }}>
+					<DateField
+						label="Check-out"
+						value={dateOnlyToStr(watch("checkOut"))}
+						register={register("checkOut")}
+						error={!!errors.checkOut}
+						helperText={errors.checkOut?.message}
+					/>
+				</Grid>
+				<Grid size={{ xs: 12 }}>
+					<Button type="submit" variant="contained" color="primary" fullWidth>
+						Salvar
+					</Button>
 				</Grid>
 			</Grid>
-			<Grid size={{ xs: 12 }}>
-				<Divider>Apartamento</Divider>
-			</Grid>
-			<Grid size={{ xs: 4, sm: 2, md: 1 }}>
-				<TextField
-					label="Id Apartamento"
-					value={room?.id ?? ""}
-					fullWidth
-					onChange={(e) => setRoom(rooms.find((r) => r.id === Number(e.target.value)))}
-				/>
-			</Grid>
-			<Grid size={{ xs: 8, sm: 7, md: 4 }}>
-				<SelectField
-					label="Apartamento"
-					options={rooms}
-					valueKey="id"
-					labelId="id"
-					labelKey="number"
-					defaultValue={String(room?.id)}
-					onClick={(value) => setRoom(rooms.find((r) => r.id === value))}
-				/>
-			</Grid>
-			<Grid size={{ xs: 12 }}></Grid>
-			{room && (
-				<>
-					<Grid size={{ xs: 12 }}>
-						<PeopleRoomHostingFormPage
-							prh={{
-								peopleId: getValues("patient.people.id") ?? 0,
-								people: getValues("patient.people"),
-								roomId: room.id,
-								room: room,
-								hostingId: Number(id),
-							}}
+			<Grid container direction="column" spacing={2} mt={2}>
+				<Grid size={{ xs: 12 }}>
+					<Divider>Acompanhantes da Reserva</Divider>
+				</Grid>
+				{watch("escorts", []).map((escort, index) => (
+					<>
+						<Grid container spacing={2} size={{ xs: 12, md: 6 }} key={index}>
+							<Grid size={{ xs: 2, sm: 2 }}>
+								<TextField label="Id Acompanhante" value={escort.id} fullWidth />
+							</Grid>
+							<Grid size="grow">
+								<TextField label="Nome Acompanhante" value={escort.people?.name} fullWidth />
+							</Grid>
+							<Grid wrap="nowrap">
+								<IconButton
+									color="error"
+									size="large"
+									onClick={() => removeEscortFromHosting(+getValues("id")!, escort.id!)}
+								>
+									<Delete />
+								</IconButton>
+							</Grid>
+						</Grid>
+					</>
+				))}
+				<Grid container spacing={2} size={{ xs: 12, md: 6 }}>
+					<Grid size={{ xs: 2, sm: 2 }}>
+						<TextField
+							label="Id Acompanhante"
+							type="number"
+							value={escort?.id ?? ""}
+							fullWidth
+							onChange={(ev) => setEscort(escorts.find((es) => es.id === +ev.target.value))}
 						/>
 					</Grid>
-					{getValues("escorts").map((escort, index) => (
-						<Grid size={{ xs: 12 }} key={index}>
-							<PeopleRoomHostingFormPage
-								prh={{
-									peopleId: escort.people?.id ?? 0,
-									people: escort.people!,
-									roomId: room.id,
-									room: room,
-									hostingId: Number(id),
-								}}
-							/>
+					<Grid size="grow">
+						<SelectField
+							label="Nome Acompanhante"
+							options={escorts}
+							valueKey="id"
+							labelId="id"
+							labelKey="people.name"
+							defaultValue={String(escort?.id)}
+							onClick={(value) => setEscort(escorts.find((e) => e.id === value))}
+						/>
+					</Grid>
+					<Grid wrap="nowrap">
+						<IconButton
+							type="submit"
+							color="info"
+							size="large"
+							onClick={() => addEscortToHosting(+getValues("id")!, escort!.id!)}
+						>
+							<Add />
+						</IconButton>
+					</Grid>
+				</Grid>
+			</Grid>
+			<Grid container spacing={2} mt={2}>
+				<Grid size={{ xs: 12 }}>
+					<Divider>Apartamento/Hospedagem</Divider>
+				</Grid>
+				{prh.length > 0 && (
+					<>
+						<Grid container spacing={2} mb={2}>
+							{prh.map((prh, index) => (
+								<>
+									<Grid size={{ xs: 12 }} key={index}>
+										<PeopleRoomHostingFormPage prh={prh} mode="delete" />
+									</Grid>
+								</>
+							))}
 						</Grid>
-					))}
-				</>
-			)}
-		</Grid>
+					</>
+				)}
+				<Grid size={{ xs: 2, sm: 2, md: 1 }}>
+					<TextField
+						label="Id Apartamento"
+						type="number"
+						value={room?.id ?? ""}
+						fullWidth
+						onChange={(e) => setRoom(rooms.find((r) => r.id === +e.target.value))}
+					/>
+				</Grid>
+				<Grid size={{ xs: 10, sm: 10, md: 5 }}>
+					<SelectField
+						label="Apartamento"
+						options={rooms.map((r) => ({
+							...r,
+							title: `Nº ${r.number} - ${r.beds} camas - ${r.storey}º andar`,
+						}))}
+						valueKey="id"
+						labelId="id"
+						labelKey="title"
+						defaultValue={String(room?.id)}
+						onClick={(value) => setRoom(rooms.find((r) => r.id === value))}
+					/>
+				</Grid>
+				<Grid size={{ xs: 12 }}></Grid>
+				{room &&
+					watch("escorts", [])
+						.map((e) => e.people) // Pessoas que são acompanhantes da reserva
+						.concat(watch("patient.people")) // Pessoa que é paciente da reserva
+						.filter((p) => !prh.map((p) => p.peopleId).includes(p?.id ?? 0)) // Pessoas que não estão hospedadas
+						.map((p) => (
+							<>
+								<Grid size={{ xs: 12 }}>
+									<PeopleRoomHostingFormPage
+										mode="add"
+										prh={{
+											peopleId: p?.id ?? 0,
+											people: p,
+											roomId: room.id,
+											room: room,
+											hostingId: +watch("id")!,
+										}}
+									/>
+								</Grid>
+							</>
+						))}
+			</Grid>
+		</>
 	);
 };

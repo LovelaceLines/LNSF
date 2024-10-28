@@ -25,14 +25,13 @@ export const Header = () => {
 					src={logo_name}
 					alt="Logo"
 					sx={{
-						width: 72,
+						width: 64,
 						height: "auto",
 						display: isMobile || open ? "block" : "none",
 						borderRadius: 0,
 					}}
 				/>
-				{/* TODO - Fix - Logo cortada */}
-				<Avatar src={logo} variant="square" sx={{ width: 32, height: 32, marginLeft: -0.5 }} />
+				<Avatar src={logo} variant="circular" sx={{ width: 32, height: 32, marginLeft: -0.5 }} />
 			</Link>
 			<IconButton color="inherit" onClick={() => toggleSideBar()} sx={{ ml: "auto" }}>
 				<MenuOpen />

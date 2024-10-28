@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from "react";
 
-export type key = "download-export-display";
+export type key = "default" | "download-export-display";
 
 interface IModalContextProps {
 	handleModalClose: (key: key) => void;

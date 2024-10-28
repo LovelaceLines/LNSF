@@ -17,4 +17,5 @@ public class UserFilter : BaseFilter
 
 	[ToLowerContainsComparison]
 	public string? PhoneNumber { get; set; }
+	public string? Roles { get; set; }
 }

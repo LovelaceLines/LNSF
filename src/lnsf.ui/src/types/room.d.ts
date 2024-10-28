@@ -16,4 +16,5 @@ export type roomFilter = baseFilter & {
 	beds?: number;
 	storey?: number;
 	available?: boolean;
+	isAvailable?: boolean;
 };

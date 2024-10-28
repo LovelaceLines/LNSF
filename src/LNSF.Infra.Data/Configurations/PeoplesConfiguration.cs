@@ -1,13 +1,14 @@
 ﻿using LNSF.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace LNSF.Infra.Data.Configurations;
 
-public class PeoplesConfiguration : IEntityTypeConfiguration<People>
+public class PeoplesConfiguration : BaseConfiguration<People>
 {
-    public void Configure(EntityTypeBuilder<People> builder)
+    public override void Configure(EntityTypeBuilder<People> builder)
     {
+        base.Configure(builder);
+
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Id)

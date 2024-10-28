@@ -56,7 +56,20 @@ public class PeopleTestApi : GlobalClientRequest
 
 		var peoplePuted = await PutFromBody<People>(_peopleClient, fake);
 
-		Assert.Equivalent(fake, peoplePuted);
+		Assert.Equal(fake.Id, peoplePuted.Id);
+		Assert.Equal(fake.RG, peoplePuted.RG);
+		Assert.Equal(fake.CPF, peoplePuted.CPF);
+		Assert.Equal(fake.Name, peoplePuted.Name);
+		Assert.Equal(fake.BirthDate, peoplePuted.BirthDate);
+		Assert.Equal(fake.Phone, peoplePuted.Phone);
+		Assert.Equal(fake.Email, peoplePuted.Email);
+		Assert.Equal(fake.Street, peoplePuted.Street);
+		Assert.Equal(fake.City, peoplePuted.City);
+		Assert.Equal(fake.State, peoplePuted.State);
+		Assert.Equal(fake.HouseNumber, peoplePuted.HouseNumber);
+		Assert.Equal(fake.Neighborhood, peoplePuted.Neighborhood);
+		Assert.Equal(fake.MaritalStatus, peoplePuted.MaritalStatus);
+		Assert.Equal(fake.RaceColor, peoplePuted.RaceColor);
 	}
 
 	[Fact]

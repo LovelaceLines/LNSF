@@ -4,16 +4,15 @@ import { useParams } from "react-router-dom";
 
 import { patient } from "@/types";
 import { toValue } from "@/utils";
-import { useHospitalStore, usePatientStore, usePeopleStore } from "@/zustand";
+import { useHospitalStore, usePatientStore, usePeopleStore, useTreatmentStore } from "@/store";
 
 export const usePatientFormPage = () => {
-	const { getPatient, postPatient, putPatient } = usePatientStore();
 	const { id } = useParams<{ id: string | undefined }>();
 	const {
-		register,
-		handleSubmit,
 		formState: { errors },
 		getValues,
+		handleSubmit,
+		register,
 		watch,
 		setValue,
 	} = useForm<patient>({
@@ -22,31 +21,34 @@ export const usePatientFormPage = () => {
 
 	useEffect(() => {
 		if (id) getPatient(id).then((data) => toValue(data, setValue));
-	}, []);
+	}, [id]);
 
-	const handleSave = (data: patient) => {
-		if (!id) postPatient(data);
-		else putPatient(data);
-	};
+	const { getPatient, postPatient, putPatient, addTreatmentToPatient, removeTreatmentFromPatient } = usePatientStore();
+
+	const handleSave = (data: patient) =>
+		!getValues("id") ? postPatient(data).then((p) => toValue(p, setValue)) : putPatient(data).then((p) => toValue(p, setValue));
 
 	const { peoples, getPeoples } = usePeopleStore();
 	const { hospitals, getHospitals } = useHospitalStore();
+	const { getTreatments } = useTreatmentStore();
 
 	useEffect(() => {
 		getPeoples({ isPatient: false, sort: "name", page: 1, perPage: 1000 });
 		getHospitals({ sort: "name", page: 1, perPage: 1000 });
+		getTreatments({ sort: "name", page: 1, perPage: 1000 });
 	}, []);
 
 	return {
-		id,
+		addTreatmentToPatient,
+		removeTreatmentFromPatient,
 		peoples,
 		hospitals,
-		register,
-		handleSubmit,
+		handleSave,
 		errors,
 		getValues,
+		handleSubmit,
+		register,
 		setValue,
 		watch,
-		handleSave,
 	};
 };

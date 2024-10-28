@@ -1,12 +1,13 @@
 import { MRT_ColumnDef } from "material-react-table";
+import { IconButton, Tooltip } from "@mui/material";
+import { InfoOutlined } from "@mui/icons-material";
 import { useMemo } from "react";
 
 import { useMaterialReactTable } from "@/tables";
 import { MRTInputNumber } from "@/tables/components";
 import { room } from "@/types";
 import { useRoomTablePage } from "./useRoomTablePage";
-import { IconButton, Tooltip } from "@mui/material";
-import { InfoOutlined } from "@mui/icons-material";
+import { Checkbox } from "@/components";
 
 export const RoomTablePage = () => {
 	const {
@@ -19,6 +20,8 @@ export const RoomTablePage = () => {
 		setPagination,
 		setSorting,
 		onSubmit,
+		register,
+		watch,
 	} = useRoomTablePage();
 
 	const columns = useMemo<MRT_ColumnDef<room>[]>(
@@ -96,6 +99,16 @@ export const RoomTablePage = () => {
 
 				toCreate: true,
 				toEdit: true,
+
+				renderTopToolbarFilterActions: () => (
+					<>
+						<Checkbox
+							label="Disponíveis agora"
+							checked={watch("isAvailable")}
+							register={register("isAvailable")}
+						/>
+					</>
+				),
 
 				renderToolbarExtraInternalActions: () => (
 					<>

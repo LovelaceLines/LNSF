@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { AccountCircle, Apartment, Bed, Home, LocalHospital, People, Settings, Spa, Tour } from "@mui/icons-material";
+import { AccountCircle, Apartment, Bed, Home, LocalHospital, People, Settings, Spa, Today, Tour } from "@mui/icons-material";
 
 import { AppBar } from "./components/app-bar";
 import { ISideBarProps, SideBar } from "./components/side-bar";
@@ -15,6 +15,7 @@ const buttonList: ISideBarProps[][] = [
 	],
 	[
 		{ text: "Pessoas", to: "/app/pessoas", icon: <People /> },
+		{ text: "Reservas", to: "/app/reservas", icon: <Today /> },
 		{ text: "Hospedagens", to: "/app/hospedagens", icon: <Apartment /> },
 		{ text: "Apartamentos", to: "/app/apartamentos", icon: <Bed /> },
 	],
@@ -24,7 +25,7 @@ const buttonList: ISideBarProps[][] = [
 	],
 	[{ text: "Usuários", to: "/app/usuarios", icon: <People /> }],
 	[
-		{ text: "Minha Conta", to: "/app/suprimento", icon: <AccountCircle /> },
+		{ text: "Minha Conta", to: "/app/minha-conta", icon: <AccountCircle /> },
 		{ text: "Configurações", to: "/app/configuracoes", icon: <Settings /> },
 	],
 ];

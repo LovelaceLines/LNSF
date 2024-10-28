@@ -1,42 +1,67 @@
 import { Grid2 as Grid, IconButton, TextField } from "@mui/material";
 import { Add, Delete } from "@mui/icons-material";
+import { Controller } from "react-hook-form";
 
 import { SelectField } from "@/components";
 import { patientTreatment } from "@/types";
 import { usePatientTreatmentFormPage } from "./usePatientTreatmentFormPage";
+import { useCallback } from "react";
 
-export const PatientTreatmentFormPage = ({ patientTreatment }: { patientTreatment: patientTreatment }) => {
-	const { treatments, addTreatmentToPatient, removeTreatmentFromPatient, watch, setValue } = usePatientTreatmentFormPage({
+interface PatientTreatmentFormPageProps {
+	patientTreatment: patientTreatment;
+	mode: "add" | "delete";
+	onSave: (patientId: number, treatmentId: number) => void;
+}
+
+export const PatientTreatmentFormPage = ({ patientTreatment, mode, onSave }: PatientTreatmentFormPageProps) => {
+	const { treatments, control, getValues, register, setValue, watch } = usePatientTreatmentFormPage({
 		patientTreatment,
 	});
 
+	const handleSave = useCallback(() => {
+		onSave(getValues("patientId"), getValues("treatmentId"));
+	}, [getValues("patientId"), getValues("treatmentId"), onSave]);
+
 	return (
 		<Grid container spacing={2} alignItems="center">
-			<Grid size={{ xs: 12, sm: 2, md: 1.5 }}>
-				<TextField label="Id Tramento" value={watch("treatmentId")} fullWidth />
+			<Grid size={{ xs: 12, sm: 2 }}>
+				<Controller
+					name="patientId"
+					control={control}
+					render={({ field }) => <TextField type="number" disabled label="Id Paciente" {...field} fullWidth />}
+				/>
 			</Grid>
-			<Grid size={{ xs: 12, sm: 6, lg: 5 }}>
+			<Grid size={{ xs: 12, sm: 2 }}>
+				<TextField
+					type="number"
+					label="Id Tramento"
+					value={Number(watch("treatmentId"))}
+					{...register("treatmentId")}
+					fullWidth
+					onChange={(e) => setValue("treatmentId", Number(e.target.value))}
+				/>
+			</Grid>
+			<Grid size="grow">
 				<SelectField
 					label="Tratamento"
 					labelId="id"
 					labelKey="name"
 					options={treatments}
 					valueKey="id"
-					defaultValue={String(patientTreatment.treatmentId)}
+					defaultValue={String(watch("treatmentId"))}
 					onClick={(value) => setValue("treatmentId", Number(value))}
 				/>
 			</Grid>
-			<Grid>
-				<IconButton onClick={() => addTreatmentToPatient(watch("patientId"), watch("treatmentId"))} color="primary" size="large">
-					<Add />
-				</IconButton>
-				<IconButton
-					onClick={() => removeTreatmentFromPatient(watch("patientId"), watch("treatmentId"))}
-					color="warning"
-					size="large"
-				>
-					<Delete />
-				</IconButton>
+			<Grid wrap="nowrap">
+				{mode === "add" ? (
+					<IconButton onClick={handleSave} color="info" size="large">
+						<Add />
+					</IconButton>
+				) : (
+					<IconButton onClick={handleSave} color="error" size="large">
+						<Delete />
+					</IconButton>
+				)}
 			</Grid>
 		</Grid>
 	);

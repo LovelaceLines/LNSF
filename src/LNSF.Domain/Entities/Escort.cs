@@ -1,6 +1,6 @@
 namespace LNSF.Domain.Entities;
 
-public class Escort
+public class Escort : BaseEntity
 {
     public int Id { get; set; }
 

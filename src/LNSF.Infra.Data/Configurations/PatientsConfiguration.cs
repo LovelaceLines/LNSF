@@ -1,13 +1,14 @@
 using LNSF.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace LNSF.Infra.Data.Configurations; 
+namespace LNSF.Infra.Data.Configurations;
 
-public class PatientsConfiguration : IEntityTypeConfiguration<Patient>
+public class PatientsConfiguration : BaseConfiguration<Patient>
 {
-    public void Configure(EntityTypeBuilder<Patient> builder)
+    public override void Configure(EntityTypeBuilder<Patient> builder)
     {
+        base.Configure(builder);
+
         builder.HasKey(p => p.Id);
 
         builder.Property(p => p.Id)
@@ -20,7 +21,7 @@ public class PatientsConfiguration : IEntityTypeConfiguration<Patient>
         builder.HasOne(p => p.Hospital)
             .WithMany()
             .HasForeignKey(p => p.HospitalId);
-        
+
         builder.Property(p => p.PeopleId)
             .IsUnicode();
     }

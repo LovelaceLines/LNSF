@@ -1,13 +1,14 @@
 ﻿using LNSF.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace LNSF.Infra.Data.Configurations;
 
-public class HospitalsConfiguration : IEntityTypeConfiguration<Hospital>
+public class HospitalsConfiguration : BaseConfiguration<Hospital>
 {
-    public void Configure(EntityTypeBuilder<Hospital> builder)
+    public override void Configure(EntityTypeBuilder<Hospital> builder)
     {
+        base.Configure(builder);
+
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Id)

@@ -1,6 +1,6 @@
 ﻿namespace LNSF.Domain.Entities;
 
-public class FamilyGroupProfile
+public class FamilyGroupProfile : BaseEntity
 {
     public int Id { get; set; }
     public int PatientId { get; set; }

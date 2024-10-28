@@ -124,7 +124,10 @@ public class HostingTestApi : GlobalClientRequest
 
 		var hostingPutted = await PutFromBody<Hosting>(_hostingClient, hostingFake);
 
-		Assert.Equivalent(hostingFake, hostingPutted);
+		Assert.Equal(hostingFake.Id, hostingPutted.Id);
+		Assert.Equal(hostingFake.PatientId, hostingPutted.PatientId);
+		Assert.Equal(hostingFake.CheckIn, hostingPutted.CheckIn);
+		Assert.Equal(hostingFake.CheckOut, hostingPutted.CheckOut);
 	}
 
 	[Fact]
@@ -152,14 +155,45 @@ public class HostingTestApi : GlobalClientRequest
 		var hostingPuttedWithDuringCheckOutAndAfterCheckOut = await PutFromBody<Hosting>(_hostingClient, hostingFakeToPutWithDuringCheckOutAndAfterCheckOut);
 		var hostingPuttedWithAfterCheckOutAndAfterCheckOut = await PutFromBody<Hosting>(_hostingClient, hostingFakeToPutWithAfterCheckOutAndAfterCheckOut);
 
-		Assert.Equivalent(hostingFakeToPutWithBeforeCheckInAndDuringCheckOut, hostingPuttedWithBeforeCheckInAndDuringCheckOut);
-		Assert.Equivalent(hostingFakeToPutWithBeforeCheckInAndBeforeCheckOut, hostingPuttedWithBeforeCheckInAndBeforeCheckOut);
-		Assert.Equivalent(hostingFakeToPutWithBeforeCheckInAndBeforeCheckIn, hostingPuttedWithBeforeCheckInAndBeforeCheckIn);
-		Assert.Equivalent(hostingFakeToPutWithBetweenCheckInAndCheckOut, hostingPuttedWithBetweenCheckInAndCheckOut);
-		Assert.Equivalent(hostingFakeToPutWithDuringCheckInAndBeforeCheckOut, hostingPuttedWithDuringCheckInAndBeforeCheckOut);
-		Assert.Equivalent(hostingFakeToPutWithBeforeCheckOutAndAfterCheckOut, hostingPuttedWithBeforeCheckOutAndAfterCheckOut);
-		Assert.Equivalent(hostingFakeToPutWithDuringCheckOutAndAfterCheckOut, hostingPuttedWithDuringCheckOutAndAfterCheckOut);
-		Assert.Equivalent(hostingFakeToPutWithAfterCheckOutAndAfterCheckOut, hostingPuttedWithAfterCheckOutAndAfterCheckOut);
+		Assert.Equal(hostingFakeToPutWithBeforeCheckInAndDuringCheckOut.Id, hostingPuttedWithBeforeCheckInAndDuringCheckOut.Id);
+		Assert.Equal(hostingFakeToPutWithBeforeCheckInAndDuringCheckOut.PatientId, hostingPuttedWithBeforeCheckInAndDuringCheckOut.PatientId);
+		Assert.Equal(hostingFakeToPutWithBeforeCheckInAndDuringCheckOut.CheckIn, hostingPuttedWithBeforeCheckInAndDuringCheckOut.CheckIn);
+		Assert.Equal(hostingFakeToPutWithBeforeCheckInAndDuringCheckOut.CheckOut, hostingPuttedWithBeforeCheckInAndDuringCheckOut.CheckOut);
+
+		Assert.Equal(hostingFakeToPutWithBeforeCheckInAndBeforeCheckOut.Id, hostingPuttedWithBeforeCheckInAndBeforeCheckOut.Id);
+		Assert.Equal(hostingFakeToPutWithBeforeCheckInAndBeforeCheckOut.PatientId, hostingPuttedWithBeforeCheckInAndBeforeCheckOut.PatientId);
+		Assert.Equal(hostingFakeToPutWithBeforeCheckInAndBeforeCheckOut.CheckIn, hostingPuttedWithBeforeCheckInAndBeforeCheckOut.CheckIn);
+		Assert.Equal(hostingFakeToPutWithBeforeCheckInAndBeforeCheckOut.CheckOut, hostingPuttedWithBeforeCheckInAndBeforeCheckOut.CheckOut);
+
+		Assert.Equal(hostingFakeToPutWithBeforeCheckInAndBeforeCheckIn.Id, hostingPuttedWithBeforeCheckInAndBeforeCheckIn.Id);
+		Assert.Equal(hostingFakeToPutWithBeforeCheckInAndBeforeCheckIn.PatientId, hostingPuttedWithBeforeCheckInAndBeforeCheckIn.PatientId);
+		Assert.Equal(hostingFakeToPutWithBeforeCheckInAndBeforeCheckIn.CheckIn, hostingPuttedWithBeforeCheckInAndBeforeCheckIn.CheckIn);
+		Assert.Equal(hostingFakeToPutWithBeforeCheckInAndBeforeCheckIn.CheckOut, hostingPuttedWithBeforeCheckInAndBeforeCheckIn.CheckOut);
+
+		Assert.Equal(hostingFakeToPutWithBetweenCheckInAndCheckOut.Id, hostingPuttedWithBetweenCheckInAndCheckOut.Id);
+		Assert.Equal(hostingFakeToPutWithBetweenCheckInAndCheckOut.PatientId, hostingPuttedWithBetweenCheckInAndCheckOut.PatientId);
+		Assert.Equal(hostingFakeToPutWithBetweenCheckInAndCheckOut.CheckIn, hostingPuttedWithBetweenCheckInAndCheckOut.CheckIn);
+		Assert.Equal(hostingFakeToPutWithBetweenCheckInAndCheckOut.CheckOut, hostingPuttedWithBetweenCheckInAndCheckOut.CheckOut);
+
+		Assert.Equal(hostingFakeToPutWithDuringCheckInAndBeforeCheckOut.Id, hostingPuttedWithDuringCheckInAndBeforeCheckOut.Id);
+		Assert.Equal(hostingFakeToPutWithDuringCheckInAndBeforeCheckOut.PatientId, hostingPuttedWithDuringCheckInAndBeforeCheckOut.PatientId);
+		Assert.Equal(hostingFakeToPutWithDuringCheckInAndBeforeCheckOut.CheckIn, hostingPuttedWithDuringCheckInAndBeforeCheckOut.CheckIn);
+		Assert.Equal(hostingFakeToPutWithDuringCheckInAndBeforeCheckOut.CheckOut, hostingPuttedWithDuringCheckInAndBeforeCheckOut.CheckOut);
+
+		Assert.Equal(hostingFakeToPutWithBeforeCheckOutAndAfterCheckOut.Id, hostingPuttedWithBeforeCheckOutAndAfterCheckOut.Id);
+		Assert.Equal(hostingFakeToPutWithBeforeCheckOutAndAfterCheckOut.PatientId, hostingPuttedWithBeforeCheckOutAndAfterCheckOut.PatientId);
+		Assert.Equal(hostingFakeToPutWithBeforeCheckOutAndAfterCheckOut.CheckIn, hostingPuttedWithBeforeCheckOutAndAfterCheckOut.CheckIn);
+		Assert.Equal(hostingFakeToPutWithBeforeCheckOutAndAfterCheckOut.CheckOut, hostingPuttedWithBeforeCheckOutAndAfterCheckOut.CheckOut);
+
+		Assert.Equal(hostingFakeToPutWithDuringCheckOutAndAfterCheckOut.Id, hostingPuttedWithDuringCheckOutAndAfterCheckOut.Id);
+		Assert.Equal(hostingFakeToPutWithDuringCheckOutAndAfterCheckOut.PatientId, hostingPuttedWithDuringCheckOutAndAfterCheckOut.PatientId);
+		Assert.Equal(hostingFakeToPutWithDuringCheckOutAndAfterCheckOut.CheckIn, hostingPuttedWithDuringCheckOutAndAfterCheckOut.CheckIn);
+		Assert.Equal(hostingFakeToPutWithDuringCheckOutAndAfterCheckOut.CheckOut, hostingPuttedWithDuringCheckOutAndAfterCheckOut.CheckOut);
+
+		Assert.Equal(hostingFakeToPutWithAfterCheckOutAndAfterCheckOut.Id, hostingPuttedWithAfterCheckOutAndAfterCheckOut.Id);
+		Assert.Equal(hostingFakeToPutWithAfterCheckOutAndAfterCheckOut.PatientId, hostingPuttedWithAfterCheckOutAndAfterCheckOut.PatientId);
+		Assert.Equal(hostingFakeToPutWithAfterCheckOutAndAfterCheckOut.CheckIn, hostingPuttedWithAfterCheckOutAndAfterCheckOut.CheckIn);
+		Assert.Equal(hostingFakeToPutWithAfterCheckOutAndAfterCheckOut.CheckOut, hostingPuttedWithAfterCheckOutAndAfterCheckOut.CheckOut);
 	}
 
 	[Fact]

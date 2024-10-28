@@ -51,4 +51,5 @@ public class PeopleFilter : BaseFilter
 	public bool? IsEscort { get; set; }
 	public bool? IsActive { get; set; }
 	public bool? IsVeteran { get; set; }
+	public bool? WillHosted { get; set; }
 }

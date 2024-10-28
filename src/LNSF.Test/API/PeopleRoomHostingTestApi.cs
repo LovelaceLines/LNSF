@@ -17,7 +17,9 @@ public class PeopleRoomHostingTestApiPost : GlobalClientRequest
 
 		var prhPosted = await PostFromBody<PeopleRoomHosting>(_addPeopleToRoomClient, prhFake);
 
-		Assert.Equivalent(prhFake, prhPosted);
+		Assert.Equal(prhFake.RoomId, prhPosted.RoomId);
+		Assert.Equal(prhFake.PeopleId, prhPosted.PeopleId);
+		Assert.Equal(prhFake.HostingId, prhPosted.HostingId);
 	}
 
 	[Fact]
@@ -32,7 +34,9 @@ public class PeopleRoomHostingTestApiPost : GlobalClientRequest
 
 		var prhPosted = await PostFromBody<PeopleRoomHosting>(_addPeopleToRoomClient, prhFake);
 
-		Assert.Equivalent(prhFake, prhPosted);
+		Assert.Equal(prhFake.RoomId, prhPosted.RoomId);
+		Assert.Equal(prhFake.PeopleId, prhPosted.PeopleId);
+		Assert.Equal(prhFake.HostingId, prhPosted.HostingId);
 	}
 
 	[Fact]
@@ -49,8 +53,12 @@ public class PeopleRoomHostingTestApiPost : GlobalClientRequest
 		var peopleRoomHostingPostedWithPatient = await PostFromBody<PeopleRoomHosting>(_addPeopleToRoomClient, prhFakeWithPatient);
 		var peopleRoomHostingPostedWithEscort = await PostFromBody<PeopleRoomHosting>(_addPeopleToRoomClient, prhFakeWithEscort);
 
-		Assert.Equivalent(prhFakeWithPatient, peopleRoomHostingPostedWithPatient);
-		Assert.Equivalent(prhFakeWithEscort, peopleRoomHostingPostedWithEscort);
+		Assert.Equal(prhFakeWithPatient.RoomId, peopleRoomHostingPostedWithPatient.RoomId);
+		Assert.Equal(prhFakeWithPatient.PeopleId, peopleRoomHostingPostedWithPatient.PeopleId);
+		Assert.Equal(prhFakeWithPatient.HostingId, peopleRoomHostingPostedWithPatient.HostingId);
+		Assert.Equal(prhFakeWithEscort.RoomId, peopleRoomHostingPostedWithEscort.RoomId);
+		Assert.Equal(prhFakeWithEscort.PeopleId, peopleRoomHostingPostedWithEscort.PeopleId);
+		Assert.Equal(prhFakeWithEscort.HostingId, peopleRoomHostingPostedWithEscort.HostingId);
 	}
 
 	[Fact]
@@ -65,7 +73,9 @@ public class PeopleRoomHostingTestApiPost : GlobalClientRequest
 
 		var prhPosted = await PostFromBody<PeopleRoomHosting>(_addPeopleToRoomClient, prhFake);
 
-		Assert.Equivalent(prhFake, prhPosted);
+		Assert.Equal(prhFake.RoomId, prhPosted.RoomId);
+		Assert.Equal(prhFake.PeopleId, prhPosted.PeopleId);
+		Assert.Equal(prhFake.HostingId, prhPosted.HostingId);
 	}
 
 	[Fact]
@@ -86,8 +96,12 @@ public class PeopleRoomHostingTestApiPost : GlobalClientRequest
 		var peopleRoomHostingPostedWithEscort = await PostFromBody<PeopleRoomHosting>(_addPeopleToRoomClient, prhFakeWithEscort);
 
 
-		Assert.Equivalent(prhFakeWithPatient, peopleRoomHostingPostedWithPatient);
-		Assert.Equivalent(prhFakeWithEscort, peopleRoomHostingPostedWithEscort);
+		Assert.Equal(prhFakeWithPatient.RoomId, peopleRoomHostingPostedWithPatient.RoomId);
+		Assert.Equal(prhFakeWithPatient.PeopleId, peopleRoomHostingPostedWithPatient.PeopleId);
+		Assert.Equal(prhFakeWithPatient.HostingId, peopleRoomHostingPostedWithPatient.HostingId);
+		Assert.Equal(prhFakeWithEscort.RoomId, peopleRoomHostingPostedWithEscort.RoomId);
+		Assert.Equal(prhFakeWithEscort.PeopleId, peopleRoomHostingPostedWithEscort.PeopleId);
+		Assert.Equal(prhFakeWithEscort.HostingId, peopleRoomHostingPostedWithEscort.HostingId);
 	}
 
 	[Fact]
@@ -189,7 +203,9 @@ public class PeopleRoomHostingTestApiPost : GlobalClientRequest
 
 		var peopleRoomHostingRemoved = await DeleteFromBody<PeopleRoomHosting>(_removePeopleFromRoomClient, prh);
 
-		Assert.Equivalent(prh, peopleRoomHostingRemoved);
+		Assert.Equal(prh.RoomId, peopleRoomHostingRemoved.RoomId);
+		Assert.Equal(prh.PeopleId, peopleRoomHostingRemoved.PeopleId);
+		Assert.Equal(prh.HostingId, peopleRoomHostingRemoved.HostingId);
 	}
 
 	[Fact]
