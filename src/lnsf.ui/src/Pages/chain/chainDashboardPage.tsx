@@ -191,6 +191,7 @@ export const ChainDashboardPage = () => {
 							series={[
 								{
 									data: genderChartCctivePeople,
+									arcLabel: "value",
 								},
 							]}
 							width={300}
