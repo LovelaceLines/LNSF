@@ -3,10 +3,10 @@ import { Box } from "@mui/material";
 import { useMemo } from "react";
 
 import { useMaterialReactTable } from "@/tables";
-import { MRTInputNumber, MRTLaunchLink } from "@/tables/components";
+import { MRTInputDateTime, MRTInputNumber, MRTLaunchLink } from "@/tables/components";
 import { hosting } from "@/types";
 import { useHostingTablePage } from "./useHostingTablePage";
-import { dateOnlyToStr } from "@/utils";
+import { dateTimeToStr } from "@/utils";
 
 export const HostingTablePage = () => {
 	const {
@@ -33,7 +33,12 @@ export const HostingTablePage = () => {
 				accessorKey: "patientId",
 				header: "Id Paciente",
 				Filter: ({ column }) => <MRTInputNumber column={column} />,
-				Cell: ({ row }) => <MRTLaunchLink label={row.original.patientId} to={`/app/pessoas/pacientes/${row.original.patientId}`} />,
+				Cell: ({ row }) => (
+					<MRTLaunchLink
+						label={row.original.patientId}
+						to={`/app/pessoas/pacientes/${row.original.patientId}`}
+					/>
+				),
 			},
 			{
 				accessorKey: "patient.people.name",
@@ -61,12 +66,22 @@ export const HostingTablePage = () => {
 			{
 				accessorKey: "checkIn",
 				header: "Check In",
-				Cell: ({ row }) => dateOnlyToStr(row.original.checkIn, "ptBr"),
+				size: 300,
+				filterVariant: "datetime-range",
+				Filter: ({ column, rangeFilterIndex }) => (
+					<MRTInputDateTime column={column} rangeFilterIndex={rangeFilterIndex} />
+				),
+				Cell: ({ row }) => dateTimeToStr(row.original.checkIn, "ptBr"),
 			},
 			{
 				accessorKey: "checkOut",
 				header: "Check Out",
-				Cell: ({ row }) => dateOnlyToStr(row.original.checkOut, "ptBr"),
+				size: 300,
+				filterVariant: "datetime-range",
+				Filter: ({ column, rangeFilterIndex }) => (
+					<MRTInputDateTime column={column} rangeFilterIndex={rangeFilterIndex} />
+				),
+				Cell: ({ row }) => dateTimeToStr(row.original.checkOut, "ptBr"),
 			},
 		],
 		[]

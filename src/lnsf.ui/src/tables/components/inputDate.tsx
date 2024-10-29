@@ -5,9 +5,13 @@ import { useState } from "react";
 
 interface MRTInputDateOnlyProps<TData extends MRT_RowData> {
 	column: MRT_Column<TData>;
+	rangeFilterIndex?: number;
 }
 
-export const MRTInputDateOnly = <TData extends MRT_RowData>({ column }: MRTInputDateOnlyProps<TData>) => {
+export const MRTInputDateOnly = <TData extends MRT_RowData>({
+	column,
+	rangeFilterIndex,
+}: MRTInputDateOnlyProps<TData>) => {
 	const [value, setValue] = useState(column.getFilterValue() || undefined);
 
 	return (
@@ -16,8 +20,12 @@ export const MRTInputDateOnly = <TData extends MRT_RowData>({ column }: MRTInput
 			fullWidth
 			value={value}
 			onChange={(e) => {
-				console.log(e.target.value);
-				column.setFilterValue(e.target.value);
+				if (rangeFilterIndex === undefined) column.setFilterValue(e.target.value);
+				else {
+					const newValue = column.getFilterValue() || [];
+					newValue[rangeFilterIndex] = e.target.value;
+					column.setFilterValue(newValue);
+				}
 				setValue(e.target.value);
 			}}
 			placeholder={`Filtrar por ${column.columnDef.header}`}
@@ -25,7 +33,7 @@ export const MRTInputDateOnly = <TData extends MRT_RowData>({ column }: MRTInput
 				<Tooltip title="Limpar filtros" placement="right">
 					<IconButton
 						size="small"
-						onClick={(e) => {
+						onClick={() => {
 							column.setFilterValue("");
 							setValue("");
 						}}
@@ -40,7 +48,10 @@ export const MRTInputDateOnly = <TData extends MRT_RowData>({ column }: MRTInput
 	);
 };
 
-export const MRTInputDateTime = <TData extends MRT_RowData>({ column }: MRTInputDateOnlyProps<TData>) => {
+export const MRTInputDateTime = <TData extends MRT_RowData>({
+	column,
+	rangeFilterIndex,
+}: MRTInputDateOnlyProps<TData>) => {
 	const [value, setValue] = useState(column.getFilterValue() || undefined);
 
 	return (
@@ -49,8 +60,12 @@ export const MRTInputDateTime = <TData extends MRT_RowData>({ column }: MRTInput
 			fullWidth
 			value={value}
 			onChange={(e) => {
-				console.log(e.target.value);
-				column.setFilterValue(e.target.value);
+				if (rangeFilterIndex === undefined) column.setFilterValue(e.target.value);
+				else {
+					const newValue = column.getFilterValue() || [];
+					newValue[rangeFilterIndex] = e.target.value;
+					column.setFilterValue(newValue);
+				}
 				setValue(e.target.value);
 			}}
 			placeholder={`Filtrar por ${column.columnDef.header}`}
@@ -58,7 +73,7 @@ export const MRTInputDateTime = <TData extends MRT_RowData>({ column }: MRTInput
 				<Tooltip title="Limpar filtros" placement="right">
 					<IconButton
 						size="small"
-						onClick={(e) => {
+						onClick={() => {
 							column.setFilterValue("");
 							setValue("");
 						}}

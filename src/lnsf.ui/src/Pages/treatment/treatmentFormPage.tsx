@@ -3,9 +3,10 @@ import { Button, Divider, Grid2 as Grid, TextField } from "@mui/material";
 import { useTreatmentFormPage } from "./useTreatmentFormPage";
 import { getTypeTreatment } from "@/types";
 import { SelectField } from "@/components";
+import { Controller } from "react-hook-form";
 
 export const TreatmentFormPage = () => {
-	const { id, register, handleSubmit, errors, getValues, handleSave, setValue } = useTreatmentFormPage();
+	const { handleSave, control, errors, handleSubmit, setValue, register, watch } = useTreatmentFormPage();
 
 	return (
 		<Grid container spacing={2} component="form" onSubmit={handleSubmit(handleSave)}>
@@ -13,10 +14,29 @@ export const TreatmentFormPage = () => {
 				<Divider>Dados do Tratamento</Divider>
 			</Grid>
 			<Grid size={{ xs: 4, sm: 1.5 }}>
-				<TextField label="Id" disabled={!id} {...register("id")} error={!!errors.id} helperText={errors.id?.message} fullWidth />
+				<TextField
+					label="Id"
+					disabled
+					{...register("id")}
+					error={!!errors.id}
+					helperText={errors.id?.message}
+					fullWidth
+				/>
 			</Grid>
 			<Grid size={{ xs: 8, sm: 7.5, md: 8.5 }}>
-				<TextField label="Nome" {...register("name")} error={!!errors.name} helperText={errors.name?.message} fullWidth />
+				<Controller
+					name="name"
+					control={control}
+					render={({ field }) => (
+						<TextField
+							label="Nome"
+							{...field}
+							error={!!errors.name}
+							helperText={errors.name?.message}
+							fullWidth
+						/>
+					)}
+				/>
 			</Grid>
 			<Grid size={{ xs: 12, sm: 3, md: 2 }}>
 				<SelectField
@@ -25,7 +45,7 @@ export const TreatmentFormPage = () => {
 					labelKey="value"
 					options={getTypeTreatment()}
 					valueKey="id"
-					defaultValue={id && `${getValues("type")}`}
+					defaultValue={String(watch("type"))}
 					onClick={(value) => setValue("type", Number(value))}
 				/>
 			</Grid>

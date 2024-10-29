@@ -49,7 +49,7 @@ export const usePeopleFormPage = () => {
 	const { getPeople, postPeople, putPeople } = usePeopleStore();
 
 	const handleSave = (data: people) =>
-		getValues("id")
+		!getValues("id")
 			? postPeople(data).then((p) => toValue(p, setValue))
 			: putPeople(data).then((p) => toValue(p, setValue));
 

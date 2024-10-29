@@ -9,3 +9,8 @@ export enum sortOrder {
 	asc,
 	desc,
 }
+
+export type range<T> = {
+	min?: T;
+	max?: T;
+};

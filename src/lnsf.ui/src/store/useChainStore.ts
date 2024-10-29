@@ -45,7 +45,6 @@ export const useChainStore = create<state>((set) => ({
 		const res = await Axios.get<peopleRoomHosting[]>("/Chain/people-will-birthday", {
 			params: filter,
 		});
-		console.debug(res.data);
 		set({ peopleWillBirthdate: res.data });
 	},
 

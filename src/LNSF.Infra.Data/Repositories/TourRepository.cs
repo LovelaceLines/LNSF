@@ -13,11 +13,11 @@ public class TourRepository(AppDbContext context) : BaseRepository<Tour>(context
 	{
 		var query = context.Tours.ApplyFilterWithoutPagination(filter);
 
-		if (filter.IsClose == true)
-			query = query.Where(x => x.Input != null);
+		if (filter.IsClose.HasValue)
+			query = query.Where(x => x.Input.HasValue == filter.IsClose.Value);
 
-		if (filter.IsOpen == true)
-			query = query.Where(x => x.Input == null);
+		if (filter.IsOpen.HasValue)
+			query = query.Where(x => x.Input.HasValue != filter.IsOpen.Value);
 
 		query = query.Include(x => x.People);
 		var items = await query.ToPaged(filter.Page, filter.PerPage).ToListAsync();

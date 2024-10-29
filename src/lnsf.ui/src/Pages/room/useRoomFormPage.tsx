@@ -7,9 +7,9 @@ import { useRoomStore } from "@/store";
 import { toValue } from "@/utils";
 
 export const useRoomFormPage = () => {
-	const { getRoom, postRoom, putRoom } = useRoomStore();
 	const { id } = useParams<{ id: string | undefined }>();
 	const {
+		control,
 		register,
 		handleSubmit,
 		formState: { errors },
@@ -17,26 +17,28 @@ export const useRoomFormPage = () => {
 		watch,
 		setValue,
 	} = useForm<room>({
-		values: { id: 0, beds: 0, number: "0", storey: 0, bathroom: false, available: false },
+		values: { id: 0, beds: 0, number: "", storey: 0, bathroom: false, available: false },
 	});
 
 	useEffect(() => {
 		if (id) getRoom(id).then((data) => toValue(data, setValue));
 	}, [id]);
 
-	const handleSave = (data: room) => {
-		if (!id) postRoom(data);
-		else putRoom(data);
-	};
+	const { getRoom, postRoom, putRoom } = useRoomStore();
+
+	const handleSave = (data: room) =>
+		!getValues("id")
+			? postRoom(data).then((r) => toValue(r, setValue))
+			: putRoom(data).then((r) => toValue(r, setValue));
 
 	return {
-		id,
-		register,
-		handleSubmit,
+		handleSave,
+		control,
 		errors,
+		handleSubmit,
 		getValues,
+		register,
 		setValue,
 		watch,
-		handleSave,
 	};
 };

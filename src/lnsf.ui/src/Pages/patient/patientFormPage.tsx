@@ -28,7 +28,7 @@ export const PatientFormPage = () => {
 					<TextField
 						label="Id"
 						type="number"
-						disabled={!watch("id")}
+						disabled
 						{...register("id")}
 						error={!!errors.id}
 						helperText={errors.id?.message}

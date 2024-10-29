@@ -24,7 +24,7 @@ export const MRTInputNumber = <TData extends MRT_RowData>({ column }: MRTInputNu
 				<Tooltip title="Limpar filtros" placement="right">
 					<IconButton
 						size="small"
-						onClick={(e) => {
+						onClick={() => {
 							column.setFilterValue("");
 							setValue("");
 						}}

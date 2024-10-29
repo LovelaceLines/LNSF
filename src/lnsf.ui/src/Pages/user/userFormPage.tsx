@@ -7,18 +7,17 @@ import { useUserFormPage } from "./useUserFormPage";
 
 export const UserFormPage = () => {
 	const {
-		id,
+		roles,
 		role,
 		setRole,
-		roles,
+		handleSave,
 		handleAddUserToRole,
 		handleRemoveUserFromRole,
 		control,
-		register,
-		handleSubmit,
 		errors,
 		getValues,
-		handleSave,
+		handleSubmit,
+		register,
 		watch,
 	} = useUserFormPage();
 
@@ -33,7 +32,14 @@ export const UserFormPage = () => {
 						name="id"
 						control={control}
 						render={({ field }) => (
-							<TextField label="Id" disabled={!id} {...field} error={!!errors.id} helperText={errors.id?.message} fullWidth />
+							<TextField
+								label="Id"
+								disabled
+								{...field}
+								error={!!errors.id}
+								helperText={errors.id?.message}
+								fullWidth
+							/>
 						)}
 					/>
 				</Grid>
@@ -42,7 +48,13 @@ export const UserFormPage = () => {
 						name="name"
 						control={control}
 						render={({ field }) => (
-							<TextField label="Nome" {...field} error={!!errors.name} helperText={errors.name?.message} fullWidth />
+							<TextField
+								label="Nome"
+								{...field}
+								error={!!errors.name}
+								helperText={errors.name?.message}
+								fullWidth
+							/>
 						)}
 					/>
 				</Grid>
@@ -66,7 +78,13 @@ export const UserFormPage = () => {
 						name="email"
 						control={control}
 						render={({ field }) => (
-							<TextField label="Email" {...field} error={!!errors.email} helperText={errors.email?.message} fullWidth />
+							<TextField
+								label="Email"
+								{...field}
+								error={!!errors.email}
+								helperText={errors.email?.message}
+								fullWidth
+							/>
 						)}
 					/>
 				</Grid>
@@ -85,7 +103,7 @@ export const UserFormPage = () => {
 						)}
 					/>
 				</Grid>
-				{id ? null : (
+				{watch("id") ? null : (
 					<>
 						<Grid size={{ xs: 12, sm: 6 }}>
 							<TextField
@@ -102,7 +120,8 @@ export const UserFormPage = () => {
 								label="Confirmar Senha"
 								type="password"
 								{...register("confirmPassword", {
-									validate: (value) => value === getValues("password") || "As senhas devem ser iguais",
+									validate: (value) =>
+										value === getValues("password") || "As senhas devem ser iguais",
 								})}
 								error={!!errors.confirmPassword}
 								helperText={errors.confirmPassword?.message}
@@ -130,7 +149,11 @@ export const UserFormPage = () => {
 							<TextField label="Permissão" fullWidth disabled value={role.name} />
 						</Grid>
 						<Grid wrap="nowrap">
-							<IconButton color="error" size="small" onClick={() => handleRemoveUserFromRole(+role.id!)}>
+							<IconButton
+								color="error"
+								size="small"
+								onClick={() => handleRemoveUserFromRole(+role.id!)}
+							>
 								<Delete />
 							</IconButton>
 						</Grid>

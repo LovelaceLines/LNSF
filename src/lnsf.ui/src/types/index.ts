@@ -1,5 +1,5 @@
 export type { authToken, jwtPayload, login, userToken } from "./auth";
-export type { baseFilter } from "./baseFilter";
+export type { baseFilter, range } from "./baseFilter";
 export type {
 	chainCountPeopleHostedFilter,
 	chainIntervalCheckFilter,

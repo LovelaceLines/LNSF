@@ -32,7 +32,7 @@ export const useHostingFormPage = () => {
 	const { prh, getPeopleRoomHostingByHostingId } = usePeopleRoomHostingStore();
 
 	useEffect(() => {
-		if (getValues("id")) getPeopleRoomHostingByHostingId(+getValues("id"));
+		if (getValues("id")) getPeopleRoomHostingByHostingId(+getValues("id")!);
 	}, [getValues("id")]);
 
 	const { getHosting, postHosting, putHosting, addEscortToHosting, removeEscortFromHosting } =

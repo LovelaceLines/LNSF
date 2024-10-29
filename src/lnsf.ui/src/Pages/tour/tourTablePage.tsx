@@ -24,8 +24,6 @@ export const TourTablePage = () => {
 		onSubmit,
 	} = useTourTablePage();
 
-	console.debug(columnFilters);
-
 	const columns = useMemo<MRT_ColumnDef<tour>[]>(
 		() => [
 			{
@@ -34,19 +32,24 @@ export const TourTablePage = () => {
 				size: 75,
 				Filter: ({ column }) => <MRTInputNumber column={column} />,
 			},
-			// TODO - Fix - Tornar menos especifico, filtra apenas se a data for exatamete a do banco
 			{
 				accessorKey: "output",
 				header: "Data de Saída",
-				size: 150,
-				filterVariant: "datetime",
-				Filter: ({ column }) => <MRTInputDateTime column={column} />,
+				size: 300,
+				filterVariant: "datetime-range",
+				Filter: ({ column, rangeFilterIndex }) => (
+					<MRTInputDateTime column={column} rangeFilterIndex={rangeFilterIndex} />
+				),
 				Cell: ({ row }) => dateTimeToStr(row.original.output, "ptBr"),
 			},
 			{
 				accessorKey: "input",
 				header: "Data de Entrada",
+				size: 300,
 				filterVariant: "datetime-range",
+				Filter: ({ column, rangeFilterIndex }) => (
+					<MRTInputDateTime column={column} rangeFilterIndex={rangeFilterIndex} />
+				),
 				Cell: ({ row }) => dateTimeToStr(row.original.input, "ptBr"),
 			},
 			{
@@ -54,7 +57,12 @@ export const TourTablePage = () => {
 				header: "Id Pessoa",
 				size: 75,
 				Filter: ({ column }) => <MRTInputNumber column={column} />,
-				Cell: ({ row }) => <MRTLaunchLink label={row.original.people.id} to={`/app/pessoas/${row.original.people.id}`} />,
+				Cell: ({ row }) => (
+					<MRTLaunchLink
+						label={row.original.people?.id}
+						to={`/app/pessoas/${row.original.people?.id}`}
+					/>
+				),
 			},
 			{
 				accessorKey: "people.name",
@@ -116,8 +124,16 @@ export const TourTablePage = () => {
 
 				renderTopToolbarFilterActions: () => (
 					<>
-						<Checkbox label="Saída e entrada" checked={watch("isClose")} register={register("isClose")} />
-						<Checkbox label="Apenas saída" checked={watch("isOpen")} register={register("isOpen")} />
+						<Checkbox
+							label="Saída e entrada"
+							checked={watch("isClose")}
+							register={register("isClose")}
+						/>
+						<Checkbox
+							label="Apenas saída"
+							checked={watch("isOpen")}
+							register={register("isOpen")}
+						/>
 					</>
 				),
 			})}

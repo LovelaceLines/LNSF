@@ -54,7 +54,11 @@ interface Props<TData extends MRT_RowData> extends MRT_TableOptions<TData> {
 	renderToolbarExtraInternalActions?: () => JSX.Element;
 }
 
-export const useMaterialReactTable = <TData extends MRT_RowData>({ columns, data, ...props }: Props<TData>) => {
+export const useMaterialReactTable = <TData extends MRT_RowData>({
+	columns,
+	data,
+	...props
+}: Props<TData>) => {
 	const { isOpen: isOpenModal, handleModalOpen } = useModal("download-export-display");
 	const { themeName } = useThemeContext();
 
@@ -122,14 +126,24 @@ export const useMaterialReactTable = <TData extends MRT_RowData>({ columns, data
 					</Link>
 				)}
 				{props.toEdit && (
-					<Link to={`${props.toEdit === true ? "" : props.toEdit + "/"}${Object.keys(props.state?.rowSelection ?? {})[0] ?? ""}`}>
+					<Link
+						to={`${props.toEdit === true ? "" : props.toEdit + "/"}${
+							Object.keys(props.state?.rowSelection ?? {})[0] ?? ""
+						}`}
+					>
 						<Button key="edit" variant="outlined" size="small" endIcon={<Edit />}>
 							Editar
 						</Button>
 					</Link>
 				)}
 				{props.handleDelete && (
-					<Button key="delete" variant="outlined" size="small" endIcon={<Delete />} onClick={handleDelete}>
+					<Button
+						key="delete"
+						variant="outlined"
+						size="small"
+						endIcon={<Delete />}
+						onClick={handleDelete}
+					>
 						Deletar
 					</Button>
 				)}
@@ -139,7 +153,10 @@ export const useMaterialReactTable = <TData extends MRT_RowData>({ columns, data
 						variant="outlined"
 						size="small"
 						endIcon={<Check />}
-						onClick={() => props.handleSelect && props.handleSelect(table.getSelectedRowModel().rows.map((r) => r.original))}
+						onClick={() =>
+							props.handleSelect &&
+							props.handleSelect(table.getSelectedRowModel().rows.map((r) => r.original))
+						}
 					>
 						Selecionar
 					</Button>
@@ -175,7 +192,12 @@ export const useMaterialReactTable = <TData extends MRT_RowData>({ columns, data
 
 	useDebounced(
 		() => props.onSubmit && props.onSubmit(),
-		[props.state?.globalFilter, props.state?.columnFilters, props.state?.sorting, props.state?.pagination],
+		[
+			props.state?.globalFilter,
+			props.state?.columnFilters,
+			props.state?.sorting,
+			props.state?.pagination,
+		],
 		200
 	);
 
@@ -207,6 +229,10 @@ export const useMaterialReactTable = <TData extends MRT_RowData>({ columns, data
 		initialState: {
 			showColumnFilters: true,
 			density: "compact",
+			pagination: {
+				pageIndex: 0,
+				pageSize: 99999,
+			},
 			...props.initialState,
 		},
 
@@ -266,7 +292,7 @@ export const useMaterialReactTable = <TData extends MRT_RowData>({ columns, data
 		}),
 
 		muiPaginationProps: ({ table }) => ({
-			rowsPerPageOptions: [5, 10, 15, 20, 25, 30, 50, 100, 200, 500],
+			rowsPerPageOptions: [5, 10, 15, 20, 25, 30, 50, 100, 200, 500, 1000],
 		}),
 
 		//#endregion

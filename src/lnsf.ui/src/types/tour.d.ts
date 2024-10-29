@@ -1,4 +1,4 @@
-import { baseFilter } from "./baseFilter";
+import { baseFilter, range } from "./baseFilter";
 import { people } from "./people";
 
 export type tour = {
@@ -12,8 +12,8 @@ export type tour = {
 
 export type tourFilter = baseFilter & {
 	id?: number;
-	output?: Date;
-	input?: Date;
+	output?: range<string>;
+	input?: range<string>;
 	note?: string;
 	peopleId?: number;
 	isOpen?: boolean;

@@ -1,6 +1,6 @@
 import { MRT_ColumnDef } from "material-react-table";
-import { Check, InfoOutlined, Launch } from "@mui/icons-material";
-import { Button, IconButton, Switch, ToggleButton, Tooltip } from "@mui/material";
+import { InfoOutlined, Launch } from "@mui/icons-material";
+import { Button, IconButton, Tooltip } from "@mui/material";
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 
@@ -26,7 +26,6 @@ export const PeopleTablePage = () => {
 		register,
 		watch,
 		rowCount,
-		setValue,
 		state: { columnFilters, sorting, pagination, globalFilter, rowSelection },
 		setColumnFilters,
 		setGlobalFilter,

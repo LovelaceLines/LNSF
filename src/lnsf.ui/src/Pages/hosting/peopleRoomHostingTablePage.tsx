@@ -2,11 +2,11 @@ import { MRT_ColumnDef } from "material-react-table";
 import { useMemo } from "react";
 
 import { useMaterialReactTable } from "@/tables";
-import { MRTInputNumber } from "@/tables/components";
+import { MRTInputDateOnly, MRTInputNumber } from "@/tables/components";
 import { peopleRoomHosting } from "@/types";
 import { usePeopleRoomHostingTablePage } from "./usePeopleRoomHostingTablePage";
 import { CopyButton } from "@/tables/util";
-import { dateOnlyToStr } from "@/utils";
+import { dateTimeToStr } from "@/utils";
 
 export const PeopleRoomHostingTablePage = () => {
 	const {
@@ -32,12 +32,22 @@ export const PeopleRoomHostingTablePage = () => {
 			{
 				accessorKey: "hosting.checkIn",
 				header: "Check In",
-				Cell: ({ row }) => dateOnlyToStr(row.original.hosting?.checkIn, "ptBr"),
+				size: 300,
+				filterVariant: "date-range",
+				Filter: ({ column, rangeFilterIndex }) => (
+					<MRTInputDateOnly column={column} rangeFilterIndex={rangeFilterIndex} />
+				),
+				Cell: ({ row }) => dateTimeToStr(row.original.hosting?.checkIn, "ptBr"),
 			},
 			{
 				accessorKey: "hosting.checkOut",
 				header: "Check Out",
-				Cell: ({ row }) => dateOnlyToStr(row.original.hosting?.checkOut, "ptBr"),
+				size: 300,
+				filterVariant: "date-range",
+				Filter: ({ column, rangeFilterIndex }) => (
+					<MRTInputDateOnly column={column} rangeFilterIndex={rangeFilterIndex} />
+				),
+				Cell: ({ row }) => dateTimeToStr(row.original.hosting?.checkOut, "ptBr"),
 			},
 			{
 				accessorKey: "peopleId",
@@ -100,7 +110,8 @@ export const PeopleRoomHostingTablePage = () => {
 				setPagination,
 				setRowSelection,
 
-				getRowId: (originalRow) => `${originalRow.peopleId}.${originalRow.roomId}.${originalRow.hostingId}`,
+				getRowId: (originalRow) =>
+					`${originalRow.peopleId}.${originalRow.roomId}.${originalRow.hostingId}`,
 
 				rowCount,
 

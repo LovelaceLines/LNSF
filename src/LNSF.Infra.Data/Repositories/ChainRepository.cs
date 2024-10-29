@@ -62,8 +62,12 @@ public class ChainRepository(AppDbContext context) : IChainRepository
 			if (nextBirthday < DateOnly.FromDateTime(DateTime.Now.Date))
 				nextBirthday = nextBirthday.AddYears(1);
 
-			return nextBirthday <= maxDate;
+			prh.People!.BirthDate = nextBirthday;
+
+			return nextBirthday.CompareTo(maxDate) <= 0;
 		}).ToList();
+
+		prh = prh.OrderBy(prh => prh.People!.BirthDate).ToList();
 
 		return prh ?? [];
 	}
@@ -72,6 +76,7 @@ public class ChainRepository(AppDbContext context) : IChainRepository
 	{
 		var checkIn = filter.CheckIn.ToDateTime(TimeOnly.MinValue);
 		var checkOut = filter.CheckOut.ToDateTime(TimeOnly.MaxValue);
+		checkOut = checkOut.AddHours(23).AddMinutes(59).AddSeconds(59);
 
 		FormattableString query = $@"
 			SELECT
@@ -85,7 +90,7 @@ public class ChainRepository(AppDbContext context) : IChainRepository
 			INNER JOIN
 				Hostings h ON p.Id = h.PatientId
 			WHERE
-				{checkIn} <= h.CheckIn AND h.CheckOut <= {checkOut}
+				{checkIn} <= h.CheckIn AND (h.CheckOut IS NULL OR h.CheckOut <= {checkOut})
 			GROUP BY
 				t.Type
 			";

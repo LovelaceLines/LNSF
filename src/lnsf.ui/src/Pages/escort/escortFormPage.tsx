@@ -4,7 +4,7 @@ import { SelectField } from "@/components";
 import { useEscortFormPage } from "./useEscortFormPage";
 
 export const EscortFormPage = () => {
-	const { peoples, handleSave, errors, getValues, handleSubmit, register, setValue, watch } = useEscortFormPage();
+	const { peoples, handleSave, errors, handleSubmit, register, setValue, watch } = useEscortFormPage();
 
 	return (
 		<Grid container spacing={2} component="form" onSubmit={handleSubmit(handleSave)}>

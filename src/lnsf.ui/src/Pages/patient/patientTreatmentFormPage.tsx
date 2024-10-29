@@ -1,11 +1,11 @@
 import { Grid2 as Grid, IconButton, TextField } from "@mui/material";
 import { Add, Delete } from "@mui/icons-material";
+import { useCallback } from "react";
 import { Controller } from "react-hook-form";
 
 import { SelectField } from "@/components";
 import { patientTreatment } from "@/types";
 import { usePatientTreatmentFormPage } from "./usePatientTreatmentFormPage";
-import { useCallback } from "react";
 
 interface PatientTreatmentFormPageProps {
 	patientTreatment: patientTreatment;
@@ -13,7 +13,11 @@ interface PatientTreatmentFormPageProps {
 	onSave: (patientId: number, treatmentId: number) => void;
 }
 
-export const PatientTreatmentFormPage = ({ patientTreatment, mode, onSave }: PatientTreatmentFormPageProps) => {
+export const PatientTreatmentFormPage = ({
+	patientTreatment,
+	mode,
+	onSave,
+}: PatientTreatmentFormPageProps) => {
 	const { treatments, control, getValues, register, setValue, watch } = usePatientTreatmentFormPage({
 		patientTreatment,
 	});
@@ -28,7 +32,9 @@ export const PatientTreatmentFormPage = ({ patientTreatment, mode, onSave }: Pat
 				<Controller
 					name="patientId"
 					control={control}
-					render={({ field }) => <TextField type="number" disabled label="Id Paciente" {...field} fullWidth />}
+					render={({ field }) => (
+						<TextField type="number" disabled label="Id Paciente" {...field} fullWidth />
+					)}
 				/>
 			</Grid>
 			<Grid size={{ xs: 12, sm: 2 }}>

@@ -9,7 +9,13 @@ export const useTourTablePage = () => {
 
 	const { register, getValues, watch, setValue } = useForm<tourFilter>();
 
-	const onSubmit = () => getTours({ ...getFilteredObject({ state }), ...getValues() });
+	const onSubmit = () =>
+		getTours({
+			...getFilteredObject({ state }),
+			...getValues(),
+			isClose: getValues("isClose") || undefined,
+			isOpen: getValues("isOpen") || undefined,
+		});
 
 	const rowCount = queryResult.totalCount;
 

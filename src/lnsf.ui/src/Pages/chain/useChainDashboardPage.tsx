@@ -1,12 +1,5 @@
 import { useChainStore, usePeopleStore } from "@/store";
-import {
-	chainCountPeopleHostedFilter,
-	chainIntervalCheckFilter,
-	chainDayFilter,
-	people,
-	formatGender,
-	gender,
-} from "@/types";
+import { formatGender, gender } from "@/types";
 import { dateOnlyToStr } from "@/utils";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -29,8 +22,8 @@ export const useChainDashboardPage = () => {
 	const { getPeoples } = usePeopleStore();
 
 	const currentDate = new Date();
-	const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-	const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+	const firstDayOfYear = new Date(currentDate.getFullYear(), 0, 1);
+	const lastDayOfYear = new Date(currentDate.getFullYear(), 11, 31);
 
 	const {
 		control,
@@ -45,8 +38,8 @@ export const useChainDashboardPage = () => {
 			date: dateOnlyToStr(new Date()),
 			daysToCheck: 7,
 			daysToBirthdate: 15,
-			checkIn: dateOnlyToStr(firstDayOfMonth),
-			checkOut: dateOnlyToStr(lastDayOfMonth),
+			checkIn: dateOnlyToStr(firstDayOfYear),
+			checkOut: dateOnlyToStr(lastDayOfYear),
 		},
 	});
 

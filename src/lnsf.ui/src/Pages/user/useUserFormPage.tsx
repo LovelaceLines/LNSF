@@ -9,9 +9,6 @@ import { toValue } from "@/utils";
 type user = _user & { confirmPassword: string };
 
 export const useUserFormPage = () => {
-	const { addUserToRole, getUser, postUser, putUser, removeUserFromRole } = useUserStore();
-	const [role, setRole] = useState<role>();
-	const { roles, getRoles } = useRoleStore();
 	const { id } = useParams<{ id: string | undefined }>();
 	const {
 		control,
@@ -22,19 +19,35 @@ export const useUserFormPage = () => {
 		watch,
 		setValue,
 	} = useForm<user>({
-		values: { id: 0, name: "", userName: "", email: "", phoneNumber: "", password: "", confirmPassword: "", roles: [] },
+		values: {
+			id: 0,
+			name: "",
+			userName: "",
+			email: "",
+			phoneNumber: "",
+			password: "",
+			confirmPassword: "",
+			roles: [],
+		},
 	});
-
-	useEffect(() => {
-		getRoles({ sort: "name", page: 1, perPage: 9999 });
-	}, []);
 
 	useEffect(() => {
 		if (id) getUser(Number(id)).then((user) => toValue(user, setValue));
 	}, [id]);
 
+	const [role, setRole] = useState<role>();
+	const { roles, getRoles } = useRoleStore();
+
+	useEffect(() => {
+		getRoles({ sort: "name", page: 1, perPage: 9999 });
+	}, []);
+
+	const { addUserToRole, getUser, postUser, putUser, removeUserFromRole } = useUserStore();
+
 	const handleSave = (user: user) =>
-		!id ? postUser(user).then((u) => toValue(u, setValue)) : putUser(user).then((u) => toValue(u, setValue));
+		!getValues("id")
+			? postUser(user).then((u) => toValue(u, setValue))
+			: putUser(user).then((u) => toValue(u, setValue));
 
 	const handleAddUserToRole = () =>
 		addUserToRole(watch("id") ?? 0, role?.id ?? 0).then((ur) =>
@@ -50,19 +63,18 @@ export const useUserFormPage = () => {
 		);
 
 	return {
-		id,
 		roles,
 		role,
 		setRole,
+		handleSave,
 		handleAddUserToRole,
 		handleRemoveUserFromRole,
 		control,
-		register,
-		handleSubmit,
 		errors,
 		getValues,
+		handleSubmit,
+		register,
 		setValue,
 		watch,
-		handleSave,
 	};
 };

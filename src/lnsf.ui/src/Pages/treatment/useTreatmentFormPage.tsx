@@ -7,9 +7,9 @@ import { useTreatmentStore } from "@/store";
 import { toValue } from "@/utils";
 
 export const useTreatmentFormPage = () => {
-	const { getTreatment, postTreatment, putTreatment } = useTreatmentStore();
 	const { id } = useParams<{ id: string | undefined }>();
 	const {
+		control,
 		register,
 		handleSubmit,
 		formState: { errors },
@@ -17,26 +17,28 @@ export const useTreatmentFormPage = () => {
 		watch,
 		setValue,
 	} = useForm<treatment>({
-		values: { id: 0, name: "nome", type: typeTreatment.pretransplant },
+		values: { id: 0, name: "", type: typeTreatment.cancer },
 	});
 
 	useEffect(() => {
 		if (id) getTreatment(Number(id)).then((data) => toValue(data, setValue));
 	}, [id]);
 
-	const handleSave = (data: treatment) => {
-		if (!id) postTreatment(data);
-		else putTreatment(data);
-	};
+	const { getTreatment, postTreatment, putTreatment } = useTreatmentStore();
+
+	const handleSave = (data: treatment) =>
+		!getValues("id")
+			? postTreatment(data).then((t) => toValue(t, setValue))
+			: putTreatment(data).then((t) => toValue(t, setValue));
 
 	return {
-		id,
-		register,
-		handleSubmit,
+		handleSave,
+		control,
 		errors,
 		getValues,
+		handleSubmit,
 		setValue,
+		register,
 		watch,
-		handleSave,
 	};
 };

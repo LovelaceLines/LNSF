@@ -1,7 +1,13 @@
 import { parseQueryParams } from "@/services";
 import { baseFilter, sortOrder } from "@/types";
-import { MRT_ColumnFiltersState, MRT_PaginationState, MRT_RowSelectionState, MRT_SortingState } from "material-react-table";
-import React, { createContext, Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
+import { dateOnlyToStr, dateTimeToStr, strIsDateOnly, strIsDateTime } from "@/utils";
+import {
+	MRT_ColumnFiltersState,
+	MRT_PaginationState,
+	MRT_RowSelectionState,
+	MRT_SortingState,
+} from "material-react-table";
+import React, { createContext, Dispatch, SetStateAction, useContext, useState } from "react";
 
 interface StateProps {
 	state: {
@@ -37,42 +43,62 @@ export const TableProvider = ({ children }: { children: React.ReactNode }) => {
 	const setGlobalFilter: Dispatch<SetStateAction<string>> = (value: SetStateAction<string>) => {
 		return setState((prev) => ({
 			...prev,
-			globalFilter: typeof value === "function" ? (value as (prevState: string) => string)(prev.globalFilter) : value,
+			globalFilter:
+				typeof value === "function"
+					? (value as (prevState: string) => string)(prev.globalFilter)
+					: value,
 		}));
 	};
 
-	const setSorting: Dispatch<SetStateAction<MRT_SortingState>> = (value: SetStateAction<MRT_SortingState>) => {
+	const setSorting: Dispatch<SetStateAction<MRT_SortingState>> = (
+		value: SetStateAction<MRT_SortingState>
+	) => {
 		return setState((prev) => ({
 			...prev,
-			sorting: typeof value === "function" ? (value as (prevState: MRT_SortingState) => MRT_SortingState)(prev.sorting) : value,
+			sorting:
+				typeof value === "function"
+					? (value as (prevState: MRT_SortingState) => MRT_SortingState)(prev.sorting)
+					: value,
 		}));
 	};
 
-	const setColumnFilters: Dispatch<SetStateAction<MRT_ColumnFiltersState>> = (value: SetStateAction<MRT_ColumnFiltersState>) => {
+	const setColumnFilters: Dispatch<SetStateAction<MRT_ColumnFiltersState>> = (
+		value: SetStateAction<MRT_ColumnFiltersState>
+	) => {
 		return setState((prev) => ({
 			...prev,
 			columnFilters:
 				typeof value === "function"
-					? (value as (prevState: MRT_ColumnFiltersState) => MRT_ColumnFiltersState)(prev.columnFilters)
+					? (value as (prevState: MRT_ColumnFiltersState) => MRT_ColumnFiltersState)(
+							prev.columnFilters
+					  )
 					: value,
 		}));
 	};
 
-	const setRowSelection: Dispatch<SetStateAction<MRT_RowSelectionState>> = (value: SetStateAction<MRT_RowSelectionState>) => {
+	const setRowSelection: Dispatch<SetStateAction<MRT_RowSelectionState>> = (
+		value: SetStateAction<MRT_RowSelectionState>
+	) => {
 		return setState((prev) => ({
 			...prev,
 			rowSelection:
 				typeof value === "function"
-					? (value as (prevState: MRT_RowSelectionState) => MRT_RowSelectionState)(prev.rowSelection)
+					? (value as (prevState: MRT_RowSelectionState) => MRT_RowSelectionState)(
+							prev.rowSelection
+					  )
 					: value,
 		}));
 	};
 
-	const setPagination: Dispatch<SetStateAction<MRT_PaginationState>> = (value: SetStateAction<MRT_PaginationState>) => {
+	const setPagination: Dispatch<SetStateAction<MRT_PaginationState>> = (
+		value: SetStateAction<MRT_PaginationState>
+	) => {
 		return setState((prev) => ({
 			...prev,
 			pagination:
-				typeof value === "function" ? (value as (prevState: MRT_PaginationState) => MRT_PaginationState)(prev.pagination) : value,
+				typeof value === "function"
+					? (value as (prevState: MRT_PaginationState) => MRT_PaginationState)(prev.pagination)
+					: value,
 		}));
 	};
 
@@ -110,7 +136,18 @@ export const getFilteredObject = ({ state }: StateProps): FilteredObject => {
 	};
 
 	state.columnFilters.forEach((filter) => {
-		filteredObject[filter.id] = filter.value;
+		// Caso o filtro seja um range de datas
+		if (filter.value instanceof Array && filter.value.length === 2) {
+			if (strIsDateOnly(filter.value[0]) && strIsDateOnly(filter.value[1])) {
+				filteredObject[`${filter.id}.min`] = dateOnlyToStr(filter.value[0], ".Net");
+				filteredObject[`${filter.id}.max`] = dateOnlyToStr(filter.value[1], ".Net");
+			} else if (strIsDateTime(filter.value[0]) && strIsDateTime(filter.value[1])) {
+				filteredObject[`${filter.id}.min`] = dateTimeToStr(filter.value[0], ".Net");
+				filteredObject[`${filter.id}.max`] = dateTimeToStr(filter.value[1], ".Net");
+			}
+		} else {
+			filteredObject[filter.id] = filter.value;
+		}
 	});
 
 	return filteredObject;

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import { tour, tourFilter, queryResult, baseFilter } from "@/types";
+import { tour, tourFilter, queryResult } from "@/types";
 import { Axios } from "@/http";
 
 type state = {
@@ -37,7 +37,9 @@ export const useTourStore = create<state>((set) => ({
 	postTour: async (tour: tour): Promise<tour> => {
 		const res = await Axios.post<tour>("/Tour", { ...tour, input: undefined, output: undefined } as tour);
 		set((state) => ({ tours: [...state.tours, res.data] }));
-		set((state) => ({ queryResult: { ...state.queryResult, totalCount: state.queryResult.totalCount + 1 } }));
+		set((state) => ({
+			queryResult: { ...state.queryResult, totalCount: state.queryResult.totalCount + 1 },
+		}));
 		return res.data;
 	},
 

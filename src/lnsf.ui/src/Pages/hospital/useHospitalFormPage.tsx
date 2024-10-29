@@ -7,36 +7,38 @@ import { useHospitalStore } from "@/store";
 import { toValue } from "@/utils";
 
 export const useHospitalFormPage = () => {
-	const { getHospital, postHospital, putHospital } = useHospitalStore();
 	const { id } = useParams<{ id: string | undefined }>();
 	const {
-		register,
-		handleSubmit,
+		control,
 		formState: { errors },
 		getValues,
-		watch,
+		handleSubmit,
+		register,
 		setValue,
+		watch,
 	} = useForm<hospital>({
-		values: { id: 0, name: "nome", acronym: "n" } as hospital,
+		values: { id: 0, name: "", acronym: "" },
 	});
 
 	useEffect(() => {
 		if (id) getHospital(id).then((data) => toValue(data, setValue));
 	}, [id]);
 
-	const handleSave = (data: hospital) => {
-		if (!id) postHospital(data);
-		else putHospital(data);
-	};
+	const { getHospital, postHospital, putHospital } = useHospitalStore();
+
+	const handleSave = (data: hospital) =>
+		!getValues("id")
+			? postHospital(data).then((h) => toValue(h, setValue))
+			: putHospital(data).then((h) => toValue(h, setValue));
 
 	return {
-		id,
-		register,
-		handleSubmit,
+		handleSave,
+		control,
 		errors,
 		getValues,
+		handleSubmit,
+		register,
 		setValue,
 		watch,
-		handleSave,
 	};
 };
