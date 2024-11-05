@@ -21,6 +21,7 @@ export type patientFilter = baseFilter & {
 };
 
 export type patientTreatment = {
+	id?: number;
 	patientId: number;
 	patient?: patient;
 	treatmentId: number;

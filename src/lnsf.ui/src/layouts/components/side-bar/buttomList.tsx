@@ -26,12 +26,15 @@ export const ButtonList = ({ buttonList }: Readonly<{ buttonList: ISideBarProps[
 					{subList.map(({ text, to, icon }, index) => (
 						<ListItem key={text + index} disablePadding>
 							<Link to={to} style={{ width: "100%", color: "inherit", textDecoration: "none" }}>
-								<ListItemButton>
-									<Tooltip title={text} placement="right" arrow disableHoverListener={open}>
+								<Tooltip title={text} placement="right" arrow disableHoverListener={open}>
+									<ListItemButton>
 										<ListItemIcon sx={{ color: "inherit" }}>{icon}</ListItemIcon>
-									</Tooltip>
-									<ListItemText primary={text} sx={{ opacity: 1, textWrap: "nowrap" }} />
-								</ListItemButton>
+										<ListItemText
+											primary={text}
+											sx={{ opacity: 1, textWrap: "nowrap" }}
+										/>
+									</ListItemButton>
+								</Tooltip>
 							</Link>
 						</ListItem>
 					))}
@@ -40,12 +43,12 @@ export const ButtonList = ({ buttonList }: Readonly<{ buttonList: ISideBarProps[
 			))}
 
 			<ListItem key={logoutButton.text} disablePadding sx={{ display: "block" }}>
-				<ListItemButton onClick={() => logoutUser()}>
-					<Tooltip title={logoutButton.text} placement="right" disableHoverListener={open} arrow>
+				<Tooltip title={logoutButton.text} placement="right" disableHoverListener={open} arrow>
+					<ListItemButton onClick={() => logoutUser()}>
 						<ListItemIcon sx={{ color: "inherit" }}>{logoutButton.icon}</ListItemIcon>
-					</Tooltip>
-					<ListItemText primary={logoutButton.text} sx={{ opacity: 1 }} />
-				</ListItemButton>
+						<ListItemText primary={logoutButton.text} sx={{ opacity: 1 }} />
+					</ListItemButton>
+				</Tooltip>
 			</ListItem>
 		</List>
 	);

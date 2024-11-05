@@ -2,7 +2,6 @@
 
 public class Tour : BaseEntity
 {
-	public int Id { get; set; }
 	public DateTime Output { get; set; }
 	public DateTime? Input { get; set; }
 	public required string Note { get; set; }

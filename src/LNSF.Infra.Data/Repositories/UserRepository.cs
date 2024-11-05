@@ -8,7 +8,6 @@ using LNSF.Domain.Repositories;
 using LNSF.Infra.Data.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using System.Net;
 
 namespace LNSF.Infra.Data.Repositories;

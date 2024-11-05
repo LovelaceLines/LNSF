@@ -7,17 +7,7 @@ import { hospital } from "@/types";
 import { useHospitalTablePage } from "./useHospitalTablePage";
 
 export const HospitalTablePage = () => {
-	const {
-		hospitals,
-		rowCount,
-		state: { columnFilters, sorting, pagination, globalFilter, rowSelection },
-		setColumnFilters,
-		setGlobalFilter,
-		setRowSelection,
-		setPagination,
-		setSorting,
-		onSubmit,
-	} = useHospitalTablePage();
+	const { hospitals, rowCount, onSubmit } = useHospitalTablePage();
 
 	const columns = useMemo<MRT_ColumnDef<hospital>[]>(
 		() => [
@@ -42,25 +32,12 @@ export const HospitalTablePage = () => {
 	return (
 		<>
 			{useMaterialReactTable({
+				id: "hospital",
 				columns,
 				data: hospitals,
 				title: "Hospitais",
 
-				setGlobalFilter,
-				setColumnFilters,
-				setSorting,
-				setPagination,
-				setRowSelection,
-
 				rowCount,
-
-				state: {
-					globalFilter,
-					columnFilters,
-					sorting,
-					rowSelection,
-					pagination,
-				},
 
 				onSubmit,
 

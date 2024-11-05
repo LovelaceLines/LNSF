@@ -55,7 +55,7 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
 			new Role
 			{
 				Id = 4,
-				Name = "Secretario",
+				Name = "Secretário",
 				NormalizedName = "SECRETARIO",
 				ConcurrencyStamp = Guid.NewGuid().ToString(),
 				CreatedAt = DateTime.Now,
@@ -64,7 +64,7 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
 			new Role
 			{
 				Id = 5,
-				Name = "Voluntario",
+				Name = "Voluntário",
 				NormalizedName = "VOLUNTARIO",
 				ConcurrencyStamp = Guid.NewGuid().ToString(),
 				CreatedAt = DateTime.Now,

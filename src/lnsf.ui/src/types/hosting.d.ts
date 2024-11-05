@@ -12,10 +12,11 @@ export type hosting = {
 };
 
 export type hostingEscort = {
+	id?: number;
 	hostingId: number;
 	hosting?: hosting;
 	escortId: number;
-	escort: escort;
+	escort?: escort;
 };
 
 export type hostingFilter = baseFilter & {

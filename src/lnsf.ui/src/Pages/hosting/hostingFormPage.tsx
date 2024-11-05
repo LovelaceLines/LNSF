@@ -106,7 +106,12 @@ export const HostingFormPage = () => {
 								<IconButton
 									color="error"
 									size="large"
-									onClick={() => removeEscortFromHosting(+getValues("id")!, escort.id!)}
+									onClick={() =>
+										removeEscortFromHosting({
+											hostingId: +getValues("id")!,
+											escortId: escort.id!,
+										})
+									}
 								>
 									<Delete />
 								</IconButton>
@@ -140,7 +145,9 @@ export const HostingFormPage = () => {
 							type="submit"
 							color="info"
 							size="large"
-							onClick={() => addEscortToHosting(+getValues("id")!, escort!.id!)}
+							onClick={() =>
+								addEscortToHosting({ hostingId: +getValues("id")!, escortId: escort!.id! })
+							}
 						>
 							<Add />
 						</IconButton>

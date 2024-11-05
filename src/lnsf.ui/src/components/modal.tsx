@@ -28,8 +28,10 @@ export const Modal = ({ id, children }: ModalProps) => {
 				borderColor={themeName === "light" ? colors.black : colors.white}
 				boxShadow={24}
 				p={4}
+				maxHeight="90vh"
 				sx={{
 					transform: "translate(-50%, -50%)",
+					overflowY: "auto",
 				}}
 			>
 				<IconButton onClick={handleModalClose} sx={{ position: "absolute", top: 0, right: 0 }}>

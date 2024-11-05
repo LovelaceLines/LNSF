@@ -10,7 +10,7 @@ import { usePatientTreatmentFormPage } from "./usePatientTreatmentFormPage";
 interface PatientTreatmentFormPageProps {
 	patientTreatment: patientTreatment;
 	mode: "add" | "delete";
-	onSave: (patientId: number, treatmentId: number) => void;
+	onSave: (patientTreatment: patientTreatment) => void;
 }
 
 export const PatientTreatmentFormPage = ({
@@ -23,7 +23,7 @@ export const PatientTreatmentFormPage = ({
 	});
 
 	const handleSave = useCallback(() => {
-		onSave(getValues("patientId"), getValues("treatmentId"));
+		onSave({ patientId: getValues("patientId"), treatmentId: getValues("treatmentId") });
 	}, [getValues("patientId"), getValues("treatmentId"), onSave]);
 
 	return (

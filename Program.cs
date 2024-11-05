@@ -13,6 +13,7 @@ builder.Services.AddAuthorizationConfiguration(builder.Configuration);
 builder.Services.AddCorsConfiguration(builder.Configuration);
 builder.Services.AddSwaggerConfiguration();
 
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

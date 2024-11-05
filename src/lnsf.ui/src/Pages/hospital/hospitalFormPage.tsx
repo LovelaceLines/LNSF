@@ -18,7 +18,8 @@ export const HospitalFormPage = () => {
 					render={({ field }) => (
 						<TextField
 							label="Id"
-							disabled={!field.value}
+							type="number"
+							disabled
 							{...field}
 							error={!!errors.id}
 							helperText={errors.id?.message}

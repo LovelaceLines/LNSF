@@ -7,17 +7,7 @@ import { user } from "@/types";
 import { useUserTablePage } from "./useUserTablePage";
 
 export const UserTablePage = () => {
-	const {
-		users,
-		rowCount,
-		state: { columnFilters, sorting, pagination, globalFilter, rowSelection },
-		setColumnFilters,
-		setGlobalFilter,
-		setRowSelection,
-		setPagination,
-		setSorting,
-		onSubmit,
-	} = useUserTablePage();
+	const { users, rowCount, onSubmit } = useUserTablePage();
 
 	const columns = useMemo<MRT_ColumnDef<user>[]>(
 		() => [
@@ -55,25 +45,12 @@ export const UserTablePage = () => {
 	return (
 		<>
 			{useMaterialReactTable({
+				id: "user",
 				columns,
 				data: users,
 				title: "Usuários",
 
-				setGlobalFilter,
-				setColumnFilters,
-				setSorting,
-				setPagination,
-				setRowSelection,
-
 				rowCount,
-
-				state: {
-					globalFilter,
-					columnFilters,
-					sorting,
-					rowSelection,
-					pagination,
-				},
 
 				onSubmit,
 

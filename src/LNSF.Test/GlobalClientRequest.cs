@@ -3,12 +3,12 @@ using Microsoft.IdentityModel.Tokens;
 using LNSF.API.InputModels;
 using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
+using LNSF.Domain.Filters;
 using LNSF.Test.DTOs;
 using LNSF.Test.Fakers;
 using LNSF.Test.Utils;
 
 using User = LNSF.Test.Fakers.User;
-using LNSF.Domain.Filters;
 
 [assembly: CollectionBehavior(CollectionBehavior.CollectionPerAssembly)]
 
@@ -48,6 +48,7 @@ public class GlobalClientRequest : HttpClientUtil
 	public async Task<UserToken> GetToken()
 	{
 		var user = await GetUser();
+		var userRole = await GetUserRole(userId: user.Id, roleId: 1);
 		return await GetToken(user.UserName, user.Password);
 	}
 
@@ -69,7 +70,7 @@ public class GlobalClientRequest : HttpClientUtil
 		return await PostFromBody<Role>(_roleClient, fake);
 	}
 
-	public async Task<UserRoleIM> GetUserRole()
+	public async Task<UserRole> GetUserRole()
 	{
 		var user = await GetUser();
 		var role = await GetRole();
@@ -77,13 +78,13 @@ public class GlobalClientRequest : HttpClientUtil
 		return await GetUserRole(user.Id, role.Id);
 	}
 
-	public async Task<UserRoleIM> GetUserRole(int userId, int roleId)
+	public async Task<UserRole> GetUserRole(int userId, int roleId)
 	{
-		var model = new UserRoleIM { UserId = userId, RoleId = roleId };
+		var model = new UserRole { UserId = userId, RoleId = roleId };
 
-		await PostFromBody<AppHttpResponse>(_addUserToRoleClient, model);
+		var userRole = await PostFromBody<UserRole>(_addUserToRoleClient, model);
 
-		return model;
+		return userRole;
 	}
 
 	public async Task<People> GetPeople()
@@ -204,7 +205,7 @@ public class GlobalClientRequest : HttpClientUtil
 		}
 		if (!roomId.HasValue)
 		{
-			var room = await GetRoom();
+			var room = await GetRoom(available: true, beds: 4);
 			roomId = room.Id;
 		}
 		if (!hostingId.HasValue)

@@ -1,5 +1,17 @@
 import { Box } from "@mui/material";
-import { AccountCircle, Apartment, Bed, Home, LocalHospital, People, Settings, Spa, Today, Tour } from "@mui/icons-material";
+import {
+	AccountCircle,
+	Apartment,
+	Bed,
+	Home,
+	LocalHospital,
+	People,
+	Quiz,
+	Settings,
+	Spa,
+	Today,
+	Tour,
+} from "@mui/icons-material";
 
 import { AppBar } from "./components/app-bar";
 import { ISideBarProps, SideBar } from "./components/side-bar";
@@ -26,6 +38,7 @@ const buttonList: ISideBarProps[][] = [
 	[{ text: "Usuários", to: "/app/usuarios", icon: <People /> }],
 	[
 		{ text: "Minha Conta", to: "/app/minha-conta", icon: <AccountCircle /> },
+		{ text: "Logs", to: "/app/logs", icon: <Quiz /> },
 		{ text: "Configurações", to: "/app/configuracoes", icon: <Settings /> },
 	],
 ];

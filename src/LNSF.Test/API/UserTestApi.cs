@@ -1,5 +1,6 @@
 using LNSF.API.InputModels;
 using LNSF.Domain.DTOs;
+using LNSF.Domain.Entities;
 using LNSF.Domain.Filters;
 using LNSF.Test.DTOs;
 using LNSF.Test.Fakers;
@@ -40,8 +41,7 @@ public class UserControllerTests : GlobalClientRequest
 	public async Task Put_ValidUser_ReturnsOkResult()
 	{
 		var user = await GetUser();
-		var role = await GetRole();
-		var userRole = await GetUserRole(userId: user.Id, roleId: role.Id);
+		var userRole = await GetUserRole(userId: user.Id, roleId: 1);
 		var token = await GetToken(userName: user.UserName, password: user.Password);
 		_accessToken = token.AuthToken.AccessToken;
 		var fake = new UserFake(id: user.Id).Generate();
@@ -58,11 +58,10 @@ public class UserControllerTests : GlobalClientRequest
 	[Fact]
 	public async Task Put_InvalidUserWithExistingUserNameEmailOrPhoneNumber_ReturnsConflictResult()
 	{
-		var role = await GetRole();
 		var user1 = await GetUser();
-		await GetUserRole(userId: user1.Id, roleId: role.Id);
+		await GetUserRole(userId: user1.Id, roleId: 1);
 		var user2 = await GetUser();
-		await GetUserRole(userId: user2.Id, roleId: role.Id);
+		await GetUserRole(userId: user2.Id, roleId: 1);
 		var token = await GetToken(userName: user1.UserName, password: user1.Password);
 		_accessToken = token.AuthToken.AccessToken;
 		var userWithExistingUserName = new UserFake(id: user1.Id, userName: user2.UserName).Generate();
@@ -82,8 +81,7 @@ public class UserControllerTests : GlobalClientRequest
 	public async Task Put_Password_ValidUser_ReturnsOkResult()
 	{
 		var user = await GetUser();
-		var role = await GetRole();
-		var userRole = await GetUserRole(userId: user.Id, roleId: role.Id);
+		var userRole = await GetUserRole(userId: user.Id, roleId: 1);
 		var token = await GetToken(userName: user.UserName, password: user.Password);
 		_accessToken = token.AuthToken.AccessToken;
 		var model = new UpdatePasswordIM { OldPassword = user.Password, NewPassword = new UserFake().Generate().Password };
@@ -126,7 +124,7 @@ public class UserControllerTests : GlobalClientRequest
 	{
 		var user = await GetUser();
 		var role = await GetRole();
-		var model = new UserRoleIM { UserId = user.Id, RoleId = role.Id };
+		var model = new UserRole { UserId = user.Id, RoleId = role.Id };
 
 		var result = await PostFromBody<AppHttpResponse>(_addUserToRoleClient, model);
 
@@ -179,7 +177,7 @@ public class UserControllerTests : GlobalClientRequest
 	public async Task Delete_RemoveFromRole_InvalidUser_ReturnsBadRequestResult()
 	{
 		var role = await GetRole();
-		var userRole = new UserRoleIM { UserId = new Random().Next(1000, 9999), RoleId = role.Id };
+		var userRole = new UserRole { UserId = new Random().Next(1000, 9999), RoleId = role.Id };
 
 		var result = await DeleteFromBody<AppHttpResponse>(_removeUserFromRoleClient, userRole);
 
@@ -190,7 +188,7 @@ public class UserControllerTests : GlobalClientRequest
 	public async Task Delete_RemoveFromRole_InvalidRole_ReturnsBadRequestResult()
 	{
 		var user = await GetUser();
-		var userRole = new UserRoleIM { UserId = user.Id, RoleId = new Random().Next(1, 1000) };
+		var userRole = new UserRole { UserId = user.Id, RoleId = new Random().Next(1, 1000) };
 
 		var result = await DeleteFromBody<AppHttpResponse>(_removeUserFromRoleClient, userRole);
 
@@ -203,7 +201,7 @@ public class UserControllerTests : GlobalClientRequest
 		var user = await GetUser();
 		var role = await GetRole();
 
-		var result = await DeleteFromBody<AppHttpResponse>(_removeUserFromRoleClient, new UserRoleIM { UserId = user.Id, RoleId = role.Id });
+		var result = await DeleteFromBody<AppHttpResponse>(_removeUserFromRoleClient, new UserRole { UserId = user.Id, RoleId = role.Id });
 
 		Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
 	}

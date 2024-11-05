@@ -1,11 +1,7 @@
 import {
 	MaterialReactTable,
-	MRT_ColumnFiltersState,
-	MRT_PaginationState,
 	MRT_Row,
-	MRT_RowSelectionState,
 	MRT_ShowHideColumnsButton,
-	MRT_SortingState,
 	MRT_TableInstance,
 	MRT_TableState,
 	MRT_ToggleDensePaddingButton,
@@ -20,7 +16,7 @@ import {
 import { MRT_Localization_PT_BR } from "material-react-table/locales/pt-BR";
 import { Add, Check, ClearAll, Delete, Edit, FileDownload, Share } from "@mui/icons-material";
 import { Box, Button, IconButton, Tooltip } from "@mui/material";
-import { Dispatch, SetStateAction, useCallback } from "react";
+import { useCallback } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -28,22 +24,20 @@ import { DownloadExportDisplay } from "./components/download-export-display/down
 import { useModal } from "@/contexts";
 import { useDebounced } from "@/hooks";
 import { colors, useThemeContext } from "@/theme";
+import { useTablePropsLocalStorage } from "./useTablePropsLocalStorage";
+import { key } from "./types";
+import { useTableState } from "./useTableState";
 
 interface Props<TData extends MRT_RowData> extends MRT_TableOptions<TData> {
 	columns: MRT_ColumnDef<TData>[];
 	data: TData[];
-	setGlobalFilter?: Dispatch<SetStateAction<string>>;
-	setColumnFilters?: Dispatch<SetStateAction<MRT_ColumnFiltersState>>;
-	setSorting?: Dispatch<SetStateAction<MRT_SortingState>>;
-	setPagination?: Dispatch<SetStateAction<MRT_PaginationState>>;
 	rowCount?: number;
 	getRowId?: ((originalRow: TData, index: number, parentRow: MRT_Row<TData>) => string) | undefined;
 	initialState?: Partial<MRT_TableState<TData>>;
-	state?: Partial<MRT_TableState<TData>>;
-	setRowSelection?: Dispatch<SetStateAction<MRT_RowSelectionState>>;
 	enableRowSelection?: boolean;
 	onSubmit?: () => void;
 	isLoading?: () => boolean;
+	id: key;
 	title: string;
 	toCreate?: string | boolean;
 	toEdit?: string | boolean;
@@ -55,11 +49,24 @@ interface Props<TData extends MRT_RowData> extends MRT_TableOptions<TData> {
 }
 
 export const useMaterialReactTable = <TData extends MRT_RowData>({
+	id,
 	columns,
 	data,
 	...props
 }: Props<TData>) => {
 	const { isOpen: isOpenModal, handleModalOpen } = useModal("download-export-display");
+	const { tableProps } = useTablePropsLocalStorage();
+	const {
+		state,
+		setColumnFilters,
+		setGlobalFilter,
+		setSorting,
+		setPagination,
+		setColumnOrder,
+		setRowSelection,
+		setColumnSizing,
+		setColumnVisibility,
+	} = useTableState();
 	const { themeName } = useThemeContext();
 
 	const handleShare = useCallback(async () => {
@@ -88,24 +95,26 @@ export const useMaterialReactTable = <TData extends MRT_RowData>({
 	}, []);
 
 	const handleClearFilters = useCallback(() => {
-		props.setGlobalFilter && props.setGlobalFilter("");
-		props.setColumnFilters && props.setColumnFilters([]);
-		props.setSorting && props.setSorting([]);
+		setGlobalFilter(id, "");
+		setColumnFilters(id, []);
+		setSorting(id, []);
+		setColumnSizing(id, {});
+		setColumnVisibility(id, {});
 	}, []);
 
 	const handleDelete = useCallback(() => {
-		if (!props.state?.rowSelection || !props.setRowSelection) return;
+		if (!state[id].rowSelection) return;
 
-		if (!Object.keys(props.state?.rowSelection).length) {
+		if (!Object.keys(state[id].rowSelection).length) {
 			toast.warning("Selecione um registro para deletar.");
 			return;
 		}
 
-		const id = parseInt(Object.keys(props.state?.rowSelection)[0] ?? 0);
-		props.setRowSelection({});
-		props.handleDelete && props.handleDelete(id);
+		const row_id = parseInt(Object.keys(state[id].rowSelection)[0] ?? 0);
+		setRowSelection(id, {});
+		props.handleDelete && props.handleDelete(row_id);
 		toast.info("Registro deletado! Atualize a página para ver as alterações.");
-	}, [props.state?.rowSelection]);
+	}, [state[id].rowSelection]);
 
 	const renderTopToolbarCustomActions = ({ table }: { table: MRT_TableInstance<TData> }) => (
 		<Box display="flex" flexDirection="column" gap={1}>
@@ -128,10 +137,16 @@ export const useMaterialReactTable = <TData extends MRT_RowData>({
 				{props.toEdit && (
 					<Link
 						to={`${props.toEdit === true ? "" : props.toEdit + "/"}${
-							Object.keys(props.state?.rowSelection ?? {})[0] ?? ""
+							Object.keys(state[id].rowSelection ?? {})[0] ?? ""
 						}`}
 					>
-						<Button key="edit" variant="outlined" size="small" endIcon={<Edit />}>
+						<Button
+							key="edit"
+							variant="outlined"
+							size="small"
+							endIcon={<Edit />}
+							disabled={!table.getIsSomeRowsSelected()}
+						>
 							Editar
 						</Button>
 					</Link>
@@ -143,6 +158,7 @@ export const useMaterialReactTable = <TData extends MRT_RowData>({
 						size="small"
 						endIcon={<Delete />}
 						onClick={handleDelete}
+						disabled={!table.getIsSomeRowsSelected()}
 					>
 						Deletar
 					</Button>
@@ -192,12 +208,7 @@ export const useMaterialReactTable = <TData extends MRT_RowData>({
 
 	useDebounced(
 		() => props.onSubmit && props.onSubmit(),
-		[
-			props.state?.globalFilter,
-			props.state?.columnFilters,
-			props.state?.sorting,
-			props.state?.pagination,
-		],
+		[state[id].globalFilter, state[id].columnFilters, state[id].sorting, state[id].pagination],
 		200
 	);
 
@@ -206,28 +217,68 @@ export const useMaterialReactTable = <TData extends MRT_RowData>({
 		data,
 		...props,
 
-		renderTopToolbarCustomActions: props.renderTopToolbarCustomActions ?? renderTopToolbarCustomActions,
-		renderToolbarInternalActions: props.renderToolbarInternalActions ?? renderToolbarInternalActions,
+		renderTopToolbarCustomActions: renderTopToolbarCustomActions,
+		renderToolbarInternalActions: renderToolbarInternalActions,
 
 		//#region setStates
 
-		onGlobalFilterChange: props.setGlobalFilter,
+		onGlobalFilterChange: (value) => setGlobalFilter(id, value),
 
-		manualFiltering: props.setColumnFilters ? true : false,
-		onColumnFiltersChange: props.setColumnFilters,
+		manualFiltering: true,
+		onColumnFiltersChange: (updaterValue) => {
+			const value =
+				typeof updaterValue === "function" ? updaterValue(state[id].columnFilters) : updaterValue;
+			setColumnFilters(id, value);
+		},
 
-		manualSorting: props.setSorting ? true : false,
-		onSortingChange: props.setSorting,
+		manualSorting: true,
+		onSortingChange: (updaterValue) => {
+			const value = typeof updaterValue === "function" ? updaterValue(state[id].sorting) : updaterValue;
+			setSorting(id, value);
+		},
 
-		manualPagination: props.setPagination ? true : false,
-		onPaginationChange: props.setPagination,
+		manualPagination: true,
+		onPaginationChange: (updaterValue) => {
+			const value =
+				typeof updaterValue === "function"
+					? updaterValue(state[id].pagination ?? { pageIndex: 0, pageSize: 20 })
+					: updaterValue;
+			setPagination(id, value);
+		},
+
+		onColumnOrderChange: (updaterValue) => {
+			const value =
+				typeof updaterValue === "function" ? updaterValue(state[id].columnOrder) : updaterValue;
+			setColumnOrder(id, value);
+		},
 
 		enableRowSelection: props.enableRowSelection ?? false,
 		getRowId: props.getRowId ?? ((row) => String(row.id)),
-		onRowSelectionChange: props.setRowSelection,
+		onRowSelectionChange: (updaterValue) => {
+			const value =
+				typeof updaterValue === "function"
+					? updaterValue(state[id].rowSelection ?? {})
+					: updaterValue;
+			setRowSelection(id, value);
+		},
+
+		onColumnSizingChange: (updaterValue) => {
+			const value =
+				typeof updaterValue === "function" ? updaterValue(state[id].columnSizing) : updaterValue;
+			setColumnSizing(id, value);
+		},
+
+		enableHiding: true,
+		onColumnVisibilityChange: (updaterValue) => {
+			const value =
+				typeof updaterValue === "function"
+					? updaterValue(state[id].columnVisibility ?? {})
+					: updaterValue;
+			setColumnVisibility(id, value);
+		},
 
 		initialState: {
-			showColumnFilters: true,
+			showColumnFilters: tableProps.showColumnFilters ?? undefined,
 			density: "compact",
 			pagination: {
 				pageIndex: 0,
@@ -238,7 +289,7 @@ export const useMaterialReactTable = <TData extends MRT_RowData>({
 
 		state: {
 			isLoading: props.isLoading ? props.isLoading() : false,
-			...props.state,
+			...state[id],
 		},
 
 		//#endregion
@@ -250,6 +301,10 @@ export const useMaterialReactTable = <TData extends MRT_RowData>({
 		rowCount: props.rowCount ?? data.length ?? undefined,
 
 		localization: MRT_Localization_PT_BR,
+
+		columnFilterDisplayMode: tableProps.columnFilterDisplayMode ?? undefined,
+
+		enableColumnOrdering: true,
 
 		//#region Styles
 

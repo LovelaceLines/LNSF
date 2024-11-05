@@ -1,4 +1,6 @@
-﻿namespace LNSF.Domain.Entities;
+﻿using LNSF.Domain.Entities;
+
+namespace LNSF.Domain.Filters;
 
 public class ChainCountPeopleHostedFilter
 {

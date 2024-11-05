@@ -32,7 +32,9 @@ export const useEscortStore = create<state>((set) => ({
 	postEscort: async (escort) => {
 		const res = await Axios.post<escort>("/Escort", escort);
 		set((state) => ({ escorts: [...state.escorts, res.data] }));
-		set((state) => ({ queryResult: { ...state.queryResult, totalCount: state.queryResult.totalCount + 1 } }));
+		set((state) => ({
+			queryResult: { ...state.queryResult, totalCount: state.queryResult.totalCount + 1 },
+		}));
 		return res.data;
 	},
 
@@ -45,7 +47,9 @@ export const useEscortStore = create<state>((set) => ({
 	deleteEscort: async (id) => {
 		const res = await Axios.delete<escort>(`/Escort/${id}`);
 		set((state) => ({ escorts: state.escorts.filter((p) => p.id !== id) }));
-		set((state) => ({ queryResult: { ...state.queryResult, totalCount: state.queryResult.totalCount - 1 } }));
+		set((state) => ({
+			queryResult: { ...state.queryResult, totalCount: state.queryResult.totalCount - 1 },
+		}));
 		return res.data;
 	},
 }));

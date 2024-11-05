@@ -51,6 +51,7 @@ export type peopleFilter = baseFilter & {
 };
 
 export type peopleRoomHosting = {
+	id?: number;
 	hostingId: number;
 	hosting?: hosting;
 	peopleId: number;

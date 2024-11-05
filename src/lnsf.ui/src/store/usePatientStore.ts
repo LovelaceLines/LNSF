@@ -12,8 +12,8 @@ type state = {
 	postPatient: (patient: patient) => Promise<patient>;
 	putPatient: (patient: patient) => Promise<patient>;
 
-	addTreatmentToPatient: (patientId: number, treatmentId: number) => Promise<patientTreatment>;
-	removeTreatmentFromPatient: (patientId: number, treatmentId: number) => Promise<patientTreatment>;
+	addTreatmentToPatient: (patientTreatment: patientTreatment) => Promise<patientTreatment>;
+	removeTreatmentFromPatient: (patientTreatment: patientTreatment) => Promise<patientTreatment>;
 };
 
 export const usePatientStore = create<state>((set) => ({
@@ -34,7 +34,9 @@ export const usePatientStore = create<state>((set) => ({
 	postPatient: async (patient) => {
 		const res = await Axios.post<patient>("/Patient", patient);
 		set((state) => ({ patients: [...state.patients, res.data] }));
-		set((state) => ({ queryResult: { ...state.queryResult, totalCount: state.queryResult.totalCount + 1 } }));
+		set((state) => ({
+			queryResult: { ...state.queryResult, totalCount: state.queryResult.totalCount + 1 },
+		}));
 		return res.data;
 	},
 
@@ -44,17 +46,14 @@ export const usePatientStore = create<state>((set) => ({
 		return res.data;
 	},
 
-	addTreatmentToPatient: async (patientId: number, treatmentId: number): Promise<patientTreatment> => {
-		const res = await Axios.post<patientTreatment>("/Patient/add-treatment-to-patient", {
-			patientId: patientId,
-			treatmentId: treatmentId,
-		});
+	addTreatmentToPatient: async (patientTreatment: patientTreatment): Promise<patientTreatment> => {
+		const res = await Axios.post<patientTreatment>("/Patient/add-treatment-to-patient", patientTreatment);
 		return res.data;
 	},
 
-	removeTreatmentFromPatient: async (patientId: number, treatmentId: number): Promise<patientTreatment> => {
+	removeTreatmentFromPatient: async (patientTreatment: patientTreatment): Promise<patientTreatment> => {
 		const res = await Axios.delete<patientTreatment>("/Patient/remove-treatment-from-patient", {
-			data: { patientId: patientId, treatmentId: treatmentId },
+			data: patientTreatment,
 		});
 		return res.data;
 	},

@@ -28,7 +28,7 @@ public class TreatmentsConfiguration : BaseConfiguration<Treatment>
 			new Treatment
 			{
 				Id = 1,
-				Name = "Cancer",
+				Name = "Câncer",
 				Type = TypeTreatment.CANCER
 			},
 			new Treatment

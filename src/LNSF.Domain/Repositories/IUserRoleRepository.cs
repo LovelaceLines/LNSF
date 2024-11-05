@@ -4,7 +4,6 @@ namespace LNSF.Domain.Repositories;
 
 public interface IUserRoleRepository : IBaseRepository<UserRole>
 {
-	Task<bool> Exists(int userId, int roleId);
-	Task<UserRole> Get(int userId, int roleId);
-	Task<UserRole> Add(int userId, int roleId);
+	Task<bool> ExistsByUserIdRoleId(int userId, int roleId);
+	Task<UserRole> GetByUserIdRoleId(int userId, int roleId);
 }

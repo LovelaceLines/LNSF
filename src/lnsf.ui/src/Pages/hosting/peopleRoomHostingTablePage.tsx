@@ -9,17 +9,7 @@ import { CopyButton } from "@/tables/util";
 import { dateTimeToStr } from "@/utils";
 
 export const PeopleRoomHostingTablePage = () => {
-	const {
-		prh,
-		rowCount,
-		state: { columnFilters, sorting, pagination, globalFilter, rowSelection },
-		setColumnFilters,
-		setGlobalFilter,
-		setRowSelection,
-		setPagination,
-		setSorting,
-		onSubmit,
-	} = usePeopleRoomHostingTablePage();
+	const { prh, rowCount, onSubmit } = usePeopleRoomHostingTablePage();
 
 	const columns = useMemo<MRT_ColumnDef<peopleRoomHosting>[]>(
 		() => [
@@ -100,32 +90,17 @@ export const PeopleRoomHostingTablePage = () => {
 	return (
 		<>
 			{useMaterialReactTable({
+				id: "peopleRoomHosting",
 				columns,
 				data: prh,
 				title: "Reservas",
-
-				setGlobalFilter,
-				setColumnFilters,
-				setSorting,
-				setPagination,
-				setRowSelection,
 
 				getRowId: (originalRow) =>
 					`${originalRow.peopleId}.${originalRow.roomId}.${originalRow.hostingId}`,
 
 				rowCount,
 
-				state: {
-					globalFilter,
-					columnFilters,
-					sorting,
-					rowSelection,
-					pagination,
-				},
-
 				onSubmit,
-
-				enableRowSelection: true,
 			})}
 		</>
 	);

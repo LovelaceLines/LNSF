@@ -10,7 +10,7 @@ namespace LNSF.Api.Controllers;
 [Route("api/[controller]")]
 public class PatientTreatmentController(IPatientTreatmentRepository repository) : ControllerBase
 {
-	[Authorize]
+	[Authorize(Policy = "User")]
 	[HttpGet]
 	public async Task<ActionResult<QueryResult<PatientTreatment>>> Query([FromQuery] BaseFilter filter) =>
 		Ok(await repository.Query(filter));

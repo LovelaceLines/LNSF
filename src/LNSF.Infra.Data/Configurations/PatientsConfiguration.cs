@@ -5,24 +5,24 @@ namespace LNSF.Infra.Data.Configurations;
 
 public class PatientsConfiguration : BaseConfiguration<Patient>
 {
-    public override void Configure(EntityTypeBuilder<Patient> builder)
-    {
-        base.Configure(builder);
+	public override void Configure(EntityTypeBuilder<Patient> builder)
+	{
+		base.Configure(builder);
 
-        builder.HasKey(p => p.Id);
+		builder.HasKey(p => p.Id);
 
-        builder.Property(p => p.Id)
-            .ValueGeneratedOnAdd();
+		builder.Property(p => p.Id)
+			.ValueGeneratedOnAdd();
 
-        builder.HasOne(p => p.People)
-            .WithOne()
-            .HasForeignKey<Patient>(p => p.PeopleId);
+		builder.HasOne(p => p.People)
+			.WithOne()
+			.HasForeignKey<Patient>(p => p.PeopleId);
 
-        builder.HasOne(p => p.Hospital)
-            .WithMany()
-            .HasForeignKey(p => p.HospitalId);
+		builder.HasOne(p => p.Hospital)
+			.WithMany()
+			.HasForeignKey(p => p.HospitalId);
 
-        builder.Property(p => p.PeopleId)
-            .IsUnicode();
-    }
+		builder.Property(p => p.PeopleId)
+			.IsUnicode();
+	}
 }

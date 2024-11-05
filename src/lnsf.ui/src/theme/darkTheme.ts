@@ -2,7 +2,6 @@ import { ThemeOptions, createTheme } from "@mui/material";
 
 import { colors } from "./colors";
 import { GlobalTheme } from "./globalTheme";
-import { lightBlue } from "@mui/material/colors";
 
 export const DarkTheme = createTheme(GlobalTheme, {
 	palette: {
@@ -17,7 +16,7 @@ export const DarkTheme = createTheme(GlobalTheme, {
 			disabled: colors.raisinBlack,
 		},
 		action: {
-			hover: lightBlue[900],
+			hover: "#111111",
 			disabled: colors.raisinBlack,
 		},
 		divider: colors.jet,

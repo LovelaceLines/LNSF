@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from "react";
 
-export type key = "default" | "download-export-display";
+export type key = "default" | "download-export-display" | "log" | string;
 
 interface IModalContextProps {
 	handleModalClose: (key: key) => void;
@@ -19,10 +19,20 @@ export const ModalProvider = ({ children }: Readonly<{ children: React.ReactNode
 
 	const isOpen = (key: key) => open[key] ?? false;
 
-	return <ModalContext.Provider value={{ handleModalClose, handleModalOpen, isOpen }}>{children}</ModalContext.Provider>;
+	return (
+		<ModalContext.Provider value={{ handleModalClose, handleModalOpen, isOpen }}>
+			{children}
+		</ModalContext.Provider>
+	);
 };
 
-export const useModal = (id: key): { isOpen: boolean; handleModalClose: () => void; handleModalOpen: () => void } => {
+export const useModal = (
+	id: key
+): { isOpen: boolean; handleModalClose: () => void; handleModalOpen: () => void } => {
 	const { handleModalClose, handleModalOpen, isOpen } = useContext(ModalContext);
-	return { isOpen: isOpen(id), handleModalClose: () => handleModalClose(id), handleModalOpen: () => handleModalOpen(id) };
+	return {
+		isOpen: isOpen(id),
+		handleModalClose: () => handleModalClose(id),
+		handleModalOpen: () => handleModalOpen(id),
+	};
 };

@@ -4,7 +4,6 @@ namespace LNSF.Domain.Entities;
 
 public class People : BaseEntity
 {
-	public int Id { get; set; }
 	public required string Name { get; set; }
 	public Gender Gender { get; set; }
 	public DateOnly BirthDate { get; set; }

@@ -37,8 +37,9 @@ public class PeopleRoomHostingService(IPeopleRoomHostingRepository repository,
 
 	public async Task<PeopleRoomHosting> Delete(PeopleRoomHosting peopleRoomHosting)
 	{
-		if (!await repository.ExistsById(peopleRoomHosting.RoomId, peopleRoomHosting.PeopleId, peopleRoomHosting.HostingId)) throw new AppException("Registro não encontrado!", HttpStatusCode.NotFound);
+		if (!await repository.ExistsByPeopleIdRoomIdHostingId(peopleRoomHosting.PeopleId, peopleRoomHosting.RoomId, peopleRoomHosting.HostingId)) throw new AppException("Registro não encontrado!", HttpStatusCode.NotFound);
+		peopleRoomHosting = await repository.GetByPeopleIdRoomIdHostingId(peopleRoomHosting.PeopleId, peopleRoomHosting.RoomId, peopleRoomHosting.HostingId);
 
-		return await repository.Remove(peopleRoomHosting);
+		return await repository.RemoveById(peopleRoomHosting.Id);
 	}
 }

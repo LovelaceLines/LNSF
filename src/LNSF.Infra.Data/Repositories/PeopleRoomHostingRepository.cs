@@ -20,6 +20,9 @@ public class PeopleRoomHostingRepository(AppDbContext context) : BaseRepository<
 		return new QueryResult<PeopleRoomHosting>(items: items, totalCount: totalCount);
 	}
 
+	public async Task<bool> ExistsByPeopleIdRoomIdHostingId(int peopleId, int roomId, int hostingId) =>
+		await context.PeoplesRoomsHostings.AnyAsync(prh => prh.PeopleId == peopleId && prh.RoomId == roomId && prh.HostingId == hostingId);
+
 	public async Task<bool> ExistsHosting(PeopleRoomHosting peopleRoomHosting) =>
 		await context.PeoplesRoomsHostings.AnyAsync(prh => prh.PeopleId == peopleRoomHosting.PeopleId &&
 			prh.HostingId == peopleRoomHosting.HostingId);
@@ -41,4 +44,7 @@ public class PeopleRoomHostingRepository(AppDbContext context) : BaseRepository<
 		await context.PeoplesRoomsHostings.CountAsync(prh => prh.RoomId == peopleRoomHosting.RoomId &&
 			prh.Hosting!.CheckIn <= peopleRoomHosting.Hosting!.CheckIn && peopleRoomHosting.Hosting.CheckIn <= prh.Hosting.CheckOut &&
 			prh.Hosting.CheckIn <= peopleRoomHosting.Hosting.CheckOut && peopleRoomHosting.Hosting.CheckOut <= prh.Hosting.CheckOut);
+
+	public async Task<PeopleRoomHosting> GetByPeopleIdRoomIdHostingId(int peopleId, int roomId, int hostingId) =>
+		await context.PeoplesRoomsHostings.FirstAsync(prh => prh.PeopleId == peopleId && prh.RoomId == roomId && prh.HostingId == hostingId);
 }

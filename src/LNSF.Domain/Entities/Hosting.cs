@@ -2,7 +2,6 @@ namespace LNSF.Domain.Entities;
 
 public class Hosting : BaseEntity
 {
-	public int Id { get; set; }
 	public DateTime CheckIn { get; set; }
 	public DateTime? CheckOut { get; set; }
 

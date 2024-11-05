@@ -1,11 +1,11 @@
-import { getFilteredObject, useTable } from "@/tables";
+import { getFilteredObject, useTableState } from "@/tables";
 import { useTreatmentStore } from "@/store";
 
 export const useTreatmentTablePage = () => {
 	const { getTreatments, queryResult, treatments, deleteTreatment } = useTreatmentStore();
-	const { state, ...restTablePros } = useTable();
+	const { state } = useTableState();
 
-	const onSubmit = () => getTreatments(getFilteredObject({ state }));
+	const onSubmit = () => getTreatments(getFilteredObject({ state: state.treatment }));
 
 	const rowCount = queryResult.totalCount;
 
@@ -14,7 +14,6 @@ export const useTreatmentTablePage = () => {
 		state,
 		rowCount,
 		deleteTreatment,
-		...restTablePros,
 		onSubmit,
 	};
 };

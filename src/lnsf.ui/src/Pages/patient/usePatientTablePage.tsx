@@ -1,11 +1,11 @@
-import { getFilteredObject, useTable } from "@/tables";
+import { getFilteredObject, useTableState } from "@/tables";
 import { usePatientStore } from "@/store";
 
 export const usePatientTablePage = () => {
 	const { getPatients, patients, queryResult } = usePatientStore();
-	const { state, ...restTablePros } = useTable();
+	const { state } = useTableState();
 
-	const onSubmit = () => getPatients(getFilteredObject({ state }));
+	const onSubmit = () => getPatients(getFilteredObject({ state: state.patient }));
 
 	const rowCount = queryResult.totalCount;
 
@@ -13,7 +13,6 @@ export const usePatientTablePage = () => {
 		patients,
 		state,
 		rowCount,
-		...restTablePros,
 		onSubmit,
 	};
 };

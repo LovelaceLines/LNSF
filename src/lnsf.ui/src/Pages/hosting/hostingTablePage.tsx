@@ -9,17 +9,7 @@ import { useHostingTablePage } from "./useHostingTablePage";
 import { dateTimeToStr } from "@/utils";
 
 export const HostingTablePage = () => {
-	const {
-		hostings,
-		rowCount,
-		state: { columnFilters, sorting, pagination, globalFilter, rowSelection },
-		setColumnFilters,
-		setGlobalFilter,
-		setRowSelection,
-		setPagination,
-		setSorting,
-		onSubmit,
-	} = useHostingTablePage();
+	const { hostings, rowCount, onSubmit } = useHostingTablePage();
 
 	const columns = useMemo<MRT_ColumnDef<hosting>[]>(
 		() => [
@@ -90,25 +80,12 @@ export const HostingTablePage = () => {
 	return (
 		<>
 			{useMaterialReactTable({
+				id: "hosting",
 				columns,
 				data: hostings,
 				title: "Reservas",
 
-				setGlobalFilter,
-				setColumnFilters,
-				setSorting,
-				setPagination,
-				setRowSelection,
-
 				rowCount,
-
-				state: {
-					globalFilter,
-					columnFilters,
-					sorting,
-					rowSelection,
-					pagination,
-				},
 
 				onSubmit,
 

@@ -1,19 +1,17 @@
-import { getFilteredObject, useTable } from "@/tables";
+import { getFilteredObject, useTableState } from "@/tables";
 import { usePeopleRoomHostingStore } from "@/store";
 
 export const usePeopleRoomHostingTablePage = () => {
 	const { getPeopleRoomHosting, prh, queryResult } = usePeopleRoomHostingStore();
-	const { state, ...restTablePros } = useTable();
+	const { state } = useTableState();
 
 	const rowCount = queryResult.totalCount;
 
-	const onSubmit = () => getPeopleRoomHosting(getFilteredObject({ state }));
+	const onSubmit = () => getPeopleRoomHosting(getFilteredObject({ state: state.peopleRoomHosting }));
 
 	return {
 		prh,
-		state,
 		rowCount,
-		...restTablePros,
 		onSubmit,
 	};
 };

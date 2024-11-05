@@ -86,6 +86,8 @@ public static class DependencyInjectionSetup
 		services.AddTransient<IUserRoleRepository, UserRoleRepository>();
 		services.AddTransient<IUserRoleService, UserRoleService>();
 
+		services.AddTransient<ILogEntryRepository, LogEntryRepository>();
+
 		services.AddTransient<AuthAndUserExtractionFilter>();
 		// BaseConfiguration
 		services.AddTransient<IEntityTypeConfiguration<EmergencyContact>, EmergencyContactsConfiguration>();

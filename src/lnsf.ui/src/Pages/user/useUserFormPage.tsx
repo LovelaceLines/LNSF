@@ -50,12 +50,12 @@ export const useUserFormPage = () => {
 			: putUser(user).then((u) => toValue(u, setValue));
 
 	const handleAddUserToRole = () =>
-		addUserToRole(watch("id") ?? 0, role?.id ?? 0).then((ur) =>
+		addUserToRole({ userId: getValues("id") ?? 0, roleId: role?.id ?? 0 }).then((ur) =>
 			setValue("roles", [...getValues().roles, { id: ur.roleId, name: role?.name ?? "" }])
 		);
 
 	const handleRemoveUserFromRole = (roleId: number) =>
-		removeUserFromRole(watch("id") ?? 0, roleId).then(() =>
+		removeUserFromRole({ userId: getValues("id") ?? 0, roleId: roleId }).then(() =>
 			setValue(
 				"roles",
 				getValues().roles.filter((r) => r.id !== roleId)

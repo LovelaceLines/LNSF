@@ -1,12 +1,11 @@
 import { Box, Card, CardContent, CardHeader, Paper, TextField, Typography } from "@mui/material";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { PieChart } from "@mui/x-charts/PieChart";
-import { MRT_ColumnDef } from "material-react-table";
+import { MRT_ColumnDef, MaterialReactTable, useMaterialReactTable } from "material-react-table";
 import { useMemo } from "react";
 import { Masonry } from "@mui/lab";
 
 import { DateField } from "@/components";
-import { useMaterialReactTable } from "@/tables";
 import { useChainDashboardPage } from "./useChainDashboardPage";
 import { peopleRoomHosting } from "@/types";
 import { dateOnlyToStr, dateTimeToStr } from "@/utils";
@@ -107,18 +106,17 @@ export const ChainDashboardPage = () => {
 							/>
 						</CardContent>
 						<CardContent>
-							<>
-								{useMaterialReactTable({
+							<MaterialReactTable
+								table={useMaterialReactTable({
 									columns: peopleWillBirthdateColumns,
 									data: peopleWillBirthdate,
-									title: "Aniversariantes",
 									initialState: {
 										showColumnFilters: false,
 									},
 									renderBottomToolbar: () => <></>,
 									renderTopToolbar: () => <></>,
 								})}
-							</>
+							/>
 						</CardContent>
 					</Card>,
 					<Card variant="elevation" raised key="typeTreatmentCount">

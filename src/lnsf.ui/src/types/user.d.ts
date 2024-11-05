@@ -23,7 +23,12 @@ export type userFilter = baseFilter & {
 	phoneNumber?: string;
 };
 
-export type defaultRole = "Desenvolvedor" | "Administrador" | "Assistente Social" | "Secretário" | "Voluntário";
+export type defaultRole =
+	| "Desenvolvedor"
+	| "Administrador"
+	| "Assistente Social"
+	| "Secretário"
+	| "Voluntário";
 
 export type role = {
 	id?: number;
@@ -36,6 +41,7 @@ export type roleFilter = baseFilter & {
 };
 
 export type userRole = {
+	id?: number;
 	userId: number;
 	user?: user;
 	roleId: number;

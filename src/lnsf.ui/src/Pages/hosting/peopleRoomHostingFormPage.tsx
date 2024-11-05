@@ -62,11 +62,11 @@ export const PeopleRoomHostingFormPage = ({ prh, mode }: PeopleRoomHostingFormPa
 						color="info"
 						size="large"
 						onClick={() =>
-							addPeopleToRoom(
-								getValues("peopleId"),
-								getValues("roomId"),
-								getValues("hostingId")
-							)
+							addPeopleToRoom({
+								peopleId: getValues("peopleId"),
+								roomId: getValues("roomId"),
+								hostingId: getValues("hostingId"),
+							})
 						}
 					>
 						<Add />
@@ -76,11 +76,11 @@ export const PeopleRoomHostingFormPage = ({ prh, mode }: PeopleRoomHostingFormPa
 						color="error"
 						size="large"
 						onClick={() =>
-							removePeopleFromRoom(
-								getValues("peopleId"),
-								getValues("roomId"),
-								getValues("hostingId")
-							)
+							removePeopleFromRoom({
+								peopleId: getValues("peopleId"),
+								roomId: getValues("roomId"),
+								hostingId: getValues("hostingId"),
+							})
 						}
 					>
 						<Delete />

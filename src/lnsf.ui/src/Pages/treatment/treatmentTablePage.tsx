@@ -7,18 +7,7 @@ import { formatTypeTreatment, getTypeTreatment, treatment } from "@/types";
 import { useTreatmentTablePage } from "./useTreatmentTablePage";
 
 export const TreatmentTablePage = () => {
-	const {
-		treatments,
-		deleteTreatment: handleDelete,
-		rowCount,
-		state: { columnFilters, sorting, pagination, globalFilter, rowSelection },
-		setColumnFilters,
-		setGlobalFilter,
-		setRowSelection,
-		setPagination,
-		setSorting,
-		onSubmit,
-	} = useTreatmentTablePage();
+	const { treatments, deleteTreatment: handleDelete, rowCount, onSubmit } = useTreatmentTablePage();
 
 	const columns = useMemo<MRT_ColumnDef<treatment>[]>(
 		() => [
@@ -46,25 +35,12 @@ export const TreatmentTablePage = () => {
 	return (
 		<>
 			{useMaterialReactTable({
+				id: "treatment",
 				columns,
 				data: treatments,
 				title: "Tratamentos",
 
-				setGlobalFilter,
-				setColumnFilters,
-				setSorting,
-				setPagination,
-				setRowSelection,
-
 				rowCount,
-
-				state: {
-					globalFilter,
-					columnFilters,
-					sorting,
-					rowSelection,
-					pagination,
-				},
 
 				onSubmit,
 

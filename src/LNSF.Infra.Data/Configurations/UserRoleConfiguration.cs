@@ -10,7 +10,9 @@ public class UserRoleConfiguration : IEntityTypeConfiguration<UserRole>
 	{
 		builder.ToTable("UserRoles");
 
-		builder.HasKey(ur => new { ur.UserId, ur.RoleId });
+		builder.HasKey(ur => ur.Id);
+
+		builder.HasIndex(ur => new { ur.UserId, ur.RoleId });
 
 		builder.HasOne(ur => ur.Role)
 			.WithMany()
@@ -20,50 +22,36 @@ public class UserRoleConfiguration : IEntityTypeConfiguration<UserRole>
 			.WithMany()
 			.HasForeignKey(ur => ur.UserId);
 
-		builder.Property(p => p.CreatedAt)
-			.ValueGeneratedOnAdd()
-			.HasValueGenerator<DateTimeNowValueGenerator>();
-
-		builder.Property(p => p.UpdatedAt)
-			.ValueGeneratedOnUpdate()
-			.HasValueGenerator<DateTimeNowValueGenerator>();
-
-
 		builder.HasData(
 			new UserRole
 			{
+				Id = 1,
 				UserId = 1,
 				RoleId = 1,
-				CreatedAt = DateTime.Now,
-				UpdatedAt = DateTime.Now
 			},
 			new UserRole
 			{
+				Id = 2,
 				UserId = 1,
 				RoleId = 2,
-				CreatedAt = DateTime.Now,
-				UpdatedAt = DateTime.Now
 			},
 			new UserRole
 			{
+				Id = 3,
 				UserId = 1,
 				RoleId = 3,
-				CreatedAt = DateTime.Now,
-				UpdatedAt = DateTime.Now
 			},
 			new UserRole
 			{
+				Id = 4,
 				UserId = 2,
 				RoleId = 2,
-				CreatedAt = DateTime.Now,
-				UpdatedAt = DateTime.Now
 			},
 			new UserRole
 			{
+				Id = 5,
 				UserId = 3,
 				RoleId = 5,
-				CreatedAt = DateTime.Now,
-				UpdatedAt = DateTime.Now
 			}
 		);
 	}

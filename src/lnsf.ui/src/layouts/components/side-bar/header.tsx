@@ -1,5 +1,6 @@
-import { Avatar, Box, IconButton, Link } from "@mui/material";
+import { Avatar, Box, IconButton } from "@mui/material";
 import { MenuOpen } from "@mui/icons-material";
+import { Link } from "react-router-dom";
 import logo from "/icons/lnsf.svg";
 import logo_name from "/icons/lnsf-txt.svg";
 
@@ -13,7 +14,7 @@ export const Header = () => {
 	return (
 		<Box display="flex" flexDirection="row" alignItems="center" gap={1} height={64} p={2}>
 			<Link
-				href="/app"
+				to="/app"
 				style={{
 					display: "flex",
 					flexDirection: "row",

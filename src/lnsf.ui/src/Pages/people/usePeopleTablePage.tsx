@@ -1,12 +1,12 @@
 import { useForm } from "react-hook-form";
 
-import { getFilteredObject, useTable } from "@/tables";
+import { getFilteredObject, useTableState } from "@/tables";
 import { peopleFilter } from "@/types";
 import { usePeopleStore } from "@/store";
 
 export const usePeopleTablePage = () => {
 	const { getPeoples, peoples, queryResult } = usePeopleStore();
-	const { state, ...restTablePros } = useTable();
+	const { state } = useTableState();
 
 	const { register, getValues, watch, setValue } = useForm<peopleFilter>({
 		values: { isActive: undefined, isEscort: undefined, isPatient: undefined, isVeteran: undefined },
@@ -15,7 +15,7 @@ export const usePeopleTablePage = () => {
 	const onSubmit = () =>
 		getPeoples({
 			...getValues(),
-			...getFilteredObject({ state }),
+			...getFilteredObject({ state: state.people }),
 			isActive: getValues("isActive") || undefined,
 			isEscort: getValues("isEscort") || undefined,
 			isPatient: getValues("isPatient") || undefined,
@@ -30,9 +30,7 @@ export const usePeopleTablePage = () => {
 		getValues,
 		watch,
 		setValue,
-		state,
 		rowCount,
-		...restTablePros,
 		onSubmit,
 	};
 };

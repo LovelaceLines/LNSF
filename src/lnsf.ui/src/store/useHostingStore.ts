@@ -12,8 +12,8 @@ type state = {
 	postHosting: (hosting: hosting) => Promise<hosting>;
 	putHosting: (hosting: hosting) => Promise<hosting>;
 
-	addEscortToHosting: (hostingId: number, escortId: number) => Promise<hostingEscort>;
-	removeEscortFromHosting: (hostingId: number, escortId: number) => Promise<hostingEscort>;
+	addEscortToHosting: (hostingEscort: hostingEscort) => Promise<hostingEscort>;
+	removeEscortFromHosting: (hostingEscort: hostingEscort) => Promise<hostingEscort>;
 
 	hostingsEscorts: hostingEscort[];
 	getHostingsEscorts: (filters?: baseFilter) => Promise<hostingEscort[]>;
@@ -37,7 +37,9 @@ export const useHostingStore = create<state>((set) => ({
 	postHosting: async (hosting): Promise<hosting> => {
 		const res = await Axios.post<hosting>("/Hosting", hosting);
 		set((state) => ({ hostings: [...state.hostings, res.data] }));
-		set((state) => ({ queryResult: { ...state.queryResult, totalCount: state.queryResult.totalCount + 1 } }));
+		set((state) => ({
+			queryResult: { ...state.queryResult, totalCount: state.queryResult.totalCount + 1 },
+		}));
 		return res.data;
 	},
 
@@ -47,14 +49,14 @@ export const useHostingStore = create<state>((set) => ({
 		return res.data;
 	},
 
-	addEscortToHosting: async (hostingId: number, escortId: number): Promise<hostingEscort> => {
-		const res = await Axios.post<hostingEscort>("/Hosting/add-escort-to-hosting", { hostingId: hostingId, escortId: escortId });
+	addEscortToHosting: async (hostingEscort: hostingEscort): Promise<hostingEscort> => {
+		const res = await Axios.post<hostingEscort>("/Hosting/add-escort-to-hosting", hostingEscort);
 		return res.data;
 	},
 
-	removeEscortFromHosting: async (hostingId: number, escortId: number): Promise<hostingEscort> => {
+	removeEscortFromHosting: async (hostingEscort: hostingEscort): Promise<hostingEscort> => {
 		const res = await Axios.delete<hostingEscort>("/Hosting/remove-escort-from-hosting", {
-			data: { hostingId: hostingId, escortId: escortId },
+			data: hostingEscort,
 		});
 		return res.data;
 	},

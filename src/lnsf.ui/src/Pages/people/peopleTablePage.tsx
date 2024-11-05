@@ -21,19 +21,7 @@ import { usePeopleTablePage } from "./usePeopleTablePage";
 import { dateOnlyToStr } from "@/utils";
 
 export const PeopleTablePage = () => {
-	const {
-		peoples,
-		register,
-		watch,
-		rowCount,
-		state: { columnFilters, sorting, pagination, globalFilter, rowSelection },
-		setColumnFilters,
-		setGlobalFilter,
-		setRowSelection,
-		setPagination,
-		setSorting,
-		onSubmit,
-	} = usePeopleTablePage();
+	const { peoples, register, watch, rowCount, onSubmit } = usePeopleTablePage();
 
 	const columns = useMemo<MRT_ColumnDef<people>[]>(
 		() => [
@@ -133,25 +121,12 @@ export const PeopleTablePage = () => {
 	return (
 		<>
 			{useMaterialReactTable({
+				id: "people",
 				columns,
 				data: peoples,
 				title: "Pessoas Cadastradas",
 
-				setGlobalFilter,
-				setColumnFilters,
-				setSorting,
-				setPagination,
-				setRowSelection,
-
 				rowCount,
-
-				state: {
-					globalFilter,
-					columnFilters,
-					sorting,
-					rowSelection,
-					pagination,
-				},
 
 				onSubmit,
 

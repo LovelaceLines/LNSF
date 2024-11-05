@@ -13,8 +13,8 @@ type state = {
 	putUser: (user: user) => Promise<user>;
 	putPassword: (password: password) => Promise<user>;
 
-	addUserToRole: (userId: number, roleId: number) => Promise<userRole>;
-	removeUserFromRole: (userId: number, roleId: number) => Promise<userRole>;
+	addUserToRole: (userRole: userRole) => Promise<userRole>;
+	removeUserFromRole: (userRole: userRole) => Promise<userRole>;
 };
 
 export const useUserStore = create<state>((set) => ({
@@ -35,7 +35,9 @@ export const useUserStore = create<state>((set) => ({
 	postUser: async (user: user): Promise<user> => {
 		const res = await Axios.post<user>("/User", user);
 		set((state) => ({ users: [...state.users, res.data] }));
-		set((state) => ({ queryResult: { ...state.queryResult, totalCount: state.queryResult.totalCount + 1 } }));
+		set((state) => ({
+			queryResult: { ...state.queryResult, totalCount: state.queryResult.totalCount + 1 },
+		}));
 		return res.data;
 	},
 
@@ -50,13 +52,16 @@ export const useUserStore = create<state>((set) => ({
 		return res.data;
 	},
 
-	addUserToRole: async (userId: number, roleId: number): Promise<userRole> => {
-		const res = await Axios.post<userRole>("/User/add-user-to-role", { userId: userId, roleId: roleId });
+	addUserToRole: async (userRole: userRole): Promise<userRole> => {
+		const res = await Axios.post<userRole>("/User/add-user-to-role", userRole);
 		return res.data;
 	},
 
-	removeUserFromRole: async (userId: number, roleId: number): Promise<userRole> => {
-		const res = await Axios.delete<userRole>("/User/remove-user-from-role", { data: { userId: userId, roleId: roleId } });
+	removeUserFromRole: async (userRole: userRole): Promise<userRole> => {
+		console.debug(userRole);
+		const res = await Axios.delete<userRole>("/User/remove-user-from-role", {
+			data: userRole,
+		});
 		return res.data;
 	},
 }));

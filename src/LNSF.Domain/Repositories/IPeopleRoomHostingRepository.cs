@@ -6,6 +6,7 @@ namespace LNSF.Domain.Repositories;
 public interface IPeopleRoomHostingRepository : IBaseRepository<PeopleRoomHosting>
 {
 	Task<QueryResult<PeopleRoomHosting>> Query(PeopleRoomHostingFilter filter);
+	Task<bool> ExistsByPeopleIdRoomIdHostingId(int peopleId, int roomId, int hostingId);
 	Task<bool> ExistsHosting(PeopleRoomHosting peopleRoomHosting);
 	Task<bool> ExistsByPeopleRoomHosting(PeopleRoomHosting peopleRoomHosting);
 
@@ -16,4 +17,5 @@ public interface IPeopleRoomHostingRepository : IBaseRepository<PeopleRoomHostin
 	/// <returns>True if there is vacancy, false otherwise.</returns>
 	Task<bool> HaveVacancy(PeopleRoomHosting peopleRoomHosting);
 	Task<int> GetOccupation(PeopleRoomHosting peopleRoomHosting);
+	Task<PeopleRoomHosting> GetByPeopleIdRoomIdHostingId(int peopleId, int roomId, int hostingId);
 }

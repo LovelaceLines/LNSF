@@ -10,19 +10,7 @@ import { useTourTablePage } from "./useTourTablePage";
 import { dateTimeToStr } from "@/utils";
 
 export const TourTablePage = () => {
-	const {
-		tours,
-		rowCount,
-		state: { columnFilters, sorting, pagination, globalFilter, rowSelection },
-		setColumnFilters,
-		setGlobalFilter,
-		setRowSelection,
-		setPagination,
-		setSorting,
-		register,
-		watch,
-		onSubmit,
-	} = useTourTablePage();
+	const { tours, rowCount, register, watch, onSubmit } = useTourTablePage();
 
 	const columns = useMemo<MRT_ColumnDef<tour>[]>(
 		() => [
@@ -95,25 +83,12 @@ export const TourTablePage = () => {
 	return (
 		<>
 			{useMaterialReactTable({
+				id: "tour",
 				columns,
 				data: tours,
 				title: "Registro Diário",
 
-				setGlobalFilter,
-				setColumnFilters,
-				setSorting,
-				setPagination,
-				setRowSelection,
-
 				rowCount,
-
-				state: {
-					globalFilter,
-					columnFilters,
-					sorting,
-					rowSelection,
-					pagination,
-				},
 
 				onSubmit,
 

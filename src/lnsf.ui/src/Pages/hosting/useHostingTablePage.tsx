@@ -1,19 +1,17 @@
-import { getFilteredObject, useTable } from "@/tables";
+import { getFilteredObject, useTableState } from "@/tables";
 import { useHostingStore } from "@/store";
 
 export const useHostingTablePage = () => {
 	const { getHostings, hostings, queryResult } = useHostingStore();
-	const { state, ...restTablePros } = useTable();
+	const { state } = useTableState();
 
-	const onSubmit = () => getHostings(getFilteredObject({ state }));
+	const onSubmit = () => getHostings(getFilteredObject({ state: state.hosting }));
 
 	const rowCount = queryResult.totalCount;
 
 	return {
 		hostings,
-		state,
 		rowCount,
-		...restTablePros,
 		onSubmit,
 	};
 };

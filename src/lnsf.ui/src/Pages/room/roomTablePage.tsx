@@ -10,19 +10,7 @@ import { useRoomTablePage } from "./useRoomTablePage";
 import { Checkbox } from "@/components";
 
 export const RoomTablePage = () => {
-	const {
-		rooms,
-		rowCount,
-		state: { columnFilters, sorting, pagination, globalFilter, rowSelection },
-		setColumnFilters,
-		setGlobalFilter,
-		setRowSelection,
-		setPagination,
-		setSorting,
-		onSubmit,
-		register,
-		watch,
-	} = useRoomTablePage();
+	const { rooms, rowCount, onSubmit, register, watch } = useRoomTablePage();
 
 	const columns = useMemo<MRT_ColumnDef<room>[]>(
 		() => [
@@ -73,25 +61,12 @@ export const RoomTablePage = () => {
 	return (
 		<>
 			{useMaterialReactTable({
+				id: "room",
 				columns,
 				data: rooms,
 				title: "Apartamentos",
 
-				setGlobalFilter,
-				setColumnFilters,
-				setSorting,
-				setPagination,
-				setRowSelection,
-
 				rowCount,
-
-				state: {
-					globalFilter,
-					columnFilters,
-					sorting,
-					rowSelection,
-					pagination,
-				},
 
 				onSubmit,
 

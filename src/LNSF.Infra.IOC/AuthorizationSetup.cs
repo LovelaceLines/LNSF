@@ -2,35 +2,40 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 
-using LNSF.Domain.Exceptions;
-
 namespace LNSF.Infra.IOC;
 
 public static class AuthorizationSetup
 {
-    public static IServiceCollection AddAuthorizationConfiguration(this IServiceCollection services, IConfiguration configuration)
-    {
-        services.AddAuthorization(options =>
-        {
-            options.AddPolicy("BaseUserRolesPolicy", policy =>
-            {
-                policy.RequireRole(configuration.GetSection("GlobalSettings:BaseUserRoles").Value?.Split(',') ??
-                    throw new AppException("GlobalSettings:BaseUserRoles is null!", HttpStatusCode.InternalServerError));
-            });
+	public static IServiceCollection AddAuthorizationConfiguration(this IServiceCollection services, IConfiguration configuration)
+	{
+		services.AddAuthorization(options =>
+		{
+			options.AddPolicy("Administrador", policy =>
+			{
+				policy.RequireRole(["Desenvolvedor", "Administrador"]);
+			});
 
-            options.AddPolicy("AdminUserRolesPolicy", policy =>
-            {
-                policy.RequireRole(configuration.GetSection("GlobalSettings:AdminUserRoles").Value?.Split(',') ??
-                    throw new AppException("GlobalSettings:AdminUserRoles is null!", HttpStatusCode.InternalServerError));
-            });
+			options.AddPolicy("Assistente Social", policy =>
+			{
+				policy.RequireRole(["Desenvolvedor", "Administrador", "Assistente Social"]);
+			});
 
-            options.AddPolicy("SuperUserRolesPolicy", policy =>
-            {
-                policy.RequireRole(configuration.GetSection("GlobalSettings:SuperUserRoles").Value?.Split(',') ??
-                    throw new AppException("GlobalSettings:SuperUserRoles is null!", HttpStatusCode.InternalServerError));
-            });
-        });
+			options.AddPolicy("Secretário", policy =>
+			{
+				policy.RequireRole(["Desenvolvedor", "Administrador", "Secretário"]);
+			});
 
-        return services;
-    }
+			options.AddPolicy("Base", policy =>
+			{
+				policy.RequireRole(["Desenvolvedor", "Administrador", "Assistente Social", "Secretário"]);
+			});
+
+			options.AddPolicy("User", policy =>
+			{
+				policy.RequireRole(["Desenvolvedor", "Administrador", "Assistente Social", "Secretário", "Voluntário"]);
+			});
+		});
+
+		return services;
+	}
 }

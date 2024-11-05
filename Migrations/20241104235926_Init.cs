@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LNSF.Migrations
 {
     /// <inheritdoc />
-    public partial class Init0 : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -305,17 +305,41 @@ namespace LNSF.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserRoles",
+                name: "LogEntries",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
                     UserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    RoleId = table.Column<int>(type: "INTEGER", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    EntityName = table.Column<string>(type: "TEXT", nullable: false),
+                    EntityId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Action = table.Column<string>(type: "TEXT", nullable: false),
+                    ValuesChanges = table.Column<string>(type: "TEXT", nullable: false),
+                    LogDateTime = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserRoles", x => new { x.UserId, x.RoleId });
+                    table.PrimaryKey("PK_LogEntries", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LogEntries_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserRoles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    RoleId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserRoles", x => x.Id);
                     table.ForeignKey(
                         name: "FK_UserRoles_Roles_RoleId",
                         column: x => x.RoleId,
@@ -379,12 +403,14 @@ namespace LNSF.Migrations
                 name: "PatientsTreatments",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
                     PatientId = table.Column<int>(type: "INTEGER", nullable: false),
                     TreatmentId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PatientsTreatments", x => new { x.PatientId, x.TreatmentId });
+                    table.PrimaryKey("PK_PatientsTreatments", x => x.Id);
                     table.ForeignKey(
                         name: "FK_PatientsTreatments_Patients_PatientId",
                         column: x => x.PatientId,
@@ -444,12 +470,14 @@ namespace LNSF.Migrations
                 name: "HostingsEscorts",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
                     HostingId = table.Column<int>(type: "INTEGER", nullable: false),
                     EscortId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_HostingsEscorts", x => new { x.HostingId, x.EscortId });
+                    table.PrimaryKey("PK_HostingsEscorts", x => x.Id);
                     table.ForeignKey(
                         name: "FK_HostingsEscorts_Escorts_EscortId",
                         column: x => x.EscortId,
@@ -468,13 +496,15 @@ namespace LNSF.Migrations
                 name: "PeoplesRoomsHostings",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
                     HostingId = table.Column<int>(type: "INTEGER", nullable: false),
                     PeopleId = table.Column<int>(type: "INTEGER", nullable: false),
                     RoomId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PeoplesRoomsHostings", x => new { x.RoomId, x.PeopleId, x.HostingId });
+                    table.PrimaryKey("PK_PeoplesRoomsHostings", x => x.Id);
                     table.ForeignKey(
                         name: "FK_PeoplesRoomsHostings_Hostings_HostingId",
                         column: x => x.HostingId,
@@ -500,11 +530,11 @@ namespace LNSF.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "CreatedAt", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { 1, "63dc6a45-87b3-4da2-80a3-bf935ad184cd", new DateTime(2024, 10, 23, 20, 23, 21, 909, DateTimeKind.Local).AddTicks(6903), "Desenvolvedor", "DESENVOLVEDOR" },
-                    { 2, "ae07ab74-ea5e-4b1c-b914-453b3618834c", new DateTime(2024, 10, 23, 20, 23, 21, 909, DateTimeKind.Local).AddTicks(6929), "Administrador", "ADMINISTRADOR" },
-                    { 3, "b439e8bf-feae-46bc-a6f1-fe62cc7813ef", new DateTime(2024, 10, 23, 20, 23, 21, 909, DateTimeKind.Local).AddTicks(6945), "AssistenteSocial", "ASSISTENTESOCIAL" },
-                    { 4, "868ab74e-2408-4947-acc0-e8b804e69614", new DateTime(2024, 10, 23, 20, 23, 21, 909, DateTimeKind.Local).AddTicks(6950), "Secretario", "SECRETARIO" },
-                    { 5, "ad291550-69cd-4ef8-b05b-83f162a2df15", new DateTime(2024, 10, 23, 20, 23, 21, 909, DateTimeKind.Local).AddTicks(6962), "Voluntario", "VOLUNTARIO" }
+                    { 1, "50f9fdfe-576e-4bdb-a969-6ba4ce856f93", new DateTime(2024, 11, 4, 20, 59, 25, 196, DateTimeKind.Local).AddTicks(1983), "Desenvolvedor", "DESENVOLVEDOR" },
+                    { 2, "75a5cb8d-eae0-422d-a406-09e12227cd71", new DateTime(2024, 11, 4, 20, 59, 25, 196, DateTimeKind.Local).AddTicks(2008), "Administrador", "ADMINISTRADOR" },
+                    { 3, "365f8d0c-2f20-4dbb-9eaa-ee1456f0ce10", new DateTime(2024, 11, 4, 20, 59, 25, 196, DateTimeKind.Local).AddTicks(2014), "Assistente Social", "ASSISTENTESOCIAL" },
+                    { 4, "2e54c106-ec32-4df4-bd43-184a058c0921", new DateTime(2024, 11, 4, 20, 59, 25, 196, DateTimeKind.Local).AddTicks(2034), "Secretário", "SECRETARIO" },
+                    { 5, "7061de7c-30fd-427f-8372-bdee668a8a2f", new DateTime(2024, 11, 4, 20, 59, 25, 196, DateTimeKind.Local).AddTicks(2049), "Voluntário", "VOLUNTARIO" }
                 });
 
             migrationBuilder.InsertData(
@@ -512,7 +542,7 @@ namespace LNSF.Migrations
                 columns: new[] { "Id", "Name", "Type" },
                 values: new object[,]
                 {
-                    { 1, "Cancer", 0 },
+                    { 1, "Câncer", 0 },
                     { 2, "Pré-transplante", 1 },
                     { 3, "Pós-transplante", 2 },
                     { 4, "Outro", 3 }
@@ -523,21 +553,21 @@ namespace LNSF.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedAt", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { 1, 0, "e37acf6b-2983-4c47-8738-8cc4d551150d", new DateTime(2024, 10, 23, 20, 23, 21, 992, DateTimeKind.Local).AddTicks(8345), "georgemaiaf@gmail.com", false, false, null, "George Maia", "GEORGEMAIAF@GMAIL.COM", "GEORGEDEV", "AQAAAAIAAYagAAAAEMK//XvhzUabJihkZ2fkll+gfDQIxKGpkBNxKUZ6V+n6ZT0o1US3ccpm62fk4axZqw==", "(55) 88 9 9246-5315", false, "a8432e0f-513b-43b9-addc-5e29f4455632", false, "georgedev" },
-                    { 2, 0, "0caca49b-097a-4fc8-8a68-db7a0e0feec5", new DateTime(2024, 10, 23, 20, 23, 22, 117, DateTimeKind.Local).AddTicks(6976), "lnsf@gmail.com", false, false, null, "Lar Nossa Senhora de Fátima", "LNSF@GMAIL.COM", "LNSF", "AQAAAAIAAYagAAAAEEVe71TDW1Hff+ZYGd4RttZACfvuNVktEoGNG3dkeY1m/0sbK/VCUViqu8a8uyKShw==", "(11) 11 1 1111-1111", false, "d90050a1-0240-48d9-9fd3-fbfacaa3c41f", false, "lnsf" },
-                    { 3, 0, "de7f031e-b134-4e34-82a4-6c2fcd534ca7", new DateTime(2024, 10, 23, 20, 23, 22, 209, DateTimeKind.Local).AddTicks(5876), "lnsf2@gmail.com", false, false, null, "Lar Nossa Senhora de Fátima 2", "LNSF2@GMAIL.COM", "LNSF2", "AQAAAAIAAYagAAAAEJdv6443OJMDNlDfiu4ToTL/TQzr1MWVdsn71KbiGgE2sn4w07buDHQQKfJaGo5YNA==", "(22) 22 2 2222-2222", false, "8a8bcd0e-1398-48fb-ac82-2c2792bdd4a8", false, "lnsf2" }
+                    { 1, 0, "b3dfdbde-6f78-4b56-85a2-e785b81949c3", new DateTime(2024, 11, 4, 20, 59, 25, 276, DateTimeKind.Local).AddTicks(1823), "georgemaiaf@gmail.com", false, false, null, "George Maia", "GEORGEMAIAF@GMAIL.COM", "GEORGEDEV", "AQAAAAIAAYagAAAAEB/ozYGr3I/7kdNNlv7XN/kR2FbU9DyofuFIQjtBDEeH5nsxWKVgjV/MExGTPPatFw==", "(55) 88 9 9246-5315", false, "ac56f750-c53a-4130-9746-568236c5c0ab", false, "georgedev" },
+                    { 2, 0, "2910f4e6-f889-421b-8a48-315357460a87", new DateTime(2024, 11, 4, 20, 59, 25, 360, DateTimeKind.Local).AddTicks(5525), "lnsf@gmail.com", false, false, null, "Lar Nossa Senhora de Fátima", "LNSF@GMAIL.COM", "LNSF", "AQAAAAIAAYagAAAAEBEAfMel/385e2vQLsxn2C3mezZb4zDR6fR5a36Ar340PEVi2QmDuxXj2/X9zRCvXA==", "(11) 11 1 1111-1111", false, "b087e6af-9ada-40ec-b06f-ef0246e59268", false, "lnsf" },
+                    { 3, 0, "e93cbb23-8c83-4324-b51a-0cba744e1ba7", new DateTime(2024, 11, 4, 20, 59, 25, 463, DateTimeKind.Local).AddTicks(4775), "lnsf2@gmail.com", false, false, null, "Lar Nossa Senhora de Fátima 2", "LNSF2@GMAIL.COM", "LNSF2", "AQAAAAIAAYagAAAAEBBI8XkhqPlZMc73JK/iP1gmIGfvMoHvI9u6nBNes+T7x7VVRSeZh46pI633edLc3Q==", "(22) 22 2 2222-2222", false, "f9b7efbd-0978-4024-b1d1-1e9bda089c27", false, "lnsf2" }
                 });
 
             migrationBuilder.InsertData(
                 table: "UserRoles",
-                columns: new[] { "RoleId", "UserId", "CreatedAt" },
+                columns: new[] { "Id", "RoleId", "UserId" },
                 values: new object[,]
                 {
-                    { 1, 1, new DateTime(2024, 10, 23, 20, 23, 22, 212, DateTimeKind.Local).AddTicks(8998) },
-                    { 2, 1, new DateTime(2024, 10, 23, 20, 23, 22, 212, DateTimeKind.Local).AddTicks(9032) },
-                    { 3, 1, new DateTime(2024, 10, 23, 20, 23, 22, 212, DateTimeKind.Local).AddTicks(9034) },
-                    { 2, 2, new DateTime(2024, 10, 23, 20, 23, 22, 212, DateTimeKind.Local).AddTicks(9036) },
-                    { 5, 3, new DateTime(2024, 10, 23, 20, 23, 22, 212, DateTimeKind.Local).AddTicks(9037) }
+                    { 1, 1, 1 },
+                    { 2, 2, 1 },
+                    { 3, 3, 1 },
+                    { 4, 2, 2 },
+                    { 5, 5, 3 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -583,6 +613,16 @@ namespace LNSF.Migrations
                 column: "EscortId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_HostingsEscorts_HostingId_EscortId",
+                table: "HostingsEscorts",
+                columns: new[] { "HostingId", "EscortId" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LogEntries_UserId",
+                table: "LogEntries",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Patients_HospitalId",
                 table: "Patients",
                 column: "HospitalId");
@@ -592,6 +632,11 @@ namespace LNSF.Migrations
                 table: "Patients",
                 column: "PeopleId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PatientsTreatments_PatientId_TreatmentId",
+                table: "PatientsTreatments",
+                columns: new[] { "PatientId", "TreatmentId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_PatientsTreatments_TreatmentId",
@@ -619,6 +664,11 @@ namespace LNSF.Migrations
                 name: "IX_PeoplesRoomsHostings_PeopleId",
                 table: "PeoplesRoomsHostings",
                 column: "PeopleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PeoplesRoomsHostings_RoomId_PeopleId_HostingId",
+                table: "PeoplesRoomsHostings",
+                columns: new[] { "RoomId", "PeopleId", "HostingId" });
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
@@ -655,6 +705,11 @@ namespace LNSF.Migrations
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserRoles_UserId_RoleId",
+                table: "UserRoles",
+                columns: new[] { "UserId", "RoleId" });
+
+            migrationBuilder.CreateIndex(
                 name: "EmailIndex",
                 table: "Users",
                 column: "NormalizedEmail");
@@ -689,6 +744,9 @@ namespace LNSF.Migrations
 
             migrationBuilder.DropTable(
                 name: "HostingsEscorts");
+
+            migrationBuilder.DropTable(
+                name: "LogEntries");
 
             migrationBuilder.DropTable(
                 name: "PatientsTreatments");

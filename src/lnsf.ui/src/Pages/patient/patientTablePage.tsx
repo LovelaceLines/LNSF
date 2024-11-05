@@ -8,30 +8,25 @@ import { patient } from "@/types";
 import { usePatientTablePage } from "./usePatientTablePage";
 
 export const PatientTablePage = () => {
-	const {
-		patients,
-		rowCount,
-		state: { columnFilters, sorting, pagination, globalFilter, rowSelection },
-		setColumnFilters,
-		setGlobalFilter,
-		setRowSelection,
-		setPagination,
-		setSorting,
-		onSubmit,
-	} = usePatientTablePage();
+	const { patients, rowCount, onSubmit } = usePatientTablePage();
 
 	const columns = useMemo<MRT_ColumnDef<patient>[]>(
 		() => [
 			{
 				accessorKey: "id",
 				header: "Id",
-				size: 75,
+				size: 80,
 				Filter: ({ column }) => <MRTInputNumber column={column} />,
 			},
 			{
 				accessorKey: "peopleId",
 				header: "Id Pessoa",
-				Cell: ({ row }) => <MRTLaunchLink label={row.original.peopleId} to={`/app/pessoas/${row.original.peopleId}`} />,
+				Cell: ({ row }) => (
+					<MRTLaunchLink
+						label={row.original.peopleId}
+						to={`/app/pessoas/${row.original.peopleId}`}
+					/>
+				),
 			},
 			{
 				accessorKey: "people.name",
@@ -62,7 +57,12 @@ export const PatientTablePage = () => {
 			{
 				accessorKey: "hospitalId",
 				header: "Id Hospital",
-				Cell: ({ row }) => <MRTLaunchLink label={row.original.hospitalId} to={`/app/hospitais/${row.original.hospitalId}`} />,
+				Cell: ({ row }) => (
+					<MRTLaunchLink
+						label={row.original.hospitalId}
+						to={`/app/hospitais/${row.original.hospitalId}`}
+					/>
+				),
 			},
 			{
 				accessorKey: "hospital.name",
@@ -81,25 +81,12 @@ export const PatientTablePage = () => {
 	return (
 		<>
 			{useMaterialReactTable({
+				id: "patient",
 				columns,
 				data: patients,
 				title: "Pacientes Cadastrados",
 
-				setGlobalFilter,
-				setColumnFilters,
-				setSorting,
-				setPagination,
-				setRowSelection,
-
 				rowCount,
-
-				state: {
-					globalFilter,
-					columnFilters,
-					sorting,
-					rowSelection,
-					pagination,
-				},
 
 				onSubmit,
 

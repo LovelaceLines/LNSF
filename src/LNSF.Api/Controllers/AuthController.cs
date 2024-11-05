@@ -1,10 +1,9 @@
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-
 using LNSF.API.InputModels;
 using LNSF.Application.Interfaces;
 using LNSF.API.Utils;
 using LNSF.Domain.DTOs;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LNSF.API.Controllers;
 
@@ -31,7 +30,7 @@ public class AuthController(IAuthService service,
 		return Ok(await service.RefreshToken(token));
 	}
 
-	[Authorize]
+	[Authorize(Policy = "User")]
 	[HttpGet("user")]
 	public async Task<ActionResult<UserDTO>> Get([FromHeader(Name = "Authorization")] string auth)
 	{

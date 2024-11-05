@@ -5,18 +5,20 @@ namespace LNSF.Infra.Data.Configurations;
 
 public class PatientsTreatmentsConfiguration : BaseConfiguration<PatientTreatment>
 {
-    public override void Configure(EntityTypeBuilder<PatientTreatment> builder)
-    {
-        base.Configure(builder);
+	public override void Configure(EntityTypeBuilder<PatientTreatment> builder)
+	{
+		base.Configure(builder);
 
-        builder.HasKey(pt => new { pt.PatientId, pt.TreatmentId });
+		builder.HasKey(pt => pt.Id);
 
-        builder.HasOne(pt => pt.Patient)
-            .WithMany()
-            .HasForeignKey(pt => pt.PatientId);
+		builder.HasIndex(pt => new { pt.PatientId, pt.TreatmentId });
 
-        builder.HasOne(pt => pt.Treatment)
-            .WithMany()
-            .HasForeignKey(pt => pt.TreatmentId);
-    }
+		builder.HasOne(pt => pt.Patient)
+			.WithMany()
+			.HasForeignKey(pt => pt.PatientId);
+
+		builder.HasOne(pt => pt.Treatment)
+			.WithMany()
+			.HasForeignKey(pt => pt.TreatmentId);
+	}
 }

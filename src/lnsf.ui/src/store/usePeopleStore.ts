@@ -12,8 +12,8 @@ type state = {
 	postPeople: (people: people) => Promise<people>;
 	putPeople: (people: people) => Promise<people>;
 
-	addPeopleToRoom: (peopleId: number, roomId: number, hostingId: number) => Promise<peopleRoomHosting>;
-	removePeopleFromRoom: (peopleId: number, roomId: number, hostingId: number) => Promise<peopleRoomHosting>;
+	addPeopleToRoom: (peopleRoomHosting: peopleRoomHosting) => Promise<peopleRoomHosting>;
+	removePeopleFromRoom: (peopleRoomHosting: peopleRoomHosting) => Promise<peopleRoomHosting>;
 };
 
 export const usePeopleStore = create<state>((set) => ({
@@ -47,26 +47,14 @@ export const usePeopleStore = create<state>((set) => ({
 		return res.data;
 	},
 
-	addPeopleToRoom: async (
-		peopleId: number,
-		roomId: number,
-		hostingId: number
-	): Promise<peopleRoomHosting> => {
-		const res = await Axios.post<peopleRoomHosting>("/People/add-people-to-room", {
-			peopleId: peopleId,
-			roomId: roomId,
-			hostingId: hostingId,
-		} as peopleRoomHosting);
+	addPeopleToRoom: async (peopleRoomHosting: peopleRoomHosting): Promise<peopleRoomHosting> => {
+		const res = await Axios.post<peopleRoomHosting>("/People/add-people-to-room", peopleRoomHosting);
 		return res.data;
 	},
 
-	removePeopleFromRoom: async (
-		peopleId: number,
-		roomId: number,
-		hostingId: number
-	): Promise<peopleRoomHosting> => {
+	removePeopleFromRoom: async (peopleRoomHosting: peopleRoomHosting): Promise<peopleRoomHosting> => {
 		const res = await Axios.delete<peopleRoomHosting>("/People/remove-people-from-room", {
-			data: { peopleId: peopleId, roomId: roomId, hostingId: hostingId } as peopleRoomHosting,
+			data: peopleRoomHosting,
 		});
 		return res.data;
 	},

@@ -2,10 +2,10 @@
 
 public class PeopleRoomHosting : BaseEntity
 {
-    public int HostingId { get; set; }
-    public Hosting? Hosting { get; set; }
-    public int PeopleId { get; set; }
-    public People? People { get; set; }
-    public int RoomId { get; set; }
-    public Room? Room { get; set; }
+	public int HostingId { get; set; }
+	public Hosting? Hosting { get; set; }
+	public int PeopleId { get; set; }
+	public People? People { get; set; }
+	public int RoomId { get; set; }
+	public Room? Room { get; set; }
 }

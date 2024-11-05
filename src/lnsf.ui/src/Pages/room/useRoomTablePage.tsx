@@ -1,16 +1,17 @@
-import { getFilteredObject, useTable } from "@/tables";
+import { useForm } from "react-hook-form";
+
+import { getFilteredObject, useTableState } from "@/tables";
 import { useRoomStore } from "@/store";
 import { roomFilter } from "@/types";
-import { useForm } from "react-hook-form";
 
 export const useRoomTablePage = () => {
 	const { register, getValues, watch } = useForm<roomFilter>({ values: {} });
 	const { getRooms, rooms, queryResult } = useRoomStore();
-	const { state, ...restTablePros } = useTable();
+	const { state } = useTableState();
 
 	const onSubmit = () =>
 		getRooms({
-			...getFilteredObject({ state }),
+			...getFilteredObject({ state: state.room }),
 			...getValues(),
 			isAvailable: getValues("isAvailable") || undefined,
 		});
@@ -19,9 +20,7 @@ export const useRoomTablePage = () => {
 
 	return {
 		rooms,
-		state,
 		rowCount,
-		...restTablePros,
 		onSubmit,
 		getValues,
 		register,

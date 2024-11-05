@@ -7,6 +7,7 @@ export { useHostingStore } from "./useHostingStore";
 export { usePatientStore } from "./usePatientStore";
 export { usePeopleRoomHostingStore } from "./usePeopleRoomHostingStore";
 export { usePeopleStore } from "./usePeopleStore";
+export { useLogStore } from "./useLogStore";
 export { useRoleStore } from "./useRoleStore";
 export { useRoomStore } from "./useRoomStore";
 export { useTourStore } from "./useTourStore";

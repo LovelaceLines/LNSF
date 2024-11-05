@@ -14,7 +14,9 @@ import { PatientFormPage, PatientTablePage } from "@/pages/patient";
 import { EscortFormPage, EscortTablePage } from "@/pages/escort";
 import { CurrentUserFormPage, UserFormPage, UserTablePage } from "@/pages/user";
 import { ChainDashboardPage } from "@/pages/chain";
+import { LogTablePage } from "@/pages/logEntry";
 import { NotFoundPage } from "@/pages";
+import { SettingsPage } from "@/pages/settings";
 
 const LoginRouters: RouteObject = {
 	path: "/",
@@ -157,8 +159,12 @@ const MainRouters: RouteObject = {
 			element: <CurrentUserFormPage />,
 		},
 		{
+			path: "logs",
+			element: <LogTablePage />,
+		},
+		{
 			path: "configuracoes",
-			element: <>Configurações</>,
+			element: <SettingsPage />,
 		},
 		{
 			path: "*",

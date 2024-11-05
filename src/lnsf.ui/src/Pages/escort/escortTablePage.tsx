@@ -8,17 +8,7 @@ import { escort } from "@/types";
 import { useEscortTablePage } from "./useEscortTablePage";
 
 export const EscortTablePage = () => {
-	const {
-		escorts,
-		rowCount,
-		state: { columnFilters, sorting, pagination, globalFilter, rowSelection },
-		setColumnFilters,
-		setGlobalFilter,
-		setRowSelection,
-		setPagination,
-		setSorting,
-		onSubmit,
-	} = useEscortTablePage();
+	const { escorts, rowCount, onSubmit } = useEscortTablePage();
 
 	const columns = useMemo<MRT_ColumnDef<escort>[]>(
 		() => [
@@ -31,7 +21,12 @@ export const EscortTablePage = () => {
 			{
 				accessorKey: "peopleId",
 				header: "Id Pessoa",
-				Cell: ({ row }) => <MRTLaunchLink label={row.original.peopleId} to={`/app/pessoas/${row.original.peopleId}`} />,
+				Cell: ({ row }) => (
+					<MRTLaunchLink
+						label={row.original.peopleId}
+						to={`/app/pessoas/${row.original.peopleId}`}
+					/>
+				),
 			},
 			{
 				accessorKey: "people.name",
@@ -56,25 +51,12 @@ export const EscortTablePage = () => {
 	return (
 		<>
 			{useMaterialReactTable({
+				id: "escort",
 				columns,
 				data: escorts,
 				title: "Acompanhantes Cadastrados",
 
-				setGlobalFilter,
-				setColumnFilters,
-				setSorting,
-				setPagination,
-				setRowSelection,
-
 				rowCount,
-
-				state: {
-					globalFilter,
-					columnFilters,
-					sorting,
-					rowSelection,
-					pagination,
-				},
 
 				onSubmit,
 
