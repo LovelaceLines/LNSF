@@ -1,4 +1,13 @@
-import { Box, Button, Divider, FormControl, FormControlLabel, Radio, RadioGroup, Typography } from "@mui/material";
+import {
+	Box,
+	Button,
+	Divider,
+	FormControl,
+	FormControlLabel,
+	Radio,
+	RadioGroup,
+	Typography,
+} from "@mui/material";
 import { useState } from "react";
 
 import { Modal } from "@/components";
@@ -18,11 +27,14 @@ export const DownloadExportDisplay = (props: DownloadExportDisplayProps) => {
 	const headId: string[] = props.head.map(({ id }) => id);
 	const headValue: string[] = props.head.map(({ value }) => value);
 	const allRows: string[][] = props.allRows.map((row) => props.head.map(({ id }) => getValue(row, id)));
-	const selectedRows: string[][] = props.selectedRows.map((row) => props.head.map(({ id }) => getValue(row, id)));
+	const selectedRows: string[][] = props.selectedRows.map((row) =>
+		props.head.map(({ id }) => getValue(row, id))
+	);
 
 	const [rowsMode, setRowsMode] = useState<"selected" | "all">("all");
 
-	const handleRowsModeChange = (event: React.ChangeEvent<HTMLInputElement>) => setRowsMode(event.target.value as "selected" | "all");
+	const handleRowsModeChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+		setRowsMode(event.target.value as "selected" | "all");
 
 	const handleFormat = (format: "JSON" | "CSV" | "XLSX" | "PDF") => {
 		const rows = rowsMode === "all" ? allRows : selectedRows;
@@ -46,22 +58,22 @@ export const DownloadExportDisplay = (props: DownloadExportDisplayProps) => {
 		<Modal id="download-export-display">
 			<>
 				<Typography variant="h6" align="center">
-					Download/Export
+					Download/Exportação
 				</Typography>
-
 				<Divider />
-
-				<Typography variant="subtitle1">Export rows:</Typography>
+				<Typography variant="subtitle1">Exportar linhas:</Typography>
 				<FormControl>
 					<RadioGroup row value={rowsMode} onChange={handleRowsModeChange}>
-						<FormControlLabel value="all" control={<Radio />} label="All rows" />
-						<FormControlLabel value="selected" control={<Radio />} label="Only selected rows" />
+						<FormControlLabel value="all" control={<Radio />} label="Todas as linhas" />
+						<FormControlLabel
+							value="selected"
+							control={<Radio />}
+							label="Somente as selecionadas"
+						/>
 					</RadioGroup>
 				</FormControl>
-
 				<Divider />
-
-				<Typography variant="subtitle1">Export format:</Typography>
+				<Typography variant="subtitle1">Formato de exportação:</Typography>
 				<Box display="flex" justifyContent="center" gap={1}>
 					<Button variant="contained" size="small" onClick={() => handleFormat("JSON")}>
 						JSON
@@ -72,9 +84,9 @@ export const DownloadExportDisplay = (props: DownloadExportDisplayProps) => {
 					<Button variant="contained" size="small" onClick={() => handleFormat("XLSX")}>
 						XLSX
 					</Button>
-					{/* <Button variant="contained" size="small" onClick={() => handleFormat("PDF")}>
-            PDF
-          </Button> */}
+					<Button variant="contained" size="small" onClick={() => handleFormat("PDF")}>
+						PDF
+					</Button>
 				</Box>
 			</>
 		</Modal>

@@ -1,9 +1,11 @@
+using LNSF.API.ServiceFilters;
 using LNSF.Application.Interfaces;
 using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Filters;
 using LNSF.Domain.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LNSF.Api.Controllers;
@@ -12,12 +14,30 @@ namespace LNSF.Api.Controllers;
 [Route("api/[controller]")]
 public class PeopleController(IPeopleRepository repository,
 	IPeopleService service,
-	IPeopleRoomHostingService peopleRoomHostingService) : ControllerBase
+	IPeopleRoomHostingService peopleRoomHostingService,
+	IHttpContextAccessor httpContextAccessor) : ControllerBase
 {
 	[Authorize(Policy = "User")]
 	[HttpGet]
-	public async Task<ActionResult<QueryResult<PeopleDTO>>> Query([FromQuery] PeopleFilter filter) =>
-		Ok(await repository.Query(filter));
+	[ServiceFilter(typeof(AuthAndUserExtractionFilter))]
+	public async Task<ActionResult<QueryResult<PeopleDTO>>> Query([FromQuery] PeopleFilter filter)
+	{
+		var peoples = await repository.Query(filter);
+		peoples = new JsonSerializer<PeopleDTO>().Serialize(
+			new ContractResolver(
+				[
+					new()
+					{
+						Role = "Voluntário",
+						PropsSkipSerialization = ["RG", "CPF", "Phone"]
+					},
+				],
+				httpContextAccessor
+			),
+			peoples
+		);
+		return Ok(peoples);
+	}
 
 	[Authorize(Policy = "Base")]
 	[HttpPost]

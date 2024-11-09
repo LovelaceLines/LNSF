@@ -1,5 +1,6 @@
 import { getStorageValue, setStorageValue } from "./localStorageService";
 import { authToken, user } from "@/types";
+import { includes } from "@/utils";
 
 export const getAuthToken = (): authToken =>
 	getStorageValue("authToken", { accessToken: "", refreshToken: "" } as authToken) as authToken;
@@ -18,3 +19,8 @@ export const getUser = (): user =>
 	} as user) as user;
 
 export const setUser = (user: user) => setStorageValue("user", user);
+
+export const isInRoles = (roles: string[]): boolean => {
+	const userRoles = getUser().roles.map((role) => role.name);
+	return includes(userRoles, roles);
+};

@@ -11,9 +11,10 @@ export interface ISideBarProps {
 	to: string;
 	icon: React.ReactElement;
 	allowRoles?: string[];
+	display: boolean;
 }
 
-const logoutButton: ISideBarProps = { text: "Sair", to: "/login", icon: <Logout /> };
+const logoutButton: ISideBarProps = { text: "Sair", to: "/login", icon: <Logout />, display: true };
 
 export const ButtonList = ({ buttonList }: Readonly<{ buttonList: ISideBarProps[][] }>) => {
 	const { logoutUser } = useAuthStore();
@@ -23,8 +24,12 @@ export const ButtonList = ({ buttonList }: Readonly<{ buttonList: ISideBarProps[
 		<List>
 			{buttonList.map((subList, index) => (
 				<React.Fragment key={index}>
-					{subList.map(({ text, to, icon }, index) => (
-						<ListItem key={text + index} disablePadding>
+					{subList.map(({ text, to, icon, display }, index) => (
+						<ListItem
+							key={text + index}
+							disablePadding
+							sx={{ display: display ? "block" : "none" }}
+						>
 							<Link to={to} style={{ width: "100%", color: "inherit", textDecoration: "none" }}>
 								<Tooltip title={text} placement="right" arrow disableHoverListener={open}>
 									<ListItemButton>
@@ -38,7 +43,10 @@ export const ButtonList = ({ buttonList }: Readonly<{ buttonList: ISideBarProps[
 							</Link>
 						</ListItem>
 					))}
-					<Divider key={"Divider" + index} />
+					<Divider
+						key={"Divider" + index}
+						sx={{ display: subList.some((v) => v.display) ? "block" : "none" }}
+					/>
 				</React.Fragment>
 			))}
 

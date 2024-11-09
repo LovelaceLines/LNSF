@@ -18,6 +18,7 @@ import {
 	people,
 } from "@/types";
 import { usePeopleTablePage } from "./usePeopleTablePage";
+import { isInRoles } from "@/services";
 import { dateOnlyToStr } from "@/utils";
 
 export const PeopleTablePage = () => {
@@ -39,12 +40,14 @@ export const PeopleTablePage = () => {
 				accessorKey: "rg",
 				header: "RG",
 				enableClickToCopy: true,
+				visibleInShowHideMenu: !isInRoles(["Voluntário"]),
 				muiCopyButtonProps: CopyButton,
 			},
 			{
 				accessorKey: "cpf",
 				header: "CPF",
 				enableClickToCopy: true,
+				visibleInShowHideMenu: !isInRoles(["Voluntário"]),
 				muiCopyButtonProps: CopyButton,
 			},
 			{
@@ -55,6 +58,7 @@ export const PeopleTablePage = () => {
 				accessorKey: "phone",
 				header: "Telefone",
 				enableClickToCopy: true,
+				visibleInShowHideMenu: !isInRoles(["Voluntário"]),
 				muiCopyButtonProps: CopyButton,
 			},
 			{

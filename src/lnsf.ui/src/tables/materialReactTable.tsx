@@ -99,7 +99,6 @@ export const useMaterialReactTable = <TData extends MRT_RowData>({
 		setColumnFilters(id, []);
 		setSorting(id, []);
 		setColumnSizing(id, {});
-		setColumnVisibility(id, {});
 	}, []);
 
 	const handleDelete = useCallback(() => {
@@ -129,7 +128,7 @@ export const useMaterialReactTable = <TData extends MRT_RowData>({
 				)}
 				{props.toCreate && (
 					<Link to={props.toCreate === true ? "add" : props.toCreate}>
-						<Button key="create" variant="outlined" size="small" endIcon={<Add />}>
+						<Button key="create" variant="outlined" size="small" color="info" endIcon={<Add />}>
 							Criar
 						</Button>
 					</Link>
@@ -144,6 +143,7 @@ export const useMaterialReactTable = <TData extends MRT_RowData>({
 							key="edit"
 							variant="outlined"
 							size="small"
+							color="warning"
 							endIcon={<Edit />}
 							disabled={!table.getIsSomeRowsSelected()}
 						>
@@ -156,6 +156,7 @@ export const useMaterialReactTable = <TData extends MRT_RowData>({
 						key="delete"
 						variant="outlined"
 						size="small"
+						color="error"
 						endIcon={<Delete />}
 						onClick={handleDelete}
 						disabled={!table.getIsSomeRowsSelected()}

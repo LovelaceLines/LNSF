@@ -3,14 +3,26 @@ import { useForm } from "react-hook-form";
 import { getFilteredObject, useTableState } from "@/tables";
 import { peopleFilter } from "@/types";
 import { usePeopleStore } from "@/store";
+import { useEffect } from "react";
+import { isInRoles } from "@/services";
 
 export const usePeopleTablePage = () => {
 	const { getPeoples, peoples, queryResult } = usePeopleStore();
-	const { state } = useTableState();
 
 	const { register, getValues, watch, setValue } = useForm<peopleFilter>({
 		values: { isActive: undefined, isEscort: undefined, isPatient: undefined, isVeteran: undefined },
 	});
+
+	const { state, setColumnVisibility } = useTableState();
+
+	useEffect(() => {
+		setColumnVisibility("people", {
+			...state.people.columnVisibility,
+			cpf: isInRoles(["Voluntário"]) ? false : state.people.columnVisibility?.cpf ?? true,
+			rg: isInRoles(["Voluntário"]) ? false : state.people.columnVisibility?.rg ?? true,
+			phone: isInRoles(["Voluntário"]) ? false : state.people.columnVisibility?.phone ?? true,
+		});
+	}, []);
 
 	const onSubmit = () =>
 		getPeoples({

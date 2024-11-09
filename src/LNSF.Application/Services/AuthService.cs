@@ -167,8 +167,12 @@ public class AuthService : IAuthService
 		if (!int.TryParse(result.Claims["nameid"]?.ToString(), out var userId))
 			throw new AppException("Claims NameId not found!", HttpStatusCode.InternalServerError);
 
-		var rolesSTR = result.Claims["role"].ToString() ?? throw new AppException("Claims Role not found!", HttpStatusCode.InternalServerError);
-		var roles = rolesSTR.Split(',');
+		string[] roles = [];
+		var claimsRolesValue = result.Claims.FirstOrDefault(c => c.Key == "role").Value;
+		if (claimsRolesValue.GetType() != typeof(List<object>))
+			roles = [claimsRolesValue.ToString()!];
+		else
+			roles = ((List<object>)claimsRolesValue).Select(r => r.ToString()!).ToArray();
 
 		return (userId, roles);
 	}
