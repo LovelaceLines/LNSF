@@ -21,6 +21,6 @@ export const getUser = (): user =>
 export const setUser = (user: user) => setStorageValue("user", user);
 
 export const isInRoles = (roles: string[]): boolean => {
-	const userRoles = getUser().roles.map((role) => role.name);
+	const userRoles = getUser().roles?.map((role) => role.name) || [];
 	return includes(userRoles, roles);
 };

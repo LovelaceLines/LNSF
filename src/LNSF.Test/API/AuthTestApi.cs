@@ -11,7 +11,7 @@ public class AuthControllerTest : GlobalClientRequest
 	[Fact]
 	public async Task Post_Login_Desenvolvedor_ReturnsToken()
 	{
-		var login = new LoginIM { UserName = "lnsf", Password = "123456" };
+		var login = new LoginIM { UserName = "administrador", Password = "123456" };
 
 		var res = await PostFromBody<UserToken>(_loginClient, login);
 
