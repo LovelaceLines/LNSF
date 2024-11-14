@@ -24,6 +24,8 @@ public class AppDbContext : IdentityDbContext<User, Role, int, IdentityUserClaim
 	public DbSet<HostingEscort> HostingsEscorts { get; set; }
 	public DbSet<FamilyGroupProfile> FamilyGroupProfiles { get; set; }
 	public DbSet<ServiceRecord> ServiceRecords { get; set; }
+	public DbSet<Notification> Notifications { get; set; }
+	public DbSet<NotificationUser> NotificationsUsers { get; set; }
 
 	public DbSet<LogEntry> LogEntries { get; set; }
 
@@ -48,6 +50,8 @@ public class AppDbContext : IdentityDbContext<User, Role, int, IdentityUserClaim
 		builder.ApplyConfiguration(new UserRoleConfiguration());
 		builder.ApplyConfiguration(new FamilyGroupProfilesConfiguration());
 		builder.ApplyConfiguration(new ServiceRecordsConfiguration());
+		builder.ApplyConfiguration(new NotificationConfiguration());
+		builder.ApplyConfiguration(new NotificationUserConfiguration());
 		builder.ApplyConfiguration(new LogEntriesConfiguration());
 	}
 

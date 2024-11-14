@@ -42,6 +42,8 @@ public class GlobalClientRequest : HttpClientUtil
 	public readonly HttpClient _roomClient = new() { BaseAddress = new Uri($"{BaseUrl}Room/") };
 	public readonly HttpClient _addPeopleToRoomClient = new() { BaseAddress = new Uri($"{BaseUrl}People/add-people-to-room/") };
 	public readonly HttpClient _removePeopleFromRoomClient = new() { BaseAddress = new Uri($"{BaseUrl}People/remove-people-from-room/") };
+	public readonly HttpClient _notificationClient = new() { BaseAddress = new Uri($"{BaseUrl}Notification/") };
+	public readonly HttpClient _notificationMarkAsReadClient = new() { BaseAddress = new Uri($"{BaseUrl}Notification/mark-as-read/") };
 
 	#region GetEntityFake
 
@@ -215,6 +217,13 @@ public class GlobalClientRequest : HttpClientUtil
 		}
 		var fake = new PeopleRoomHosting() { PeopleId = peopleId.Value, RoomId = roomId.Value, HostingId = hostingId.Value };
 		return await PostFromBody<PeopleRoomHosting>(_addPeopleToRoomClient, fake);
+	}
+
+	public async Task<Notification> GetNotification()
+	{
+		var fake = new NotificationFake().Generate();
+		var result = await PostFromBody<Notification>(_notificationClient, fake);
+		return result;
 	}
 
 	#endregion
