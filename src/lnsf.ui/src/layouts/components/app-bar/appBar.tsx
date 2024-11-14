@@ -1,10 +1,9 @@
-import { AppBar as AppBarMUI, Container, Grid2 as Grid, IconButton, Toolbar } from "@mui/material";
-import { NotificationAdd } from "@mui/icons-material";
+import { AppBar as AppBarMUI, Container, Grid2 as Grid, Toolbar } from "@mui/material";
 
 import { Avatar } from "./avatar";
 import { colors, useThemeContext } from "@/theme";
+import { Notification } from "./notification";
 import { ToggleSideBar } from "./toggleSideBar";
-import { ToggleThemeIcon } from "./toggleThemeIcon";
 
 export const AppBar = () => {
 	const { themeName } = useThemeContext();
@@ -28,11 +27,9 @@ export const AppBar = () => {
 							justifyContent="flex-end"
 							alignContent="center"
 							size={{ xs: 1, sm: 3 }}
+							gap={1}
 						>
-							<IconButton color="inherit">
-								<NotificationAdd />
-							</IconButton>
-							<ToggleThemeIcon />
+							<Notification />
 							<Avatar />
 						</Grid>
 					</Grid>

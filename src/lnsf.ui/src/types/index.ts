@@ -12,6 +12,7 @@ export type { error } from "./error";
 export type { escort } from "./escort";
 export type { hospital, hospitalFilter } from "./hospital";
 export type { hosting, hostingFilter, hostingEscort } from "./hosting";
+export type { notification, notificationUser } from "./notification";
 export type { log, logFilter } from "./log.d";
 export { formatAction, formatEntityName, getAction, getEntityName } from "./log.f";
 export type { patient, patientFilter, patientTreatment } from "./patient";

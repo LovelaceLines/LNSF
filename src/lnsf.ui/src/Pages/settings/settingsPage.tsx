@@ -1,12 +1,23 @@
-import { Button, Divider, FormControlLabel, Grid2 as Grid, Switch } from "@mui/material";
+import {
+	Button,
+	Divider,
+	FormControlLabel,
+	Grid2 as Grid,
+	IconButton,
+	Switch,
+	Typography,
+} from "@mui/material";
 
 import { SelectField } from "@/components";
 import { useTablePropsLocalStorage } from "@/tables";
 import { useSettingsPage } from "./useSettingsPage";
+import { useThemeContext } from "@/theme";
+import { Brightness4, Brightness5 } from "@mui/icons-material";
 
 export const SettingsPage = () => {
 	const { tableProps, setTableProp, resetTableProp } = useTablePropsLocalStorage();
 	const { columnFilterDisplayModeOptions } = useSettingsPage();
+	const { themeName, toggleTheme } = useThemeContext();
 
 	return (
 		<Grid container spacing={2}>
@@ -46,6 +57,17 @@ export const SettingsPage = () => {
 					<Button variant="outlined" onClick={resetTableProp}>
 						Resetar Configurações de Tabela
 					</Button>
+				</Grid>
+			</Grid>
+			<Grid container spacing={2} size={12} alignItems="center">
+				<Grid size={12}>
+					<Divider>Tema</Divider>
+				</Grid>
+				<Grid size={12} display="flex" alignItems="center" direction="row">
+					<Typography>Trocar tema</Typography>
+					<IconButton onClick={toggleTheme} color="inherit" sx={{ display: "flex" }}>
+						{themeName === "light" ? <Brightness4 /> : <Brightness5 />}
+					</IconButton>
 				</Grid>
 			</Grid>
 		</Grid>

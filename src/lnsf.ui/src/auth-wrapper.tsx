@@ -21,18 +21,22 @@ export const AuthWrapper = ({
 
 			if (typeof jwt.role === "string") jwt.role = [jwt.role];
 
-			const authorized =
+			const authenticated =
 				user?.id?.toString() == jwt.nameid &&
 				user?.userName === jwt.unique_name &&
-				includes(authorizedRoles, jwt.role) &&
 				includes(
 					jwt.role,
-					user?.roles.map((role) => role.name)
+					user?.roles?.map((role) => role.name)
 				) &&
 				jwt.exp > Date.now() / 1000;
 
-			if (authorized) return;
-			else {
+			const authorized = includes(authorizedRoles, jwt.role);
+
+			if (authenticated && authorized) return;
+			else if (authenticated && !authorized) {
+				navigate("/app/unauthorized");
+				return;
+			} else {
 				refreshToken();
 				return;
 			}

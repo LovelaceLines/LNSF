@@ -15,7 +15,7 @@ import { EscortFormPage, EscortTablePage } from "@/pages/escort";
 import { CurrentUserFormPage, UserFormPage, UserTablePage } from "@/pages/user";
 import { ChainDashboardPage } from "@/pages/chain";
 import { LogTablePage } from "@/pages/logEntry";
-import { NotFoundPage } from "@/pages";
+import { NotFoundPage, UnauthorizedPage } from "@/pages";
 import { SettingsPage } from "@/pages/settings";
 
 const LoginRouters: RouteObject = {
@@ -144,15 +144,27 @@ const MainRouters: RouteObject = {
 		},
 		{
 			path: "usuarios",
-			element: <UserTablePage />,
+			element: (
+				<AuthWrapper authorizedRoles={["Desenvolvedor", "Administrador"]}>
+					<UserTablePage />
+				</AuthWrapper>
+			),
 		},
 		{
 			path: "usuarios/add",
-			element: <UserFormPage />,
+			element: (
+				<AuthWrapper authorizedRoles={["Desenvolvedor", "Administrador"]}>
+					<UserFormPage />
+				</AuthWrapper>
+			),
 		},
 		{
 			path: "usuarios/:id",
-			element: <UserFormPage />,
+			element: (
+				<AuthWrapper authorizedRoles={["Desenvolvedor", "Administrador"]}>
+					<UserFormPage />
+				</AuthWrapper>
+			),
 		},
 		{
 			path: "minha-conta",
@@ -160,11 +172,19 @@ const MainRouters: RouteObject = {
 		},
 		{
 			path: "logs",
-			element: <LogTablePage />,
+			element: (
+				<AuthWrapper authorizedRoles={["Desenvolvedor", "Administrador"]}>
+					<LogTablePage />
+				</AuthWrapper>
+			),
 		},
 		{
 			path: "configuracoes",
 			element: <SettingsPage />,
+		},
+		{
+			path: "unauthorized",
+			element: <UnauthorizedPage />,
 		},
 		{
 			path: "*",
@@ -173,11 +193,13 @@ const MainRouters: RouteObject = {
 	],
 };
 
-const NotFoundRouters: RouteObject = {
-	path: "*",
-	element: <NotFoundPage />,
-};
+const OtherRouters: RouteObject[] = [
+	{
+		path: "*",
+		element: <NotFoundPage />,
+	},
+];
 
-const routerObjects: RouteObject[] = [LoginRouters, MainRouters, NotFoundRouters];
+const routerObjects: RouteObject[] = [LoginRouters, MainRouters, ...OtherRouters];
 
 export const router = createBrowserRouter(routerObjects);

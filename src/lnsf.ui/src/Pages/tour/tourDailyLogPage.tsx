@@ -55,7 +55,7 @@ export const TourDailyLogPage = () => {
 				<>
 					<Grid>
 						<Typography variant="subtitle2">
-							{tour.people.name} - {tour.people.note}
+							{tour.people?.name} - {tour.people?.note}
 						</Typography>
 					</Grid>
 					<Grid size={{ xs: 12 }}>

@@ -24,6 +24,8 @@ export const UserTablePage = () => {
 			{
 				accessorKey: "roles",
 				header: "Funções",
+				enableSorting: false,
+				enableColumnFilter: false,
 				Cell: ({ row }) => row.original.roles.map((role) => role.name).join(", "),
 			},
 			{

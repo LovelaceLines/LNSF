@@ -6,4 +6,5 @@ export const getAllRoles = (): defaultRole[] =>
 		? ["Desenvolvedor", "Administrador", "Assistente Social", "Secretário", "Voluntário"]
 		: ["Administrador", "Assistente Social", "Secretário", "Voluntário"];
 
-export const getAdminRoles = (): defaultRole[] => (env.NODE_ENV == "development" ? ["Desenvolvedor", "Administrador"] : ["Administrador"]);
+export const getAdminRoles = (): defaultRole[] =>
+	env.NODE_ENV == "development" ? ["Desenvolvedor", "Administrador"] : ["Administrador"];
