@@ -6,6 +6,7 @@ export const keys: key[] = [
 	"hospital",
 	"hosting",
 	"log",
+	"notification",
 	"patient",
 	"peopleRoomHosting",
 	"people",

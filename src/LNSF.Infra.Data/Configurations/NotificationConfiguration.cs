@@ -18,8 +18,5 @@ public class NotificationConfiguration : BaseConfiguration<Notification>
 		builder.Property(n => n.Content)
 			.IsRequired()
 			.HasMaxLength(500);
-
-		builder.Property(n => n.CreatedAt)
-			.HasValueGenerator<DateTimeNowValueGenerator>();
 	}
 }

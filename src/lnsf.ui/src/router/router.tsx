@@ -1,22 +1,23 @@
 import { createBrowserRouter, Navigate, RouteObject } from "react-router-dom";
 
 import { AuthWrapper } from "@/auth-wrapper";
-import { MainLayout, LoginLayout } from "@/layouts";
-import { SingInPage } from "@/pages/(login)";
 import { Loading } from "@/components";
-import { PeopleFormPage, PeopleTablePage } from "@/pages/people";
-import { TourDailyLogPage, TourTablePage } from "@/pages/tour";
-import { RoomFormPage, RoomTablePage } from "@/pages/room";
-import { HospitalFormPage, HospitalTablePage } from "@/pages/hospital";
-import { TreatmentFormPage, TreatmentTablePage } from "@/pages/treatment";
-import { HostingFormPage, HostingTablePage, PeopleRoomHostingTablePage } from "@/pages/hosting";
-import { PatientFormPage, PatientTablePage } from "@/pages/patient";
-import { EscortFormPage, EscortTablePage } from "@/pages/escort";
-import { CurrentUserFormPage, UserFormPage, UserTablePage } from "@/pages/user";
-import { ChainDashboardPage } from "@/pages/chain";
-import { LogTablePage } from "@/pages/logEntry";
+import { MainLayout, LoginLayout } from "@/layouts";
 import { NotFoundPage, UnauthorizedPage } from "@/pages";
+import { EscortFormPage, EscortTablePage } from "@/pages/escort";
+import { ChainDashboardPage } from "@/pages/chain";
+import { HospitalFormPage, HospitalTablePage } from "@/pages/hospital";
+import { HostingFormPage, HostingTablePage, PeopleRoomHostingTablePage } from "@/pages/hosting";
+import { LogTablePage } from "@/pages/logEntry";
+import { SingInPage } from "@/pages/(login)";
+import { PeopleFormPage, PeopleTablePage } from "@/pages/people";
+import { RoomFormPage, RoomTablePage } from "@/pages/room";
+import { NotificationFormPage, NotificationTablePage } from "@/pages/notification";
 import { SettingsPage } from "@/pages/settings";
+import { TreatmentFormPage, TreatmentTablePage } from "@/pages/treatment";
+import { TourDailyLogPage, TourTablePage } from "@/pages/tour";
+import { PatientFormPage, PatientTablePage } from "@/pages/patient";
+import { CurrentUserFormPage, UserFormPage, UserTablePage } from "@/pages/user";
 
 const LoginRouters: RouteObject = {
 	path: "/",
@@ -175,6 +176,30 @@ const MainRouters: RouteObject = {
 			element: (
 				<AuthWrapper authorizedRoles={["Desenvolvedor", "Administrador"]}>
 					<LogTablePage />
+				</AuthWrapper>
+			),
+		},
+		{
+			path: "notificacoes",
+			element: (
+				<AuthWrapper authorizedRoles={["Desenvolvedor", "Administrador"]}>
+					<NotificationTablePage />
+				</AuthWrapper>
+			),
+		},
+		{
+			path: "notificacoes/add",
+			element: (
+				<AuthWrapper authorizedRoles={["Desenvolvedor", "Administrador"]}>
+					<NotificationFormPage />
+				</AuthWrapper>
+			),
+		},
+		{
+			path: "notificacoes/:id",
+			element: (
+				<AuthWrapper authorizedRoles={["Desenvolvedor", "Administrador"]}>
+					<NotificationFormPage />
 				</AuthWrapper>
 			),
 		},

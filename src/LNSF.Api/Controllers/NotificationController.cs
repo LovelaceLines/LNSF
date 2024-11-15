@@ -1,6 +1,7 @@
 using LNSF.API.ServiceFilters;
 using LNSF.Application.Interfaces;
 using LNSF.Domain.Entities;
+using LNSF.Domain.Filters;
 using LNSF.Domain.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -16,8 +17,12 @@ public class NotificationController(INotificationRepository repository,
 	INotificationUserService notificationUserService) : ControllerBase
 {
 	[HttpGet]
+	public async Task<ActionResult<QueryResult<Notification>>> Get([FromQuery] NotificationFilter filter) =>
+		Ok(await repository.Query(filter));
+
+	[HttpGet("by-user")]
 	[ServiceFilter(typeof(AuthAndUserExtractionFilter))]
-	public async Task<ActionResult<List<Notification>>> Get()
+	public async Task<ActionResult<List<Notification>>> GetByUser()
 	{
 		var userId = (int)HttpContext.Items["CurrentUserId"]!;
 		return Ok(await repository.GetByUserId(userId));

@@ -91,6 +91,7 @@ public static class DependencyInjectionSetup
 
 		services.AddTransient<INotificationUserRepository, NotificationUserRepository>();
 		services.AddTransient<INotificationUserService, NotificationUserService>();
+		services.AddTransient<NotificationValidator>();
 
 		services.AddTransient<ILogEntryRepository, LogEntryRepository>();
 

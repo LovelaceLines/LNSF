@@ -1,13 +1,15 @@
 import { create } from "zustand";
 
 import { Axios } from "@/http";
-import { notification, notificationUser } from "@/types";
+import { notification, notificationFilter, notificationUser, queryResult } from "@/types";
 
 type state = {
 	count: number;
 	notifications: notification[];
+	queryResult: queryResult<notification>;
 
-	getNotifications: () => Promise<notification[]>;
+	getNotifications: (filters?: notificationFilter) => Promise<queryResult<notification>>;
+	getNotificationsByUser: () => Promise<notification[]>;
 	getUnreadCount: () => Promise<number>;
 	postMarkAsRead: (notificationId: number) => Promise<notificationUser>;
 	postNotification: (notification: notification) => Promise<notification>;
@@ -18,9 +20,17 @@ type state = {
 export const useNotificationStore = create<state>((set) => ({
 	count: 0,
 	notifications: [],
+	queryResult: { items: [], totalCount: 0 },
 
-	getNotifications: async (): Promise<notification[]> => {
-		const res = await Axios.get<notification[]>("/Notification");
+	getNotifications: async (filters?: notificationFilter): Promise<queryResult<notification>> => {
+		console.debug("getNotifications");
+		const res = await Axios.get<queryResult<notification>>("/Notification", { params: filters });
+		set({ queryResult: res.data });
+		return res.data;
+	},
+
+	getNotificationsByUser: async (): Promise<notification[]> => {
+		const res = await Axios.get<notification[]>("/Notification/by-user");
 		set({ notifications: res.data });
 		return res.data;
 	},

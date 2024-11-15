@@ -14,6 +14,7 @@ export type key =
 	| "hospital"
 	| "hosting"
 	| "log"
+	| "notification"
 	| "patient"
 	| "peopleRoomHosting"
 	| "people"

@@ -40,6 +40,7 @@ const initialState = (): state["state"] => {
 			pagination: { pageIndex: 0, pageSize: 20 },
 			columnSizing: {},
 			columnVisibility: {},
+			rowSelection: {},
 			...getTableState[k],
 		};
 	});

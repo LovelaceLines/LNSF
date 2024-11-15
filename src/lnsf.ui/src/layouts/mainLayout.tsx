@@ -1,8 +1,8 @@
-import { Box } from "@mui/material";
 import {
 	AccountCircle,
 	Apartment,
 	Bed,
+	EditNotifications,
 	Home,
 	LocalHospital,
 	People,
@@ -12,6 +12,8 @@ import {
 	Today,
 	Tour,
 } from "@mui/icons-material";
+import { Box } from "@mui/material";
+import { useEffect } from "react";
 
 import { AppBar } from "./components/app-bar";
 import { ISideBarProps, SideBar } from "./components/side-bar";
@@ -19,6 +21,7 @@ import { useSideBar } from "@/contexts";
 import { useThemeContext } from "@/theme";
 import { LayersLayout } from "./layersLayout";
 import { isInRoles } from "@/services";
+import { useNotificationStore } from "@/store";
 
 const buttonList: ISideBarProps[][] = [
 	[{ text: "Inicio", to: "/app", icon: <Home />, display: !isInRoles(["Voluntário"]) }],
@@ -60,6 +63,12 @@ const buttonList: ISideBarProps[][] = [
 			icon: <Quiz />,
 			display: isInRoles(["Desenvolvedor", "Administrador"]),
 		},
+		{
+			text: "Notificações",
+			to: "/app/notificacoes",
+			icon: <EditNotifications />,
+			display: isInRoles(["Desenvolvedor", "Administrador"]),
+		},
 		{ text: "Configurações", to: "/app/configuracoes", icon: <Settings />, display: true },
 	],
 ];
@@ -70,6 +79,11 @@ const minDrawerWidth = 56;
 export const MainLayout = () => {
 	const { open } = useSideBar();
 	const { isDesktop } = useThemeContext();
+	const { getUnreadCount } = useNotificationStore();
+
+	useEffect(() => {
+		getUnreadCount();
+	}, []);
 
 	return (
 		<Box display="flex">

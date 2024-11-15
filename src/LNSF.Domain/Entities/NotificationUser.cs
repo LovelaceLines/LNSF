@@ -1,4 +1,3 @@
-
 namespace LNSF.Domain.Entities;
 
 public class NotificationUser : BaseEntity

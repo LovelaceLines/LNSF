@@ -191,6 +191,57 @@ namespace LNSF.Migrations
                     b.ToTable("LogEntries");
                 });
 
+            modelBuilder.Entity("LNSF.Domain.Entities.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("ExpiredAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("ValidFrom")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Notifications");
+                });
+
+            modelBuilder.Entity("LNSF.Domain.Entities.NotificationUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("NotificationId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("ReadAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NotificationId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("NotificationsUsers");
+                });
+
             modelBuilder.Entity("LNSF.Domain.Entities.Patient", b =>
                 {
                     b.Property<int>("Id")
@@ -381,47 +432,47 @@ namespace LNSF.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "ddb0acbe-6de9-49e4-89ab-d919745de8e1",
-                            CreatedAt = new DateTime(2024, 11, 9, 20, 24, 12, 706, DateTimeKind.Local).AddTicks(8212),
+                            ConcurrencyStamp = "5338cce6-69c1-4d23-8b06-830cec06c955",
+                            CreatedAt = new DateTime(2024, 11, 14, 16, 34, 22, 172, DateTimeKind.Local).AddTicks(1665),
                             Name = "Desenvolvedor",
                             NormalizedName = "DESENVOLVEDOR",
-                            UpdatedAt = new DateTime(2024, 11, 9, 20, 24, 12, 706, DateTimeKind.Local).AddTicks(8225)
+                            UpdatedAt = new DateTime(2024, 11, 14, 16, 34, 22, 172, DateTimeKind.Local).AddTicks(1676)
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "f8d6eb54-6449-47ee-b688-9f78e70482d4",
-                            CreatedAt = new DateTime(2024, 11, 9, 20, 24, 12, 706, DateTimeKind.Local).AddTicks(8234),
+                            ConcurrencyStamp = "cccaced1-949f-4d3f-98a9-967c2cdeff44",
+                            CreatedAt = new DateTime(2024, 11, 14, 16, 34, 22, 172, DateTimeKind.Local).AddTicks(1684),
                             Name = "Administrador",
                             NormalizedName = "ADMINISTRADOR",
-                            UpdatedAt = new DateTime(2024, 11, 9, 20, 24, 12, 706, DateTimeKind.Local).AddTicks(8235)
+                            UpdatedAt = new DateTime(2024, 11, 14, 16, 34, 22, 172, DateTimeKind.Local).AddTicks(1684)
                         },
                         new
                         {
                             Id = 3,
-                            ConcurrencyStamp = "b1e1ccf1-6571-43df-8e75-8f7dcdf9241f",
-                            CreatedAt = new DateTime(2024, 11, 9, 20, 24, 12, 706, DateTimeKind.Local).AddTicks(8240),
+                            ConcurrencyStamp = "3a3acd80-4297-4a8b-b8ae-c5e88298282e",
+                            CreatedAt = new DateTime(2024, 11, 14, 16, 34, 22, 172, DateTimeKind.Local).AddTicks(1688),
                             Name = "Assistente Social",
                             NormalizedName = "ASSISTENTESOCIAL",
-                            UpdatedAt = new DateTime(2024, 11, 9, 20, 24, 12, 706, DateTimeKind.Local).AddTicks(8241)
+                            UpdatedAt = new DateTime(2024, 11, 14, 16, 34, 22, 172, DateTimeKind.Local).AddTicks(1689)
                         },
                         new
                         {
                             Id = 4,
-                            ConcurrencyStamp = "cddc0a2b-407b-4488-8535-4f8b841e7634",
-                            CreatedAt = new DateTime(2024, 11, 9, 20, 24, 12, 706, DateTimeKind.Local).AddTicks(8256),
+                            ConcurrencyStamp = "4d56b4b5-e6c1-416d-bcc9-91bfc6181d58",
+                            CreatedAt = new DateTime(2024, 11, 14, 16, 34, 22, 172, DateTimeKind.Local).AddTicks(1693),
                             Name = "Secretário",
                             NormalizedName = "SECRETARIO",
-                            UpdatedAt = new DateTime(2024, 11, 9, 20, 24, 12, 706, DateTimeKind.Local).AddTicks(8257)
+                            UpdatedAt = new DateTime(2024, 11, 14, 16, 34, 22, 172, DateTimeKind.Local).AddTicks(1693)
                         },
                         new
                         {
                             Id = 5,
-                            ConcurrencyStamp = "340d4071-a300-4544-ab47-2ba5ebc03a4a",
-                            CreatedAt = new DateTime(2024, 11, 9, 20, 24, 12, 706, DateTimeKind.Local).AddTicks(8262),
+                            ConcurrencyStamp = "3dca0a05-332b-4a0e-b1cd-54ba58503c67",
+                            CreatedAt = new DateTime(2024, 11, 14, 16, 34, 22, 172, DateTimeKind.Local).AddTicks(1706),
                             Name = "Voluntário",
                             NormalizedName = "VOLUNTARIO",
-                            UpdatedAt = new DateTime(2024, 11, 9, 20, 24, 12, 706, DateTimeKind.Local).AddTicks(8263)
+                            UpdatedAt = new DateTime(2024, 11, 14, 16, 34, 22, 172, DateTimeKind.Local).AddTicks(1706)
                         });
                 });
 
@@ -705,100 +756,100 @@ namespace LNSF.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "72cc48d3-a732-4e0f-a122-a3348cbd6793",
-                            CreatedAt = new DateTime(2024, 11, 9, 20, 24, 12, 789, DateTimeKind.Local).AddTicks(4055),
+                            ConcurrencyStamp = "1f7b8932-49f8-4579-ad50-f57b67b64c61",
+                            CreatedAt = new DateTime(2024, 11, 14, 16, 34, 22, 234, DateTimeKind.Local).AddTicks(3365),
                             Email = "desenvolvedor@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             Name = "Desenvolvedor",
                             NormalizedEmail = "DESENVOLVEDOR@GMAIL.COM",
                             NormalizedUserName = "DESENVOLVEDOR",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOfQ5skJy7zDwS/Bpr3nV6ZuPLuWJgcskzwZAQIbFC2nihSp4eDzfW10Yj8WYP1auQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEH6qqSlgsEVPfJa4lEr/bMWWPwZGDLPygzRQqG8muCDPiC5mlIUVj3WPrpFk0KWrJg==",
                             PhoneNumber = "(00) 00 0 0000-0000",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "133b4385-9bf6-4227-894c-532c43e83259",
+                            SecurityStamp = "03b15530-6b56-4f8a-9cb4-dacbe3a79581",
                             TwoFactorEnabled = false,
-                            UpdatedAt = new DateTime(2024, 11, 9, 20, 24, 12, 789, DateTimeKind.Local).AddTicks(4073),
+                            UpdatedAt = new DateTime(2024, 11, 14, 16, 34, 22, 234, DateTimeKind.Local).AddTicks(3379),
                             UserName = "desenvolvedor"
                         },
                         new
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d4804710-83f1-4cac-9f98-806b39161fd6",
-                            CreatedAt = new DateTime(2024, 11, 9, 20, 24, 12, 869, DateTimeKind.Local).AddTicks(6132),
+                            ConcurrencyStamp = "089e2866-78f6-47d2-b615-10688fe15f42",
+                            CreatedAt = new DateTime(2024, 11, 14, 16, 34, 22, 297, DateTimeKind.Local).AddTicks(8456),
                             Email = "administrador@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             Name = "Administrador",
                             NormalizedEmail = "ADMINISTRADOR@GMAIL.COM",
                             NormalizedUserName = "ADMINISTRADOR",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMxx4J8gRdmX2PgN1bsq1VdcqtutqdHyMwjtzct3kvjuj5ESBIdYxC6jm1zdB5iHgA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHSITRFDSK/eTiC4R5EKqHZbA3N3cvuMwQywJENFPbJw5ZvRLvqoC0smdY/63tIDtA==",
                             PhoneNumber = "(11) 11 1 1111-1111",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "14b4c1de-2022-44e4-b76a-a92ce3760b7d",
+                            SecurityStamp = "f5481651-e417-4c44-9958-1105ea21d38e",
                             TwoFactorEnabled = false,
-                            UpdatedAt = new DateTime(2024, 11, 9, 20, 24, 12, 869, DateTimeKind.Local).AddTicks(6146),
+                            UpdatedAt = new DateTime(2024, 11, 14, 16, 34, 22, 297, DateTimeKind.Local).AddTicks(8476),
                             UserName = "administrador"
                         },
                         new
                         {
                             Id = 3,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2d7d0774-f7e7-447b-bc75-d98eb9ba3a7c",
-                            CreatedAt = new DateTime(2024, 11, 9, 20, 24, 12, 949, DateTimeKind.Local).AddTicks(3368),
+                            ConcurrencyStamp = "17370081-8770-41a9-83ca-ef4e5331a9d3",
+                            CreatedAt = new DateTime(2024, 11, 14, 16, 34, 22, 362, DateTimeKind.Local).AddTicks(8615),
                             Email = "assistentesocial@email.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             Name = "Assistente Social",
                             NormalizedEmail = "ASSISTENTESOCIAL@EMAIL.COM",
                             NormalizedUserName = "ASSISTENTE SOCIAL",
-                            PasswordHash = "AQAAAAIAAYagAAAAELktTBKkTuvBVLwFnAGuEBk7FnR2H+j74KAHp9FORYDDGBAafjc0KsbDQFcL8WaD9Q==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECLu921+/mKInzp0dWnnkci4HK7w5LqTZxEHCo9qHxtr6uCb++k0JihQ6lrm4AILAQ==",
                             PhoneNumber = "(22) 22 2 2222-2222",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a4ea4b4c-ea1f-4e26-85ed-38ebccaafdee",
+                            SecurityStamp = "92577979-4f5d-4bbd-8d2b-0a07fe7cbd9e",
                             TwoFactorEnabled = false,
-                            UpdatedAt = new DateTime(2024, 11, 9, 20, 24, 12, 949, DateTimeKind.Local).AddTicks(3376),
+                            UpdatedAt = new DateTime(2024, 11, 14, 16, 34, 22, 362, DateTimeKind.Local).AddTicks(8634),
                             UserName = "assistentesocial"
                         },
                         new
                         {
                             Id = 4,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ced8dbdb-a0fd-4a4f-8a82-a01f8526f7c2",
-                            CreatedAt = new DateTime(2024, 11, 9, 20, 24, 13, 27, DateTimeKind.Local).AddTicks(9746),
+                            ConcurrencyStamp = "e00dbd7f-2558-445c-b336-1e57153b93eb",
+                            CreatedAt = new DateTime(2024, 11, 14, 16, 34, 22, 425, DateTimeKind.Local).AddTicks(913),
                             Email = "secretario@email.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             Name = "Secretário",
                             NormalizedEmail = "SECRETARIO@EMAIL.COM",
                             NormalizedUserName = "SECRETÁRIO",
-                            PasswordHash = "AQAAAAIAAYagAAAAEP4lQLlbiEb8/tPuy3+MNjaNn7S/0sRt+I/plhCegv/Kg6UxbQfHYGmlS8UchqZYXQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENfJ+V4NVROhlcdRbSwvRtGb+4A6tgBEdVfPa1rFbQCXE6bHX6L6S2ACubjdXCTFgQ==",
                             PhoneNumber = "(33) 33 3 3333-3333",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "531a9712-59a9-453a-be9f-743116768177",
+                            SecurityStamp = "7ed4be6c-df1b-4fde-9900-9ece24d88c56",
                             TwoFactorEnabled = false,
-                            UpdatedAt = new DateTime(2024, 11, 9, 20, 24, 13, 27, DateTimeKind.Local).AddTicks(9760),
+                            UpdatedAt = new DateTime(2024, 11, 14, 16, 34, 22, 425, DateTimeKind.Local).AddTicks(933),
                             UserName = "secretario"
                         },
                         new
                         {
                             Id = 5,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c5b36b6b-852a-439b-ab74-8c8960a53358",
-                            CreatedAt = new DateTime(2024, 11, 9, 20, 24, 13, 106, DateTimeKind.Local).AddTicks(5661),
+                            ConcurrencyStamp = "b892d64a-56f7-46bc-83de-b4fa92665bdf",
+                            CreatedAt = new DateTime(2024, 11, 14, 16, 34, 22, 487, DateTimeKind.Local).AddTicks(4461),
                             Email = "valuntario@email.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             Name = "Voluntário",
                             NormalizedEmail = "VOLUNTARIO@EMAIL.COM",
                             NormalizedUserName = "VOLUNTARIO",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDKkD7m4WQSp88tZ3OLNs7hkhWPm3Gp1VHZenVMX0+T7iOq0apSiqavaZmAoa8/L3g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMbNPgWlw/DLDC3xAfr0RdOGx8fBB188A4HltXwHwAU/Y61vcCV5PWJ5nzY2YjIDjQ==",
                             PhoneNumber = "(44) 44 4 4444-4444",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "7911b007-0e40-4c58-a0b0-bf57d382a5a8",
+                            SecurityStamp = "e5b3a2d7-5d16-47b2-9270-7d562d7c3ace",
                             TwoFactorEnabled = false,
-                            UpdatedAt = new DateTime(2024, 11, 9, 20, 24, 13, 106, DateTimeKind.Local).AddTicks(5675),
+                            UpdatedAt = new DateTime(2024, 11, 14, 16, 34, 22, 487, DateTimeKind.Local).AddTicks(4475),
                             UserName = "voluntario"
                         });
                 });
@@ -1010,6 +1061,25 @@ namespace LNSF.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("LNSF.Domain.Entities.NotificationUser", b =>
+                {
+                    b.HasOne("LNSF.Domain.Entities.Notification", "Notification")
+                        .WithMany()
+                        .HasForeignKey("NotificationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LNSF.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Notification");
 
                     b.Navigation("User");
                 });

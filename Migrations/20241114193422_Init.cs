@@ -28,6 +28,22 @@ namespace LNSF.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Notifications",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Title = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    Content = table.Column<string>(type: "TEXT", maxLength: 500, nullable: false),
+                    ValidFrom = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    ExpiredAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notifications", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Peoples",
                 columns: table => new
                 {
@@ -329,6 +345,33 @@ namespace LNSF.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "NotificationsUsers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ReadAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    NotificationId = table.Column<int>(type: "INTEGER", nullable: false),
+                    UserId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NotificationsUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_NotificationsUsers_Notifications_NotificationId",
+                        column: x => x.NotificationId,
+                        principalTable: "Notifications",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_NotificationsUsers_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserRoles",
                 columns: table => new
                 {
@@ -530,11 +573,11 @@ namespace LNSF.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "CreatedAt", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { 1, "ddb0acbe-6de9-49e4-89ab-d919745de8e1", new DateTime(2024, 11, 9, 20, 24, 12, 706, DateTimeKind.Local).AddTicks(8212), "Desenvolvedor", "DESENVOLVEDOR" },
-                    { 2, "f8d6eb54-6449-47ee-b688-9f78e70482d4", new DateTime(2024, 11, 9, 20, 24, 12, 706, DateTimeKind.Local).AddTicks(8234), "Administrador", "ADMINISTRADOR" },
-                    { 3, "b1e1ccf1-6571-43df-8e75-8f7dcdf9241f", new DateTime(2024, 11, 9, 20, 24, 12, 706, DateTimeKind.Local).AddTicks(8240), "Assistente Social", "ASSISTENTESOCIAL" },
-                    { 4, "cddc0a2b-407b-4488-8535-4f8b841e7634", new DateTime(2024, 11, 9, 20, 24, 12, 706, DateTimeKind.Local).AddTicks(8256), "Secretário", "SECRETARIO" },
-                    { 5, "340d4071-a300-4544-ab47-2ba5ebc03a4a", new DateTime(2024, 11, 9, 20, 24, 12, 706, DateTimeKind.Local).AddTicks(8262), "Voluntário", "VOLUNTARIO" }
+                    { 1, "5338cce6-69c1-4d23-8b06-830cec06c955", new DateTime(2024, 11, 14, 16, 34, 22, 172, DateTimeKind.Local).AddTicks(1665), "Desenvolvedor", "DESENVOLVEDOR" },
+                    { 2, "cccaced1-949f-4d3f-98a9-967c2cdeff44", new DateTime(2024, 11, 14, 16, 34, 22, 172, DateTimeKind.Local).AddTicks(1684), "Administrador", "ADMINISTRADOR" },
+                    { 3, "3a3acd80-4297-4a8b-b8ae-c5e88298282e", new DateTime(2024, 11, 14, 16, 34, 22, 172, DateTimeKind.Local).AddTicks(1688), "Assistente Social", "ASSISTENTESOCIAL" },
+                    { 4, "4d56b4b5-e6c1-416d-bcc9-91bfc6181d58", new DateTime(2024, 11, 14, 16, 34, 22, 172, DateTimeKind.Local).AddTicks(1693), "Secretário", "SECRETARIO" },
+                    { 5, "3dca0a05-332b-4a0e-b1cd-54ba58503c67", new DateTime(2024, 11, 14, 16, 34, 22, 172, DateTimeKind.Local).AddTicks(1706), "Voluntário", "VOLUNTARIO" }
                 });
 
             migrationBuilder.InsertData(
@@ -553,11 +596,11 @@ namespace LNSF.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedAt", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { 1, 0, "72cc48d3-a732-4e0f-a122-a3348cbd6793", new DateTime(2024, 11, 9, 20, 24, 12, 789, DateTimeKind.Local).AddTicks(4055), "desenvolvedor@gmail.com", false, false, null, "Desenvolvedor", "DESENVOLVEDOR@GMAIL.COM", "DESENVOLVEDOR", "AQAAAAIAAYagAAAAEOfQ5skJy7zDwS/Bpr3nV6ZuPLuWJgcskzwZAQIbFC2nihSp4eDzfW10Yj8WYP1auQ==", "(00) 00 0 0000-0000", false, "133b4385-9bf6-4227-894c-532c43e83259", false, "desenvolvedor" },
-                    { 2, 0, "d4804710-83f1-4cac-9f98-806b39161fd6", new DateTime(2024, 11, 9, 20, 24, 12, 869, DateTimeKind.Local).AddTicks(6132), "administrador@gmail.com", false, false, null, "Administrador", "ADMINISTRADOR@GMAIL.COM", "ADMINISTRADOR", "AQAAAAIAAYagAAAAEMxx4J8gRdmX2PgN1bsq1VdcqtutqdHyMwjtzct3kvjuj5ESBIdYxC6jm1zdB5iHgA==", "(11) 11 1 1111-1111", false, "14b4c1de-2022-44e4-b76a-a92ce3760b7d", false, "administrador" },
-                    { 3, 0, "2d7d0774-f7e7-447b-bc75-d98eb9ba3a7c", new DateTime(2024, 11, 9, 20, 24, 12, 949, DateTimeKind.Local).AddTicks(3368), "assistentesocial@email.com", false, false, null, "Assistente Social", "ASSISTENTESOCIAL@EMAIL.COM", "ASSISTENTE SOCIAL", "AQAAAAIAAYagAAAAELktTBKkTuvBVLwFnAGuEBk7FnR2H+j74KAHp9FORYDDGBAafjc0KsbDQFcL8WaD9Q==", "(22) 22 2 2222-2222", false, "a4ea4b4c-ea1f-4e26-85ed-38ebccaafdee", false, "assistentesocial" },
-                    { 4, 0, "ced8dbdb-a0fd-4a4f-8a82-a01f8526f7c2", new DateTime(2024, 11, 9, 20, 24, 13, 27, DateTimeKind.Local).AddTicks(9746), "secretario@email.com", false, false, null, "Secretário", "SECRETARIO@EMAIL.COM", "SECRETÁRIO", "AQAAAAIAAYagAAAAEP4lQLlbiEb8/tPuy3+MNjaNn7S/0sRt+I/plhCegv/Kg6UxbQfHYGmlS8UchqZYXQ==", "(33) 33 3 3333-3333", false, "531a9712-59a9-453a-be9f-743116768177", false, "secretario" },
-                    { 5, 0, "c5b36b6b-852a-439b-ab74-8c8960a53358", new DateTime(2024, 11, 9, 20, 24, 13, 106, DateTimeKind.Local).AddTicks(5661), "valuntario@email.com", false, false, null, "Voluntário", "VOLUNTARIO@EMAIL.COM", "VOLUNTARIO", "AQAAAAIAAYagAAAAEDKkD7m4WQSp88tZ3OLNs7hkhWPm3Gp1VHZenVMX0+T7iOq0apSiqavaZmAoa8/L3g==", "(44) 44 4 4444-4444", false, "7911b007-0e40-4c58-a0b0-bf57d382a5a8", false, "voluntario" }
+                    { 1, 0, "1f7b8932-49f8-4579-ad50-f57b67b64c61", new DateTime(2024, 11, 14, 16, 34, 22, 234, DateTimeKind.Local).AddTicks(3365), "desenvolvedor@gmail.com", false, false, null, "Desenvolvedor", "DESENVOLVEDOR@GMAIL.COM", "DESENVOLVEDOR", "AQAAAAIAAYagAAAAEH6qqSlgsEVPfJa4lEr/bMWWPwZGDLPygzRQqG8muCDPiC5mlIUVj3WPrpFk0KWrJg==", "(00) 00 0 0000-0000", false, "03b15530-6b56-4f8a-9cb4-dacbe3a79581", false, "desenvolvedor" },
+                    { 2, 0, "089e2866-78f6-47d2-b615-10688fe15f42", new DateTime(2024, 11, 14, 16, 34, 22, 297, DateTimeKind.Local).AddTicks(8456), "administrador@gmail.com", false, false, null, "Administrador", "ADMINISTRADOR@GMAIL.COM", "ADMINISTRADOR", "AQAAAAIAAYagAAAAEHSITRFDSK/eTiC4R5EKqHZbA3N3cvuMwQywJENFPbJw5ZvRLvqoC0smdY/63tIDtA==", "(11) 11 1 1111-1111", false, "f5481651-e417-4c44-9958-1105ea21d38e", false, "administrador" },
+                    { 3, 0, "17370081-8770-41a9-83ca-ef4e5331a9d3", new DateTime(2024, 11, 14, 16, 34, 22, 362, DateTimeKind.Local).AddTicks(8615), "assistentesocial@email.com", false, false, null, "Assistente Social", "ASSISTENTESOCIAL@EMAIL.COM", "ASSISTENTE SOCIAL", "AQAAAAIAAYagAAAAECLu921+/mKInzp0dWnnkci4HK7w5LqTZxEHCo9qHxtr6uCb++k0JihQ6lrm4AILAQ==", "(22) 22 2 2222-2222", false, "92577979-4f5d-4bbd-8d2b-0a07fe7cbd9e", false, "assistentesocial" },
+                    { 4, 0, "e00dbd7f-2558-445c-b336-1e57153b93eb", new DateTime(2024, 11, 14, 16, 34, 22, 425, DateTimeKind.Local).AddTicks(913), "secretario@email.com", false, false, null, "Secretário", "SECRETARIO@EMAIL.COM", "SECRETÁRIO", "AQAAAAIAAYagAAAAENfJ+V4NVROhlcdRbSwvRtGb+4A6tgBEdVfPa1rFbQCXE6bHX6L6S2ACubjdXCTFgQ==", "(33) 33 3 3333-3333", false, "7ed4be6c-df1b-4fde-9900-9ece24d88c56", false, "secretario" },
+                    { 5, 0, "b892d64a-56f7-46bc-83de-b4fa92665bdf", new DateTime(2024, 11, 14, 16, 34, 22, 487, DateTimeKind.Local).AddTicks(4461), "valuntario@email.com", false, false, null, "Voluntário", "VOLUNTARIO@EMAIL.COM", "VOLUNTARIO", "AQAAAAIAAYagAAAAEMbNPgWlw/DLDC3xAfr0RdOGx8fBB188A4HltXwHwAU/Y61vcCV5PWJ5nzY2YjIDjQ==", "(44) 44 4 4444-4444", false, "e5b3a2d7-5d16-47b2-9270-7d562d7c3ace", false, "voluntario" }
                 });
 
             migrationBuilder.InsertData(
@@ -622,6 +665,16 @@ namespace LNSF.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_LogEntries_UserId",
                 table: "LogEntries",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NotificationsUsers_NotificationId",
+                table: "NotificationsUsers",
+                column: "NotificationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NotificationsUsers_UserId",
+                table: "NotificationsUsers",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -751,6 +804,9 @@ namespace LNSF.Migrations
                 name: "LogEntries");
 
             migrationBuilder.DropTable(
+                name: "NotificationsUsers");
+
+            migrationBuilder.DropTable(
                 name: "PatientsTreatments");
 
             migrationBuilder.DropTable(
@@ -767,6 +823,9 @@ namespace LNSF.Migrations
 
             migrationBuilder.DropTable(
                 name: "Escorts");
+
+            migrationBuilder.DropTable(
+                name: "Notifications");
 
             migrationBuilder.DropTable(
                 name: "Treatments");
