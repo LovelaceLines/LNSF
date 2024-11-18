@@ -31,7 +31,7 @@ const buttonList: ISideBarProps[][] = [
 			text: "Reg. Diário - Histor.",
 			to: "/app/registro-diario/historico",
 			icon: <Tour />,
-			display: !isInRoles(["Voluntário"]),
+			display: true,
 		},
 	],
 	[
@@ -41,7 +41,8 @@ const buttonList: ISideBarProps[][] = [
 			text: "Hospedagens",
 			to: "/app/hospedagens",
 			icon: <Apartment />,
-			display: !isInRoles(["Voluntário"]),
+
+			display: true,
 		},
 		{ text: "Apartamentos", to: "/app/apartamentos", icon: <Bed />, display: !isInRoles(["Voluntário"]) },
 	],

@@ -17,9 +17,10 @@ import {
 	getRaceColor,
 	people,
 } from "@/types";
-import { usePeopleTablePage } from "./usePeopleTablePage";
+
 import { isInRoles } from "@/services";
 import { dateOnlyToStr } from "@/utils";
+import { usePeopleTablePage } from "./usePeopleTablePage";
 
 export const PeopleTablePage = () => {
 	const { peoples, register, watch, rowCount, onSubmit } = usePeopleTablePage();

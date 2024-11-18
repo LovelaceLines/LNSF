@@ -7,6 +7,7 @@ import { peopleRoomHosting } from "@/types";
 import { usePeopleRoomHostingTablePage } from "./usePeopleRoomHostingTablePage";
 import { CopyButton } from "@/tables/util";
 import { dateTimeToStr } from "@/utils";
+import { isInRoles } from "@/services";
 
 export const PeopleRoomHostingTablePage = () => {
 	const { prh, rowCount, onSubmit } = usePeopleRoomHostingTablePage();
@@ -54,12 +55,14 @@ export const PeopleRoomHostingTablePage = () => {
 				header: "RG",
 				enableClickToCopy: true,
 				muiCopyButtonProps: CopyButton,
+				visibleInShowHideMenu: !isInRoles(["Voluntário"]),
 			},
 			{
 				accessorKey: "people.cpf",
 				header: "CPF",
 				enableClickToCopy: true,
 				muiCopyButtonProps: CopyButton,
+				visibleInShowHideMenu: !isInRoles(["Voluntário"]),
 			},
 			{
 				accessorKey: "roomId",
@@ -71,17 +74,6 @@ export const PeopleRoomHostingTablePage = () => {
 				accessorKey: "room.number",
 				header: "Número Apartamento",
 				size: 75,
-			},
-			{
-				accessorKey: "room.available",
-				header: "Disponibilidade",
-				size: 75,
-				filterVariant: "select",
-				filterSelectOptions: [
-					{ value: "true", label: "Sim" },
-					{ value: "false", label: "Não" },
-				],
-				Cell: ({ row }) => (row.original.room?.available ? "Sim" : "Não"),
 			},
 		],
 		[]
