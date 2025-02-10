@@ -7,38 +7,38 @@ import { useNotificationStore } from "@/store";
 import { toValue } from "@/utils";
 
 export const useNotificationFormPage = () => {
-	const { id } = useParams<{ id: string | undefined }>();
-	const {
-		control,
-		register,
-		handleSubmit,
-		formState: { errors },
-		getValues,
-		watch,
-		setValue,
-	} = useForm<notification>({
-		values: { id: 0, title: "", content: "", validFrom: "", expiredAt: "" },
-	});
+  const { id } = useParams<{ id: string | undefined }>();
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors },
+    getValues,
+    watch,
+    setValue,
+  } = useForm<notification>({
+    values: { id: 0, title: "", content: "", validFrom: "", expiredAt: "" },
+  });
 
-	const { getNotifications, postNotification, putNotification } = useNotificationStore();
+  const { getNotifications, postNotification, putNotification } = useNotificationStore();
 
-	useEffect(() => {
-		if (id) getNotifications({ id: +id }).then((data) => toValue(data.items[0], setValue));
-	}, [id]);
+  useEffect(() => {
+    if (id) getNotifications({ id: +id }).then((data) => toValue(data.items[0], setValue));
+  }, [id]);
 
-	const handleSave = (data: notification) =>
-		!getValues("id")
-			? postNotification(data).then((r) => toValue(r, setValue))
-			: putNotification(data).then((r) => toValue(r, setValue));
+  const handleSave = (data: notification) =>
+    !getValues("id")
+      ? postNotification(data).then((r) => toValue(r, setValue))
+      : putNotification(data).then((r) => toValue(r, setValue));
 
-	return {
-		handleSave,
-		control,
-		errors,
-		handleSubmit,
-		getValues,
-		register,
-		setValue,
-		watch,
-	};
+  return {
+    handleSave,
+    control,
+    errors,
+    handleSubmit,
+    getValues,
+    register,
+    setValue,
+    watch,
+  };
 };

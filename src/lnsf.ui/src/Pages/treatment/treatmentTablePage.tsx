@@ -7,49 +7,49 @@ import { formatTypeTreatment, getTypeTreatment, treatment } from "@/types";
 import { useTreatmentTablePage } from "./useTreatmentTablePage";
 
 export const TreatmentTablePage = () => {
-	const { treatments, deleteTreatment: handleDelete, rowCount, onSubmit } = useTreatmentTablePage();
+  const { treatments, deleteTreatment: handleDelete, rowCount, onSubmit } = useTreatmentTablePage();
 
-	const columns = useMemo<MRT_ColumnDef<treatment>[]>(
-		() => [
-			{
-				accessorKey: "id",
-				header: "Id",
-				size: 75,
-				Filter: ({ column }) => <MRTInputNumber column={column} />,
-			},
-			{
-				accessorKey: "name",
-				header: "Nome",
-			},
-			{
-				accessorKey: "type",
-				header: "Tipo",
-				filterVariant: "select",
-				filterSelectOptions: getTypeTreatment().map((t) => ({ value: t.id, label: t.value })),
-				Cell: ({ row }) => formatTypeTreatment(row.original.type),
-			},
-		],
-		[]
-	);
+  const columns = useMemo<MRT_ColumnDef<treatment>[]>(
+    () => [
+      {
+        accessorKey: "id",
+        header: "Id",
+        size: 75,
+        Filter: ({ column }) => <MRTInputNumber column={column} />,
+      },
+      {
+        accessorKey: "name",
+        header: "Nome",
+      },
+      {
+        accessorKey: "type",
+        header: "Tipo",
+        filterVariant: "select",
+        filterSelectOptions: getTypeTreatment().map((t) => ({ value: t.id, label: t.value })),
+        Cell: ({ row }) => formatTypeTreatment(row.original.type),
+      },
+    ],
+    []
+  );
 
-	return (
-		<>
-			{useMaterialReactTable({
-				id: "treatment",
-				columns,
-				data: treatments,
-				title: "Tratamentos",
+  return (
+    <>
+      {useMaterialReactTable({
+        id: "treatment",
+        columns,
+        data: treatments,
+        title: "Tratamentos",
 
-				rowCount,
+        rowCount,
 
-				onSubmit,
+        onSubmit,
 
-				enableRowSelection: true,
+        enableRowSelection: true,
 
-				toCreate: true,
-				toEdit: true,
-				handleDelete,
-			})}
-		</>
-	);
+        toCreate: true,
+        toEdit: true,
+        handleDelete,
+      })}
+    </>
+  );
 };

@@ -11,98 +11,93 @@ import { isInRoles } from "@/store";
 import { dateTimeToStr } from "@/utils";
 
 export const PeopleRoomHostingTablePage = () => {
-	const { prh, rowCount, roomIdGrouped, toggleRoomIdGrouping, onSubmit } = usePeopleRoomHostingTablePage();
+  const { prh, rowCount, roomIdGrouped, toggleRoomIdGrouping, onSubmit } = usePeopleRoomHostingTablePage();
 
-	const columns = useMemo<MRT_ColumnDef<peopleRoomHosting>[]>(
-		() => [
-			{
-				accessorKey: "hostingId",
-				header: "Id Reserva",
-				size: 100,
-				Filter: ({ column }) => <MRTInputNumber column={column} />,
-			},
-			{
-				accessorKey: "hosting.checkIn",
-				header: "Check In",
-				size: 300,
-				filterVariant: "date-range",
-				Filter: ({ column, rangeFilterIndex }) => (
-					<MRTInputDateOnly column={column} rangeFilterIndex={rangeFilterIndex} />
-				),
-				Cell: ({ row }) => dateTimeToStr(row.original.hosting?.checkIn, "ptBr"),
-			},
-			{
-				accessorKey: "hosting.checkOut",
-				header: "Check Out",
-				size: 300,
-				filterVariant: "date-range",
-				Filter: ({ column, rangeFilterIndex }) => (
-					<MRTInputDateOnly column={column} rangeFilterIndex={rangeFilterIndex} />
-				),
-				Cell: ({ row }) => dateTimeToStr(row.original.hosting?.checkOut, "ptBr"),
-			},
-			{
-				accessorKey: "peopleId",
-				header: "Id Pessoa",
-				size: 75,
-				Filter: ({ column }) => <MRTInputNumber column={column} />,
-			},
-			{
-				accessorKey: "people.name",
-				header: "Nome",
-			},
-			{
-				accessorKey: "people.rg",
-				header: "RG",
-				enableClickToCopy: true,
-				muiCopyButtonProps: CopyButton,
-				visibleInShowHideMenu: !isInRoles(["Voluntário"]),
-			},
-			{
-				accessorKey: "people.cpf",
-				header: "CPF",
-				enableClickToCopy: true,
-				muiCopyButtonProps: CopyButton,
-				visibleInShowHideMenu: !isInRoles(["Voluntário"]),
-			},
-			{
-				accessorKey: "roomId",
-				header: "Id Apartamento",
-				size: 75,
-				Filter: ({ column }) => <MRTInputNumber column={column} />,
-			},
-			{
-				accessorKey: "room.number",
-				header: "Número Apartamento",
-				size: 75,
-			},
-		],
-		[]
-	);
+  const columns = useMemo<MRT_ColumnDef<peopleRoomHosting>[]>(
+    () => [
+      {
+        accessorKey: "hostingId",
+        header: "Id Reserva",
+        size: 100,
+        Filter: ({ column }) => <MRTInputNumber column={column} />,
+      },
+      {
+        accessorKey: "hosting.checkIn",
+        header: "Check In",
+        size: 300,
+        filterVariant: "date-range",
+        Filter: ({ column, rangeFilterIndex }) => (
+          <MRTInputDateOnly column={column} rangeFilterIndex={rangeFilterIndex} />
+        ),
+        Cell: ({ row }) => dateTimeToStr(row.original.hosting?.checkIn, "ptBr"),
+      },
+      {
+        accessorKey: "hosting.checkOut",
+        header: "Check Out",
+        size: 300,
+        filterVariant: "date-range",
+        Filter: ({ column, rangeFilterIndex }) => (
+          <MRTInputDateOnly column={column} rangeFilterIndex={rangeFilterIndex} />
+        ),
+        Cell: ({ row }) => dateTimeToStr(row.original.hosting?.checkOut, "ptBr"),
+      },
+      {
+        accessorKey: "peopleId",
+        header: "Id Pessoa",
+        size: 75,
+        Filter: ({ column }) => <MRTInputNumber column={column} />,
+      },
+      {
+        accessorKey: "people.name",
+        header: "Nome",
+      },
+      {
+        accessorKey: "people.rg",
+        header: "RG",
+        enableClickToCopy: true,
+        muiCopyButtonProps: CopyButton,
+        visibleInShowHideMenu: !isInRoles(["Voluntário"]),
+      },
+      {
+        accessorKey: "people.cpf",
+        header: "CPF",
+        enableClickToCopy: true,
+        muiCopyButtonProps: CopyButton,
+        visibleInShowHideMenu: !isInRoles(["Voluntário"]),
+      },
+      {
+        accessorKey: "roomId",
+        header: "Id Apartamento",
+        size: 75,
+        Filter: ({ column }) => <MRTInputNumber column={column} />,
+      },
+      {
+        accessorKey: "room.number",
+        header: "Número Apartamento",
+        size: 75,
+      },
+    ],
+    []
+  );
 
-	return (
-		<>
-			{useMaterialReactTable({
-				id: "peopleRoomHosting",
-				columns,
-				data: prh,
-				title: "Reservas",
+  return (
+    <>
+      {useMaterialReactTable({
+        id: "peopleRoomHosting",
+        columns,
+        data: prh,
+        title: "Reservas",
 
-				getRowId: (originalRow) =>
-					`${originalRow.peopleId}.${originalRow.roomId}.${originalRow.hostingId}`,
+        getRowId: (originalRow) => `${originalRow.peopleId}.${originalRow.roomId}.${originalRow.hostingId}`,
 
-				rowCount,
+        rowCount,
 
-				onSubmit,
+        onSubmit,
 
-				renderTopToolbarFilterActions: () => (
-					<Checkbox
-						checked={roomIdGrouped}
-						onChange={toggleRoomIdGrouping}
-						label="Agrupar por Apartamento"
-					/>
-				),
-			})}
-		</>
-	);
+        renderTopToolbarFilterActions: () => (
+          <Checkbox checked={roomIdGrouped} onChange={toggleRoomIdGrouping} label="Agrupar por Apartamento" />
+        ),
+      })}
+    </>
+  );
 };

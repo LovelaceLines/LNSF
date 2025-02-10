@@ -4,26 +4,26 @@ import { people } from "./people";
 import { treatment } from "./treatment";
 
 export type patient = {
-	id?: number;
-	socioeconomicRecord: boolean;
-	term: boolean;
-	peopleId: number;
-	people?: people;
-	hospitalId: number;
-	hospital?: hospital;
-	treatments: treatment[];
+  id?: number;
+  socioeconomicRecord: boolean;
+  term: boolean;
+  peopleId: number;
+  people?: people;
+  hospitalId: number;
+  hospital?: hospital;
+  treatments: treatment[];
 };
 
 export type patientFilter = baseFilter & {
-	id?: number;
-	peopleId?: number;
-	hospitalId?: number;
+  id?: number;
+  peopleId?: number;
+  hospitalId?: number;
 };
 
 export type patientTreatment = {
-	id?: number;
-	patientId: number;
-	patient?: patient;
-	treatmentId: number;
-	treatment?: treatment;
+  id?: number;
+  patientId: number;
+  patient?: patient;
+  treatmentId: number;
+  treatment?: treatment;
 };

@@ -7,7 +7,11 @@ export const ToggleSideBar = () => {
   const { open, toggleSideBar } = useSideBar();
 
   return (
-    <IconButton color="inherit" onClick={() => toggleSideBar()} sx={{ display: { xs: "flex", sm: open ? "none" : "flex" } }}>
+    <IconButton
+      color="inherit"
+      onClick={() => toggleSideBar()}
+      sx={{ display: { xs: "flex", sm: open ? "none" : "flex" } }}
+    >
       <Menu />
     </IconButton>
   );

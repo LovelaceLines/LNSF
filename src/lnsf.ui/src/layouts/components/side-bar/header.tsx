@@ -8,35 +8,35 @@ import { useSideBar } from "@/contexts";
 import { useThemeContext } from "@/theme";
 
 export const Header = () => {
-	const { isMobile } = useThemeContext();
-	const { open, toggleSideBar } = useSideBar();
+  const { isMobile } = useThemeContext();
+  const { open, toggleSideBar } = useSideBar();
 
-	return (
-		<Box display="flex" flexDirection="row" alignItems="center" gap={1} height={64} p={2}>
-			<Link
-				to="/app"
-				style={{
-					display: "flex",
-					flexDirection: "row",
-					alignItems: "center",
-					gap: 16,
-				}}
-			>
-				<Avatar
-					src={logo_name}
-					alt="Logo"
-					sx={{
-						width: 64,
-						height: "auto",
-						display: isMobile || open ? "block" : "none",
-						borderRadius: 0,
-					}}
-				/>
-				<Avatar src={logo} variant="circular" sx={{ width: 32, height: 32, marginLeft: -0.5 }} />
-			</Link>
-			<IconButton color="inherit" onClick={() => toggleSideBar()} sx={{ ml: "auto" }}>
-				<MenuOpen />
-			</IconButton>
-		</Box>
-	);
+  return (
+    <Box display="flex" flexDirection="row" alignItems="center" gap={1} height={64} p={2}>
+      <Link
+        to="/app"
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          gap: 16,
+        }}
+      >
+        <Avatar
+          src={logo_name}
+          alt="Logo"
+          sx={{
+            width: 64,
+            height: "auto",
+            display: isMobile || open ? "block" : "none",
+            borderRadius: 0,
+          }}
+        />
+        <Avatar src={logo} variant="circular" sx={{ width: 32, height: 32, marginLeft: -0.5 }} />
+      </Link>
+      <IconButton color="inherit" onClick={() => toggleSideBar()} sx={{ ml: "auto" }}>
+        <MenuOpen />
+      </IconButton>
+    </Box>
+  );
 };

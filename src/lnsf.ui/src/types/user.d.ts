@@ -1,49 +1,49 @@
 import { baseFilter } from "./baseFilter";
 
 export type user = {
-	id?: number;
-	name: string;
-	userName: string;
-	email: string;
-	phoneNumber: string;
-	password?: string;
-	roles: role[];
+  id?: number;
+  name: string;
+  userName: string;
+  email: string;
+  phoneNumber: string;
+  password?: string;
+  roles: role[];
 };
 
 export type password = {
-	oldPassword: string;
-	newPassword: string;
+  oldPassword: string;
+  newPassword: string;
 };
 
 export type userFilter = baseFilter & {
-	id?: number;
-	name?: string;
-	userName?: string;
-	email?: string;
-	phoneNumber?: string;
+  id?: number;
+  name?: string;
+  userName?: string;
+  email?: string;
+  phoneNumber?: string;
 };
 
 export type defaultRole =
-	| "Desenvolvedor"
-	| "Administrador"
-	| "Assistente Social"
-	| "Secretário"
-	| "Voluntário";
+  | "Desenvolvedor"
+  | "Administrador"
+  | "Assistente Social"
+  | "Secretário"
+  | "Voluntário";
 
 export type role = {
-	id?: number;
-	name: defaultRole | string;
+  id?: number;
+  name: defaultRole | string;
 };
 
 export type roleFilter = baseFilter & {
-	id?: number;
-	name?: string;
+  id?: number;
+  name?: string;
 };
 
 export type userRole = {
-	id?: number;
-	userId: number;
-	user?: user;
-	roleId: number;
-	role?: role;
+  id?: number;
+  userId: number;
+  user?: user;
+  roleId: number;
+  role?: role;
 };

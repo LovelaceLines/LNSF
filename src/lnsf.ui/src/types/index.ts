@@ -1,10 +1,10 @@
 export type { authToken, jwtPayload, login, userToken } from "./auth";
 export type { baseFilter, range } from "./baseFilter";
 export type {
-	chainCountPeopleHostedFilter,
-	chainIntervalCheckFilter,
-	chainDayFilter,
-	peopleHosted,
+  chainCountPeopleHostedFilter,
+  chainIntervalCheckFilter,
+  chainDayFilter,
+  peopleHosted,
 } from "./chain";
 export { sortOrder } from "./baseFilter";
 export type { emergencyContact, emergencyContactFilter } from "./emergencyContact";
@@ -19,12 +19,12 @@ export type { patient, patientFilter, patientTreatment } from "./patient";
 export type { people, peopleFilter, peopleRoomHosting, peopleRoomHostingFilter } from "./people";
 export { gender, maritalStatus, raceColor } from "./people.d";
 export {
-	formatGender,
-	formatMaritalStatus,
-	formatRaceColor,
-	getGender,
-	getMaritalStatus,
-	getRaceColor,
+  formatGender,
+  formatMaritalStatus,
+  formatRaceColor,
+  getGender,
+  getMaritalStatus,
+  getRaceColor,
 } from "./people.f";
 export type { queryResult } from "./response";
 export type { room, roomFilter } from "./room";

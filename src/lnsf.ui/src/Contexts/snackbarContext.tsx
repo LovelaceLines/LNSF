@@ -36,7 +36,14 @@ export const SnackbarProvider = ({ children }: Readonly<{ children: React.ReactN
   return (
     <SnackbarContext.Provider value={{ Snackbar }}>
       {children}
-      <SnackbarMUI open={open} onClose={handleClose} anchorOrigin={isMobile ? mobileAnchor : desktopAnchor} autoHideDuration={5000} message={message} action={action} />
+      <SnackbarMUI
+        open={open}
+        onClose={handleClose}
+        anchorOrigin={isMobile ? mobileAnchor : desktopAnchor}
+        autoHideDuration={5000}
+        message={message}
+        action={action}
+      />
     </SnackbarContext.Provider>
   );
 };

@@ -1,4 +1,4 @@
 export type queryResult<T> = {
-	items: T[];
-	totalCount: number;
+  items: T[];
+  totalCount: number;
 };

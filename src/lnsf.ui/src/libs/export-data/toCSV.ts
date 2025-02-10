@@ -8,7 +8,9 @@ export const exportDataToCSV = (filename: string, head: string[], body: string[]
     useKeysAsHeaders: true,
   });
 
-  const data: { [k: string]: any; [k: number]: any }[] = body.map((row) => head.reduce((acc, key, i) => ({ ...acc, [key]: row[i] }), {}));
+  const data: { [k: string]: any; [k: number]: any }[] = body.map((row) =>
+    head.reduce((acc, key, i) => ({ ...acc, [key]: row[i] }), {})
+  );
 
   const csv = generateCsv(csvConfig)(data);
   download(csvConfig)(csv);

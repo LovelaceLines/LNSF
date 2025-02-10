@@ -4,18 +4,18 @@ import { patientTreatment } from "@/types";
 import { useTreatmentStore } from "@/store";
 
 export const usePatientTreatmentFormPage = ({ patientTreatment }: { patientTreatment: patientTreatment }) => {
-	const { control, getValues, setValue, register, watch } = useForm<patientTreatment>({
-		values: patientTreatment,
-	});
+  const { control, getValues, setValue, register, watch } = useForm<patientTreatment>({
+    values: patientTreatment,
+  });
 
-	const { treatments } = useTreatmentStore();
+  const { treatments } = useTreatmentStore();
 
-	return {
-		treatments,
-		control,
-		getValues,
-		setValue,
-		register,
-		watch,
-	};
+  return {
+    treatments,
+    control,
+    getValues,
+    setValue,
+    register,
+    watch,
+  };
 };

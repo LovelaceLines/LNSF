@@ -7,45 +7,45 @@ import { hospital } from "@/types";
 import { useHospitalTablePage } from "./useHospitalTablePage";
 
 export const HospitalTablePage = () => {
-	const { hospitals, rowCount, onSubmit } = useHospitalTablePage();
+  const { hospitals, rowCount, onSubmit } = useHospitalTablePage();
 
-	const columns = useMemo<MRT_ColumnDef<hospital>[]>(
-		() => [
-			{
-				accessorKey: "id",
-				header: "Id",
-				size: 75,
-				Filter: ({ column }) => <MRTInputNumber column={column} />,
-			},
-			{
-				accessorKey: "name",
-				header: "Nome",
-			},
-			{
-				accessorKey: "acronym",
-				header: "Sigla",
-			},
-		],
-		[]
-	);
+  const columns = useMemo<MRT_ColumnDef<hospital>[]>(
+    () => [
+      {
+        accessorKey: "id",
+        header: "Id",
+        size: 75,
+        Filter: ({ column }) => <MRTInputNumber column={column} />,
+      },
+      {
+        accessorKey: "name",
+        header: "Nome",
+      },
+      {
+        accessorKey: "acronym",
+        header: "Sigla",
+      },
+    ],
+    []
+  );
 
-	return (
-		<>
-			{useMaterialReactTable({
-				id: "hospital",
-				columns,
-				data: hospitals,
-				title: "Hospitais",
+  return (
+    <>
+      {useMaterialReactTable({
+        id: "hospital",
+        columns,
+        data: hospitals,
+        title: "Hospitais",
 
-				rowCount,
+        rowCount,
 
-				onSubmit,
+        onSubmit,
 
-				enableRowSelection: true,
+        enableRowSelection: true,
 
-				toCreate: true,
-				toEdit: true,
-			})}
-		</>
-	);
+        toCreate: true,
+        toEdit: true,
+      })}
+    </>
+  );
 };

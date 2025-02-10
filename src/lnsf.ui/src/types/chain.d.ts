@@ -1,16 +1,16 @@
 export type peopleHosted = {
-	count: number;
+  count: number;
 };
 
 export type chainCountPeopleHostedFilter = {
-	date: string; // dateonly
+  date: string; // dateonly
 };
 
 export type chainDayFilter = {
-	days: number;
+  days: number;
 };
 
 export type chainIntervalCheckFilter = {
-	checkIn: string; // dateonly
-	checkOut: string; // dateonly
+  checkIn: string; // dateonly
+  checkOut: string; // dateonly
 };

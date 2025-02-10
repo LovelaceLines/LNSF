@@ -2,19 +2,19 @@ import { getFilteredObject, useTableState } from "@/tables";
 import { useLogStore } from "@/store";
 
 export const useLogTablePage = () => {
-	const { getLogs, logs, queryResult } = useLogStore();
-	const { state } = useTableState();
+  const { getLogs, logs, queryResult } = useLogStore();
+  const { state } = useTableState();
 
-	const onSubmit = () =>
-		getLogs({
-			...getFilteredObject({ state: state.log }),
-		});
+  const onSubmit = () =>
+    getLogs({
+      ...getFilteredObject({ state: state.log }),
+    });
 
-	const rowCount = queryResult.totalCount;
+  const rowCount = queryResult.totalCount;
 
-	return {
-		logs,
-		rowCount,
-		onSubmit,
-	};
+  return {
+    logs,
+    rowCount,
+    onSubmit,
+  };
 };

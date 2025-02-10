@@ -10,14 +10,14 @@ import { getKey } from "@/services";
  * @returns Um array contendo o valor armazenado e uma função para atualizá-lo.
  */
 export const useLocalStorage = (key: string, initialValue?: unknown): [any, React.Dispatch<any>] => {
-	key = getKey(key);
+  key = getKey(key);
 
-	const storageValue = localStorage.getItem(key);
-	const [value, setValue] = useState(() => (storageValue ? JSON.parse(storageValue) : initialValue));
+  const storageValue = localStorage.getItem(key);
+  const [value, setValue] = useState(() => (storageValue ? JSON.parse(storageValue) : initialValue));
 
-	useEffect(() => {
-		localStorage.setItem(key, JSON.stringify(value));
-	}, [key, value]);
+  useEffect(() => {
+    localStorage.setItem(key, JSON.stringify(value));
+  }, [key, value]);
 
-	return [value, setValue];
+  return [value, setValue];
 };

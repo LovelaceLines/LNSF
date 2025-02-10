@@ -14,8 +14,8 @@ export const getKey = (key: string): string => `@LNSF:${key}`;
  * @returns O valor armazenado no localstorage, ou o valor padrão caso a chave não exista.
  */
 export const getStorageValue = (key: string, defaultValue?: unknown) => {
-	const item = localStorage.getItem(getKey(key));
-	return item ? JSON.parse(item) : defaultValue || null;
+  const item = localStorage.getItem(getKey(key));
+  return item ? JSON.parse(item) : defaultValue || null;
 };
 
 /**
@@ -26,6 +26,6 @@ export const getStorageValue = (key: string, defaultValue?: unknown) => {
  * @returns O valor armazenado.
  */
 export const setStorageValue = (key: string, value: unknown) => {
-	localStorage.setItem(getKey(key), JSON.stringify(value));
-	return value;
+  localStorage.setItem(getKey(key), JSON.stringify(value));
+  return value;
 };
