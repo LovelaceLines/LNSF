@@ -6,5 +6,6 @@
 		"database"
 	],
 	"editor.formatOnSave": true,
-	"editor.fontSize": 18
+	"editor.fontSize": 18,
+	"editor.tabSize": 4,
 }
