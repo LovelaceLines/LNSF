@@ -20,8 +20,7 @@ import { ISideBarProps, SideBar } from "./components/side-bar";
 import { useSideBar } from "@/contexts";
 import { useThemeContext } from "@/theme";
 import { LayersLayout } from "./layersLayout";
-import { isInRoles } from "@/services";
-import { useNotificationStore } from "@/store";
+import { isInRoles, useNotificationStore } from "@/store";
 
 const buttonList: ISideBarProps[][] = [
 	[{ text: "Inicio", to: "/app", icon: <Home />, display: !isInRoles(["Voluntário"]) }],

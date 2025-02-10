@@ -3,6 +3,7 @@ import { create } from "zustand";
 import { Axios } from "@/http";
 import { getAuthToken, getUser, setAuthToken, setUser } from "@/services";
 import { authToken, login, user, userToken } from "@/types";
+import { includes } from "@/utils";
 
 type state = {
 	authToken?: authToken;
@@ -12,9 +13,10 @@ type state = {
 	loginUser: (loginData: login) => Promise<userToken>;
 	refreshToken: () => Promise<authToken>;
 	currentUser: () => Promise<user>;
+	isInRoles: (roles: string[]) => boolean;
 };
 
-export const useAuthStore = create<state>((set) => ({
+export const useAuthStore = create<state>((set, get) => ({
 	authToken: getAuthToken(),
 	user: getUser(),
 
@@ -57,4 +59,12 @@ export const useAuthStore = create<state>((set) => ({
 
 		return data;
 	},
+
+	isInRoles: (roles: string[]): boolean => {
+		const userRoles = get().user?.roles?.map((role) => role.name) || [];
+		console.debug("User roles", userRoles);
+		return includes(userRoles, roles);
+	},
 }));
+
+export const { isInRoles } = useAuthStore.getState();

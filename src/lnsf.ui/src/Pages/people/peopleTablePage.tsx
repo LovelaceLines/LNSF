@@ -5,7 +5,6 @@ import { useMemo } from "react";
 import { Link } from "react-router-dom";
 
 import { Checkbox } from "@/components";
-import { isInRoles } from "@/services";
 import { useMaterialReactTable } from "@/tables";
 import { MRTInputDateOnly, MRTInputNumber } from "@/tables/components";
 import { CopyButton } from "@/tables/util";
@@ -18,6 +17,7 @@ import {
 	getRaceColor,
 	people,
 } from "@/types";
+import { isInRoles } from "@/store";
 import { usePeopleTablePage } from "./usePeopleTablePage";
 import { dateOnlyToStr } from "@/utils";
 

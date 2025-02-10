@@ -1,4 +1,4 @@
-export { useAuthStore } from "./useAuthStore";
+export { isInRoles, useAuthStore } from "./useAuthStore";
 export { useEmergencyContactStore } from "./useEmergencyContactStore";
 export type { typeTreatmentCount } from "./useChainStore";
 export { useChainStore } from "./useChainStore";

@@ -2,9 +2,8 @@ import { useForm } from "react-hook-form";
 
 import { getFilteredObject, useTableState } from "@/tables";
 import { peopleFilter } from "@/types";
-import { usePeopleStore } from "@/store";
+import { isInRoles, usePeopleStore } from "@/store";
 import { useEffect } from "react";
-import { isInRoles } from "@/services";
 
 export const usePeopleTablePage = () => {
 	const { getPeoples, peoples, queryResult } = usePeopleStore();

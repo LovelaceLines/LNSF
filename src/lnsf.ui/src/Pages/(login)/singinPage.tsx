@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useEffect } from "react";
 import { login } from "@/types";
-import { useAuthStore } from "@/store/useAuthStore";
+import { isInRoles, useAuthStore } from "@/store/useAuthStore";
 
 export const SingInPage = () => {
 	const { user, loginUser } = useAuthStore();
@@ -19,8 +19,10 @@ export const SingInPage = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		if (user?.id) {
-			navigate("/app/", { replace: true });
+		if (user?.id && user.roles.length) {
+			console.debug("User is logged in", isInRoles(["voluntario"]));
+			if (isInRoles(["Voluntário"])) navigate("/app/registro-diario/", { replace: true });
+			else navigate("/app/", { replace: true });
 		}
 	}, [user]);
 

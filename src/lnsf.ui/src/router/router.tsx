@@ -211,10 +211,6 @@ const MainRouters: RouteObject = {
 			path: "unauthorized",
 			element: <UnauthorizedPage />,
 		},
-		{
-			path: "*",
-			element: <Navigate to="/app" replace />,
-		},
 	],
 };
 

@@ -1,7 +1,7 @@
+import { useEffect } from "react";
+
 import { getFilteredObject, useTableState } from "@/tables";
-import { usePeopleRoomHostingStore } from "@/store";
-import { useEffect, useState } from "react";
-import { isInRoles } from "@/services";
+import { isInRoles, usePeopleRoomHostingStore } from "@/store";
 
 export const usePeopleRoomHostingTablePage = () => {
 	const { getPeopleRoomHosting, prh, queryResult } = usePeopleRoomHostingStore();
