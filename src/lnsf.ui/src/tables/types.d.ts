@@ -1,10 +1,11 @@
 import {
 	MRT_ColumnFiltersState,
 	MRT_ColumnOrderState,
+	MRT_ColumnSizingState,
+	MRT_GroupingState,
 	MRT_PaginationState,
 	MRT_RowSelectionState,
 	MRT_SortingState,
-	MRT_ColumnSizingState,
 	MRT_VisibilityState,
 } from "material-react-table";
 
@@ -33,5 +34,6 @@ export interface StateProps {
 		pagination: MRT_PaginationState;
 		columnSizing: MRT_ColumnSizingState;
 		columnVisibility?: MRT_VisibilityState;
+		grouping: MRT_GroupingState;
 	};
 }

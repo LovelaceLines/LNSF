@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"name": "LNSF.API",
+			"path": ".."
+		},
+		{
+			"name": "LNSF.UI",
+			"path": "../src/lnsf.ui"
+		}
+	],
+	"settings": {
+		"conventionalCommits.scopes": [
+			"project",
+			"ui",
+			"api",
+			"database"
+		]
+	}
+}

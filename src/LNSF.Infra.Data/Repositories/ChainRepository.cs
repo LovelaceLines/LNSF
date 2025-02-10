@@ -1,11 +1,8 @@
-using AutoFilterer.Extensions;
-using LNSF.Domain.DTOs;
 using LNSF.Domain.Entities;
 using LNSF.Domain.Filters;
 using LNSF.Domain.Repositories;
 using LNSF.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace LNSF.Infra.Data.Repositories;
 
@@ -55,8 +52,10 @@ public class ChainRepository(AppDbContext context) : IChainRepository
 		prh = prh.DistinctBy(prh => prh.PeopleId)
 			.Where(prh =>
 		{
+			if (!prh.People!.BirthDate.HasValue) return false;
+
 			DateOnly maxDate = DateOnly.FromDateTime(DateTime.Now.Date).AddDays(filter.Days);
-			DateOnly birthDate = prh.People!.BirthDate;
+			DateOnly birthDate = prh.People!.BirthDate.Value;
 			DateOnly nextBirthday = new(DateTime.Now.Year, birthDate.Month, birthDate.Day);
 
 			if (nextBirthday < DateOnly.FromDateTime(DateTime.Now.Date))

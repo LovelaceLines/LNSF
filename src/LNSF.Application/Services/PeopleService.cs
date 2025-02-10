@@ -15,8 +15,8 @@ public class PeopleService(IPeopleRepository repository, PeopleValidator validat
 		var validationResult = validator.Validate(people);
 		if (!validationResult.IsValid) throw new AppException(validationResult.ToString(), HttpStatusCode.BadRequest);
 
-		if (await repository.ExistsByCpf(people.CPF)) throw new AppException("CPF já cadastrado!", HttpStatusCode.Conflict);
-		if (await repository.ExistsByRg(people.RG)) throw new AppException("RG já cadastrado!", HttpStatusCode.Conflict);
+		if (people.CPF.IsNullOrEmpty() && await repository.ExistsByCpf(people.CPF!)) throw new AppException("CPF já cadastrado!", HttpStatusCode.Conflict);
+		if (people.RG.IsNullOrEmpty() && await repository.ExistsByRg(people.RG!)) throw new AppException("RG já cadastrado!", HttpStatusCode.Conflict);
 		if (!people.Email.IsNullOrEmpty() && await repository.ExistsByEmail(people.Email!)) throw new AppException("Email já cadastrado!", HttpStatusCode.Conflict);
 		if (!people.Phone.IsNullOrEmpty() && await repository.ExistsByPhone(people.Phone!)) throw new AppException("Telefone já cadastrado!", HttpStatusCode.Conflict);
 
@@ -31,8 +31,8 @@ public class PeopleService(IPeopleRepository repository, PeopleValidator validat
 		if (!await repository.ExistsById(newPeople.Id)) throw new AppException("Pessoa não encontrada!", HttpStatusCode.NotFound);
 		var oldPeople = await repository.GetById(newPeople.Id);
 
-		if (oldPeople.CPF != newPeople.CPF && await repository.ExistsByCpf(newPeople.CPF)) throw new AppException("CPF já cadastrado!", HttpStatusCode.Conflict);
-		if (oldPeople.RG != newPeople.RG && await repository.ExistsByRg(newPeople.RG)) throw new AppException("RG já cadastrado!", HttpStatusCode.Conflict);
+		if (newPeople.CPF.IsNullOrEmpty() && oldPeople.CPF != newPeople.CPF && await repository.ExistsByCpf(newPeople.CPF!)) throw new AppException("CPF já cadastrado!", HttpStatusCode.Conflict);
+		if (newPeople.RG.IsNullOrEmpty() && oldPeople.RG != newPeople.RG && await repository.ExistsByRg(newPeople.RG!)) throw new AppException("RG já cadastrado!", HttpStatusCode.Conflict);
 		if (oldPeople.Email != newPeople.Email && !newPeople.Email.IsNullOrEmpty() && await repository.ExistsByEmail(newPeople.Email!)) throw new AppException("Email já cadastrado!", HttpStatusCode.Conflict);
 		if (oldPeople.Phone != newPeople.Phone && !newPeople.Phone.IsNullOrEmpty() && await repository.ExistsByPhone(newPeople.Phone!)) throw new AppException("Telefone já cadastrado!", HttpStatusCode.Conflict);
 

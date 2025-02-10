@@ -66,6 +66,7 @@ export const useMaterialReactTable = <TData extends MRT_RowData>({
 		setRowSelection,
 		setColumnSizing,
 		setColumnVisibility,
+		setGrouping,
 	} = useTableState();
 	const { themeName } = useThemeContext();
 
@@ -276,6 +277,13 @@ export const useMaterialReactTable = <TData extends MRT_RowData>({
 					? updaterValue(state[id].columnVisibility ?? {})
 					: updaterValue;
 			setColumnVisibility(id, value);
+		},
+
+		enableGrouping: true,
+		onGroupingChange: (updaterValue) => {
+			const value =
+				typeof updaterValue === "function" ? updaterValue(state[id].grouping ?? []) : updaterValue;
+			setGrouping(id, value);
 		},
 
 		initialState: {

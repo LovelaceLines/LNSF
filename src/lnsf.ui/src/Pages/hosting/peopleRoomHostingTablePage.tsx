@@ -1,16 +1,17 @@
 import { MRT_ColumnDef } from "material-react-table";
 import { useMemo } from "react";
 
+import { Checkbox } from "@/components";
+import { isInRoles } from "@/services";
 import { useMaterialReactTable } from "@/tables";
 import { MRTInputDateOnly, MRTInputNumber } from "@/tables/components";
 import { peopleRoomHosting } from "@/types";
 import { usePeopleRoomHostingTablePage } from "./usePeopleRoomHostingTablePage";
 import { CopyButton } from "@/tables/util";
 import { dateTimeToStr } from "@/utils";
-import { isInRoles } from "@/services";
 
 export const PeopleRoomHostingTablePage = () => {
-	const { prh, rowCount, onSubmit } = usePeopleRoomHostingTablePage();
+	const { prh, rowCount, roomIdGrouped, toggleRoomIdGrouping, onSubmit } = usePeopleRoomHostingTablePage();
 
 	const columns = useMemo<MRT_ColumnDef<peopleRoomHosting>[]>(
 		() => [
@@ -93,6 +94,14 @@ export const PeopleRoomHostingTablePage = () => {
 				rowCount,
 
 				onSubmit,
+
+				renderTopToolbarFilterActions: () => (
+					<Checkbox
+						checked={roomIdGrouped}
+						onChange={toggleRoomIdGrouping}
+						label="Agrupar por Apartamento"
+					/>
+				),
 			})}
 		</>
 	);

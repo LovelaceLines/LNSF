@@ -11,9 +11,10 @@ public class PeopleValidator : AbstractValidator<People>
 			.MinimumLength(2).WithMessage(GlobalValidator.MinLength("Nome", 2))
 			.MaximumLength(64).WithMessage(GlobalValidator.MaxLength("Nome", 64));
 
-		RuleFor(people => people.BirthDate.Year)
+		RuleFor(people => people.BirthDate!.Value.Year)
 			.LessThanOrEqualTo(DateTime.Now.Year - 15).WithMessage(GlobalValidator.InvalidAge())
-			.GreaterThanOrEqualTo(DateTime.Now.Year - 128).WithMessage(GlobalValidator.InvalidAge());
+			.GreaterThanOrEqualTo(DateTime.Now.Year - 128).WithMessage(GlobalValidator.InvalidAge())
+			.When(people => people.BirthDate.HasValue);
 
 		RuleFor(people => people.Email)
 			.EmailAddress().WithMessage(GlobalValidator.InvalidEmailFormat())

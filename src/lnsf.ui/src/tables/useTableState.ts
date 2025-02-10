@@ -2,6 +2,7 @@ import {
 	MRT_ColumnFiltersState,
 	MRT_ColumnOrderState,
 	MRT_ColumnSizingState,
+	MRT_GroupingState,
 	MRT_PaginationState,
 	MRT_RowSelectionState,
 	MRT_SortingState,
@@ -27,6 +28,7 @@ type state = {
 	setPagination: (id: key, value: MRT_PaginationState) => void;
 	setColumnSizing: (id: key, value: MRT_ColumnSizingState) => void;
 	setColumnVisibility: (id: key, value: MRT_VisibilityState) => void;
+	setGrouping: (id: key, value: MRT_GroupingState) => void;
 };
 
 const initialState = (): state["state"] => {
@@ -41,6 +43,7 @@ const initialState = (): state["state"] => {
 			columnSizing: {},
 			columnVisibility: {},
 			rowSelection: {},
+			grouping: [],
 			...getTableState[k],
 		};
 	});
@@ -141,6 +144,19 @@ export const useTableState = create<state>((set, get) => ({
 				[id]: {
 					..._state.state[id],
 					columnVisibility: value,
+				},
+			},
+		}));
+	},
+
+	setGrouping: (id, value) => {
+		setTableState(id, { ...get().state[id], grouping: value });
+		set((_state) => ({
+			state: {
+				..._state.state,
+				[id]: {
+					..._state.state[id],
+					grouping: value,
 				},
 			},
 		}));
