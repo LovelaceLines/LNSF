@@ -20,7 +20,6 @@ export const SingInPage = () => {
 
   useEffect(() => {
     if (user?.id && user.roles.length) {
-      console.debug("User is logged in", isInRoles(["voluntario"]));
       if (isInRoles(["Voluntário"])) navigate("/app/registro-diario/", { replace: true });
       else navigate("/app/", { replace: true });
     }

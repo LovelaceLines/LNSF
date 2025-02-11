@@ -100,6 +100,8 @@ export const useMaterialReactTable = <TData extends MRT_RowData>({
     setColumnFilters(id, []);
     setSorting(id, []);
     setColumnSizing(id, {});
+    setRowSelection(id, {});
+    setGrouping(id, []);
   }, []);
 
   const handleDelete = useCallback(() => {
@@ -244,6 +246,7 @@ export const useMaterialReactTable = <TData extends MRT_RowData>({
         typeof updaterValue === "function"
           ? updaterValue(state[id].pagination ?? { pageIndex: 0, pageSize: 20 })
           : updaterValue;
+      setRowSelection(id, {});
       setPagination(id, value);
     },
 
@@ -284,7 +287,7 @@ export const useMaterialReactTable = <TData extends MRT_RowData>({
       density: "compact",
       pagination: {
         pageIndex: 0,
-        pageSize: 99999,
+        pageSize: 20,
       },
       ...props.initialState,
     },
@@ -349,7 +352,7 @@ export const useMaterialReactTable = <TData extends MRT_RowData>({
     }),
 
     muiPaginationProps: ({ table }) => ({
-      rowsPerPageOptions: [5, 10, 15, 20, 25, 30, 50, 100, 200, 500, 1000],
+      rowsPerPageOptions: [5, 10, 15, 20, 25, 30, 50, 100, 200, 500, 1000, 2000, 5000],
     }),
 
     //#endregion

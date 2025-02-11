@@ -24,11 +24,11 @@ type state = {
   setSorting: (id: key, value: MRT_SortingState) => void;
   setColumnFilters: (id: key, value: MRT_ColumnFiltersState) => void;
   setRowSelection: (id: key, value: MRT_RowSelectionState) => void;
-  setColumnOrder: (id: key, value: MRT_ColumnOrderState) => void;
   setPagination: (id: key, value: MRT_PaginationState) => void;
+  setGrouping: (id: key, value: MRT_GroupingState) => void;
+  setColumnOrder: (id: key, value: MRT_ColumnOrderState) => void;
   setColumnSizing: (id: key, value: MRT_ColumnSizingState) => void;
   setColumnVisibility: (id: key, value: MRT_VisibilityState) => void;
-  setGrouping: (id: key, value: MRT_GroupingState) => void;
 };
 
 const initialState = (): state["state"] => {
@@ -50,7 +50,7 @@ const initialState = (): state["state"] => {
   return initial;
 };
 
-export const useTableState = create<state>((set, get) => ({
+export const useTableState = create<state>((set) => ({
   state: initialState(),
 
   setGlobalFilter: (id, value) =>
@@ -97,8 +97,30 @@ export const useTableState = create<state>((set, get) => ({
       },
     })),
 
+  setPagination: (id, value) =>
+    set((_state) => ({
+      state: {
+        ..._state.state,
+        [id]: {
+          ..._state.state[id],
+          pagination: value,
+        },
+      },
+    })),
+
+  setGrouping: (id, value) =>
+    set((_state) => ({
+      state: {
+        ..._state.state,
+        [id]: {
+          ..._state.state[id],
+          grouping: value,
+        },
+      },
+    })),
+
   setColumnOrder: (id, value) => {
-    setTableState(id, { ...get().state[id], columnOrder: value });
+    setTableState(id, { columnOrder: value });
     set((_state) => ({
       state: {
         ..._state.state,
@@ -110,21 +132,8 @@ export const useTableState = create<state>((set, get) => ({
     }));
   },
 
-  setPagination: (id, value) => {
-    setTableState(id, { ...get().state[id], pagination: value });
-    set((_state) => ({
-      state: {
-        ..._state.state,
-        [id]: {
-          ..._state.state[id],
-          pagination: value,
-        },
-      },
-    }));
-  },
-
   setColumnSizing: (id, value) => {
-    setTableState(id, { ...get().state[id], columnSizing: value });
+    setTableState(id, { columnSizing: value });
     set((_state) => ({
       state: {
         ..._state.state,
@@ -137,26 +146,13 @@ export const useTableState = create<state>((set, get) => ({
   },
 
   setColumnVisibility: (id, value) => {
-    setTableState(id, { ...get().state[id], columnVisibility: value });
+    setTableState(id, { columnVisibility: value });
     set((_state) => ({
       state: {
         ..._state.state,
         [id]: {
           ..._state.state[id],
           columnVisibility: value,
-        },
-      },
-    }));
-  },
-
-  setGrouping: (id, value) => {
-    setTableState(id, { ...get().state[id], grouping: value });
-    set((_state) => ({
-      state: {
-        ..._state.state,
-        [id]: {
-          ..._state.state[id],
-          grouping: value,
         },
       },
     }));

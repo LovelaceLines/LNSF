@@ -62,7 +62,6 @@ export const useAuthStore = create<state>((set, get) => ({
 
   isInRoles: (roles: string[]): boolean => {
     const userRoles = get().user?.roles?.map((role) => role.name) || [];
-    console.debug("User roles", userRoles);
     return includes(userRoles, roles);
   },
 }));
