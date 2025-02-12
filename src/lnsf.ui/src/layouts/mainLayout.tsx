@@ -13,7 +13,7 @@ import {
   Tour,
 } from "@mui/icons-material";
 import { Box } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { AppBar } from "./components/app-bar";
 import { ISideBarProps, SideBar } from "./components/side-bar";
@@ -21,57 +21,6 @@ import { useSideBar } from "@/contexts";
 import { useThemeContext } from "@/theme";
 import { LayersLayout } from "./layersLayout";
 import { isInRoles, useNotificationStore } from "@/store";
-
-const buttonList: ISideBarProps[][] = [
-  [{ text: "Inicio", to: "/app", icon: <Home />, display: !isInRoles(["Voluntário"]) }],
-  [
-    { text: "Reg. Diário", to: "/app/registro-diario", icon: <Tour />, display: true },
-    {
-      text: "Reg. Diário - Histor.",
-      to: "/app/registro-diario/historico",
-      icon: <Tour />,
-      display: true,
-    },
-  ],
-  [
-    { text: "Pessoas", to: "/app/pessoas", icon: <People />, display: !isInRoles(["Voluntário"]) },
-    { text: "Reservas", to: "/app/reservas", icon: <Today />, display: !isInRoles(["Voluntário"]) },
-    {
-      text: "Hospedagens",
-      to: "/app/hospedagens",
-      icon: <Apartment />,
-
-      display: true,
-    },
-    { text: "Apartamentos", to: "/app/apartamentos", icon: <Bed />, display: !isInRoles(["Voluntário"]) },
-  ],
-  [
-    {
-      text: "hospitais",
-      to: "/app/hospitais",
-      icon: <LocalHospital />,
-      display: !isInRoles(["Voluntário"]),
-    },
-    { text: "Tratamentos", to: "/app/tratamentos", icon: <Spa />, display: !isInRoles(["Voluntário"]) },
-  ],
-  [{ text: "Usuários", to: "/app/usuarios", icon: <People />, display: !isInRoles(["Voluntário"]) }],
-  [
-    { text: "Minha Conta", to: "/app/minha-conta", icon: <AccountCircle />, display: true },
-    {
-      text: "Logs",
-      to: "/app/logs",
-      icon: <Quiz />,
-      display: isInRoles(["Desenvolvedor", "Administrador"]),
-    },
-    {
-      text: "Notificações",
-      to: "/app/notificacoes",
-      icon: <EditNotifications />,
-      display: isInRoles(["Desenvolvedor", "Administrador"]),
-    },
-    { text: "Configurações", to: "/app/configuracoes", icon: <Settings />, display: true },
-  ],
-];
 
 const drawerWidth = 240;
 const minDrawerWidth = 56;
@@ -81,8 +30,61 @@ export const MainLayout = () => {
   const { isDesktop } = useThemeContext();
   const { getUnreadCount } = useNotificationStore();
 
+  const [buttonList, setButtonList] = useState<ISideBarProps[][]>([]);
+
   useEffect(() => {
     getUnreadCount();
+
+    setButtonList([
+      [{ text: "Inicio", to: "/app", icon: <Home />, display: !isInRoles(["Voluntário"]) }],
+      [
+        { text: "Reg. Diário", to: "/app/registro-diario", icon: <Tour />, display: true },
+        {
+          text: "Reg. Diário - Histor.",
+          to: "/app/registro-diario/historico",
+          icon: <Tour />,
+          display: true,
+        },
+      ],
+      [
+        { text: "Pessoas", to: "/app/pessoas", icon: <People />, display: !isInRoles(["Voluntário"]) },
+        { text: "Reservas", to: "/app/reservas", icon: <Today />, display: !isInRoles(["Voluntário"]) },
+        {
+          text: "Hospedagens",
+          to: "/app/hospedagens",
+          icon: <Apartment />,
+
+          display: true,
+        },
+        { text: "Apartamentos", to: "/app/apartamentos", icon: <Bed />, display: !isInRoles(["Voluntário"]) },
+      ],
+      [
+        {
+          text: "hospitais",
+          to: "/app/hospitais",
+          icon: <LocalHospital />,
+          display: !isInRoles(["Voluntário"]),
+        },
+        { text: "Tratamentos", to: "/app/tratamentos", icon: <Spa />, display: !isInRoles(["Voluntário"]) },
+      ],
+      [{ text: "Usuários", to: "/app/usuarios", icon: <People />, display: !isInRoles(["Voluntário"]) }],
+      [
+        { text: "Minha Conta", to: "/app/minha-conta", icon: <AccountCircle />, display: true },
+        {
+          text: "Logs",
+          to: "/app/logs",
+          icon: <Quiz />,
+          display: isInRoles(["Desenvolvedor", "Administrador"]),
+        },
+        {
+          text: "Notificações",
+          to: "/app/notificacoes",
+          icon: <EditNotifications />,
+          display: isInRoles(["Desenvolvedor", "Administrador"]),
+        },
+        { text: "Configurações", to: "/app/configuracoes", icon: <Settings />, display: true },
+      ],
+    ]);
   }, []);
 
   return (
