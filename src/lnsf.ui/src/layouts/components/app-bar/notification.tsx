@@ -15,7 +15,7 @@ import {
 import { useState } from "react";
 
 import { useNotificationStore } from "@/store";
-import { dateOnlyToStr } from "@/utils";
+import { dateTimeToStr } from "@/utils";
 import { useThemeContext } from "@/theme";
 
 export const Notification = () => {
@@ -77,7 +77,7 @@ export const Notification = () => {
                   <CardHeader
                     title={notification.title}
                     titleTypographyProps={{ variant: "h6" }}
-                    subheader={dateOnlyToStr(notification.validFrom, "ptBr")}
+                    subheader={dateTimeToStr(notification.validFrom, "ptBr")}
                     subheaderTypographyProps={{ variant: "caption" }}
                     action={
                       <IconButton size="small" color="error" onClick={() => postMarkAsRead(notification.id!)}>

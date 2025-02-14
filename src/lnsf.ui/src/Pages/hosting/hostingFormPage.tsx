@@ -2,8 +2,8 @@ import { Button, Divider, Grid2 as Grid, IconButton, TextField } from "@mui/mate
 import { Add, Delete } from "@mui/icons-material";
 
 import { useHostingFormPage } from "./useHostingFormPage";
-import { DateField, SelectField } from "@/components";
-import { dateOnlyToStr } from "@/utils";
+import { DateTimeField, SelectField } from "@/components";
+import { dateTimeToStr } from "@/utils";
 import { PeopleRoomHostingFormPage } from "./peopleRoomHostingFormPage";
 
 export const HostingFormPage = () => {
@@ -66,18 +66,18 @@ export const HostingFormPage = () => {
           />
         </Grid>
         <Grid size={{ xs: 6, sm: 6, md: 3 }}>
-          <DateField
+          <DateTimeField
             label="Check-in"
-            value={dateOnlyToStr(watch("checkIn"))}
+            value={dateTimeToStr(watch("checkIn"))}
             register={register("checkIn")}
             error={!!errors.checkIn}
             helperText={errors.checkIn?.message}
           />
         </Grid>
         <Grid size={{ xs: 6, sm: 6, md: 3 }}>
-          <DateField
+          <DateTimeField
             label="Check-out"
-            value={dateOnlyToStr(watch("checkOut"))}
+            value={dateTimeToStr(watch("checkOut"))}
             register={register("checkOut")}
             error={!!errors.checkOut}
             helperText={errors.checkOut?.message}

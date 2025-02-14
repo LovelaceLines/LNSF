@@ -22,8 +22,8 @@ export const useChainDashboardPage = () => {
   const { getPeoples } = usePeopleStore();
 
   const currentDate = new Date();
-  const firstDayOfYear = new Date(currentDate.getFullYear(), 0, 1);
-  const lastDayOfYear = new Date(currentDate.getFullYear(), 11, 31);
+  const firstDayOfYear = new Date(currentDate.getFullYear(), 0, 1).toISOString().split("T")[0];
+  const lastDayOfYear = new Date(currentDate.getFullYear(), 11, 31).toISOString().split("T")[0];
 
   const {
     control,
@@ -35,7 +35,7 @@ export const useChainDashboardPage = () => {
     setValue,
   } = useForm<any>({
     values: {
-      date: dateOnlyToStr(new Date()),
+      date: dateOnlyToStr(new Date().toISOString().split("T")[0]),
       daysToCheck: 7,
       daysToBirthdate: 15,
       checkIn: dateOnlyToStr(firstDayOfYear),
