@@ -11,7 +11,8 @@ import { isInRoles } from "@/store";
 import { dateTimeToStr } from "@/utils";
 
 export const PeopleRoomHostingTablePage = () => {
-  const { prh, rowCount, roomIdGrouped, toggleRoomIdGrouping, onSubmit } = usePeopleRoomHostingTablePage();
+  const { prh, rowCount, roomIdGrouped, toggleRoomIdGrouping, onSubmit, watch, register } =
+    usePeopleRoomHostingTablePage();
 
   const columns = useMemo<MRT_ColumnDef<peopleRoomHosting>[]>(
     () => [
@@ -95,7 +96,14 @@ export const PeopleRoomHostingTablePage = () => {
         onSubmit,
 
         renderTopToolbarFilterActions: () => (
-          <Checkbox checked={roomIdGrouped} onChange={toggleRoomIdGrouping} label="Agrupar por Apartamento" />
+          <>
+            <Checkbox checked={watch("isActive")} register={register("isActive")} label="Ativos" />
+            <Checkbox
+              checked={roomIdGrouped}
+              onChange={toggleRoomIdGrouping}
+              label="Agrupar por Apartamento"
+            />
+          </>
         ),
       })}
     </>

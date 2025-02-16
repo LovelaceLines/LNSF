@@ -14,6 +14,13 @@ public class PeopleRoomHostingRepository(AppDbContext context) : BaseRepository<
 	public async Task<QueryResult<PeopleRoomHosting>> Query(PeopleRoomHostingFilter filter)
 	{
 		var query = context.PeoplesRoomsHostings.ApplyFilterWithoutPagination(filter);
+
+		if (filter.IsActive.HasValue)
+			query = query.Where(prh =>
+				(prh.Hosting!.CheckIn <= DateTime.Now &&
+					(DateTime.Now <= prh.Hosting.CheckOut || prh.Hosting.CheckOut == null)
+				) == filter.IsActive);
+
 		query = query.Include(prh => prh.People).Include(prh => prh.Room).Include(prh => prh.Hosting);
 		var items = await query.ToPaged(filter.Page, filter.PerPage).ToListAsync();
 		var totalCount = await query.CountAsync();
@@ -22,6 +29,9 @@ public class PeopleRoomHostingRepository(AppDbContext context) : BaseRepository<
 
 	public async Task<bool> ExistsByPeopleIdRoomIdHostingId(int peopleId, int roomId, int hostingId) =>
 		await context.PeoplesRoomsHostings.AnyAsync(prh => prh.PeopleId == peopleId && prh.RoomId == roomId && prh.HostingId == hostingId);
+
+	public async Task<bool> ExistsByHostingId(int hostingId) =>
+		await context.PeoplesRoomsHostings.AnyAsync(prh => prh.HostingId == hostingId);
 
 	public async Task<bool> ExistsHosting(PeopleRoomHosting peopleRoomHosting) =>
 		await context.PeoplesRoomsHostings.AnyAsync(prh => prh.PeopleId == peopleRoomHosting.PeopleId &&

@@ -66,7 +66,7 @@ export type peopleRoomHostingFilter = baseFilter & {
   roomId?: number;
   checkIn?: Date;
   checkOut?: Date;
-  active?: boolean;
+  isActive?: boolean;
 };
 
 export enum gender {

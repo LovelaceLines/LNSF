@@ -8,4 +8,5 @@ public class PeopleRoomHostingFilter : BaseFilter
 	public PeopleFilter? People { get; set; }
 	public int? RoomId { get; set; }
 	public RoomFilter? Room { get; set; }
+	public bool? IsActive { get; set; }
 }
