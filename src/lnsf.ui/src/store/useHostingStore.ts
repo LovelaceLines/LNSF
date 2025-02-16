@@ -11,6 +11,7 @@ type state = {
   getHostings: (filters?: hostingFilter) => Promise<void>;
   postHosting: (hosting: hosting) => Promise<hosting>;
   putHosting: (hosting: hosting) => Promise<hosting>;
+  deleteHosting: (id: number) => Promise<hosting>;
 
   addEscortToHosting: (hostingEscort: hostingEscort) => Promise<hostingEscort>;
   removeEscortFromHosting: (hostingEscort: hostingEscort) => Promise<hostingEscort>;
@@ -46,6 +47,15 @@ export const useHostingStore = create<state>((set) => ({
   putHosting: async (hosting): Promise<hosting> => {
     const res = await Axios.put<hosting>("/Hosting", hosting);
     set((state) => ({ hostings: state.hostings.map((p) => (p.id === hosting.id ? res.data : p)) }));
+    return res.data;
+  },
+
+  deleteHosting: async (id: number): Promise<hosting> => {
+    const res = await Axios.delete<hosting>(`/Hosting/${id}`);
+    set((state) => ({ hostings: state.hostings.filter((p) => p.id !== id) }));
+    set((state) => ({
+      queryResult: { ...state.queryResult, totalCount: state.queryResult.totalCount - 1 },
+    }));
     return res.data;
   },
 

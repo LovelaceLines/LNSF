@@ -1,11 +1,17 @@
 import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 
 import { getFilteredObject, useTableState } from "@/tables";
 import { isInRoles, usePeopleRoomHostingStore } from "@/store";
+import { peopleRoomHostingFilter } from "@/types";
 
 export const usePeopleRoomHostingTablePage = () => {
   const { getPeopleRoomHosting, prh, queryResult } = usePeopleRoomHostingStore();
   const { state, setColumnVisibility, setGrouping } = useTableState();
+
+  const { getValues, register, watch } = useForm<peopleRoomHostingFilter>({
+    values: { isActive: undefined },
+  });
 
   useEffect(() => {
     setColumnVisibility("peopleRoomHosting", {
@@ -21,7 +27,12 @@ export const usePeopleRoomHostingTablePage = () => {
 
   const rowCount = queryResult.totalCount;
 
-  const onSubmit = () => getPeopleRoomHosting(getFilteredObject({ state: state.peopleRoomHosting }));
+  const onSubmit = () =>
+    getPeopleRoomHosting({
+      ...getFilteredObject({ state: state.peopleRoomHosting }),
+      ...getValues(),
+      isActive: getValues("isActive") || undefined,
+    });
 
   const roomIdGrouped = state.peopleRoomHosting.grouping?.includes("roomId");
   const toggleRoomIdGrouping = () =>
@@ -38,5 +49,7 @@ export const usePeopleRoomHostingTablePage = () => {
     roomIdGrouped,
     toggleRoomIdGrouping,
     onSubmit,
+    watch,
+    register,
   };
 };

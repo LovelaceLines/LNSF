@@ -9,7 +9,7 @@ import { useHostingTablePage } from "./useHostingTablePage";
 import { dateTimeToStr } from "@/utils";
 
 export const HostingTablePage = () => {
-  const { hostings, rowCount, onSubmit } = useHostingTablePage();
+  const { handleDelete, hostings, rowCount, onSubmit } = useHostingTablePage();
 
   const columns = useMemo<MRT_ColumnDef<hosting>[]>(
     () => [
@@ -93,6 +93,7 @@ export const HostingTablePage = () => {
 
         toCreate: true,
         toEdit: true,
+        handleDelete,
       })}
     </>
   );

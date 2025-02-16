@@ -39,4 +39,9 @@ public class HostingController(IHostingRepository repository,
 	[HttpDelete("remove-escort-from-hosting")]
 	public async Task<ActionResult<HostingEscort>> RemoveEscortFromHosting([FromBody] HostingEscort hostingEscort) =>
 		await hostingEscortService.Delete(hostingEscort);
+
+	[Authorize(Policy = "Administrador")]
+	[HttpDelete("{id}")]
+	public async Task<ActionResult<Hosting>> Delete(int id) =>
+		await service.Delete(id);
 }

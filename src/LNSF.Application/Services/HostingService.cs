@@ -9,7 +9,8 @@ namespace LNSF.Application.Services;
 
 public class HostingService(IHostingRepository repository,
 	HostingValidator validator,
-	IPatientRepository patientRepository) : IHostingService
+	IPatientRepository patientRepository,
+	IPeopleRoomHostingRepository peopleRoomHostingRepository) : IHostingService
 {
 	public async Task<Hosting> Create(Hosting hosting)
 	{
@@ -32,5 +33,14 @@ public class HostingService(IHostingRepository repository,
 		if (await repository.ExistsWithDateConflict(hosting)) throw new AppException("Já existe uma hospedagem para este paciente neste período", HttpStatusCode.Conflict);
 
 		return await repository.Update(hosting);
+	}
+
+	public async Task<Hosting> Delete(int id)
+	{
+		if (!await repository.ExistsById(id)) throw new AppException("Hospedagem não encontrada", HttpStatusCode.NotFound);
+
+		if (await peopleRoomHostingRepository.ExistsByHostingId(id)) throw new AppException("Hospedagem não pode ser excluída pois possui pessoas hospedadas", HttpStatusCode.Conflict);
+
+		return await repository.RemoveById(id);
 	}
 }
