@@ -16,8 +16,8 @@ export const HostingFormPage = () => {
     room,
     setRoom,
     rooms,
-    addEscortToHosting,
-    removeEscortFromHosting,
+    handleAddEscortToHosting,
+    handleRemoveEscortFromHosting,
     register,
     handleSubmit,
     errors,
@@ -25,6 +25,8 @@ export const HostingFormPage = () => {
     getValues,
     setValue,
     watch,
+    handleAddPeopleToRoom,
+    handleRemovePeopleFromRoom,
   } = useHostingFormPage();
 
   return (
@@ -107,7 +109,7 @@ export const HostingFormPage = () => {
                   color="error"
                   size="large"
                   onClick={() =>
-                    removeEscortFromHosting({
+                    handleRemoveEscortFromHosting({
                       hostingId: +getValues("id")!,
                       escortId: escort.id!,
                     })
@@ -145,7 +147,9 @@ export const HostingFormPage = () => {
               type="submit"
               color="info"
               size="large"
-              onClick={() => addEscortToHosting({ hostingId: +getValues("id")!, escortId: escort!.id! })}
+              onClick={() =>
+                handleAddEscortToHosting({ hostingId: +getValues("id")!, escortId: escort!.id! })
+              }
             >
               <Add />
             </IconButton>
@@ -153,16 +157,16 @@ export const HostingFormPage = () => {
         </Grid>
       </Grid>
       <Grid container spacing={2} mt={2}>
-        <Grid size={{ xs: 12 }}>
+        <Grid size={12}>
           <Divider>Apartamento/Hospedagem</Divider>
         </Grid>
         {prh.length > 0 && (
           <>
-            <Grid container spacing={2} mb={2}>
+            <Grid container size={12} spacing={2} mb={2}>
               {prh.map((prh, index) => (
                 <>
-                  <Grid size={{ xs: 12 }} key={index}>
-                    <PeopleRoomHostingFormPage prh={prh} mode="delete" />
+                  <Grid size={12} key={index}>
+                    <PeopleRoomHostingFormPage prh={prh} removePeopleFromRoom={handleRemovePeopleFromRoom} />
                   </Grid>
                 </>
               ))}
@@ -202,7 +206,6 @@ export const HostingFormPage = () => {
               <>
                 <Grid size={{ xs: 12 }}>
                   <PeopleRoomHostingFormPage
-                    mode="add"
                     prh={{
                       peopleId: p?.id ?? 0,
                       people: p,
@@ -210,6 +213,7 @@ export const HostingFormPage = () => {
                       room: room,
                       hostingId: +watch("id")!,
                     }}
+                    addPeopleToRoom={handleAddPeopleToRoom}
                   />
                 </Grid>
               </>

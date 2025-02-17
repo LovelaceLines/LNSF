@@ -5,11 +5,16 @@ import { Add, Delete } from "@mui/icons-material";
 
 interface PeopleRoomHostingFormPageProps {
   prh: peopleRoomHosting;
-  mode: "add" | "delete";
+  addPeopleToRoom?: (peopleRoomHosting: peopleRoomHosting) => Promise<peopleRoomHosting[]>;
+  removePeopleFromRoom?: (peopleRoomHosting: peopleRoomHosting) => Promise<peopleRoomHosting[]>;
 }
 
-export const PeopleRoomHostingFormPage = ({ prh, mode }: PeopleRoomHostingFormPageProps) => {
-  const { addPeopleToRoom, removePeopleFromRoom, register, getValues } = usePeopleRoomHostingFormPage({
+export const PeopleRoomHostingFormPage = ({
+  prh,
+  addPeopleToRoom,
+  removePeopleFromRoom,
+}: PeopleRoomHostingFormPageProps) => {
+  const { register, getValues } = usePeopleRoomHostingFormPage({
     prh,
   });
 
@@ -44,7 +49,7 @@ export const PeopleRoomHostingFormPage = ({ prh, mode }: PeopleRoomHostingFormPa
           label="Número Apartamento"
           {...register("room.number")}
           fullWidth
-          InputProps={{ readOnly: true }}
+          slotProps={{ input: { readOnly: true } }}
         />
       </Grid>
       <Grid size={{ xs: 2, sm: 2, md: 1 }}>
@@ -52,11 +57,11 @@ export const PeopleRoomHostingFormPage = ({ prh, mode }: PeopleRoomHostingFormPa
           label="Id Hospedagem"
           {...register("hostingId")}
           fullWidth
-          InputProps={{ readOnly: true }}
+          slotProps={{ input: { readOnly: true } }}
         />
       </Grid>
-      <Grid>
-        {mode === "add" ? (
+      {addPeopleToRoom && (
+        <Grid>
           <IconButton
             type="submit"
             color="info"
@@ -71,7 +76,10 @@ export const PeopleRoomHostingFormPage = ({ prh, mode }: PeopleRoomHostingFormPa
           >
             <Add />
           </IconButton>
-        ) : (
+        </Grid>
+      )}
+      {removePeopleFromRoom && (
+        <Grid>
           <IconButton
             color="error"
             size="large"
@@ -85,8 +93,8 @@ export const PeopleRoomHostingFormPage = ({ prh, mode }: PeopleRoomHostingFormPa
           >
             <Delete />
           </IconButton>
-        )}
-      </Grid>
+        </Grid>
+      )}
     </Grid>
   );
 };
